@@ -1,0 +1,349 @@
+% Copyright 2022 Douglas Myers-Turnbull
+% This work may be distributed and/or modified under the conditions of the
+% LaTeX Project Public License, either version 1.3 of this license or
+% (at your option) any later version. The latest version of this license is
+% in http://www.latex-project.org/lppl.txt and version 1.3 or later is part of
+% all distributions of LaTeX version 2005/12/01 or later.
+
+
+%=======                                                   =======
+%=======                       info                        =======
+%=======                                                   =======
+
+\NeedsTeXFormat{LaTeX2e}[2020-10-01]
+\ExplSyntaxOn
+\ProvidesExplPackage{info}{2022-02-17}{0.1}{Title pages from templates and key/value pairs.}
+\RequirePackage{datetime2}  % provide: calc,useregional,level
+\RequirePackage{txtstyles}
+
+\keys_define:nn {info} {
+    fix .bool_gset:N = \g_fix_bool,
+    fix .default:n = true,
+    fix .initial:n = false,
+}
+\ProcessKeysOptions{info}
+
+\msg_new:nnn{info}{infomissing}{No~info~key~'#1'~is~defined.}
+\cs_new:Npn \info__missing_err:n #1
+    { \msg_error:nnn{info}{infomissing}{#1} }
+
+\msg_new:nnn{info}{infonotdef}{Info~key~'#1'~is~not~defined.}
+\cs_new:Npn \info__not_def_err:n #1
+    { \msg_error:nnn{info}{infonotdef}{#1} }
+
+\msg_new:nnn{info}{infoisdef}{Info~key~'#1'~is~already~defined~(to~'#2').}
+\cs_new:Npn \info__is_def_err:nn #1#2
+    { \msg_error:nnnn{info}{infoisdef}{#1}{#2} }
+\cs_generate_variant:Nn \info__is_def_err:nv { nv }
+
+
+
+%===================================================================
+%                    storing and looking up
+%===================================================================
+
+\prop_new:N \g_info_prop
+\prop_new:N \g_info_affiliations_prop
+\prop_new:N \g_info_notes_prop
+
+
+\prg_new_conditional:Npnn \info_if_exist:n #1 { T, F, TF }
+{
+    \prop_if_in:NnTF \g_info_prop {#1}
+        { \prg_return_true: }
+        { \prg_return_false: }
+}
+
+\cs_new:Npn \info_get:nnN #1#2#3
+{
+    \prop_get:NnNF \g_info_prop {#1} #3
+    { \tl_set:Nn #2 {#2} }
+}
+\cs_generate_variant:Nn \info_get:nnN { VnN }
+
+\cs_new:Npn \info_get:nN #1#2
+{
+    \prop_get:NnNF \g_info_prop {#1} #2
+    { \info__missing_err:n{#1} }
+}
+\cs_generate_variant:Nn \info_get:nN { VN }
+
+
+\cs_new:Npn \info_item:n #1
+{
+    \prop_get:NnNTF \g_info_prop {#1} \l_tmpa_tl
+    { \l_tmpa_tl }
+    { \info__missing_err:n{#1} }
+}
+\cs_generate_variant:Nn \info_item:n { V, v, x, e }
+
+\NewExpandableDocumentCommand \getinfo {m}
+{
+    \info_item:n {#1}
+}
+
+
+%===================================================================
+%                    setting info
+%===================================================================
+
+\cs_new:Npn \info_set_val:nn #1#2
+    { \prop_gput:Nnn \g_info_prop {#1} {#2} }
+\cs_generate_variant:Nn \info_set_val:nn { nV, Vn, VV }
+
+\cs_new:Npn \info_set:n #1
+    { \prop_gset_from_keyval:Nn \g_info_prop {#1} }
+\cs_generate_variant:Nn \info_set:n { v }
+\NewDocumentCommand \SetInfo {m}
+    { \info_set:n{#1} }
+
+\cs_new:Npn \info_put:n #1
+    { \prop_put_from_keyval:Nn \g_info_prop {#1}  }
+\cs_generate_variant:Nn \info_put:n { v }
+\NewDocumentCommand \PutInfo {m}
+    { \info_put:n{#1} }
+
+\cs_new:Npn \info_provide:n #1
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \prop_gput_if_new:Nnn \g_info_prop {##1} {##2} }
+}
+\cs_generate_variant:Nn \info_provide:n { v }
+\NewDocumentCommand \ProvideInfo {m}
+    { \info_provide:n{#1} }
+
+\cs_new:Npn \info_new:n #1
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+    {
+        \prop_get:NnNTF \g_info_prop {##1} \l_tmpa_tl
+        { \info__is_def_err:nv {##1}{\l_tmpa_tl} }
+        { \prop_gput_if_new:Nnn \g_info_prop {##1} {##2} }
+    }
+}
+\cs_generate_variant:Nn \info_new:n { V, v }
+\NewDocumentCommand \NewInfo {m}
+    { \info_new:n{#1} }
+
+\cs_new:Npn \info_renew:n #1
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+    {
+        \prop_get:NnNTF \g_info_prop {##1} \l_tmpa_tl
+        { \prop_gput:Nnn \g_info_prop {##1} {##2} }
+        { \info__not_def_err:n {##1} }
+    }
+}
+\cs_generate_variant:Nn \info_renew:n { V, v }
+\NewDocumentCommand \RenewInfo {m}
+    { \info_renew:n{#1} }
+
+
+
+%===================================================================
+%                    formatting single info
+%===================================================================
+
+\keys_define:nn { info / single }
+{
+    pre .tl_set:N = \l_pre_tl,
+    pre .initial:n = {},
+    post .tl_set:N = \l_post_tl,
+    post .initial:n = {},
+    style .tl_set:N = \l_style_tl,
+    style .initial:n = {},
+    style-inline .initial:n = {},
+    style-inline .tl_set:N = \l_style_inline_tl,
+    if-blank .tl_set:N = \l_if_blank_tl,
+    if-blank .initial:n = {},
+}
+
+\cs_new:Npn \info__format_single:n #1
+{
+    \str_set:Nn \l_my_str {#1}
+    \tl_if_empty:NTF \l_my_str
+    {
+        \str_set_eq:NN \l_my_str \l_if_blank_tl
+    }
+    {
+        \str_put_left:NV \l_my_str \l_pre_tl
+        \str_put_right:NV \l_my_str \l_post_tl
+    }
+    \txtstyles_use_or_inline:VVV \l_style_tl \l_style_inline_tl \l_my_str
+}
+\cs_generate_variant:Nn \info__format_single:n { V }
+
+\NewDocumentCommand \info { >{\TrimSpaces}m O{} }
+{
+    \keys_set:nn {info / single} {#2}
+    \info_get:nN {#1} \l_my_str
+    \info__format_single:V \l_my_str
+}
+
+\cs_generate_variant:Nn \text_titlecase_first:n { V }
+
+\NewDocumentCommand \Info { >{\TrimSpaces}m O{} }
+{
+    \group_begin:
+    \keys_set:nn {info / single} {#2}
+    \info_get:nN {#1} \l_my_str
+    \tl_set:Nx \l_my_str {\text_titlecase_first:V \l_my_str}
+    \info__format_single:V \l_my_str
+    \group_end:
+}
+
+
+
+%===================================================================
+%                    formatting list info
+%===================================================================
+
+\keys_define:nn { info / list }
+{
+    pre-item .tl_set:N = \l_pre_tl,
+    pre-item .initial:n = {},
+    post-item .tl_set:N = \l_post_tl,
+    post-item .initial:n = {},
+    item-style .tl_set:N = \l_style_tl,
+    item-style .initial:n = {},
+    item-style-inline .tl_set:N = \l_style_inline_tl,
+    item-style-inline .initial:n = {},
+    style .tl_set:N = \l_list_style_tl,
+    style .initial:n = {},
+    style-inline .tl_set:N = \l_list_style_inline_tl,
+    style-inline .initial:n = {},
+    sep .tl_set:N = \l_list_sep_tl,
+    sep .initial:n = {,~},
+    sep-two .tl_set:N = \l_list_sep_two_tl,
+    sep-two .initial:n = {~and~},
+    sep-last .tl_set:N = \l_list_sep_last_tl,
+    sep-last .initial:n = {,~and~},
+    pre .tl_set:N = \l_list_pre_tl,
+    pre .initial:n = {},
+    post .tl_set:N = \l_list_post_tl,
+    post .initial:n = {},
+    if-blank .tl_set:N = \l_list_if_blank_tl,
+    if-blank .initial:n = {},
+}
+
+\cs_generate_variant:Nn \seq_use:Nnnn { NVVV }
+
+\cs_new:Npn \info__format_list:N #1
+{
+    \tl_clear:N \l_if_blank_tl  % would be weird
+    \seq_set_map:NNn \l_my_mapped_seq #1 { \info__format_single:n{##1} }
+    \tl_set:Nn \l_my_rendered_list_tl
+    {
+        \seq_use:NVVV
+            \l_my_mapped_seq
+            \l_list_sep_two_tl
+            \l_list_sep_tl
+            \l_list_sep_last_tl
+    }
+    \tl_if_empty:NTF \l_my_rendered_list_tl
+    {
+        \str_set_eq:NN \l_my_rendered_list_tl \l_list_if_blank_tl
+    }
+    {
+        \str_put_left:NV \l_my_rendered_list_tl \l_list_pre_tl
+        \str_put_right:NV \l_my_rendered_list_tl \l_list_post_tl
+    }
+    \txtstyles_use_or_inline:VVV \l_list_style_tl \l_list_style_inline_tl \l_my_rendered_list_tl
+}
+\cs_generate_variant:Nn \info__format_list:n { V }
+
+\NewDocumentCommand \infolist { >{\TrimSpaces}m O{} }
+{
+    \group_begin:
+    \keys_set:nn {info / list} {#2}
+    \info_get:nN {#1} \l_tmpa_tl
+    \clist_set:NV \l_tmpa_clist \l_tmpa_tl
+    \seq_set_from_clist:NN \l_tmpa_seq \l_tmpa_clist
+    \info__format_list:N \l_tmpa_seq
+    \group_end:
+}
+
+\NewDocumentCommand \InfoList { >{\TrimSpaces}m O{} }
+{
+    \group_begin:
+    \keys_set:nn {info / list} {#2}
+    \info_get:nN {#1} \l_tmpa_tl
+    \tl_set:Nx \l_tmpa_tl {\text_titlecase_first:V \l_tmpa_tl}
+    \clist_set:NV \l_tmpa_clist \l_tmpa_tl
+    \seq_set_from_clist:NN \l_tmpa_seq \l_tmpa_clist
+    \info__format_list:N \l_tmpa_seq
+    \group_end:
+}
+
+
+
+%===================================================================
+%                    shorthands for common info
+%===================================================================
+
+\NewDocumentCommand \gettitle { O{} }
+    { \info{title}[#1] }
+
+\NewDocumentCommand \GetTitle { O{} }
+    { \Info{title}[#1] }
+
+\NewDocumentCommand \getsubject { O{} }
+    { \info{subject}[#1] }
+
+\NewDocumentCommand \GetProducer { O{} }
+    { \Info{producer}[#1] }
+
+\NewDocumentCommand \getproducer { O{} }
+    { \info{producer}[#1] }
+
+\NewDocumentCommand \GetSubject { O{} }
+    { \Info{subject}[#1] }
+
+\NewDocumentCommand \getdate { O{} }
+    { \info{date}[#1] }
+
+\NewDocumentCommand \GetDate { O{} }
+    { \Info{date}[#1] }
+
+\NewDocumentCommand \getauthors { O{} }
+    { \infolist{authors}[#1] }
+
+\NewDocumentCommand \GetAuthors { O{} }
+    { \InfoList{authors}[#1] }
+
+\NewDocumentCommand \getkeywords { O{} }
+    { \infolist{keywords}[#1] }
+
+\NewDocumentCommand \GetKeywords { O{} }
+    { \InfoList{keywords}[#1] }
+
+
+
+%===================================================================
+%                    title templates
+%===================================================================
+
+%\NewDocumentCommand \DeclareTitleTemplate { >{\TrimSpaces}m m }
+{ }
+
+%\NewDocumentCommand \NewTitleTemplate { >{\TrimSpaces}m m }
+%{ }
+
+%\NewDocumentCommand \PrintTitle { O{} }
+%{ }
+
+
+
+%===================================================================
+%                    final things
+%===================================================================
+
+\bool_if:NT \g_fix_bool
+{
+    \AtBeginDocument
+        { \let\today\DTMtoday }
+}
+

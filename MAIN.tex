@@ -1,0 +1,72 @@
+%=======                    D E S E R T                    =======
+
+\documentclass[
+    feature / minted,      % ...................................... Minted for source code
+    feature / imakeidx,    % ...................................... Index
+    feature / tcolorbox,   % ...................................... Fancy boxes
+    language = USenglish,        % ...............................  Language with dialect 
+    bib / hide-language = true,  % ................................ Hide e.g. "en" for language
+    color / url = 0000D2,        % ................................ or named color, etc.
+    cref / capitalize = true,    % ................................ E.g. "Figure 2"
+    font-size / main = 11.8pt    % ................................ Decimal font size :)
+    linespace / main = 1.6,      % ................................ 1.6 space
+    numbering / equation-within = chapter,  % ..................... Get "Equation [2.3]":
+    numbering / equation = arabic, 
+    numbering / equation-brackets = square-bold,
+    numbering / theorem-like-within = chapter,
+    style / foreign-words = {italic},  % .......................... Set text "styles":
+    style / indx-starred = {HTML:550000,allcaps,semibold},
+    style / nomenclature-group = {xkcdalgaegreen,LARGE,uppertosc},
+    glue / indent = 0em,  % ....................................... Set indent (fixed length)
+    glue-between / paragraphs = 2ex plus 0.2ex minus 0.2ex,  % .... Space between paragraphs (rubber)
+    glue-above / subsection = 2ex plus 0.2 ex minus 0.1ex    % .... Another true glue
+    toc / depth = section  % ...................................... Max depth in TOC
+]{desert}
+
+% To modify labels:
+\Translate{english}{
+    algorithm = procedure,
+    source code = computer code,
+}
+% Note: This is a wrapper around translation's \DeclareTranslation
+%       e.g. \DeclareTranslation{english}{algorithm}{procedure}
+%       Obviously we're abusing the intent a bit here :)
+
+% Load extra packages:
+\RequirePackage{pdfpages}  % to include a PDF
+
+% Setup interfaces provided by various packages:
+\SiSetup{
+    group-minimum-digits=4,   
+    group-digits=all,        
+    group-separator=\thinspace,
+}
+% \GeometrySetup, \AcroSetup  \ChemSetup, \ChemfigSetup, \HyperSetup, \MintedSetup
+% Note: These are just consistently named aliases; e.g. \AcroSetup is \acsetup
+
+% Load bibliography and maybe some other things:
+\LoadBib{REFS.bib}
+\LoadTex{GLOSSARY.tex}
+% Note: These are just aliases
+%       \LoadBib is \addbibresource, and \LoadTex is \input
+
+% Set document info
+\SetInfo {
+    title = Quantum xenochromodynamics in the cloud,
+    subject = Physics,
+    authors = Karen Johnson,
+    degree = Doctor of Philosophy,
+    university = University of Washington,
+    date = 2022-03-22
+}
+% This is provided by the "info" package (included here)
+% You can add arbitrary data and access with \info, \Info, \infolist, and \InfoList
+% e.g.:
+% \InfoList{keywords}[sep=|, style-inline={italic}, if-blank=I'm null, pre-item=', post-item=']
+% \InfoList{authors}[sep-{, }, sep-two={ and }, sep-last={ and }]
+
+\begin{document}
+\LoadFrontDocs{sections/front}
+\LoadMainDocs{sections/chapter1,sections/chapter2}
+\LoadBackDocs{sections/back}
+\end{document}

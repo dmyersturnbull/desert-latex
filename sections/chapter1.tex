@@ -1,0 +1,122 @@
+
+\begin{MainChapter}{Introduction}
+
+\Section{I am a section}
+
+\SubSection{I am a subsection}
+
+\SubSubSection{I am a subsubsection}
+
+\Paragraph*{I am a paragraph}  % * to suppress numbering
+% \indx{keyword} is shorthand for keyword\index{keyword}
+\Indx{Quantum xenochromodynamics} is characterized by a module defined $M[F]$ over a finite field $F$ alongside a set $D$ of \ac{D1} ligands \cite{yolov6}. Add a \term{*} to emphasize: \indx*{starred} (This too: \indx{space aliens}[aliens!space]).
+It is usually computed in the cloud. With \ac{CRISPR}.
+
+\section{Some text}
+
+\blockcquote{johnson2022}{Life is good.}
+
+We recovered \qty{5}{\tera\joule} from the craft.
+
+\begin{itemize}
+    \item\texttt{Bullet 1}
+    \item\texttt{Bullet 2}
+    \item\texttt{Bullet 3}
+\end{itemize}
+
+\begin{criterion}[label=mythm, name=Fiveness]
+5 = 5
+\end{criterion}
+
+\begin{proof}
+x = x \forall x\\
+\therefore 5 = 5
+\end{proof}
+
+\begin{BoxNote}
+Some technical note.
+Refer to \cref{mythm}.
+\end{BoxNote}
+
+\begin{BoxExample}[How to use this (optional title)]
+This is an example.
+\end{BoxExample}
+
+% Tables should be typeset with the modern tabularray
+% Use tblr, talltblr, longtblr, etc.
+% In 2022+, use booktabs, talltabs, and longtabs
+
+\begin{longtblr}[
+    caption = {Difficulty modifiers},
+    entry = {Difficulty modifiers},
+    label = {difficulty}
+]{
+    colspec=lrrrrr, % TODO
+    rowhead={1},
+    note{a} = {Rescue funds are something really important.},
+    remark{x} = {Some random remark.},
+    cells={font=\sffamily},
+    row{1} = {font={\sffamily\bfseries}},
+    cell{2-999}{2-6} = {cmd=\ensuremath}  % TODO: in 2022 vr, mode=math and 2-Z
+}
+\hline
+Type & Trivial & Easy & Normal & Hard & Strenuous\\
+\hline
+Type 1 \TblrNote{a} (\%) & 300 & 200 & 150 & 100 & 75\\
+Type 2 (\%) & 70 & 60 & 50 & 50 & 40\\
+Type 3 (\%) & 80 & 75 & 70 & 65 & 60\\
+\hline
+\end{longtblr}
+
+
+% Your captioning friends:
+% - \capx is like \caption but optionally accepts () for a label
+%     e.g. \capx(fig:mylabel)[TOC entry]{Caption}
+%          \capx{Caption} works too and is equiv. to \capx()[]{Caption}
+% - \capkeyval works the same way tabularray's do:
+%     \capkeyval {label=fig:mylabel, entry=TOC entry, caption=Caption}
+%     (Wrap any values containing commas in {}; e.g. caption={A caption, a really good one}.
+
+% Your figure friends:
+% - \begin{figure}, like always (now always centered though)
+% - \SinglePanelFigure for simple figures
+% - \phantompanel for fake panels with good anchors
+% - \subref to refer to the panel
+% - \subcaptionbox or the experimental \realpanel for panels with separate graphics files.\
+
+% Multi-panel figure with a single graphics file and big caption at the end.
+%\begin{figure}
+%    \includegraphics{full_figure.pdf}
+%    % These generate proper hyperlink anchors but are not directly shown:
+%    \phantompanel(fig:my_panelA)[My first panel (TOC entry, if applicable)]
+%    \phantompanel(fig:my_panelB)[My second panel (TOC entry, if applicable)]
+%    \capx(fig:my_bigfig)[Figure TOC entry]{
+%       Overview of methods.
+%       \subref{fig:my_panelA} Description of panel A.
+%       \subref{fig:my_panelB} Description of panel B.
+%    }
+%\end{figure}
+
+%\singlepanelfigure{
+%    file=cows.pdf,
+%    label=fig:cows,
+%    entry={Photo of cows.},
+%    caption={This is some extended text.},
+%}
+
+%\SinglePanelFigure[width=5in]{
+%    file=cows.png,
+%    ...
+%}
+
+
+\begin{sourcecode}{
+    language=c++,
+    label=hi,         % label, entry, and caption are the same as in \begin{tblr}
+    entry=Sample~C++,
+    caption=This is some C++ code
+}
+int i = 5;
+\end{sourcecode}
+
+\end{MainChapter}

@@ -1,0 +1,142 @@
+% Copyright 2022 Douglas Myers-Turnbull
+% This work may be distributed and/or modified under the conditions of the LaTeX Project Public
+% License, either version 1.3 of this license or (at your option) any later version. The latest
+% version of this license is in http://www.latex-project.org/lppl.txt and version 1.3 or later is
+% part of all distributions of LaTeX version 2005/12/01 or later.
+%==================================================================================================
+
+
+%=======                                                   =======
+%=======               Nomenclature groups                 =======
+%=======                                                   =======
+
+% Note: Not compatible with nomencl's nomentbl option.
+
+\NeedsTeXFormat {LaTeX2e} [2020-10-01]
+\ExplSyntaxOn
+\ProvidesExplPackage {nomgroups} {2022-02-08} {0.1} {Define~nomenclature~groups}
+\RequirePackage{nomencl}
+
+\prop_new:N \g_nomgroups_prop
+\str_gset:Nn \g_nomgroups_text_str {Z}
+\str_gset:Nn \g_nomgroups_math_str {Z}
+\str_gset:Nn \g_nomgroups_unit_str {U}
+
+\NewDocumentCommand \SetNomGroups {m}
+    { \prop_gset_from_keyval:Nn \g_nomgroups_prop {#1} }
+
+\NewDocumentCommand \AddDefaultNomGroups {}
+    { \SetNomGroups{C=Constants,F=Functions,M=Sets,N=Sequences,U=Units,Z=Other~symbols} }
+
+\NewDocumentCommand \AddNomGroups {m}
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \prop_put_if_new:Nnn \g_nomgroups_prop {##1} {##2} }
+}
+
+\NewDocumentCommand \UpdateNomGroups {m}
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \prop_put:Nnn \g_nomgroups_prop {##1} {##2} }
+}
+
+%\skip_gset:Nn \nomgroups_header_skip { 2ex plus 0.2ex minus 0.1ex }
+
+\cs_new:Npn \nomgroups_format_header:n #1
+    { \textbf{#1} }
+
+\cs_new:Npn \nomgroups_make_header:n #1
+{
+    %\vspace{\skip_use:N \nomgroups_header_skip}
+    \vspace{\baselineskip}
+    \item [ \hspace*{-\itemindent} \nomgroups_format_header:n{#1} ]
+}
+
+\keys_define:nn { nomgroups }
+{
+    groups .code:n = { \SetNomGroups{#1} },
+    groups .default:n = {},
+    add-default-groups .code:n = { \AddDefaultNomGroups },
+    add-default-groups .default:n = false,
+    default-text-group .tl_gset:N = \g_nomgroups_text_str,
+    default-math-group .tl_gset:N = \g_nomgroups_math_str,
+    default-unit-group .tl_gset:N = \g_nomgroups_unit_str,
+    header-skip .skip_gset:N = \g_nomgroups_header_skip,
+    header-format .code:n = { \cs_gset_eq:Nc \nomgroups_format_header:n {#1} }  % in 2022+ use .cs_gset:N
+}
+
+\cs_new:Npn \nomgroups_setup:n #1
+{
+    \keys_set:nn {nomgroups} {#1}
+}
+\NewDocumentCommand \SetupNomGroups {m}
+    { \nomgroups_setup:n{#1} }
+
+\AtBeginDocument
+{
+    \renewcommand* {\nomgroup} [1]
+    {
+        \prop_map_inline:Nn \g_nomgroups_prop
+        {
+            \str_if_eq:nnT {##1} {#1}
+                { \nomgroups_make_header:n{##2} }
+        }
+    }
+}
+
+\NewDocumentCommand \NomGroupLink { m m }
+{
+    \tl_if_blank:nTF {#1}
+        { #2 }
+        { \href{#1}{#2} }
+}
+
+\cs_new:Npn \nomgroups_make:vvnnnnn #1#2#3#4#5#6#7
+{
+    % careful! nomencl writes to a file; we can't use expl3
+    \tl_if_blank:nTF {#2}
+        { \nomenclature [#1,#3] {#7} {\NomGroupLink{#5}{#4 \hfill #6}} }
+        { \nomenclature [#1,#2] {#7} {\NomGroupLink{#5}{#4 \hfill #6}} }
+}
+
+% nomenclature commands: text, math, and unit
+\NewDocumentCommand \NomText
+{
+    >{\TrimSpaces}D(){\g_nomgroups_text_str} % 1 group
+    >{\TrimSpaces}O{}                        % 2 optional sort key
+    >{\TrimSpaces}m                          % 3 symbol
+    >{\TrimSpaces}m                          % 4 description
+    >{\TrimSpaces}D<>{}                      % 5 optional URL
+    >{\TrimSpaces}O{}                        % 6 optional value on right
+}
+{
+    \nomgroups_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{#3}
+}
+
+\NewDocumentCommand \NomMath
+{
+    >{\TrimSpaces}D(){\g_nomgroups_math_str} % 1 group
+    >{\TrimSpaces}O{}                        % 2 optional sort key
+    >{\TrimSpaces}m                          % 3 symbol
+    >{\TrimSpaces}m                          % 4 description
+    >{\TrimSpaces}D<>{}                      % 5 optional URL
+    >{\TrimSpaces}O{}                        % 6 optional value on right
+}
+{
+    \nomgroups_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{\ensuremath{#3}}
+}
+
+\NewDocumentCommand \NomUnit
+{
+    >{\TrimSpaces}D(){\g_nomgroups_unit_str} % 1 group
+    >{\TrimSpaces}O{}                        % 2 optional sort key
+    >{\TrimSpaces}m                          % 3 symbol
+    >{\TrimSpaces}m                          % 4 description
+    >{\TrimSpaces}D<>{}                      % 5 optional URL
+    >{\TrimSpaces}O{}                        % 6 optional value on right
+}
+{
+    \nomgroups_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{\unit{#3}}
+}
