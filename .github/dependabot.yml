@@ -1,0 +1,10 @@
+version: 2
+# see options in https://docs.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates
+updates:
+    labels: ["kind: infrastructure"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels: ["kind: infrastructure"]
+    
