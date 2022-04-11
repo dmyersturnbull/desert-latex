@@ -9,7 +9,11 @@
 
 \Paragraph*{I am a paragraph}  % * to suppress numbering
 % \indx{keyword} is shorthand for keyword\index{keyword}
-\Indx{Quantum xenochromodynamics} is characterized by a module defined $M[F]$ over a finite field $F$ alongside a set $D$ of \ac{D1} ligands \cite{yolov6}. Add a \term{*} to emphasize: \indx*{starred} (This too: \indx{space aliens}[aliens!space]).
+\Indx{Quantum xenochromodynamics} is characterized by a module defined $M[F]$ over a finite field $F$ alongside a set $D$ of \ac{D1} ligands \cite{yolov6}.
+Add a \code{*} when \emph{introducing} terms, for emphasis: \indx*{starred}.
+The style is set with \code{style / indx-starred} option.
+
+(This too: \indx{space aliens}[aliens!space]).
 It is usually computed in the cloud. With \ac{CRISPR}.
 
 \section{Some text}
@@ -69,54 +73,13 @@ Type 3 (\%) & 80 & 75 & 70 & 65 & 60\\
 \end{longtblr}
 
 
-% Your captioning friends:
-% - \capx is like \caption but optionally accepts () for a label
-%     e.g. \capx(fig:mylabel)[TOC entry]{Caption}
-%          \capx{Caption} works too and is equiv. to \capx()[]{Caption}
-% - \capkeyval works the same way tabularray's do:
-%     \capkeyval {label=fig:mylabel, entry=TOC entry, caption=Caption}
-%     (Wrap any values containing commas in {}; e.g. caption={A caption, a really good one}.
-
-% Your figure friends:
-% - \begin{figure}, like always (now always centered though)
-% - \SinglePanelFigure for simple figures
-% - \phantompanel for fake panels with good anchors
-% - \subref to refer to the panel
-% - \subcaptionbox or the experimental \realpanel for panels with separate graphics files.\
-
-% Multi-panel figure with a single graphics file and big caption at the end.
-%\begin{figure}
-%    \includegraphics{full_figure.pdf}
-%    % These generate proper hyperlink anchors but are not directly shown:
-%    \phantompanel(fig:my_panelA)[My first panel (TOC entry, if applicable)]
-%    \phantompanel(fig:my_panelB)[My second panel (TOC entry, if applicable)]
-%    \capx(fig:my_bigfig)[Figure TOC entry]{
-%       Overview of methods.
-%       \subref{fig:my_panelA} Description of panel A.
-%       \subref{fig:my_panelB} Description of panel B.
-%    }
-%\end{figure}
-
-%\singlepanelfigure{
-%    file=cows.pdf,
-%    label=fig:cows,
-%    entry={Photo of cows.},
-%    caption={This is some extended text.},
-%}
-
-%\SinglePanelFigure[width=5in]{
-%    file=cows.png,
-%    ...
-%}
-
-
-\begin{sourcecode}{
-    language=c++,
+\begin{SourceCode}{
+    lang=c++,
     label=hi,         % label, entry, and caption are the same as in \begin{tblr}
     entry=Sample~C++,
     caption=This is some C++ code
 }
 int i = 5;
-\end{sourcecode}
+\end{SourceCode}
 
 \end{MainChapter}

@@ -8,18 +8,18 @@
     bib / hide-language = true,  % ................................ Hide e.g. "en" for language
     color / url = 0000D2,        % ................................ or named color, etc.
     cref / capitalize = true,    % ................................ E.g. "Figure 2"
-    font-size / main = 11.8pt    % ................................ Decimal font size :)
+    font-size / main = 11.8pt,    % ................................ Decimal font size :)
     linespace / main = 1.6,      % ................................ 1.6 space
     numbering / footnotes = alph,  % .............................. Footnotes a, b, ...
     numbering / equation-within = chapter,  % ..................... Get "Equation [2.3]":
     numbering / equation-brackets = square-bold,
     numbering / theorem-like-within = chapter,
     style / foreign-words = {italic},  % .......................... Set text "styles":
-    style / indx-starred = {xkcdalgaegreen,italic},  % ............ Affects \indx*
-    style / nomenclature-group = {LARGE,uppertosc},  % ............ uppertosc: uppercase -> smallcaps
+    style / indx-starred = {xkcdalgaegreen;italic},  % ............ Affects \indx*
+    style / nomenclature-group = {LARGE;uppertosc},  % ............ uppertosc: uppercase -> smallcaps
     glue / indent = 0em,  % ....................................... Set indent (fixed length)
     glue-between / paragraphs = 2ex plus 0.2ex minus 0.2ex,  % .... Space between paragraphs (rubber)
-    glue-above / subsection = 2ex plus 0.2 ex minus 0.1ex    % .... Another true glue
+    glue-above / subsection = 2ex plus 0.2 ex minus 0.1ex,    % .... Another true glue
     toc / depth = section  % ...................................... Max depth in TOC
 ]{desert}
 
@@ -54,6 +54,7 @@
 \SetInfo {
     subject = Physics,                     % some some mapped to XMP metadata
     title = Xenodynamic cloud computing,
+    keywords = {xenodynamics},
     author = Karen Johnson,                % a comma-separated list
     degree = Doctor of Philosophy,         % arbitary extra data
     university = University of Washington,
@@ -64,13 +65,13 @@
 	``\info{title}"\\
 	\Info{degree} \info{subject}[pre={in ``}, post={"}]\\
 	Keywords: \infolist{keywords}[sep=|, style-inline={red;bold}]\\
-	Authors: \infolist{author}[sep-{, }, sep-two={ and }, sep-last={ and }]
+	Authors: \infolist{author}[sep={, }, sep-two={ and }, sep-last={ and }]
 }
 
 % More likely:
-\RenewDocumentCommand \ShowTitle {} {
-	\includepdf[pages=1]{university-titlepage.pdf}
-}
+%\RenewDocumentCommand \ShowTitle {} {
+%	\includepdf[pages=1]{university-titlepage.pdf}
+%}
 
 \begin{document}
 \LoadFrontDocs{sections/front}
