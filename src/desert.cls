@@ -21,6 +21,7 @@
 \cs_generate_variant:Nn \tl_if_blank:nTF { VTF }
 \cs_generate_variant:Nn \tl_if_blank:nT { VT }
 \cs_generate_variant:Nn \tl_if_blank:nF { VF }
+\cs_generate_variant:Nn \seq_if_in:NnTF { NVTF }
 
 
 %========================================================================================
@@ -72,18 +73,19 @@
 \keys_define:nn {desert}
 {
 draft .bool_gset:N = \g_desert_draft_bool,
-draft .initial:n = false,
 
 language .tl_gset:N = \g_desert_language_str,
 language .initial:n = USenglish,
 
 geometry .tl_gset:N = \g_desert_geometry_tl,
-geometry .default:n = {},
 
 preset .choices:nn =
     { GenericLetter, GenericAFour, UCSF, UCSB, Stanford, CMU, Cambridge }
     { \tl_gset_eq:NN \g_desert_preset_str \l_keys_choice_tl },
 preset .initial:n = GenericAFour,
+
+feature / svg .code:n = { \seq_gput_right:Nn \g_desert_feature_seq {svg} },
+feature / svg .value_forbidden:n = true,
 
 feature / chemformula .code:n = { \seq_gput_right:Nn \g_desert_feature_seq {chemformula} },
 feature / chemformula .value_forbidden:n = true,
@@ -99,8 +101,6 @@ feature / cryptocode .value_forbidden:n = true,
 
 feature / imakeidx .code:n = { \seq_gput_right:Nn \g_desert_feature_seq {imakeidx} },
 feature / imakeidx .value_forbidden:n = true,
-feature / index .code:n = { \seq_gput_right:Nn \g_desert_feature_seq {imakeidx} },
-feature / index .value_forbidden:n = true,
 
 feature / knowledge .code:n = { \seq_gput_right:Nn \g_desert_feature_seq {knowledge} },
 feature / knowledge .value_forbidden:n = true,
@@ -121,10 +121,8 @@ feature / varioref .code:n = { \seq_gput_right:Nn \g_desert_feature_seq {variore
 feature / varioref .value_forbidden:n = true,
 
 bib / hide-language .bool_gset:N = \g_desert_bib_hide_language_bool,
-bib / hide-language .initial:n = false,
 
 bib / per-chapter .bool_gset:N = \g_desert_bib_per_chapter_bool,
-bib / per-chapter .initial:n = false,
 
 bib / style .tl_gset:N = \g_desert_bib_style_str,
 bib / style .initial:n = ieee,
@@ -142,10 +140,8 @@ color / url   .prop_gput:N = \g_desert_color_prop,
 color / url   .initial:n  = 0000A0,
 
 cref / abbreviate .bool_gset:N = \g_desert_cref_abbreviate_bool,
-cref / abbreviate .initial:n = false,
 
 cref / capitalize .bool_gset:N = \g_desert_cref_capitalize_bool,
-cref / capitalize .initial:n = false,
 
 font-size / main .tl_gset:N = \g_desert_font_size_tl,
 font-size / main .initial:n = 11pt,
@@ -170,18 +166,19 @@ layout / footer-right .tl_gset:N = \g_desert_layout_footer_right_tl,
 layout / footer-right .initial:n = \thepage,
 
 layout / hide-copyright-page-footer .bool_gset:N = \g_desert_hide_copyright_page_footer_bool,
-layout / hide-copyright-page-footer .initial:n = false,
 
 layout / hide-title-page-footer .bool_gset:N = \g_desert_hide_title_page_footer_bool,
-layout / hide-title-page-footer .initial:n = false,
+
+layout / footnotes-as-endnotes .bool_gset:N = \g_desert_force_endnotes_bool,
+
+layout / endnote-backrefs .bool_gset:N = \g_desert_endnote_backrefs_bool,
 
 layout / footnote-placement .choices:nn =
-    {default, endnotes, abovefloats, belowfloats, bottom, bottomfloats, bottomfootnotes}
-    { \tl_gset_eq:NN \g_desert_layout_footnote_placement_str \l_keys_choice_tl },
+    {default, abovefloats, belowfloats, bottom, bottomfloats, bottomfootnotes}
+    { \tl_gset_eq:NN \g_desert_footnote_placement_str \l_keys_choice_tl },
 layout / footnote-placement .initial:n = default,
 
 layout / hide-links-in-title .bool_gset:N = \g_desert_hide_links_in_title_bool,
-layout / hide-links-in-title .initial:n = false,
 
 linespace / main .tl_gset:N = \g_desert_linespace_main_fp,
 linespace / main .initial:n = 1.5,
@@ -291,7 +288,7 @@ style / table-head-label .prop_gput:N = \g_desert_style_prop,
 style / table-head-label .initial:n = {small,sffamily,bfseries},
 
 style / table-footer .prop_gput:N = \g_desert_style_prop,
-style / table-footer .initial:n = {small,sffamily,bfseries},
+style / table-footer .initial:n = {small,sffamily},
 
 style / chapter-label .prop_gput:N = \g_desert_style_prop,
 style / chapter-label .initial:n = {Huge,404040,smallcaps},
@@ -302,14 +299,11 @@ style / chapter-name .initial:n = {huge},
 style / front-chapter-title .prop_gput:N = \g_desert_style_prop,
 style / front-chapter-title .initial:n = {hugerr,404040,smallcaps},
 
-style / chemistry .prop_gput:N = \g_desert_style_prop,
-style / chemistry .initial:n = {sans,small},
-
-style / footnote-label .prop_gput:N = \g_desert_style_prop,
-style / footnote-label .initial:n = {mini,sans},
+style / chemical-diagram .prop_gput:N = \g_desert_style_prop,
+style / chemical-diagram .initial:n = {sans,small},
 
 style / footnote-body .prop_gput:N = \g_desert_style_prop,
-style / footnote-body .initial:n = {mini,sans},
+style / footnote-body .initial:n = {footnotesize,sffamily},
 
 style / foreign-words .prop_gput:N = \g_desert_style_prop,
 style / foreign-words .initial:n = {italic},
@@ -344,19 +338,16 @@ toc / depth .choices:nn =
 toc / depth .initial:n = section,
 
 toc / front-chapters .bool_gset:N = \g_desert_toc_front_chapters_bool,
-toc / front-chapters .initial:n = false,
 
 toc / bib .bool_gset:N = \g_desert_toc_bib_bool,
-toc / bib .initial:n = false,
 
 toc / index .bool_gset:N = \g_desert_toc_index_bool,
-toc / index .initial:n = false,
+
+toc / endnotes .bool_gset:N = \g_desert_toc_endnotes_bool,
 
 toc / figure-panels .bool_gset:N = \g_desert_toc_panels_bool,
-toc / figure-panels .initial:n = false,
 
 typo / allow-hyphens .bool_gset:N = \g_desert_typo_allow_hyphens_bool,
-typo / allow-hyphens .initial:n = false,
 
 typo / caption-label-sep .tl_gset:N = \g_desert_typo_caption_label_sep_tl,
 typo / caption-label-sep .initial:n = {:~},
@@ -365,10 +356,10 @@ typo / subref-format .tl_gset:N = \g_desert_typo_subref_format_tl,
 typo / subref-format .initial:n = {parens},
 
 typo / caption-table-note-sep .tl_gset:N = \g_desert_typo_table_note_sep_tl,
-typo / caption-table-note-sep .initial:n = {~},
+typo / caption-table-note-sep .initial:n = {\enspace},
 
 typo / caption-table-remark-sep .tl_gset:N = \g_desert_typo_table_remark_sep_tl,
-typo / caption-table-remark-sep .initial:n = {},
+typo / caption-table-remark-sep .initial:n = {\enspace},
 
 glue / indent .skip_gset:N = \g_desert_indent_dim,
 glue / indent .initial:n = 0pt,
@@ -410,9 +401,9 @@ glue-between / refs .skip_gset:N = \g_desert_between_refs_skip,
 glue-between / refs .initial:n = 0.5ex plus 0.05ex minus 0.0125ex,
 
 glue-above / footnote-list .skip_gset:N = \g_desert_above_footnotes_skip,
-glue-above / footnote-list .initial:n = 6ex plus 6ex,
-glue-below / footnote-list .skip_gset:N = \g_desert_above_footnotes_skip,
-glue-below / footnote-list .initial:n = 6ex plus 18ex,  % only when floats are below
+glue-above / footnote-list .initial:n = 4pc plus 4pc,
+glue-below / footnote-list .skip_gset:N = \g_desert_below_footnotes_skip,
+glue-below / footnote-list .initial:n = 4pc plus 12pc,  % only used when floats are below
 
 glue-above / caption .skip_gset:N = \g_desert_above_caption_skip,
 glue-above / caption .initial:n = 1ex plus 0.5ex minus 0.125ex,
@@ -626,7 +617,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     \tl_gset:Nn \g_desert_geometry_tl
         { letterpaper, margin=1in, footskip=0.25in }
     \str_gset:Nn \g_desert_numbering_front_str {roman}
-    \str_gset:Nn \g_desert_layout_footnote_placement_str {bottomfloats}
+    \str_gset:Nn \g_desert_footnote_placement_str {bottomfloats}
     \str_gset:Nn \g_desert_numbering_footnotes_str {arabic}
     \str_gset:Nn \g_desert_numbering_float_within_str {none}
     \str_gset:Nn \g_desert_numbering_equation_within_str {none}
@@ -685,20 +676,12 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 \PassOptionsToPackage{babel=true}{microtype}
 \desert_has_feat:nT {ulem}
     { \PassOptionsToPackage{markup}{txtstyles} }
-% biblatex doesn't like hyperref's backref= option
-    
-
-\str_if_eq:VnF \g_desert_layout_footnote_placement_str {default}  % for compatibility
-{
-    \str_if_eq:VnF \g_desert_layout_footnote_placement_str {endnotes}
-    { \PassOptionsToPackage{\g_desert_layout_footnote_placement_str}{footmisc} }
-}
+\str_if_eq:VnF \g_desert_footnote_placement_str {default}  % for compatibility
+    { \PassOptionsToPackage{\g_desert_footnote_placement_str}{footmisc} }
 
 
 % early and order-dependent:
 %\RequirePackage{xpatch}                     % needed to patch commands
-%\RequirePackage{pdfmanagement-testphase}
-\RequirePackage{hyperxmp}
 \RequirePackage{mathcommand}                 % prime, subscript, preserving commands
 
 % language:
@@ -718,6 +701,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 
 % xindy and hyperref
 \desert_load_feat:nn{xindy}{imakeidx}        % index; before: knowledge
+\RequirePackage{hyperxmp}
 \RequirePackage{hyperref}                    % AFTER xindy
 
 % font control and math
@@ -736,7 +720,6 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 \RequirePackage{nomencl}                     % nomenclature / list of symbols
 \RequirePackage{nomgroups}                   % nomenclature groups
 
-
 % layout & spacing
 \RequirePackage[explicit]{titlesec}          % to format headers; explicit: use #1
 \RequirePackage{titletoc}                    % to format TOC
@@ -746,13 +729,11 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 \RequirePackage{enumitem}                    % control spacing for lists
 \RequirePackage{footmisc}                    % footnote styling and counters
 \RequirePackage{enotez}                      % fixed endnotes
-%\RequirePackage[backref]{enotez}            % NEEDS: 2022
 
 % graphics
 \RequirePackage[hypcap]{caption}             % needed for formatting; use hypcap option
 \RequirePackage[hypcap]{subcaption}          % successor to subfig; use hypcap option
 \RequirePackage{graphicx}                    % for, well, everything
-%\RequirePackage{svg}                        % \includesvg; after graphicx
 
 % tables
 \RequirePackage{tabularray}                  % LaTeX3 tabular and table replacement
@@ -774,10 +755,11 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 % optional features
 \desert_load_feat:nn{newfloat}{minted}
 \desert_load_feat:nn{xparse}{tcolorbox}
-\desert_load_feat:nn{}{cryptocode}
-\desert_load_feat:nn{}{chemmacros}
-\desert_load_feat:nn{}{chemformula}
-\desert_load_feat:nn{}{chemfig}
+\desert_load_feat:n{cryptocode}
+\desert_load_feat:n{chemmacros}
+\desert_load_feat:n{chemformula}
+\desert_load_feat:n{chemfig}
+\desert_load_feat:n{svg}  % \includesvg
 
 
 % should always be last:
@@ -1140,7 +1122,9 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 %                       footnote numbering and format
 %========================================================================================
 
-\cs_generate_variant:Nn \seq_if_in:NnTF { NVTF }
+\str_if_eq:VnT \g_desert_numbering_footnote_within_str {page}
+    { \MakePerPage[2]{footnote} }  % otherwise we'll set in \Chapter
+
 
 \seq_const_from_clist:Nn \c__desert_numeric_foonotes_clist
     { arabic, alph, Alph, roman, Roman }
@@ -1150,58 +1134,74 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     { \declarecommand \multfootsep {\thinspace} }  % because some symbols are doubled
 
 
-\str_if_eq:VnT \g_desert_numbering_footnote_within_str {page}
-    { \MakePerPage[2]{footnote} } % otherwise we'll set in \Chapter
-
-
 \seq_const_from_clist:Nn \g__desert_footsymbols_seq
     {lamport,lamport*,bringhurst,chicago,wiley }  % i.e. not arabic,roman,Roman,alph,Alph
 
-\str_if_eq:VnF \g_desert_layout_footnote_placement_str {endnotes}
+\cs_new:Npn \desert__footnote_n:N #1
 {
-    \seq_if_in:NVTF \g__desert_footsymbols_seq \g_desert_numbering_footnotes_str
-    {  % if it's a symbol style, we change symbols, then use \fnsymbol
-        \setfnsymbol{\g_desert_numbering_footnotes_str}
-        {
-            \renewcommand \thefootnote
-                { \txtstyles_use:nn{footnote-label}{\fnsymbol{footnote}} }
-        }
-    }
-    {  % Otherwise just use the style (TODO: simplify)
-        \str_if_eq:VnT \g_desert_numbering_footnotes_str {arabic}
-        {
-            \renewcommand \thefootnote
-                { \txtstyles_use:nn{footnote-label}{\arabic{footnote}} }
-        }
-        \str_if_eq:VnT \g_desert_numbering_footnotes_str {Roman}
-        {
-            \renewcommand \thefootnote
-                { \txtstyles_use:nn{footnote-label}{\Roman{footnote}} }
-        }
-        \str_if_eq:VnT \g_desert_numbering_footnotes_str {roman}
-        {
-            \renewcommand \thefootnote
-                { \txtstyles_use:nn{footnote-label}{\roman{footnote}} }
-        }
-        \str_if_eq:VnT \g_desert_numbering_footnotes_str {Alph}
-        {
-            \renewcommand \thefootnote
-                { \txtstyles_use:nn{footnote-label}{\Alph{footnote}} }
-        }
-        \str_if_eq:VnT \g_desert_numbering_footnotes_str {alph}
-        {
-            \renewcommand \thefootnote
-                { \txtstyles_use:nn{footnote-label}{\alph{footnote}} }
-        }
-    }
+    \renewcommand \thefootnote {#1{footnote}}
+    \renewcommand \thempfootnote {#1{mpfootnote}}
 }
+
+\seq_if_in:NVTF \g__desert_footsymbols_seq \g_desert_numbering_footnotes_str
+{
+    % if it's a symbol style, we change symbols, then use \fnsymbol
+    \setfnsymbol{\g_desert_numbering_footnotes_str}
+    \desert__footnote_n:N \fnsymbol
+}
+{
+    \exp_args:Nc
+        \desert__footnote_n:N
+        \g_desert_numbering_footnotes_str
+}
+
+\setlength {\skip\footins} {\g_desert_above_footnotes_skip}
+
+\setlength \footnotesep {\g_desert_between_footnotes_skip}
 
 % apply the footnote body format
 \renewcommand*{\footnotelayout}
     { \txtstyles_run:n{footnote-body} }
 
+% TODO: 
+%
 
-% TODO: endnotes
+
+%========================================================================================
+%                 endnotes
+%========================================================================================
+
+\setenotez{reset=true}
+
+\bool_if:NT \g_desert_endnote_backrefs_bool  % needs 2022+ !
+    { \setenotez{backref=true} }
+
+\bool_if:NT \g_desert_toc_endnotes_bool
+    { \setenotez{totoc=section*} }
+
+% We'll use these in \StartMainMatter if forcing endnotes
+% written as commands for the user's convenience
+
+\NewDocumentCommand \FootnotesAsEndnotes {}
+{
+    \let \truefootnote \footnote
+    \let \truefootnotemark \footnotemark
+    \let \truefootnotetext \footnotetext
+    \let \footnote \endnote
+    \let \footnotemark \endnotemark
+    \let \footnotetext \endnotetext
+}
+
+\NewDocumentCommand \FootnotesAsFootnotes {}
+{
+    \cs_if_exist:NT \truefootnote
+    {
+        \let \footnote \truefootnote
+        \let \footnotemark \truefootnotemark
+        \let \endnotetext \truefootnotetext
+    }
+}
+
 
 
 %========================================================================================
@@ -1469,6 +1469,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     \Chapter(#1)[#2]{#3}
 }
 {
+    \printendnotes  % does nothing there are no endnotes
     \bool_if:NT \g_desert_bib_per_chapter_bool
         { \ShowSubBib \end{refsection} }
 }
@@ -2080,11 +2081,23 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     }
 }
 
-\DefTblrTemplate {lastfoot} {shortfoot}
+
+\DefTblrTemplate {lastfoot} {default}  % make default
 {
+    \txtstyles_set_baselinestretch:V \g_desert_linespace_caption_fp
     \UseTblrTemplate{remark}{shortfoot}
     \UseTblrTemplate{note}{shortfoot}
+    \par
 }
+
+\DefTblrTemplate {lastfoot} {shortfoot}
+{
+    \txtstyles_set_baselinestretch:V \g_desert_linespace_caption_fp
+    \UseTblrTemplate{remark}{shortfoot}
+    \UseTblrTemplate{note}{shortfoot}
+    \par
+}
+
 \DefTblrTemplate {lastfoot} {longfoot}
 {
     \UseTblrTemplate{remark}{default}
@@ -2395,6 +2408,8 @@ glue-above / toc-subsubsection .initial:n = 0pc,
         \pagenumbering{\g_desert_numbering_main_str}
         \setcounter{page}{1}
     }
+    \bool_if:NT \g_desert_force_endnotes_bool
+        { \FootnotesAsEndnotes }
 }
 
 \NewDocumentCommand \StartBackMatter {}
