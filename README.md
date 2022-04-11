@@ -126,10 +126,10 @@ Tables via tabularray and csvsimple-l3.
 \begin{longtblr}[
 entry   = ...,
     caption = ...,
-    label   = ...
+    label   = ...,
+    note{a}   = {A note for the footer.},
 ]{
     rowhead   = {1},
-    note{a}   = {A note for the footer.},
     row{even} = {bg=gray},
 }
 \hline
