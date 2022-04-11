@@ -217,8 +217,8 @@ numbering / back-matter .choices:nn =
     { \tl_gset_eq:NN \g_desert_numbering_back_str \l_keys_choice_tl },
 numbering / back-matter .initial:n = arabic,
 
-numbering / capitalize-panels .bool_gset:N = \g_desert_numbering_capitalize_panels_bool,
-numbering / capitalize-panels .initial:n = false,
+numbering / capitalize-panels .tl_gset:N = \g_desert_numbering_panels_bool,
+numbering / capitalize-panels .initial:n = alph,
 
 numbering / equation-brackets .choices:nn =
     { none,round,square,curly,none-bold,round-bold,square-bold,curly-bold }
@@ -361,17 +361,11 @@ typo / allow-hyphens .initial:n = false,
 typo / caption-label-sep .tl_gset:N = \g_desert_typo_caption_label_sep_tl,
 typo / caption-label-sep .initial:n = {:~},
 
-typo / subcaption-label-sep .tl_gset:N = \g_desert_typo_subcaption_label_sep_tl,
-typo / subcaption-label-sep .initial:n = {:~},
-
-typo / subref-prefix .tl_gset:N = \g_desert_typo_subref_prefix_tl,
-typo / subref-prefix .initial:n = {},
-
-typo / subref-suffix .tl_gset:N = \g_desert_typo_subref_suffix_tl,
-typo / subref-suffix .initial:n = {},
+typo / subref-format .tl_gset:N = \g_desert_typo_subref_format_tl,
+typo / subref-format .initial:n = {parens},
 
 typo / caption-table-note-sep .tl_gset:N = \g_desert_typo_table_note_sep_tl,
-typo / caption-table-note-sep .initial:n = {\space},
+typo / caption-table-note-sep .initial:n = {~},
 
 typo / caption-table-remark-sep .tl_gset:N = \g_desert_typo_table_remark_sep_tl,
 typo / caption-table-remark-sep .initial:n = {},
@@ -422,6 +416,9 @@ glue-below / footnote-list .initial:n = 6ex plus 18ex,  % only when floats are b
 
 glue-above / caption .skip_gset:N = \g_desert_above_caption_skip,
 glue-above / caption .initial:n = 1ex plus 0.5ex minus 0.125ex,
+
+glue-above / subcaption .skip_gset:N = \g_desert_above_subcaption_skip,
+glue-above / subcaption .initial:n = 0.6ex plus 0.1ex minus 0.025ex,
 
 glue-above / table-title .skip_gset:N = \g_desert_above_table_title_skip,
 glue-above / table-title .initial:n = 2ex plus 4ex minus 0.25ex,
@@ -1510,6 +1507,96 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 
 
 %========================================================================================
+%                 theorem-like
+%========================================================================================
+
+% define the styles suggested in the amsthm documentation
+% • plain : italic text, extra space above and below;
+% • definition : upright text, extra space above and below;
+% • algorithm (NEW): same as definition;
+% • remark : upright text, no extra space above or below.
+
+\declaretheoremstyle
+    [
+        spaceabove=\g_desert_above_theorem_skip,
+        spacebelow=\g_desert_below_theorem_skip,
+        postheadspace=\g_desert_glue_after_theorem_title_skip,
+        headfont={\bfseries},
+        bodyfont={\itshape},
+    ]
+    { plain }
+
+\declaretheoremstyle
+    [
+        spaceabove=\g_desert_above_algorithm_skip,
+        spacebelow=\g_desert_below_algorithm_skip,
+        postheadspace=\g_desert_glue_after_algorithm_title_skip,
+        headfont={\bfseries},
+        bodyfont={\upshape},
+    ]
+    { algorithm }
+
+\declaretheoremstyle
+    [
+        spaceabove=\g_desert_above_definition_skip,
+        spacebelow=\g_desert_below_definition_skip,
+        postheadspace=\g_desert_glue_after_definition_title_skip,
+        headfont={\bfseries},
+        bodyfont={\upshape},
+    ]
+    { definition }
+
+\declaretheoremstyle
+    [
+        spaceabove=\g_desert_above_remark_skip,
+        spacebelow=\g_desert_below_remark_skip,
+        postheadspace=\g_desert_glue_after_remark_title_skip,
+        headfont={\bfseries},
+        bodyfont={\upshape},
+    ]
+    { remark }
+
+\clist_if_exist:NF \c_desert_theorem_like_clist
+{
+    \clist_const:Nn \c_desert_theorem_like_clist
+        { theorem,lemma,corollary,proposition,conjecture,criterion,assertion }
+}
+\clist_if_exist:NF \c_desert_definition_like_clist
+{
+    \clist_const:Nn \c_desert_definition_like_clist
+        {
+            definition,condition,
+            example,problem,exercise,question,
+            axiom,property,assumption,hypothesis
+        }
+}
+\clist_if_exist:NF \c_desert_algorithm_like_clist
+{
+    \clist_const:Nn \c_desert_algorithm_like_clist
+        { algorithm, protocol,procedure,game,reduction }
+}
+\clist_if_exist:NF \c_desert_remark_like_clist
+{
+    \clist_const:Nn \c_desert_remark_like_clist
+        { remark,note,notation,claim,summary,acknowledgment,case,conclusion }
+}
+
+\str_if_eq:VnTF \g_desert_numbering_theorem_within_str {none}
+    { \declaretheorem [style=plain] {\c_desert_theorem_like_clist} }
+    {
+        \declaretheorem
+            [ style=plain, parent=\g_desert_numbering_theorem_within_str ]
+            { \c_desert_theorem_like_clist }
+    }
+
+% TODO: , refname=theorem, Refname=Theorem
+
+\declaretheorem [style=definition,sibling=theorem] {\c_desert_algorithm_like_clist}
+\declaretheorem [style=definition,sibling=theorem] {\c_desert_definition_like_clist}
+\declaretheorem [style=remark,sibling=theorem] {\c_desert_remark_like_clist}
+
+
+%========================================================================================
 %                     lists of things
 %========================================================================================
 
@@ -1662,7 +1749,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     \bool_if:nTF {#1}
         { \StyleTxt{indx-starred}{#2} }
         { #2 }
-    \desert_has_feat:nT {index}
+    \desert_has_feat:nT {imakeidx}
         { \tl_if_blank:nTF{#3} { \index{#2} } { \index{#3} } }
 }
 \NewDocumentCommand \Indx { s m O{} }
@@ -1674,15 +1761,59 @@ glue-above / toc-subsubsection .initial:n = 0pc,
                 {\txtsentencecase*{#2}}
         }
         { \txtsentencecase*{#2} }
-    \desert_has_feat:nT {index}
+    \desert_has_feat:nT {imakeidx}
     {
         \tl_if_blank:nTF {#3} { \index{#2} } { \index{#3} }
     }
 }
 
 
+
 %========================================================================================
-%                      captions (general)
+%                      caption and subcaption styling
+%========================================================================================
+
+
+\DeclareCaptionSubType[\g_desert_numbering_panels_bool]{figure}
+
+\DeclareCaptionLabelSeparator {desert-sep} {\g_desert_typo_caption_label_sep_tl}
+
+\txtstyles_declare_cap_style:nnn {desert-caption} {caption-body} {caption-label}
+\txtstyles_declare_cap_style:nnn {desert-subcap} {subcaption-body} {subcaption-label}
+\txtstyles_declare_cap_style:nnn {desert-table} {table-head-body} {table-head-label}  % legacy tables
+
+% For all captions:
+\captionsetup
+{
+    singlelinecheck=false,  % do what the user tells you
+    format=desert-caption,
+    labelsep=desert-sep,
+}
+
+\captionsetup [figure]
+{
+    skip=\g_desert_above_caption_skip,
+    subrefformat=\g_desert_typo_subref_format_tl,  % e.g. "parens"
+}
+
+\captionsetup [subfigure]
+{
+    format=desert-subcap,
+    skip=\g_desert_above_subcaption_skip
+}
+
+% Captions that go at the TOP of tables (LEGACY table environment)
+\captionsetup [table]
+{
+    skip=\g_desert_below_table_title_skip,
+    format=desert-table,
+    position=above,
+}
+
+
+
+%========================================================================================
+%                      captioning commands
 %========================================================================================
 
 
@@ -1695,11 +1826,6 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     caption .tl_set:N = \l__caption_tl,
     caption .initial:n = {}
 }
-
-% TODO: 2022+ added these
-\cs_generate_variant:Nn \tl_if_blank:nTF {VTF}
-\cs_generate_variant:Nn \tl_if_blank:nT {VT}
-\cs_generate_variant:Nn \tl_if_blank:nF {VF}
 
 \cs_new:Nn \desert__capkeyval:
 {
@@ -1727,144 +1853,6 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     \desert__capkeyval:
     \group_end:
 }
-
-
-% TODO: how do we use this?
-\DeclareCaptionLabelSeparator {desert} {\g_desert_typo_caption_label_sep}
-
-% Captions for everything but tables
-% singlelinecheck: do what the user tells you
-\txtstyles_declare_cap_style:nnn {desert} {caption-body} {caption-label}
-\txtstyles_declare_cap_style:nnn {desert-subcap} {subcaption-body} {subcaption-label}
-
-\DeclareCaptionLabelFormat {desert-subref}
-{
-    \txtstyles_use:nn
-        {subref}
-        { \g_desert_typo_subref_prefix_tl #2 \g_desert_typo_subref_suffix_tl }
-}
-
-\captionsetup
-{
-    singlelinecheck=false,
-    skip=\g_desert_above_caption_skip,
-    format=desert,
-    labelsep=desert,
-    subrefformat=desert-subref,
-}
-
-\DeclareCaptionSubType{figure}
-
-\bool_if:NTF \g_desert_numbering_capitalize_panels_bool
-    { \DeclareCaptionSubType[Alph]{figure} }
-    { \DeclareCaptionSubType[alph]{figure} }
-
-\captionsetup [subfigure]
-{
-    singlelinecheck=true,
-    format=desert-subcap,
-}
-
-
-% Captions that go at the TOP of tables (LEGACY table environment)
-\txtstyles_declare_cap_style:nnn {desert-top} {table-head-body} {table-head-label}
-\captionsetup [table]
-{
-    skip=\g_desert_below_table_title_skip,
-    format=desert-top,
-    position=above,
-}
-
-
-
-%========================================================================================
-%                 theorem-like
-%========================================================================================
-
-% define the styles suggested in the amsthm documentation
-% • plain : italic text, extra space above and below;
-% • definition : upright text, extra space above and below;
-% • algorithm (NEW): same as definition;
-% • remark : upright text, no extra space above or below.
-
-\declaretheoremstyle
-    [
-        spaceabove=\g_desert_above_theorem_skip,
-        spacebelow=\g_desert_below_theorem_skip,
-        postheadspace=\g_desert_glue_after_theorem_title_skip,
-        headfont={\bfseries},
-        bodyfont={\itshape},
-    ]
-    { plain }
-
-\declaretheoremstyle
-    [
-        spaceabove=\g_desert_above_algorithm_skip,
-        spacebelow=\g_desert_below_algorithm_skip,
-        postheadspace=\g_desert_glue_after_algorithm_title_skip,
-        headfont={\bfseries},
-        bodyfont={\upshape},
-    ]
-    { algorithm }
-
-\declaretheoremstyle
-    [
-        spaceabove=\g_desert_above_definition_skip,
-        spacebelow=\g_desert_below_definition_skip,
-        postheadspace=\g_desert_glue_after_definition_title_skip,
-        headfont={\bfseries},
-        bodyfont={\upshape},
-    ]
-    { definition }
-
-\declaretheoremstyle
-    [
-        spaceabove=\g_desert_above_remark_skip,
-        spacebelow=\g_desert_below_remark_skip,
-        postheadspace=\g_desert_glue_after_remark_title_skip,
-        headfont={\bfseries},
-        bodyfont={\upshape},
-    ]
-    { remark }
-
-\clist_if_exist:NF \c_desert_theorem_like_clist
-{
-    \clist_const:Nn \c_desert_theorem_like_clist
-        { theorem,lemma,corollary,proposition,conjecture,criterion,assertion }
-}
-\clist_if_exist:NF \c_desert_definition_like_clist
-{
-    \clist_const:Nn \c_desert_definition_like_clist
-        {
-            definition,condition,
-            example,problem,exercise,question,
-            axiom,property,assumption,hypothesis
-        }
-}
-\clist_if_exist:NF \c_desert_algorithm_like_clist
-{
-    \clist_const:Nn \c_desert_algorithm_like_clist
-        { algorithm, protocol,procedure,game,reduction }
-}
-\clist_if_exist:NF \c_desert_remark_like_clist
-{
-    \clist_const:Nn \c_desert_remark_like_clist
-        { remark,note,notation,claim,summary,acknowledgment,case,conclusion }
-}
-
-\str_if_eq:VnTF \g_desert_numbering_theorem_within_str {none}
-    { \declaretheorem [style=plain] {\c_desert_theorem_like_clist} }
-    {
-        \declaretheorem
-            [ style=plain, parent=\g_desert_numbering_theorem_within_str ]
-            { \c_desert_theorem_like_clist }
-    }
-
-% TODO: , refname=theorem, Refname=Theorem
-
-\declaretheorem [style=definition,sibling=theorem] {\c_desert_algorithm_like_clist}
-\declaretheorem [style=definition,sibling=theorem] {\c_desert_definition_like_clist}
-\declaretheorem [style=remark,sibling=theorem] {\c_desert_remark_like_clist}
 
 
 %========================================================================================
@@ -2014,7 +2002,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 
 \NewDocumentCommand \describepanel { m m }
 {
-    \subref{#1}\g_desert_typo_caption_label_sep_tl #2
+    \subref{#1}\g_desert_typo_subcaption_label_sep_tl #2
 }
 \NewDocumentCommand \describepanels { m m }
 {
@@ -2022,7 +2010,6 @@ glue-above / toc-subsubsection .initial:n = 0pc,
         {subref}
         {
             \g_desert_typo_subref_prefix_tl
-            \g_desert_typo_caption_label_sep_tl
             #2
             \g_desert_typo_subref_suffix_tl
         }
@@ -2126,7 +2113,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 % { #3 }  Y  INNER   key-value args to tblr inner{} (e.g. colspec=)
 % < #4 >  Y  FILE    Path to file (e.g. cows.csv)
 %
-\ProvideDocumentCommand \loadtable { O{} m m r<> }
+\ProvideDocumentCommand \LoadTable { O{} m m r<> }
 {
     \SetTblrOuter{#2}
     \csvreader
@@ -2224,10 +2211,14 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 %  language   Passed to \begin{minted}{}; default=text
 %  <other>    Passed to \begin{minted}[]
 %
-\ProvideDocumentEnvironment {sourcecode} { O{} m }
+\ProvideDocumentEnvironment {SourceCode} { O{} m }
 { \VerbatimEnvironment
     \captionsetup  % TODO: outside
-        { format=desert-top, justification=raggedright, skip=\g_desert_below_table_title_skip }
+    {
+        format=desert-table,
+        justification=raggedright,
+        skip=\g_desert_below_table_title_skip
+    }
     %\vspace{-\g_desert_between_paragraphs_skip}
     \begin{listing}
     \keys_set:nn {desert / sourcecode} {#2}
@@ -2256,7 +2247,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 % { #2 }  Y  main    key-value args to \capkeyval / \begin{sourcecode}{}
 % < #4 >  Y  FILE    Path to file (e.g. cows.java)
 %
-\ProvideDocumentCommand \loadsourcecode { O{} m r<> }
+\ProvideDocumentCommand \LoadSourceCode { O{} m r<> }
 {
     \begin{listing}
     \keys_set:nn {desert / sourcecode} {#2}
@@ -2320,7 +2311,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 % ( #2 )  N  LABEL   passed to \label{}
 % { #3 }  Y  STRUCT  Passed to \chemfig{}
 %
-\NewDocumentCommand \chemstructure { O{} D(){} m }
+\NewDocumentCommand \ChemicalStructure { O{} D(){} m }
 {
     \begin{chemistry}(#2)
     \tl_if_blank:nF{#1}{\chemname{#1}}
