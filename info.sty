@@ -23,18 +23,31 @@
 }
 \ProcessKeysOptions{info}
 
-\msg_new:nnn{info}{infomissing}{No~info~key~'#1'~is~defined.}
+\msg_new:nnn{info}{infomissing}
+    {No~info~key~'#1'~is~defined.}
 \cs_new:Npn \info__missing_err:n #1
     { \msg_error:nnn{info}{infomissing}{#1} }
 
-\msg_new:nnn{info}{infonotdef}{Info~key~'#1'~is~not~defined.}
+\msg_new:nnn{info}{infonotdef}
+    {Info~key~'#1'~is~not~defined.}
 \cs_new:Npn \info__not_def_err:n #1
     { \msg_error:nnn{info}{infonotdef}{#1} }
 
-\msg_new:nnn{info}{infoisdef}{Info~key~'#1'~is~already~defined~(to~'#2').}
+\msg_new:nnn{info}{infoisdef}
+    {Info~key~'#1'~is~already~defined~(to~'#2').}
 \cs_new:Npn \info__is_def_err:nn #1#2
     { \msg_error:nnnn{info}{infoisdef}{#1}{#2} }
 \cs_generate_variant:Nn \info__is_def_err:nv { nv }
+
+\msg_new:nnn{info}{unknownxmpkey}
+    {Added~'#1=#2'~to~PDF~info~dictionary~('pdf#1'~is~not~a~known~PDF~XMP~key).}
+\cs_new:Npn \info__unknownxmpkey_info:nn #1#2
+    { \msg_info:nnnn{info}{unknownxmpkey}{#1}{#2} }
+
+\msg_new:nnn{info}{knownxmpkey}
+    {Set~XMP~field~'#1=#2'~from~info.}
+\cs_new:Npn \info__knownxmpkey_info:nn #1#2
+    { \msg_info:nnnn{info}{knownxmpkey}{#1}{#2} }
 
 
 
@@ -77,10 +90,120 @@
 }
 \cs_generate_variant:Nn \info_item:n { V, v, x, e }
 
+
+\cs_new:Npn \info_item_default:nn #1#2
+{
+    \prop_get:NnNTF \g_info_prop {#1} \l_tmpa_tl
+    { \l_tmpa_tl }
+    { #2 }
+}
+\cs_generate_variant:Nn \info_item_default:nn { Vn, vn, xn, en }
+
+
 \NewExpandableDocumentCommand \getinfo {m}
 {
     \info_item:n {#1}
 }
+
+
+%===================================================================
+%                    hyperxmp data
+%===================================================================
+
+
+% hyperxmp notes:
+%
+% Date: yyyy-mm-ddThh:mm:ss+tt:tt
+% DCMI Rendition ("pdfrendition") [default: default]
+%    default, draft, lowres, proof, screen, and thumbnail
+% DCMI Type Vocabulary (for "pdftype") [default: Text]
+%    Collection, Dataset, Event, Image,
+%    InteractiveResource, MovingImage, PhysicalObject,
+%    Service, Software, Sound, StillImage, and Text
+% PRISM aggregation types (for "pubtype"):
+%    book, journal, magazine, manual, report, or whitepaper
+%    ...  more
+% pubstatus:
+%    - AO Author’s Original
+%    - SMUR Submitted Manuscript Under Review
+%    - AM Accepted Manuscript
+%    - P Proof
+%    - VoR Version of Record
+%    - CVoR Corrected Version of Record
+%    - EVoR Enhanced Version of Record
+
+\seq_const_from_clist:Nn \c_info_hyperxmp_seq
+{
+    subject, title, subtitle, keywords,
+    type,      % recommended vocabulary above
+    author, authortitle,
+    captionwriter,  % who wrote the metadata
+    lang,      % e.g. en-US
+    rendition, % controlled vocabulary
+    copyright, licenseurl,
+    publication, publisher,
+    pubstatus, % e.g. AO  (controlled vocab)
+    pubtype,   % e.g. book (controlled vocab)
+    baseurl,
+    url,
+    bookedition,
+    volumenum, issuenum,
+    doi, eissn, isbn,
+    date, creationdate, moddate,  % normally just date is fine
+    metadate, metalang,  % metadata language and creation date
+    contactaddress, contactcity, contactcountry, contactcountry, contactemail,
+    contactphone, contactpostcode, contactregion, contacturl,
+    % and these you probably don't normally want to set:
+    producer,  % generating software
+    documentid, instanceid, versionid,  % PDF concepts; normally leave
+    identifier,  % by default uses the FIRST non-empty ID value (e.g. DOI)
+    pages, pagerange,  % If your doc starts somewhere else
+    aconformance, apart, uapart, xstandard,  % Conformance to PDF standards
+    trapped, % color trapping True/False/Unknown
+    bytes,   % download time estimation [default: last compile size]
+    source,  % [default: .tex source name]
+}
+
+\cs_new:Npn \info_get_hyperxmp_data:N #1
+{
+    \prop_map_inline:Nn \g_info_prop
+    {
+        \seq_if_in:NnT \c_info_hyperxmp_seq {##1}
+            { \prop_put:Nnn #1 {pdf##1} {##2} }
+    }
+}
+
+\cs_new:Npn \info_get_non_hyperxmp_data:N #1
+{
+    \prop_map_inline:Nn \g_info_prop
+    {
+        \seq_if_in:NnF \c_info_hyperxmp_seq {##1}
+            { \prop_put:Nnn #1 {##1} {##2} }
+    }
+}
+
+\cs_new:Npn \info_set_hyperxmp_data: #1
+{
+    \info_get_hyperxmp_data:N \l_tmpa_prop
+    % TODO: broken!! Ignored.
+    %\prop_map_function:NN \l_tmpa_prop \info__knownxmpkey_info:nn
+    %\exp_args:Ne \hypersetup { \prop_to_keyval:N {\l_tmpa_prop} }
+}
+
+\cs_new:Npn \info_set_non_hyperxmp_data: #1
+{
+    \info_get_non_hyperxmp_data:N \l_tmpa_prop
+    % TODO: broken!! Ignored.
+    %\prop_map_function:NN \l_tmpa_prop \info__unknownxmpkey_info:nn
+    %\exp_args:Ne \hypersetup { \prop_to_keyval:N {\l_tmpa_prop} }
+}
+
+\NewDocumentCommand \AddPdfHyperxmpData { }
+    { \info_set_hyperxmp_data: }
+
+
+\NewDocumentCommand \AddPdfDictData { }
+    { \info_set_non_hyperxmp_data: }
 
 
 %===================================================================
@@ -302,17 +425,23 @@
 \NewDocumentCommand \GetSubject { O{} }
     { \Info{subject}[#1] }
 
-\NewDocumentCommand \getdate { O{} }
-    { \info{date}[#1] }
+\NewDocumentCommand \getplaindate { O{} }
+    { \info{plaindate}[#1] }
 
-\NewDocumentCommand \GetDate { O{} }
-    { \Info{date}[#1] }
+\NewDocumentCommand \GetPlainDate { O{} }
+    { \Info{plaindate}[#1] }
+
+\NewDocumentCommand \getauthor { O{} }
+    { \info{author}[#1] }
+
+\NewDocumentCommand \GetAuthor { O{} }
+    { \Info{author}[#1] }
 
 \NewDocumentCommand \getauthors { O{} }
-    { \infolist{authors}[#1] }
+    { \infolist{author}[#1] }
 
 \NewDocumentCommand \GetAuthors { O{} }
-    { \InfoList{authors}[#1] }
+    { \InfoList{author}[#1] }
 
 \NewDocumentCommand \getkeywords { O{} }
     { \infolist{keywords}[#1] }

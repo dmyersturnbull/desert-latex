@@ -18,6 +18,10 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesExplClass {desert} {2022-04-09} {0.1} {Desert~dissertation~template}
 
+\cs_generate_variant:Nn \tl_if_blank:nTF { VTF }
+\cs_generate_variant:Nn \tl_if_blank:nT { VT }
+\cs_generate_variant:Nn \tl_if_blank:nF { VF }
+
 
 %========================================================================================
 %                    containers to store package options
@@ -117,7 +121,7 @@ feature / varioref .code:n = { \seq_gput_right:Nn \g_desert_feature_seq {variore
 feature / varioref .value_forbidden:n = true,
 
 bib / hide-language .bool_gset:N = \g_desert_bib_hide_language_bool,
-bib / hide-language.initial:n = false,
+bib / hide-language .initial:n = false,
 
 bib / per-chapter .bool_gset:N = \g_desert_bib_per_chapter_bool,
 bib / per-chapter .initial:n = false,
@@ -125,16 +129,16 @@ bib / per-chapter .initial:n = false,
 bib / style .tl_gset:N = \g_desert_bib_style_str,
 bib / style .initial:n = ieee,
 
-color / cite  .prop_put:N = \g_desert_color_prop,
+color / cite  .prop_gput:N = \g_desert_color_prop,
 color / cite  .initial:n  = 000060,
 
-color / file  .prop_put:N = \g_desert_color_prop,
+color / file  .prop_gput:N = \g_desert_color_prop,
 color / file  .initial:n  = red,
 
-color / ref   .prop_put:N = \g_desert_color_prop,
+color / ref   .prop_gput:N = \g_desert_color_prop,
 color / ref   .initial:n  = 000060,
 
-color / url   .prop_put:N = \g_desert_color_prop,
+color / url   .prop_gput:N = \g_desert_color_prop,
 color / url   .initial:n  = 0000A0,
 
 cref / abbreviate .bool_gset:N = \g_desert_cref_abbreviate_bool,
@@ -256,73 +260,82 @@ numbering / theorem-like-within .choices:nn =
     { \tl_gset_eq:NN \g_desert_numbering_theorem_within_str \l_keys_choice_tl },
 numbering / theorem-like-within .initial:n = chapter,
 
-style / abstract-by .prop_put:N = \g_desert_style_prop,
+style / abstract-by .prop_gput:N = \g_desert_style_prop,
 style / abstract-by .initial:n = {largerr},
 
-style / abstract-authors .prop_put:N = \g_desert_style_prop,
+style / abstract-authors .prop_gput:N = \g_desert_style_prop,
 style / abstract-authors .initial:n = {largerr},
 
-style / abstract-title .prop_put:N = \g_desert_style_prop,
+style / abstract-title .prop_gput:N = \g_desert_style_prop,
 style / abstract-title .initial:n = {Large,bold},
 
-style / caption-body .prop_put:N = \g_desert_style_prop,
+style / caption-body .prop_gput:N = \g_desert_style_prop,
 style / caption-body .initial:n = {small,sans},
 
-style / caption-label .prop_put:N = \g_desert_style_prop,
+style / caption-label .prop_gput:N = \g_desert_style_prop,
 style / caption-label .initial:n = {small,sans,bold},
 
-style / table-head-body .prop_put:N = \g_desert_style_prop,
+style / subcaption-body .prop_gput:N = \g_desert_style_prop,
+style / subcaption-body .initial:n = {small,sans},
+
+style / subcaption-label .prop_gput:N = \g_desert_style_prop,
+style / subcaption-label .initial:n = {small,sans,bold},
+
+style / subref .prop_gput:N = \g_desert_style_prop,
+style / subref .initial:n = {bold},
+
+style / table-head-body .prop_gput:N = \g_desert_style_prop,
 style / table-head-body .initial:n = {small,sffamily,bfseries},
 
-style / table-head-label .prop_put:N = \g_desert_style_prop,
+style / table-head-label .prop_gput:N = \g_desert_style_prop,
 style / table-head-label .initial:n = {small,sffamily,bfseries},
 
-style / table-footer .prop_put:N = \g_desert_style_prop,
+style / table-footer .prop_gput:N = \g_desert_style_prop,
 style / table-footer .initial:n = {small,sffamily,bfseries},
 
-style / chapter-label .prop_put:N = \g_desert_style_prop,
+style / chapter-label .prop_gput:N = \g_desert_style_prop,
 style / chapter-label .initial:n = {Huge,404040,smallcaps},
 
-style / chapter-name .prop_put:N = \g_desert_style_prop,
+style / chapter-name .prop_gput:N = \g_desert_style_prop,
 style / chapter-name .initial:n = {huge},
 
-style / front-chapter-title .prop_put:N = \g_desert_style_prop,
+style / front-chapter-title .prop_gput:N = \g_desert_style_prop,
 style / front-chapter-title .initial:n = {hugerr,404040,smallcaps},
 
-style / chemistry .prop_put:N = \g_desert_style_prop,
+style / chemistry .prop_gput:N = \g_desert_style_prop,
 style / chemistry .initial:n = {sans,small},
 
-style / footnote-label .prop_put:N = \g_desert_style_prop,
+style / footnote-label .prop_gput:N = \g_desert_style_prop,
 style / footnote-label .initial:n = {mini,sans},
 
-style / footnote-body .prop_put:N = \g_desert_style_prop,
+style / footnote-body .prop_gput:N = \g_desert_style_prop,
 style / footnote-body .initial:n = {mini,sans},
 
-style / foreign-words .prop_put:N = \g_desert_style_prop,
+style / foreign-words .prop_gput:N = \g_desert_style_prop,
 style / foreign-words .initial:n = {italic},
 
-style / indx-starred .prop_put:N = \g_desert_style_prop,
+style / indx-starred .prop_gput:N = \g_desert_style_prop,
 style / indx-starred .initial:n = {italic},
 
-style / nomenclature-group .prop_put:N = \g_desert_style_prop,
+style / nomenclature-group .prop_gput:N = \g_desert_style_prop,
 style / nomenclature-group .initial:n = {bold,large},
 
-style / section-title .prop_put:N = \g_desert_style_prop,
+style / section-title .prop_gput:N = \g_desert_style_prop,
 style / section-title .initial:n = {LARGE,bold},
 
-style / source-code .prop_put:N = \g_desert_style_prop,
+style / source-code .prop_gput:N = \g_desert_style_prop,
 style / source-code .initial:n = {small},
 
-style / subsection-title .prop_put:N = \g_desert_style_prop,
+style / subsection-title .prop_gput:N = \g_desert_style_prop,
 style / subsection-title .initial:n = {Large,bold},
 
-style / subsubsection-title .prop_put:N = \g_desert_style_prop,
+style / subsubsection-title .prop_gput:N = \g_desert_style_prop,
 style / subsubsection-title .initial:n = {large,bold},
 
-style / paragraph-title .prop_put:N = \g_desert_style_prop,
+style / paragraph-title .prop_gput:N = \g_desert_style_prop,
 style / paragraph-title .initial:n = {bold},
 
-style / chapter-toc-label .prop_put:N = \g_desert_style_prop,
+style / chapter-toc-label .prop_gput:N = \g_desert_style_prop,
 style / chapter-toc-label .initial:n = {large,bold},
 
 toc / depth .choices:nn =
@@ -347,6 +360,15 @@ typo / allow-hyphens .initial:n = false,
 
 typo / caption-label-sep .tl_gset:N = \g_desert_typo_caption_label_sep_tl,
 typo / caption-label-sep .initial:n = {:~},
+
+typo / subcaption-label-sep .tl_gset:N = \g_desert_typo_subcaption_label_sep_tl,
+typo / subcaption-label-sep .initial:n = {:~},
+
+typo / subref-prefix .tl_gset:N = \g_desert_typo_subref_prefix_tl,
+typo / subref-prefix .initial:n = {},
+
+typo / subref-suffix .tl_gset:N = \g_desert_typo_subref_suffix_tl,
+typo / subref-suffix .initial:n = {},
 
 typo / caption-table-note-sep .tl_gset:N = \g_desert_typo_table_note_sep_tl,
 typo / caption-table-note-sep .initial:n = {\space},
@@ -666,6 +688,8 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 \PassOptionsToPackage{babel=true}{microtype}
 \desert_has_feat:nT {ulem}
     { \PassOptionsToPackage{markup}{txtstyles} }
+% biblatex doesn't like hyperref's backref= option
+    
 
 \str_if_eq:VnF \g_desert_layout_footnote_placement_str {default}  % for compatibility
 {
@@ -677,7 +701,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 % early and order-dependent:
 %\RequirePackage{xpatch}                     % needed to patch commands
 %\RequirePackage{pdfmanagement-testphase}
-%\RequirePackage{hyperxmp}
+\RequirePackage{hyperxmp}
 \RequirePackage{mathcommand}                 % prime, subscript, preserving commands
 
 % language:
@@ -709,7 +733,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 \RequirePackage{mathtools}                   % better environments; loads amsmath
 
 % acro, index, nomenclature, etc.
-\RequirePackage[backend=biber]{biblatex}     % BibLaTeX!
+\RequirePackage[backend=biber]{biblatex}     % BibLaTeX! after: hyperref
 \RequirePackage{accsupp}                     % before: acro
 \RequirePackage{acro}                        % for all abbreviations
 \RequirePackage{nomencl}                     % nomenclature / list of symbols
@@ -1414,23 +1438,28 @@ glue-above / toc-subsubsection .initial:n = 0pc,
         { \thispagestyle{empty} }
 }
 
+\ProvideDocumentCommand \TitleContents {}
+{
+    \GetTitle[style-inline={largerr,bold}]\\[\bigskipamount]
+    by\\[\bigskipamount]
+    \GetAuthors[style-inline={largerr}]\\
+    \vspace{1cm}
+    \large
+    Submitted~on~\getplaindate\ in~partial~fulfillment~of\\
+    the~requirements~for~the~degree~of
+    \\[\bigskipamount]
+    \Info{degree}~in~\getsubject\\
+    \vspace{1cm}
+    \StyleParInline{mono,202020}{Replace~this~temporary~title~page.}
+}
+
 % EXAMPLE title page
 \ProvideDocumentCommand \ShowTitle {o}
 {
     \begin{FrontTitle}
     \begin{specialbox}
     \rmfamily\largerr
-    \GetTitle[style-inline={largerr,bold}]\\[\bigskipamount]
-    by\\[\bigskipamount]
-    \GetAuthors[style-inline={largerr}]\\
-    \vspace{1cm}
-    \large
-    Submitted~on~\getdate\ in~partial~fulfillment~of\\
-    the~requirements~for~the~degree~of
-    \\[\bigskipamount]
-    \Info{degree}~in~\getsubject\\
-    \vspace{1cm}
-    \StyleParInline{mono,202020}{Replace~this~temporary~title~page.}
+    \TitleContents
     \end{specialbox}
     \end{FrontTitle}
 }
@@ -1631,22 +1660,20 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 \NewDocumentCommand \indx { s m O{} }
 {
     \bool_if:nTF {#1}
-        { \txtstyles_use:n{indx-starred}{#2} }
+        { \StyleTxt{indx-starred}{#2} }
         { #2 }
     \desert_has_feat:nT {index}
-    {
-        \tl_if_blank:nTF{#3} { \index{#2} } { \index{#3} }
-    }
+        { \tl_if_blank:nTF{#3} { \index{#2} } { \index{#3} } }
 }
 \NewDocumentCommand \Indx { s m O{} }
 {
     \bool_if:nTF {#1}
-    {
-        \txtstyles_use:n
-            {indx-starred}
-            {\txtsentencecase*{#2}}
-    }
-    { \txtsentencecase*{#2} }
+        {
+            \StyleTxt
+                {indx-starred}
+                {\txtsentencecase*{#2}}
+        }
+        { \txtsentencecase*{#2} }
     \desert_has_feat:nT {index}
     {
         \tl_if_blank:nTF {#3} { \index{#2} } { \index{#3} }
@@ -1708,17 +1735,45 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 % Captions for everything but tables
 % singlelinecheck: do what the user tells you
 \txtstyles_declare_cap_style:nnn {desert} {caption-body} {caption-label}
-\captionsetup {format=desert, singlelinecheck=false, skip=\g_desert_above_caption_skip}
-\DeclareCaptionSubType*{figure}
-%\captionsetup[subfigure] {}
+\txtstyles_declare_cap_style:nnn {desert-subcap} {subcaption-body} {subcaption-label}
 
-% "1A" instead of "1a"
-\bool_if:NT \g_desert_numbering_capitalize_panels_bool
-    { \renewcommand* \thesubfigure {\thefigure\Alph{subfigure}} }
+\DeclareCaptionLabelFormat {desert-subref}
+{
+    \txtstyles_use:nn
+        {subref}
+        { \g_desert_typo_subref_prefix_tl #2 \g_desert_typo_subref_suffix_tl }
+}
+
+\captionsetup
+{
+    singlelinecheck=false,
+    skip=\g_desert_above_caption_skip,
+    format=desert,
+    labelsep=desert,
+    subrefformat=desert-subref,
+}
+
+\DeclareCaptionSubType{figure}
+
+\bool_if:NTF \g_desert_numbering_capitalize_panels_bool
+    { \DeclareCaptionSubType[Alph]{figure} }
+    { \DeclareCaptionSubType[alph]{figure} }
+
+\captionsetup [subfigure]
+{
+    singlelinecheck=true,
+    format=desert-subcap,
+}
+
 
 % Captions that go at the TOP of tables (LEGACY table environment)
 \txtstyles_declare_cap_style:nnn {desert-top} {table-head-body} {table-head-label}
-\captionsetup [table] {format=desert-top, position=above, skip=\g_desert_below_table_title_skip}
+\captionsetup [table]
+{
+    skip=\g_desert_below_table_title_skip,
+    format=desert-top,
+    position=above,
+}
 
 
 
@@ -1772,18 +1827,30 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     ]
     { remark }
 
-\clist_const:Nn \c_desert_theorem_like_clist
-    { theorem,lemma,corollary,proposition,conjecture,criterion,assertion }
-\clist_const:Nn \c_desert_definition_like_clist
-    {
-        definition,condition,
-        example,problem,exercise,question,
-        axiom,property,assumption,hypothesis
-    }
-\clist_const:Nn \c_desert_algorithm_like_clist
-    { algorithm, protocol,procedure,game,reduction }
-\clist_const:Nn \c_desert_remark_like_clist
-    { remark,note,notation,claim,summary,acknowledgment,case,conclusion }
+\clist_if_exist:NF \c_desert_theorem_like_clist
+{
+    \clist_const:Nn \c_desert_theorem_like_clist
+        { theorem,lemma,corollary,proposition,conjecture,criterion,assertion }
+}
+\clist_if_exist:NF \c_desert_definition_like_clist
+{
+    \clist_const:Nn \c_desert_definition_like_clist
+        {
+            definition,condition,
+            example,problem,exercise,question,
+            axiom,property,assumption,hypothesis
+        }
+}
+\clist_if_exist:NF \c_desert_algorithm_like_clist
+{
+    \clist_const:Nn \c_desert_algorithm_like_clist
+        { algorithm, protocol,procedure,game,reduction }
+}
+\clist_if_exist:NF \c_desert_remark_like_clist
+{
+    \clist_const:Nn \c_desert_remark_like_clist
+        { remark,note,notation,claim,summary,acknowledgment,case,conclusion }
+}
 
 \str_if_eq:VnTF \g_desert_numbering_theorem_within_str {none}
     { \declaretheorem [style=plain] {\c_desert_theorem_like_clist} }
@@ -1800,18 +1867,19 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 \declaretheorem [style=remark,sibling=theorem] {\c_desert_remark_like_clist}
 
 
-
 %========================================================================================
-%                 figures
+%                 figures -- single-panel
 %========================================================================================
 
 \AtBeginEnvironment {figure} {\centering}
 
 
-\keys_define:nn { desert / single-panel-figure }
+\keys_define:nn { desert / one-panel-figure }
 {
     file .tl_set:N = \l__file_tl,
-    file .initial:n = {...},
+    file .initial:n = {},
+    graphicx .tl_set:N = \l__graphics_options_tl,
+    graphicx .initial:n = {},
     label .tl_set:N = \l__label_tl,
     label .initial:n = {},
     entry .tl_set:N = \l__entry_tl,
@@ -1820,52 +1888,145 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     caption .initial:n = {},
 }
 
-\NewDocumentCommand \SinglePanelFigure { O{} m }
+\NewDocumentEnvironment {OnePanelFigure} { s m }
 {
-    \group_begin:
-    \keys_set:nn {desert / single-panel-figure} {#2}
-    % TODO: detect .svg
-    \includegraphics[#1]{\l__file_tl}
+    \bool_if:nTF {#1} {\begin{figure}} {\begin{figure*}}
+    \keys_set:nn {desert / one-panel-figure} {#2}
+    \tl_if_blank:VF \l__file_tl
+        { \includegraphics[\l__graphics_options_tl]{\l__file_tl} }
+}
+{
     \desert__capkeyval:
-    \group_end:
+    \bool_if:nTF {#1} {\end{figure}} {\end{figure*}}
 }
-\NewDocumentCommand \singlepanelfigure { O{} m }
-    { \SinglePanelFigure[#1]{#2} }
 
-% TODO: multi-panel figures
-
-\NewDocumentCommand \phantompanel { D(){} o }
+\NewDocumentCommand \AddOnePanelFigure { s m }
 {
-    \group_begin:
-    % add a LOF entry (if applicable), but don't show the text
-    \captionsetup{textformat=empty}
-    \subcaption[#2]{}
-    \tl_if_blank:nF {#1} {\label{#1}}
-    \group_end:
+    \begin{OnePanelFigure}\bool_if:nT{#1}{*}{#2}
+    \end{OnePanelFigure}
 }
 
-%\ProvideDocumentCommand \panelcap { D(){} m }
-%    { \subref{#1}:~#2 }  % TODO: not always :
+
+
+%========================================================================================
+%                 figures -- multi-panel (with real graphics)
+%========================================================================================
+
+\keys_define:nn { desert / multi-panel-figure }
+{
+    label .tl_set:N = \l__label_tl,
+    label .initial:n = {},
+    entry .tl_set:N = \l__entry_tl,
+    entry .initial:n = {},
+    caption .tl_set:N = \l__caption_tl,
+    caption .initial:n = {},
+}
+
+\NewDocumentEnvironment {MultiPanelFigure} { s m }
+{
+    \bool_if:nTF {#1} {\begin{figure}} {\begin{figure*}}
+    \keys_set:nn {desert / multi-panel-figure} {#2}
+}
+{
+    \desert__capkeyval:
+    \bool_if:nTF {#1} {\end{figure}} {\end{figure*}}
+}
 
 \keys_define:nn { desert / real-panel }
 {
-    file .tl_set:N = \l__file_tl,
+    file .tl_set:N = \l__panel_file_tl,
     file .initial:n = {...},
-    width .dim_set:N = \l__width_tl,
-    inner-pos .tl_set:N = \l__innerpos_tl,
-    label .tl_set:N = \l__label_tl,
-    entry .tl_set:N = \l__entry_tl,
-    caption .tl_set:N = \l__caption_tl,
+    graphicx .tl_set:N = \l__panel_graphics_options_tl,
+    graphicx .initial:n = {},
+    width .dim_set:N = \l__panel_width_dim,
+    inner-pos .tl_set:N = \l__panel_innerpos_tl,
+    label .tl_set:N = \l__panel_label_tl,
+    entry .tl_set:N = \l__panel_entry_tl,
+    caption .tl_set:N = \l__panel_caption_tl,
 }
 
-%\NewDocumentCommand \realpanel { O{} m }
-%{
-%    \subcaptionbox [\l__entry_tl] {\l__caption_tl} [\l__width_dim] [\l__innerpos_tl]
-%    {
-%        \includegraphics [#1] {\l__file_tl}
-%        \tl_if_blank:NF \l__label_tl {\label{\l__label_tl}}
-%    }
-%}
+\NewDocumentCommand \AddPanel { m }
+{
+    \group_begin:
+    \keys_set:nn {desert / real-panel} {#1}
+    \subcaptionbox
+        [\l__panel_entry_tl]
+        {\l__panel_caption_tl}
+        [\l__panel_width_dim]
+        [\l__panel_innerpos_tl]
+        {
+            \includegraphics [\l__panel_graphics_options_tl] {\l__panel_file_tl}
+            \tl_if_blank:VF \l__label_tl {\label{\l__label_tl}}
+        }
+    \group_end:
+}
+
+
+
+%========================================================================================
+%                 phantom-panel figures -- 1 graphics file 
+%========================================================================================
+
+\keys_define:nn { desert / phantom-panel-figure }
+{
+    file .tl_set:N = \l__file_tl,
+    file .initial:n = {},
+    graphicx .tl_set:N = \l__graphics_options_tl,
+    graphicx .initial:n = {},
+    label .tl_set:N = \l__label_tl,
+    label .initial:n = {},
+    entry .tl_set:N = \l__entry_tl,
+    entry .initial:n = {},
+    caption .tl_set:N = \l__caption_tl,
+    caption .initial:n = {},
+}
+
+%\prop_new:N \g__desert_panel_prop
+
+\NewDocumentEnvironment {PhantomPanelFigure} { s m }
+{
+    \bool_if:nTF {#1} {\begin{figure}} {\begin{figure*}}
+    \keys_set:nn {desert / phantom-panel-figure} {#2}
+    \tl_if_blank:VF \l__file_tl
+        { \includegraphics[\l__graphics_options_tl]{\l__file_tl} }
+}
+{
+    \desert__capkeyval:
+    \bool_if:nTF {#1} {\end{figure}} {\end{figure*}}
+}
+
+\keys_define:nn { desert / phantom-panel }
+{
+    label .tl_set:N = \l__panel_label_tl,
+    entry .tl_set:N = \l__panel_entry_tl,
+}
+
+\NewDocumentCommand \AddPhantomPanel { m }
+{
+    \group_begin:
+    \keys_set:nn {desert / phantom-panel} {#1}
+     % add a LOF/TOC entry (if applicable), but don't show the text
+    \captionlistentry {\l__panel_entry_tl}
+    \tl_if_blank:VF \l__panel_label_tl {\label{\l__panel_label_tl}}
+    \group_end:
+}
+
+
+\NewDocumentCommand \describepanel { m m }
+{
+    \subref{#1}\g_desert_typo_caption_label_sep_tl #2
+}
+\NewDocumentCommand \describepanels { m m }
+{
+    \txtstyles_use:nn
+        {subref}
+        {
+            \g_desert_typo_subref_prefix_tl
+            \g_desert_typo_caption_label_sep_tl
+            #2
+            \g_desert_typo_subref_suffix_tl
+        }
+}
 
 
 %========================================================================================
@@ -2003,7 +2164,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
             bottomtitle=0.2pc,
             #4
         }
-    }
+    }  % TODO: key-value
     \NewDocumentCommand \DeclareDesertBox { m m r[] O{} }
         { \desert_declare_box:nnnn {#1} {#2} {#3} {#4} }
 
@@ -2044,8 +2205,8 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 
 \keys_define:nn { desert / sourcecode }
 {
-    language .tl_set:N = \l__lang_tl,
-    language .initial:n = {text},
+    lang .tl_set:N = \l__lang_tl,
+    lang .initial:n = {text},
     label .tl_set:N = \l__label_tl,
     label .initial:n = {},
     entry .tl_set:N = \l__entry_tl,
@@ -2142,7 +2303,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 %                    == ARGS ==                                       %
 %  #      R? arg     description                                      %
 % ( #1 )  N  LABEL   passed to \label{}
-\ProvideDocumentEnvironment {chemistry} { D(){} }
+\ProvideDocumentEnvironment {Chemistry} { D(){} }
 {
     \txtstyles_run:n {desert-chemistry}
     \refstepcounter{chem}
@@ -2209,10 +2370,8 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     citecolor=cite,
     urlcolor=url,
     filecolor=file,
-    breaklinks=true,
     final=true, draft=false  % ignore global settings
 }
-
 
 
 %========================================================================================
@@ -2236,6 +2395,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     \pagenumbering{\g_desert_numbering_front_str}
     \setcounter{page}{1}
 }
+\AtBeginDocument {\StartFrontMatter}
 
 \NewDocumentCommand \StartMainMatter {}
 {
@@ -2325,7 +2485,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 
 \NewDocumentCommand \LoadFrontSubdocs { >{\SplitList{,}}m }
 {
-    \StartFrontMatter
+    %\StartFrontMatter
     \ProcessList{#1}{\subfile}
 }
 
@@ -2361,10 +2521,6 @@ glue-above / toc-subsubsection .initial:n = 0pc,
     university = some university
 }
 
-% requires 2022+
-%\DocumentMetadata
-%{ }
-
 
 
 %========================================================================================
@@ -2385,8 +2541,7 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 }
 
 
-% Set hypersetup document data.
-
+% Workaround for expansion issue in AddPdfHyperxmpData
 \cs_new:Npn \desert__hyper:VVVV #1#2#3#4
 {
     \hypersetup
@@ -2405,6 +2560,8 @@ glue-above / toc-subsubsection .initial:n = 0pc,
 
 \AtEndPreamble
 {
+    % TODO: Get this working and remove workaround
+    % \AddPdfHyperxmpData  % from info.sty
     \desert__hyper:VVVV
         \g__desert_title_tl
         \g__desert_authors_tl

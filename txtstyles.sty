@@ -136,6 +136,21 @@
 %                  text commands and aliases
 %===================================================================
 
+\str_gset:Nn \g_txtstyles_case_lang_str {none}
+\cs_new:Npn \txtstyles_set_case_lang:n #1
+{
+    \str_gset:Nn \g_txtstyles_case_lang_str {#1}
+}
+
+\cs_generate_variant:Nn \text_uppercase:n { V, e }
+\cs_generate_variant:Nn \text_lowercase:n { V, e }
+\cs_generate_variant:Nn \text_titlecase:n { V, e }
+\cs_generate_variant:Nn \text_titlecase_first:n { V, e }
+\cs_generate_variant:Nn \text_uppercase:nn { Vn, en, Vv, ev }
+\cs_generate_variant:Nn \text_lowercase:nn { Vn, en, Vv, ev }
+\cs_generate_variant:Nn \text_titlecase:nn { Vn, en, Vv, ev }
+\cs_generate_variant:Nn \text_titlecase_first:nn { Vn, en, Vv, ev }
+
 \NewDocumentCommand \txtsub {+m} { \textsubscript{#1} }
 \NewDocumentCommand \txtsup {+m} { \textsuperscript{#1} }
 
@@ -151,17 +166,36 @@
         { \group_begin: \ebseries #1 \group_end: }
 }
 
-\NewExpandableDocumentCommand \txtuppercase {+m} { \text_uppercase:n{#1} }
-\NewExpandableDocumentCommand \txtlowercase {+m} { \text_lowercase:n{#1} }
+\NewExpandableDocumentCommand \txtuppercase {+m}
+{
+    \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
+        { \text_uppercase:n{#1} }
+        { \text_uppercase:nv{#1}{\g_txtstyles_case_lang_str} }
+}
+\NewExpandableDocumentCommand \txtlowercase {+m}
+{
+    \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
+        { \text_lowercase:n{#1} }
+        { \text_lowercase:nv{#1}{\g_txtstyles_case_lang_str} }
+}
 
 % Uppercase first character and each first character after punctuation; lowercase the rest
 % E.g. "\txtsentencecase{grab a RED one}" --> Grab A Red One
 % The starred variant leaves intra-word casing as-is
+% the L3 kernel macros are badly named
 \NewExpandableDocumentCommand \txtsentencecase { +m }
-    { \text_titlecase:n{#1} }  % the L3 kernel macros are badly named
+{
+    \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
+        { \text_titlecase:n{#1} }
+        { \text_titlecase:nv{#1}{\g_txtstyles_case_lang_str} }
+}
 
 \NewExpandableDocumentCommand \txtsentencecasefirst { +m }
-    { \text_titlecase_first:n{#1} }  % the L3 kernel macros are badly named
+{
+    \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
+        { \text_titlecase_first:n{#1} }
+        { \text_titlecase_first:nv{#1}{\g_txtstyles_case_lang_str} }
+}
 
 \regex_const:Nn \c_txtstyles_capital_letters_regex
     { \c[L][A-Z]+ }
@@ -1811,7 +1845,9 @@
 %===================================================================
 
 \cs_new:Npn \txtstyles_declare:nn #1#2
-    { \prop_gput:Nnn \g_txtstyles_prop {#1} {#2} }
+{
+    \prop_gput:Nnn \g_txtstyles_prop {#1} {#2}
+}
 \cs_generate_variant:Nn \txtstyles_declare:nn { nV }
 \NewDocumentCommand \DeclareTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
     { \txtstyles_declare:nn{#1}{#2} }
@@ -1957,9 +1993,11 @@
 
 \cs_new_protected:Npn \txtstyles_run:n #1
 {
-    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
+    \tl_set:Nn \l_tmpa_tl {#1}
+    \tl_replace_all:Nnn \l_tmpa_tl {;} {,}
+    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpb_tl
     {
-        \clist_set:NV \l_tmpa_clist \l_tmpa_tl
+        \clist_set:NV \l_tmpa_clist \l_tmpb_tl
         \clist_map_inline:Nn \l_tmpa_clist
         {
             \cs_if_exist_use:cF {##1}
@@ -1979,9 +2017,13 @@
 %                    main macro -- \txtstyles_use:nn
 %===================================================================
 
+\cs_generate_variant:Nn \seq_set_from_clist:Nn {NV}
+
 \cs_new:Npn \txtstyles_use_direct:nn #1#2
 {
-    \seq_set_from_clist:Nn \seq_mycmds {#1}
+    \tl_set:Nn \l_tmpa_tl {#1}
+    \tl_replace_all:Nnn \l_tmpa_tl {;} {,}
+    \seq_set_from_clist:NV \seq_mycmds \l_tmpa_tl
     \tl_set:Nn \l__mytxt_tl {#2}
     \cs_set:Npn \l__casing:n ##1 {##1}
     \seq_map_variable:NNn \seq_mycmds \l__currentcmd_tl

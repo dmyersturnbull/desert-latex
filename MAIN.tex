@@ -4,19 +4,19 @@
     feature / minted,      % ...................................... Minted for source code
     feature / imakeidx,    % ...................................... Index
     feature / tcolorbox,   % ...................................... Fancy boxes
-    language = USenglish,        % ...............................  Language with dialect 
+    language = USenglish,        % ...............................  Language with dialect
     bib / hide-language = true,  % ................................ Hide e.g. "en" for language
     color / url = 0000D2,        % ................................ or named color, etc.
     cref / capitalize = true,    % ................................ E.g. "Figure 2"
     font-size / main = 11.8pt    % ................................ Decimal font size :)
     linespace / main = 1.6,      % ................................ 1.6 space
+    numbering / footnotes = alph,  % .............................. Footnotes a, b, ...
     numbering / equation-within = chapter,  % ..................... Get "Equation [2.3]":
-    numbering / equation = arabic, 
     numbering / equation-brackets = square-bold,
     numbering / theorem-like-within = chapter,
     style / foreign-words = {italic},  % .......................... Set text "styles":
-    style / indx-starred = {HTML:550000,allcaps,semibold},
-    style / nomenclature-group = {xkcdalgaegreen,LARGE,uppertosc},
+    style / indx-starred = {xkcdalgaegreen,italic},  % ............ Affects \indx*
+    style / nomenclature-group = {LARGE,uppertosc},  % ............ uppertosc: uppercase -> smallcaps
     glue / indent = 0em,  % ....................................... Set indent (fixed length)
     glue-between / paragraphs = 2ex plus 0.2ex minus 0.2ex,  % .... Space between paragraphs (rubber)
     glue-above / subsection = 2ex plus 0.2 ex minus 0.1ex    % .... Another true glue
@@ -52,21 +52,28 @@
 
 % Set document info
 \SetInfo {
-    title = Quantum xenochromodynamics in the cloud,
-    subject = Physics,
-    authors = Karen Johnson,
-    degree = Doctor of Philosophy,
+    subject = Physics,                     % some some mapped to XMP metadata
+    title = Xenodynamic cloud computing,
+    author = Karen Johnson,                % a comma-separated list
+    degree = Doctor of Philosophy,         % arbitary extra data
     university = University of Washington,
-    date = 2022-03-22
+    plaindate = 2022-03-22
 }
-% This is provided by the "info" package (included here)
-% You can add arbitrary data and access with \info, \Info, \infolist, and \InfoList
-% e.g.:
-% \InfoList{keywords}[sep=|, style-inline={italic}, if-blank=I'm null, pre-item=', post-item=']
-% \InfoList{authors}[sep-{, }, sep-two={ and }, sep-last={ and }]
+
+\RenewDocumentCommand \TitleContents {} {
+	``\info{title}"\\
+	\Info{degree} \info{subject}[pre={in ``}, post={"}]\\
+	Keywords: \infolist{keywords}[sep=|, style-inline={red;bold}]\\
+	Authors: \infolist{author}[sep-{, }, sep-two={ and }, sep-last={ and }]
+}
+
+% More likely:
+\RenewDocumentCommand \ShowTitle {} {
+	\includepdf[pages=1]{university-titlepage.pdf}
+}
 
 \begin{document}
 \LoadFrontDocs{sections/front}
-\LoadMainDocs{sections/chapter1,sections/chapter2}
+\LoadMainDocs{sections/chapter1, sections/chapter2}
 \LoadBackDocs{sections/back}
 \end{document}
