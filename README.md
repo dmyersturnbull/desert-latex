@@ -11,7 +11,9 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃]() *(
 - **Key–value style options,** quietly redirected to various packages and commands.
 - Built-in support for most academic needs, including theorems, nomenclature, abbreviations, and code.
 - Uses modern packages and options, like Biber and LaTeX 3.
-- New key–valued environments and commands.
+- New, consistently behaving, key–valued environments and commands.
+  E.g. `entry=` for the TOC entry.
+- Slowly opt-in to new features and fancy LaTeX 3 packages; your existing commands work fine.
 
 ```latex
 \documentclass[
@@ -20,7 +22,7 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃]() *(
     feature / tcolorbox,
     feature / chemmacros,
     feature / chemfig,
-    language = USenglish,
+    language = en-us,
     bib / hide-language = true,
     color / url = 0000D2,
     cref / capitalize = true,
@@ -42,15 +44,27 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃]() *(
 ]{desert}
 ```
 
+#### Flexible section/chapter/etc. commands
+```latex
+\Section{I'm your regular section}
+\Section*{I'm your regular numberless section}
+
+\Section*[entry = Add this to TOC]{I'm a numberless section}
+\Section[numberless, entry = Add this to TOC, title = I'm the same as above]
+\Section[label=sec:xx, entry={}, title=I don't show up in TOC]
+
+\Section[numberless, entry=Extra notes]  % I'm in the TOC but don't show text here
+```
+
 
 #### Information storage (from info.sty)
 
 ```latex
 \SetInfo {
     subject = Physics,                     % mapped to XMP metadata
-    title = Xenodynamic cloud computing,
-    author = Karen Johnson,                %
-    degree = Doctor of Philosophy,         % arbitary extra data
+    title   = Xenodynamic cloud computing,
+    author  = Karen Johnson,
+    degree  = Doctor of Philosophy,        % arbitary extra data
 }
 
 \RenewDocumentCommand \ShowTitle {} {
@@ -70,7 +84,11 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃]() *(
 ...
 \end{FrontChapter}
 
-\begin{FrontAbstract}
+\begin{SpecialChapter}[entry=Dedication, at=middle, width=0.6\textwidth]
+
+\end{SpecialChapter}
+
+\begin{FrontAbstract}[entry=Abstract]
 Start of abstract.
 (By default, the title and author are printed above.)
 \end{FrontAbstract}
@@ -95,19 +113,19 @@ My lightbulb uses \qty{5}{\mega\watt\per\meter\square} \foreign{in silico}.
 
 #### Theorems and code
 
-Theorems, lemmas, etc. via thmtools.
+Theorems, lemmas, etc. via [amsthm](https://ctan.org/pkg/amsthm) and [thmtools](https://ctan.org/pkg/thmtools).
 
 ```latex
-\begin{theorem}[
+\begin{Theorem}[
     label=thm1,
     name=Central Theorem of Xenodynamics
 ]
 ...
-\end{theorem}
+\end{Theorem}
 
-\begin{proof} \end{proof}
+\begin{Proof} \end{Proof}
 
-\begin{sourcecode}{
+\begin{SourceCode}{
     lang    = c++,
     label   = sourcecode1,
     entry   = My TOC entry,
@@ -119,27 +137,26 @@ Theorems, lemmas, etc. via thmtools.
 
 #### Tables
 
-Tables via tabularray and csvsimple-l3.
+Tables via [tabularray](https://ctan.org/pkg/tabularray) and [csvsimple](https://ctan.org/pkg/csvsimple)-l3.
 (Regular `table` of course works fine too.)
 
 ```latex
-\begin{longtblr}[
-entry   = ...,
+\begin{LongTable}[  % multi-page if needed
+    entry   = ...,
     caption = ...,
     label   = ...,
-    note{a}   = {A note for the footer.},
+    note{a} = {A note for the footer.},
 ]{
-    rowhead   = {1},
-    row{even} = {bg=gray},
+    rowhead    = {1},
+    row{even}  = {bg=gray},
+    hline{1,Z} = {2pt,red},
+    hline{2,Y} = {1pt,dotted},
 }
-\hline
 Type & Trivial & Easy & Normal & Hard & Strenuous\\
-\hline
 Type 1 \TblrNote{a} (\%) & 300 & 200 & 150 & 100 & 75\\
 Type 2 (\%) & 70 & 60 & 50 & 50 & 40\\
 Type 3 (\%) & 80 & 75 & 70 & 65 & 60\\
-\hline
-\end{longtblr}
+\end{LongTable}
 ```
 
 
@@ -150,11 +167,11 @@ Good old `figure` and `\includegraphics` work too, of course.
 
 ```latex
 
-\begin{OnePanelFigure}{
+\begin{OnePanelFigure}[
     entry    = ...,
     caption  = ...,
     label    = ...,
-}
+]
 \includegraphics{cows.pdf}
 % or pass file=...
 \end{OnePanelFigure}
@@ -163,22 +180,22 @@ Good old `figure` and `\includegraphics` work too, of course.
 \AddOnePanelFigure {
     entry    = ...,
     ...
-    file     = cows.png
-graphicx = {width=5cm}
+    file     = cows.png,
+    graphicx = {width=5cm}
 }
 
-\begin{MultiPanelFigure}{
+\begin{MultiPanelFigure}[
     entry    = ...,
     caption  = ...,
     label    = ...
-}
+]
 \AddPanel{entry=..., caption=..., label=..., file=...}
 \end{MultiPanelFigure}
 
-\begin{PhantomPanelFigure}{
+\begin{PhantomPanelFigure}[
     label    = ...,
     file     = ...,
-}
+]
 \AddPhantomPanel{entry=..., label=a}
 \caption{
     \describepanel{a}{Caption for panel.}
@@ -211,6 +228,16 @@ This is an example.
 \begin{BackChapter}
 ...
 \end{BackChapter}
+```
+
+#### Chemical diagrams (add-on)
+
+With `feature / chem*`.
+Provided mainly via chemmacros, chemformula, and chemfig.
+
+```latex
+\begin{ChemicalDiagram}[]
+\end{ChemicalDiagram}
 ```
 
 ### 🍁 Contributing
