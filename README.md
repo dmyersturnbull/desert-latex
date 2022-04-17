@@ -16,7 +16,7 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
 - Slowly opt-in to new features and fancy LaTeX 3 packages; your existing commands work fine.
 
 ```latex
-\documentclass[
+\documentclass [
     feature / minted,
     feature / imakeidx,
     feature / tcolorbox,
@@ -68,10 +68,10 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
 }
 
 \RenewDocumentCommand \ShowTitle {} {
-``\info{title}"\\
-\Info{degree} \info{subject}[pre={in ``}, post={"}]\\
-\infolist{keywords}[sep=|, style-inline={red;bold}]\\
-\InfoList{author}[sep-{, }, sep-two={ and }, sep-last={, and }]
+    ``\info{title}"\\
+    \Info{degree} \info{subject}[pre={in ``}, post={"}]\\
+    \infolist{keywords}[sep=|, style-inline={red;bold}]\\
+    \InfoList{author}[sep-{, }, sep-two={ and }, sep-last={, and }]
 }
 ```
 
@@ -118,7 +118,7 @@ Theorems, lemmas, etc. via [amsthm](https://ctan.org/pkg/amsthm) and [thmtools](
 ```latex
 
 \NewTheoremEnvs [style=plain] {
-    Theorem     = thm./thms. ,
+    Theorem     = thm./thms. ,   % cleveref names: cref/Cref
     Proposition = prop./props. ,
 }
 
@@ -129,7 +129,7 @@ Theorems, lemmas, etc. via [amsthm](https://ctan.org/pkg/amsthm) and [thmtools](
     Property   = property/properties ,
 }
 
-\begin{Theorem}[
+\begin{Theorem} [
     label=thm1,
     name=Central Theorem of Xenodynamics
 ]
@@ -163,7 +163,7 @@ Tables via [tabularray](https://ctan.org/pkg/tabularray) and [csvsimple](https:/
 ]{
     rowhead    = {1},
     row{even}  = {bg=gray},
-    hline{1,Z} = {2pt,red},
+    hline{1,Z} = {2pt,red},  % or toprule/midrule/bottomrule inside the table
     hline{2}   = {1pt,dotted},
 }
 Type & Trivial & Easy & Normal & Hard & Strenuous\\
@@ -227,13 +227,15 @@ or `DeclareTColorBox` to start one from scratch.
 ```latex
 
 % like \DeclareTColorBox, but with defaults
-% set nice colors with () and/or pass any tcolorbox options with []
-\DeclareDesertBox [...] {Example}
-\DeclareDesertBox (green!50!black) {Hint}
+\DeclareDesertBox [arc=1mm, fontlower=red] {Example}
 
-\begin{BoxExample}[name=Optional title, label=Optional]
+% And a shorthand for setting colframe, colupper, and colback together
+\DeclareDesertBox (xkcdalgae) [...] {Hint}
+
+\begin{Example}[name=Optional title, label=Optional]
 This is an example.
-\end{BoxExample}
+\end{Example}
+
 ```
 
 
@@ -274,20 +276,12 @@ These commands will change the strings that Desert uses.
     diagram = diagran/diagrams ,
 }
 
-% theorem-like envs with complete cleveref support
-% pre-defined thmtools styles are as they recommend:
-% plain, definition, and remark
-\NewTheoremEnvs [style=plain] {
-    theorem     = thm./thms. ,
-    proposition = prop./props. ,
-}
-
 ```
 
 #### New packages
 
 - `info.sty` (as seen above)
-- `txtstyles.sty` (lets you use e.g. `red;semi-bold;allcaps;underline`)
+- [`txtstyles.sty`](https://github.com/dmyersturnbull/textiles) (lets you use e.g. `red;semi-bold;allcaps;underline`)
 - `nomgroups.sty` (group nomenclature under subheadings)
 - `semantics.sty` (e.g. `\foreign`, `\code`, `\doi`, `ieeeauthor`)
 
