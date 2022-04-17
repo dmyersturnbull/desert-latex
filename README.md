@@ -3,7 +3,7 @@
 Modern general-purpose documentclass with LaTeX 3 and
 50+ key–value arguments.
 
-Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃]() *(oops, the link is coming)*
+Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](https://www.overleaf.com/read/bqpyjghrdxqs)
 
 
 #### 🎁 Features
