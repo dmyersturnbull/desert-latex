@@ -1,45 +1,55 @@
 %=======                    D E S E R T                    =======
 
-\documentclass[
-    feature / minted,      % ...................................... Minted for source code
-    feature / imakeidx,    % ...................................... Index
-    feature / tcolorbox,   % ...................................... Fancy boxes
-    language = USenglish,        % ...............................  Language with dialect
-    bib / hide-language = true,  % ................................ Hide e.g. "en" for language
-    color / url = 0000D2,        % ................................ or named color, etc.
-    cref / capitalize = true,    % ................................ E.g. "Figure 2"
-    font-size / main = 11.8pt,    % ................................ Decimal font size :)
-    linespace / main = 1.6,      % ................................ 1.6 space
-    numbering / footnotes = alph,  % .............................. Footnotes a, b, ...
-    numbering / equation-within = chapter,  % ..................... Get "Equation [2.3]":
-    numbering / equation-brackets = square-bold,
-    numbering / theorem-like-within = chapter,
-    style / foreign-words = {italic},  % .......................... Set text "styles":
-    style / indx-starred = {xkcdalgaegreen;italic},  % ............ Affects \indx*
-    style / nomenclature-group = {LARGE;uppertosc},  % ............ uppertosc: uppercase -> smallcaps
-    glue / indent = 0em,  % ....................................... Set indent (fixed length)
-    glue-between / paragraphs = 2ex plus 0.2ex minus 0.2ex,  % .... Space between paragraphs (rubber)
-    glue-above / subsection = 2ex plus 0.2 ex minus 0.1ex,    % .... Another true glue
-    toc / depth = section  % ...................................... Max depth in TOC
-]{desert}
+\documentclass [
+    feature / tcolorbox ,
+    feature / minted ,
+] {desert}
 
-% To modify labels:
-\Translate{english}{
-    algorithm = procedure,
-    source code = computer code,
+\SetCrefStrings {
+    figure = fig./figs. ,
+    page = p./pp. ,
 }
-% Note: This is a wrapper around translation's \DeclareTranslation
-%       e.g. \DeclareTranslation{english}{algorithm}{procedure}
-%       Obviously we're abusing the intent a bit here :)
 
+\SetBabelStrings {
+    contents           = Contents ,
+    listfigure         = Figures ,
+    reactionscheme     = Reaction ,
+    listreactionscheme = Reactions ,
+    listendnote        = Notes ,
+}
+
+%\SetBiblatexStrings {
+%    bibliography = References ,
+%}
+
+% like \DeclareTColorBox, but with defaults
+% set nice colors with () and/or pass any tcolorbox options with []
+\DeclareDesertBox [] {Note}
+\DeclareDesertBox (green!50!black) {Hint}
+
+\NewTheoremEnvs [style=plain] {
+    Theorem     = thm./thms. ,
+    Proposition = prop./props. ,
+}
+
+\NewTheoremEnvs {  % guesses the style
+    Definition = defn./defns. ,
+    Remark     = rem./rems. ,
+    Criterion = criterion/criteria ,
+    Property = property/properties ,
+}
 % Load extra packages:
 \RequirePackage{pdfpages}  % to include a PDF
 
+%\SetEnumitemKey {multipar} { ... }  % override multipar enum style
 % Setup interfaces provided by various packages:
-\SiSetup{
-    group-minimum-digits=4,   
-    group-digits=all,        
-    group-separator=\thinspace,
+\AcroSetup {
+     pages/display = first ,  % show page numbers
+}
+\SiSetup {
+    group-minimum-digits = 4 ,   
+    group-digits = all ,        
+    group-separator = \thinspace ,
 }
 % \GeometrySetup, \AcroSetup  \ChemSetup, \ChemfigSetup, \HyperSetup, \MintedSetup
 % Note: These are just consistently named aliases; e.g. \AcroSetup is \acsetup

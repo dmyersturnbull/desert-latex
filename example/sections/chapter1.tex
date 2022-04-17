@@ -1,86 +1,98 @@
 
 \begin{MainChapter}{Introduction}
+% \begin{MainChapter}[title=Introduction]
 
-\Section{I am a section}
+%\Section[title=I am a section, label=ssec, no-entry, no-number]
+%\Section[no-entry]{I am a section}
+%\Section[title=I am a section]
 
-\SubSection{I am a subsection}
+\section{I am a section}
 
-\SubSubSection{I am a subsubsection}
+\subsection{I am a subsection}
 
-\Paragraph*{I am a paragraph}  % * to suppress numbering
-\indx{keyword} is shorthand for keyword\index{keyword}
+\subsubsection{I am a subsubsection}
+
+\paragraph*{I am a paragraph}  % * to suppress numbering
+\indx{keyword} is shorthand for keyword\index{keyword}.
 \Indx{Quantum xenochromodynamics} is characterized by a module defined $M[F]$ over a finite field $F$ alongside a set $D$ of \ac{D1} ligands \cite{yolov6}.
 Add a \code{*} when \emph{introducing} terms, for emphasis: \indx*{starred}.
-The style is set with \code{style / indx-starred} option. \footnote{This is a great idea.}
+The style is set with \code{style / indx-starred} option. \footnote{This is a great idea.} See? \ac{CRISPR}. \ac{CRISPR}.
 
 (This too: \indx{space aliens}[aliens!space]).
 It is usually computed in the cloud. With \ac{CRISPR}.
-
-\section{Some text}
 
 \blockcquote{johnson2022}{Life is good.}
 
 We recovered \qty{5}{\tera\joule} from the craft.
 
 \begin{itemize}
-    \item\texttt{Bullet 1}
-    \item\texttt{Bullet 2}
-    \item\texttt{Bullet 3}
+    \item These are short bullet points. These are short bullet points. These are short bullet points. See? See? It's ok if it goes over multiple lines.
+    \item These are short bullet points.
+    \item These are short bullet points.
 \end{itemize}
 
-\begin{criterion}[label=mythm, name=Fiveness]
+\newpage
+\section{And then...}
+
+\begin{itemize}[multipar]
+    \item
+    This is a bullet point that can contain multiple paragraphs. Please use responsibly.
+    This is a bullet point that can contain multiple paragraphs. Please use responsibly.
+    
+    See? This continued to a second paragraph, and it needs a little more space between items for that reason. Otherwise it's not clear where a paragraph ends and where a bullet point ends.
+    
+    \item Again this is happening. We want to be nice to LaTex.
+    
+    See? This continued to a second paragraph, and it needs a little more space between items for that reason. Otherwise it's not clear where a paragraph ends and where a bullet point ends.
+\end{itemize}
+
+\begin{Theorem}[label=mythm, name=Fiveness]
 5 = 5
-\end{criterion}
+\end{Theorem}
 
 \begin{proof}
 x = x \forall x\\
 \therefore 5 = 5
 \end{proof}
 
-\begin{BoxNote}
-Some technical note.
+\begin{Hint}[name = An optional title., label=fives]
+Some ``hint". \ac{D1}
 Refer to \cref{mythm}.
-\end{BoxNote}
-
-\begin{BoxExample}[How to use this (optional title)]
-This is an example.
-\end{BoxExample}
+\end{Hint}
 
 % Tables should be typeset with the modern tabularray
 % Use tblr, talltblr, longtblr, etc.
 % In 2022+, use booktabs, talltabs, and longtabs
 
-\begin{longtblr}[
+\begin{LongTable}[
     caption = {Difficulty modifiers},
     entry = {Difficulty modifiers},
     label = {difficulty},
     note{a} = {Rescue funds are something really important.},
-    remark = {Some random remark.},
-    remark = Another remark
+    remark{x} = {Some random remark.},
 ]{
     colspec=lrrrrr, % TODO
     rowhead={1},
+    hline{1,Z} = 1pt,
+    hline{2} = 0.5pt,
     cells={font=\sffamily},
     row{1} = {font={\sffamily\bfseries}},
     cell{2-999}{2-6} = {cmd=\ensuremath}  % TODO: in 2022 vr, mode=math and 2-Z
 }
-\hline
 Type & Trivial & Easy & Normal & Hard & Strenuous\\
-\hline
 Type 1 \TblrNote{a} (\%) & 300 & 200 & 150 & 100 & 75\\
 Type 2 (\%) & 70 & 60 & 50 & 50 & 40\\
 Type 3 (\%) & 80 & 75 & 70 & 65 & 60\\
-\hline
-\end{longtblr}
+\end{LongTable}
 
 
-\begin{SourceCode}{
+\begin{MintedCode}[
     lang=c++,
     label=hi,         % label, entry, and caption are the same as in \begin{tblr}
     entry=Sample~C++,
     caption=This is some C++ code
-}
+]
 int i = 5;
-\end{SourceCode}
+\end{MintedCode}
 
 \end{MainChapter}

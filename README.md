@@ -116,6 +116,19 @@ My lightbulb uses \qty{5}{\mega\watt\per\meter\square} \foreign{in silico}.
 Theorems, lemmas, etc. via [amsthm](https://ctan.org/pkg/amsthm) and [thmtools](https://ctan.org/pkg/thmtools).
 
 ```latex
+
+\NewTheoremEnvs [style=plain] {
+    Theorem     = thm./thms. ,
+    Proposition = prop./props. ,
+}
+
+\NewTheoremEnvs {  % auto-choose styles
+    Definition = defn./defns. ,
+    Remark     = rem./rems. ,
+    Criterion  = criterion/criteria ,
+    Property   = property/properties ,
+}
+
 \begin{Theorem}[
     label=thm1,
     name=Central Theorem of Xenodynamics
@@ -125,13 +138,14 @@ Theorems, lemmas, etc. via [amsthm](https://ctan.org/pkg/amsthm) and [thmtools](
 
 \begin{Proof} \end{Proof}
 
-\begin{SourceCode}{
+\begin{MintedCode}{
     lang    = c++,
     label   = sourcecode1,
     entry   = My TOC entry,
     caption = ...,
     % ... minted options
 }
+\end{MintedCode}
 ```
 
 
@@ -141,7 +155,7 @@ Tables via [tabularray](https://ctan.org/pkg/tabularray) and [csvsimple](https:/
 (Regular `table` of course works fine too.)
 
 ```latex
-\begin{LongTable}[  % multi-page if needed
+\begin{LongTable} [  % multi-page if needed
     entry   = ...,
     caption = ...,
     label   = ...,
@@ -150,7 +164,7 @@ Tables via [tabularray](https://ctan.org/pkg/tabularray) and [csvsimple](https:/
     rowhead    = {1},
     row{even}  = {bg=gray},
     hline{1,Z} = {2pt,red},
-    hline{2,Y} = {1pt,dotted},
+    hline{2}   = {1pt,dotted},
 }
 Type & Trivial & Easy & Normal & Hard & Strenuous\\
 Type 1 \TblrNote{a} (\%) & 300 & 200 & 150 & 100 & 75\\
@@ -167,7 +181,7 @@ Good old `figure` and `\includegraphics` work too, of course.
 
 ```latex
 
-\begin{OnePanelFigure}[
+\begin{OnePanelFigure} [
     entry    = ...,
     caption  = ...,
     label    = ...,
@@ -184,7 +198,7 @@ Good old `figure` and `\includegraphics` work too, of course.
     graphicx = {width=5cm}
 }
 
-\begin{MultiPanelFigure}[
+\begin{MultiPanelFigure} [
     entry    = ...,
     caption  = ...,
     label    = ...
@@ -192,12 +206,12 @@ Good old `figure` and `\includegraphics` work too, of course.
 \AddPanel{entry=..., caption=..., label=..., file=...}
 \end{MultiPanelFigure}
 
-\begin{PhantomPanelFigure}[
+\begin{PhantomPanelFigure} [
     label    = ...,
     file     = ...,
 ]
 \AddPhantomPanel{entry=..., label=a}
-\caption{
+\caption {
     \describepanel{a}{Caption for panel.}
     \describepanels{b--c}{Photos of butterflies.}
 }
@@ -211,7 +225,13 @@ Use `DeclareDesertBox` to add your own,
 or `DeclareTColorBox` to start one from scratch.
 
 ```latex
-\begin{BoxExample}[title=Optional title]
+
+% like \DeclareTColorBox, but with defaults
+% set nice colors with () and/or pass any tcolorbox options with []
+\DeclareDesertBox [...] {Example}
+\DeclareDesertBox (green!50!black) {Hint}
+
+\begin{BoxExample}[name=Optional title, label=Optional]
 This is an example.
 \end{BoxExample}
 ```
@@ -230,15 +250,47 @@ This is an example.
 \end{BackChapter}
 ```
 
-#### Chemical diagrams (add-on)
+#### Strings
 
-With `feature / chem*`.
-Provided mainly via chemmacros, chemformula, and chemfig.
+These commands will change the strings that Desert uses.
+(Note: the choice of language affects the defaults.)
 
 ```latex
-\begin{ChemicalDiagram}[]
-\end{ChemicalDiagram}
+% shorthand for:
+% \DeclareTranslation{<my-base-language>{table of contents}{Contents}, etc.
+% uppercase etc. variants are defined automatically
+% using language-specific Unicode rules
+\SetTranslations {
+    table of contents = Contents ,
+    list of figures   = Figures ,
+    bibliography      = References ,
+    endnotes          = Notes ,
+}
+
+% shorthand for \Crefname{figure}{fig.}{figs.}, etc.
+\SetCrefNames {
+    figure  = fig./figs. ,
+    page    = p./pp. ,
+    diagram = diagran/diagrams ,
+}
+
+% theorem-like envs with complete cleveref support
+% pre-defined thmtools styles are as they recommend:
+% plain, definition, and remark
+\NewTheoremEnvs [style=plain] {
+    theorem     = thm./thms. ,
+    proposition = prop./props. ,
+}
+
 ```
+
+#### New packages
+
+- `info.sty` (as seen above)
+- `txtstyles.sty` (lets you use e.g. `red;semi-bold;allcaps;underline`)
+- `nomgroups.sty` (group nomenclature under subheadings)
+- `semantics.sty` (e.g. `\foreign`, `\code`, `\doi`, `ieeeauthor`)
+
 
 ### 🍁 Contributing
 

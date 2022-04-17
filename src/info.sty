@@ -13,15 +13,8 @@
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
 \ExplSyntaxOn
 \ProvidesExplPackage{info}{2022-02-17}{0.1}{Title pages from templates and key/value pairs.}
-\RequirePackage{datetime2}  % provide: calc,useregional,level
+\RequirePackage{datetime2}  % provide: calc,useregional
 \RequirePackage{txtstyles}
-
-\keys_define:nn {info} {
-    fix .bool_gset:N = \g_fix_bool,
-    fix .default:n = true,
-    fix .initial:n = false,
-}
-\ProcessKeysOptions{info}
 
 \msg_new:nnn{info}{infomissing}
     {No~info~key~'#1'~is~defined.}
@@ -100,7 +93,7 @@
 \cs_generate_variant:Nn \info_item_default:nn { Vn, vn, xn, en }
 
 
-\NewExpandableDocumentCommand \getinfo {m}
+\NewDocumentCommand \getinfo {m}
 {
     \info_item:n {#1}
 }
@@ -186,16 +179,16 @@
 {
     \info_get_hyperxmp_data:N \l_tmpa_prop
     % TODO: broken!! Ignored.
-    %\prop_map_function:NN \l_tmpa_prop \info__knownxmpkey_info:nn
-    %\exp_args:Ne \hypersetup { \prop_to_keyval:N {\l_tmpa_prop} }
+    \prop_map_function:NN \l_tmpa_prop \info__knownxmpkey_info:nn
+    %\exp_args:Nv \hypersetup { \prop_to_keyval:N \l_tmpa_prop }
 }
 
 \cs_new:Npn \info_set_non_hyperxmp_data: #1
 {
     \info_get_non_hyperxmp_data:N \l_tmpa_prop
     % TODO: broken!! Ignored.
-    %\prop_map_function:NN \l_tmpa_prop \info__unknownxmpkey_info:nn
-    %\exp_args:Ne \hypersetup { \prop_to_keyval:N {\l_tmpa_prop} }
+    \prop_map_function:NN \l_tmpa_prop \info__unknownxmpkey_info:nn
+    %\exp_args:Nv \hypersetup { \prop_to_keyval:N \l_tmpa_prop }
 }
 
 \NewDocumentCommand \AddPdfHyperxmpData { }
@@ -470,9 +463,5 @@
 %                    final things
 %===================================================================
 
-\bool_if:NT \g_fix_bool
-{
-    \AtBeginDocument
-        { \let\today\DTMtoday }
-}
+\let\today\DTMtoday
 

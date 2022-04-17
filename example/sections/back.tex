@@ -7,7 +7,9 @@
 \end{Appendix}
 
 % In \ShowListOf-type commands, ! means numbered and in TOC (inverse of *)
-\ShowListOfTheorems![onlynamed]  % shows theorems, lemmas, etc.
+\ShowListOfTheoremLike! {
+    onlynamed=true ,
+}
 \ShowListOfSourceCode!
 \end{Appendices}
 

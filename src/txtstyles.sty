@@ -43,6 +43,7 @@
 
 \RequirePackage{hyperref}
 \RequirePackage{fontsize}
+%\RequirePackage{spbmark}  % maybe? TODO: [text,math]
 
 % we'll just load it to avoid problems if a user loads it later
 \RequirePackage{setspace}
@@ -82,7 +83,7 @@
 \cs_new:Npn\txtstyles__err_not_understood:n #1
     { \msg_error:nnn{txtstyles}{notunderstood}{#1} }
 \cs_generate_variant:Nn \txtstyles__err_not_understood:n { V }
-    
+
 \msg_new:nnn{txtstyles}{stylemissing}
     {Cannot~use~style~'#1':~it~is~not~defined.}
 \cs_new:Npn\txtstyles__err_missing:n #1
@@ -94,7 +95,7 @@
 \cs_new:Npn\txtstyles__err_not_def:n #1
     { \msg_error:nnn{txtstyles}{stylenotdefined}{#1} }
 \cs_generate_variant:Nn \txtstyles__err_not_def:n { V }
-    
+
 \msg_new:nnn{txtstyles}{styledefined}
     {Style~'#1'~is~already~defined;~cannot~define.}
 \cs_new:Npn\txtstyles__err_is_def:n #1 {
@@ -103,9 +104,9 @@
 
 \msg_new:nnn{txtstyles}{colormissing}
     {Color~'#1'~does~not~exist~in~l3colors.}
-\cs_new:Npn\txtstyles_err_color_missing:n #1 {
+\cs_new:Npn\__txtstyles_err_color_missing:n #1 {
     \msg_error:nnn{txtstyles}{colormissing}{#1} }
-\cs_generate_variant:Nn \txtstyles_err_color_missing:n { V }
+\cs_generate_variant:Nn \__txtstyles_err_color_missing:n { V }
 
 \msg_new:nnn{txtstyles}{colornotdefined}
     {Color~'#1'~is~not~defined;~cannot~renew.}
@@ -125,6 +126,12 @@
     \msg_error:nnn{txtstyles}{cmdnotdefined}{#1} }
 \cs_generate_variant:Nn \txtstyles__err_cmd_not_def:n { V }
 
+\msg_new:nnn{txtstyles}{macroismodal}
+    {No~macro~or~command~named~'#1'.}
+\cs_new:Npn\txtstyles__err_is_modal:n #1 {
+    \msg_error:nnn{txtstyles}{macroismodal}{#1} }
+\cs_generate_variant:Nn \txtstyles__err_is_modal:n { V }
+
 \msg_new:nnn{txtstyles}{capoption}
     {Option~1~must~be~'label',~'text',~'both',~or~blank,~not~'#1'.}
 \cs_new:Npn\txtstyles__err_cap_option:n #1 {
@@ -137,10 +144,11 @@
 %===================================================================
 
 \str_gset:Nn \g_txtstyles_case_lang_str {none}
-\cs_new:Npn \txtstyles_set_case_lang:n #1
+\cs_new_protected:Npn \txtstyles_set_case_lang:n #1
 {
     \str_gset:Nn \g_txtstyles_case_lang_str {#1}
 }
+\cs_generate_variant:Nn \txtstyles_set_case_lang:n { V, v, x }
 
 \cs_generate_variant:Nn \text_uppercase:n { V, e }
 \cs_generate_variant:Nn \text_lowercase:n { V, e }
@@ -150,9 +158,6 @@
 \cs_generate_variant:Nn \text_lowercase:nn { Vn, en, Vv, ev }
 \cs_generate_variant:Nn \text_titlecase:nn { Vn, en, Vv, ev }
 \cs_generate_variant:Nn \text_titlecase_first:nn { Vn, en, Vv, ev }
-
-\NewDocumentCommand \txtsub {+m} { \textsubscript{#1} }
-\NewDocumentCommand \txtsup {+m} { \textsuperscript{#1} }
 
 \bool_if:NT \g_txtstyles_faces_bool
 {
@@ -166,50 +171,71 @@
         { \group_begin: \ebseries #1 \group_end: }
 }
 
-\NewExpandableDocumentCommand \txtuppercase {+m}
+\NewDocumentCommand \txtsub {+m} { \textsubscript{#1} }
+\NewDocumentCommand \txtsup {+m} { \textsuperscript{#1} }
+
+\cs_new:Npn \txtstyles_uppercase:n #1
 {
     \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
         { \text_uppercase:n{#1} }
         { \text_uppercase:nv{#1}{\g_txtstyles_case_lang_str} }
 }
-\NewExpandableDocumentCommand \txtlowercase {+m}
+\cs_generate_variant:Nn \txtstyles_uppercase:n { V, v, e }
+\NewDocumentCommand \txtuppercase {+m}
+    { \txtstyles_uppercase:n{#1} }
+
+\cs_new:Npn \txtstyles_lowercase:n #1
 {
     \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
         { \text_lowercase:n{#1} }
         { \text_lowercase:nv{#1}{\g_txtstyles_case_lang_str} }
 }
+\cs_generate_variant:Nn \txtstyles_lowercase:n { V, v, e }
+\NewDocumentCommand \txtlowercase {+m}
+    { \txtstyles_lowercase:n{#1} }
 
 % Uppercase first character and each first character after punctuation; lowercase the rest
 % E.g. "\txtsentencecase{grab a RED one}" --> Grab A Red One
 % The starred variant leaves intra-word casing as-is
 % the L3 kernel macros are badly named
-\NewExpandableDocumentCommand \txtsentencecase { +m }
+\cs_new:Npn \txtstyles_sentencecase:n #1
 {
     \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
         { \text_titlecase:n{#1} }
         { \text_titlecase:nv{#1}{\g_txtstyles_case_lang_str} }
 }
+\cs_generate_variant:Nn \txtstyles_titlecase:n { V, v, e }
+\NewDocumentCommand \txtsentencecase { +m }
+    { \txtstyles_sentencecase:n{#1} }
 
-\NewExpandableDocumentCommand \txtsentencecasefirst { +m }
+\cs_new:Npn \txtstyles_sentencecasefirst:n #1
 {
     \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
         { \text_titlecase_first:n{#1} }
         { \text_titlecase_first:nv{#1}{\g_txtstyles_case_lang_str} }
 }
+\cs_generate_variant:Nn \txtstyles_titlecasefirst:n { V, v, e }
+\NewDocumentCommand \txtsentencecasefirst { +m }
+    { \txtstyles_sentencecasefirst:n{#1} }
+
+\cs_new:Npn \txtstyles_force_sc:n #1
+    { \textsc{\text_lowercase:n{#1}} }
 
 \regex_const:Nn \c_txtstyles_capital_letters_regex
-    { \c[L][A-Z]+ }
+    { \c[L][[:upper:]]+ }
+
 
 % converts capital letters to small-caps but leaves lowercase
 % Great for mixed-case acronyms like "ChEMBL", and acronyms no longer stand out
 \cs_new:Npn \txtstyles_uptosc:n #1
 {
-    \tl_set:Nx \l_tmpa_tl {#1}
+    \tl_set:Ne \l_tmpa_tl {#1}
+    \tl_log:N \l_tmpa_tl
     \regex_replace_all:NnN
         \c_txtstyles_capital_letters_regex
-        { \c{textsc} \cB\{ \c{text_lowercase:n} \cB\{ \0 \cE\} \cE\} }
+        { \c{txtstyles_force_sc:n} \cB\{ \0 \cE\} }
         \l_tmpa_tl
-    \tl_use:N \l_tmpa_tl
+    \l_tmpa_tl
 }
 \cs_generate_variant:Nn \txtstyles_uptosc:n { v, e, x }
 \NewDocumentCommand \txtuppertosc {+m}
@@ -233,22 +259,22 @@
 \NewDocumentCommand \txtalltosc {+m}
     { \textsc{\text_lowercase:n{#1}} }
 
-\NewExpandableDocumentCommand \txtdquoted {+m}
+\NewDocumentCommand \txtdquoted {+m}
     { ``#1" }
 
-\NewExpandableDocumentCommand \txtsquoted {+m}
+\NewDocumentCommand \txtsquoted {+m}
     { `#1' }
 
-\NewExpandableDocumentCommand \txtinparens {+m}
+\NewDocumentCommand \txtinparens {+m}
     { (#1) }
 
-\NewExpandableDocumentCommand \txtinbrackets {+m}
+\NewDocumentCommand \txtinbrackets {+m}
     { [#1] }
 
-\NewExpandableDocumentCommand \txtinbraces {+m}
+\NewDocumentCommand \txtinbraces {+m}
     { \{#1\} }
 
-\NewExpandableDocumentCommand \txtinangles {+m}
+\NewDocumentCommand \txtinangles {+m}
     {〈#1〉 }
     
 
@@ -1507,7 +1533,7 @@
     dot-underline=dotuline,
     dot-ul=dotuline,
     xout=xout,
-    hashout=xout
+    hashout=xout,
 }
 \prop_map_inline:Nn \g_tmpa_prop
 {
@@ -1515,8 +1541,8 @@
     \prop_put:Nnn \g_txtstyles_aliases_prop {#1}{#2}
 }
 
-\seq_new:N \g_txtstyles_cases_seq
-\seq_gset_from_clist:Nn \g_txtstyles_cases_seq
+\seq_new:N \g_txtstyles_unary_seq
+\seq_gset_from_clist:Nn \g_txtstyles_unary_seq
 {
     txtuppercase,
     txtlowercase,
@@ -1583,7 +1609,7 @@
     { \changefontsize[#1]{#1} }  % makes baselinestretch make sense
 
 % parindent and parskip from expl3 skips
-\cs_new:Npn \txtstyles_set_par_skips:NN #1#2
+\cs_new_protected:Npn \txtstyles_set_par_skips:NN #1#2
 {
     \exp_args:NNx \setlength \parskip {\skip_use:N #1}
     \exp_args:NNx \setlength \parindent {\skip_use:N #2}
@@ -1625,7 +1651,7 @@
 {
     \l3color_if_defined:nTF {#1}
         {\prg_return_true:}
-        {\txtstyles_err_color_missing:n{#1} \prg_return_false:}
+        {\__txtstyles_err_color_missing:n{#1} \prg_return_false:}
 }
 
 \prg_new_conditional:Npnn \txtstyles__color_req_exist:n #1 { T, TF }
@@ -1754,7 +1780,7 @@
 {
     \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
         { \prg_return_true: }
-        { \txtstyles_err_missing:n{#1} \prg_return_false: }
+        { \__txtstyles_err_missing:n{#1} \prg_return_false: }
 }
 
 \prg_new_conditional:Npnn \txtstyles__req_exist:n #1 { T, TF }
@@ -1771,7 +1797,7 @@
         {  \prg_return_true: }
 }
 
-\cs_new:Npn \txtstyles_get:n #1
+\cs_new_protected:Npn \txtstyles_get:n #1
 {
     \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
         { \l_tmpa_tl }
@@ -1779,7 +1805,7 @@
 }
 \cs_generate_variant:Nn \txtstyles_get:n { V, v }
 
-\cs_new:Npn \txtstyles_get:nN #1#2
+\cs_new_protected:Npn \txtstyles_get:nN #1#2
 {
     \prop_get:NnNTF \g_txtstyles_prop {#1} #2
         { #2 }
@@ -1788,7 +1814,7 @@
 \cs_generate_variant:Nn \txtstyles_get:nN { nc, VN, Vc }
 
 % this shouldn't be needed much:
-\NewExpandableDocumentCommand \GetTxtStyle { m }
+\NewDocumentCommand \GetTxtStyle { m }
     { \txtstyles_get:n{#1} }
 
 
@@ -1797,25 +1823,25 @@
 %                    captions
 %===================================================================
 
-\cs_new:Npn \txtstyles_declare_cap_label_style:n #1
+\cs_new_protected:Npn \txtstyles_declare_cap_label_style:n #1
     { \DeclareCaptionLabelFormat {#1} { \txtstyles_use:nn{#1}{##1} } }
 \NewDocumentCommand \DeclareCapLabelStyle { m }
     { \txtstyles_declare_cap_label_style:n{#1} }
 
-\cs_new:Npn \txtstyles_declare_cap_text_style:n #1
+\cs_new_protected:Npn \txtstyles_declare_cap_text_style:n #1
     { \DeclareCaptionTextFormat {#1} { \txtstyles_use:nn{#1}{##1} } }
 \NewDocumentCommand \DeclareCapTextStyle { m }
     { \txtstyles_declare_cap_text_style:n{#1} }
 
-\cs_new:Npn \txtstyles_declare_cap_label_style_inline:n #1
+\cs_new_protected:Npn \txtstyles_declare_cap_label_style_inline:n #1
     { \DeclareCaptionLabelFormat {#1} { \txtstyles_inline:nn{#1}{##1} } }
 \cs_generate_variant:Nn \txtstyles_declare_cap_label_style_inline:nnn { nV }
 
-\cs_new:Npn \txtstyles_declare_cap_text_style_inline:n #1
+\cs_new_protected:Npn \txtstyles_declare_cap_text_style_inline:n #1
     { \DeclareCaptionTextFormat {#1} { \txtstyles_inline:nn{#1}{##1} } }
 \cs_generate_variant:Nn \txtstyles_declare_cap_text_style_inline:nnn { nV }
 
-\cs_new:Npn \txtstyles_declare_cap_style:nnn #1#2#3
+\cs_new_protected:Npn \txtstyles_declare_cap_style:nnn #1#2#3
 {
     \DeclareCaptionFormat {#1}
     {
@@ -1827,7 +1853,7 @@
 \NewDocumentCommand \DeclareCapStyle { >{\TrimSpaces}m >{\TrimSpaces}m >{\TrimSpaces}m }
     { \txtstyles_declare_cap_style:nnn{#1}{#2}{#3} }
 
-\cs_new:Npn \txtstyles_declare_cap_style_inline:nnn #1#2#3
+\cs_new_protected:Npn \txtstyles_declare_cap_style_inline:nnn #1#2#3
 {
     \DeclareCaptionFormat {#1}
     {
@@ -1844,8 +1870,39 @@
 %                    declaring styles
 %===================================================================
 
-\cs_new:Npn \txtstyles_declare:nn #1#2
+\cs_new_protected:Npn \txtstyles__check:n #1
 {
+    % nothing yet
+}
+
+\cs_new_protected:Npn \txtstyles__check_nullary:n #1
+{
+    \tl_set:Nn \l__aliasname_tl {}
+    \prop_get:NnNTF \g_txtstyles_aliases_prop {#1} \l__aliasname_tl
+    {
+        \seq_if_in:NVT \g_txtstyles_unary_seq \l__aliasname_tl
+            { \txtstyles__err_is_unary:n{#1} }
+    }
+}
+
+\cs_new_protected:Npn \txtstyles__split:NN #1#2
+{
+    \tl_replace_all:Nnn #1 {;} {,}
+    \clist_set:NV #2 #1
+}
+
+\cs_new_protected:Npn \txtstyles__split_check:nNN #1#2#3
+{
+    \tl_set:Nn \l_tmpb_tl {#1}
+    \txtstyles__split:NN \l_tmpb_tl #3
+    \use_none:n { \clist_map_function:NN #3 #2 }
+}
+\cs_generate_variant:Nn \txtstyles__split_check:nNN { VNN }
+
+
+\cs_new_protected:Npn \txtstyles_declare:nn #1#2
+{
+    \txtstyles__split_check:nNN {#2} \txtstyles__check:n \l_tmpa_clist
     \prop_gput:Nnn \g_txtstyles_prop {#1} {#2}
 }
 \cs_generate_variant:Nn \txtstyles_declare:nn { nV }
@@ -1855,14 +1912,14 @@
 % related commands a la [New/Renew/etc.]DocumentCommand
 
 % NewTxtStyle
-\cs_new:Npn \txtstyles_new:nn #1#2
+\cs_new_protected:Npn \txtstyles_new:nn #1#2
     { \txtstyles__req_not_exist:nT {#1} { \txtstyles_declare:nn{#1}{#2} } }
 \cs_generate_variant:Nn \txtstyles_new:nn { nV }
 \NewDocumentCommand \NewTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
     { \txtstyles_new:nn{#1}{#2} }
 
 % RenewTxtStyle
-\cs_new:Npn \txtstyles_renew:nn #1#2
+\cs_new_protected:Npn \txtstyles_renew:nn #1#2
     { \txtstyles__req_exist:nT {#1} { \txtstyles_declare:nn{#1}{#2} } }
 \cs_generate_variant:Nn \txtstyles_renew:nn { nV }
 \NewDocumentCommand \RenewTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
@@ -1870,11 +1927,45 @@
 
 
 % ProvideTxtStyle
-\cs_new:Npn \txtstyles_provide:nn #1#2
+\cs_new_protected:Npn \txtstyles_provide:nn #1#2
     { \txtstyles_if_exist:nF {#1} { \txtstyles_declare:nn{#1}{#2} } }
 \cs_generate_variant:Nn \txtstyles_provide:nn { nV }
 \NewDocumentCommand \ProvideTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
     { \txtstyles_provide:nn{#1}{#2} }
+
+
+\cs_new:Npn \txtstyles_declare_nullary:nn #1#2
+{
+    \txtstyles__split_check:nNN {#2} \txtstyles__check_nullary:n \l_tmpa_clist
+    \prop_gput:Nnn \g_txtstyles_prop {#1} {#2}
+}
+\cs_generate_variant:Nn \txtstyles_declare_nullary:nn { nV }
+\NewDocumentCommand \DeclareTxtStyleNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \txtstyles_declare_nullary:nn{#1}{#2} }
+
+% related commands a la [New/Renew/etc.]DocumentCommand
+
+% NewTxtStyle
+\cs_new:Npn \txtstyles_new_nullary:nn #1#2
+    { \txtstyles__req_not_exist:nT {#1} { \txtstyles_declare_nullary:nn{#1}{#2} } }
+\cs_generate_variant:Nn \txtstyles_new_nullary:nn { nV }
+\NewDocumentCommand \NewTxtStyleNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \txtstyles_new_nullary:nn{#1}{#2} }
+
+% RenewTxtStyle
+\cs_new:Npn \txtstyles_renew_nullary:nn #1#2
+    { \txtstyles__req_exist:nT {#1} { \txtstyles_declare_nullary:nn{#1}{#2} } }
+\cs_generate_variant:Nn \txtstyles_renew_nullary:nn { nV }
+\NewDocumentCommand \RenewTxtStyleNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \txtstyles_renew_nullary:nn{#1}{#2} }
+
+
+% ProvideTxtStyle
+\cs_new:Npn \txtstyles_provide_nullary:nn #1#2
+    { \txtstyles_if_exist:nF {#1} { \txtstyles_declare_nullary:nn{#1}{#2} } }
+\cs_generate_variant:Nn \txtstyles_provide_nullary:nn { nV }
+\NewDocumentCommand \ProvideTxtStyleNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \txtstyles_provide_nullary:nn{#1}{#2} }
 
 
 
@@ -1884,7 +1975,7 @@
 
 % AliasTxtStyle
 
-\cs_new:Npn \txtstyles_alias:nn #1#2
+\cs_new_protected:Npn \txtstyles_alias:nn #1#2
 {
     \prop_get:NnNTF \g_txtstyles_prop {#2} \l_tmpa_tl
     { \txtstyles_declare:nV {#1} \l_tmpa_tl }
@@ -1895,7 +1986,7 @@
     { \txtstyles_alias:nn{#1}{#2} }
 
 
-\cs_new:Npn \txtstyles_alias_new:nn #1#2
+\cs_new_protected:Npn \txtstyles_alias_new:nn #1#2
 {
     \txtstyles__req_exist:nT {#2}
     {
@@ -1991,25 +2082,42 @@
 
 % this is only needed for compatibility with other packages or legacy code
 
-\cs_new_protected:Npn \txtstyles_run:n #1
+\cs_new_protected:Npn \txtstyles_run_nullary_inline:n #1
 {
-    \tl_set:Nn \l_tmpa_tl {#1}
-    \tl_replace_all:Nnn \l_tmpa_tl {;} {,}
-    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpb_tl
+    \txtstyles__split_check:nNN {#1} \txtstyles__check_nullary:n \l_tmpa_clist
+    \seq_set_from_clist:NV \seq_mycmds_seq \l_tmpa_clist
+    \seq_map_variable:NNn \seq_mycmds_seq \l__currentcmd_tl
     {
-        \clist_set:NV \l_tmpa_clist \l_tmpb_tl
-        \clist_map_inline:Nn \l_tmpa_clist
+       \tl_set:Nn \l__aliasname_tl {}
+        \prop_get:NVNTF \g_txtstyles_aliases_prop \l__currentcmd_tl \l__aliasname_tl
         {
-            \cs_if_exist_use:cF {##1}
-            { \txtstyles__err_cmd_not_def:n{##1} }
+            \cs_if_exist_use:c {\l__aliasname_tl}
+        }
+        {
+            \cs_if_exist_use:cF { \l__currentcmd_tl }
+            {
+                \str_if_in:NnTF \l__currentcmd_tl {*}
+                    { \txtstyles_set_baselinestretch:V \l__currentcmd_tl }
+                    { \txtstyles_use_color:V \l__currentcmd_tl }
+            }
         }
     }
-    { \txtstyles__err_missing:n{#1} }
 }
-\cs_generate_variant:Nn \txtstyles_run:n { V }
+\cs_generate_variant:Nn \txtstyles_run_nullary_inline:n { V }
 
-\NewDocumentCommand \RunTxtStyle { >{\TrimSpaces}m }
-    { \txtstyles_run:n{#1} }
+\NewDocumentCommand \RunNullaryTxtStyleInline { >{\TrimSpaces}m }
+    { \txtstyles_run_nullary:n{#1} }
+
+\cs_new_protected:Npn \txtstyles_run_nullary:n #1
+{
+    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpb_tl
+        { \txtstyles_run_nullary_inline:V \l_tmpb_tl }
+        { \txtstyles__err_missing:n{#1} }
+}
+\cs_generate_variant:Nn \txtstyles_run_nullary:n { V }
+
+\NewDocumentCommand \RunNullaryTxtStyle { >{\TrimSpaces}m }
+    { \txtstyles_run_nullary:n{#1} }
 
 
 
@@ -2019,19 +2127,17 @@
 
 \cs_generate_variant:Nn \seq_set_from_clist:Nn {NV}
 
-\cs_new:Npn \txtstyles_use_direct:nn #1#2
+\cs_new_protected:Npn \txtstyles_use_direct:nn #1#2
 {
-    \tl_set:Nn \l_tmpa_tl {#1}
-    \tl_replace_all:Nnn \l_tmpa_tl {;} {,}
-    \seq_set_from_clist:NV \seq_mycmds \l_tmpa_tl
+    \txtstyles__split_check:nNN {#1} \txtstyles__check:n \l_tmpa_clist
+    \seq_set_from_clist:NV \seq_mycmds_seq \l_tmpa_clist
     \tl_set:Nn \l__mytxt_tl {#2}
-    \cs_set:Npn \l__casing:n ##1 {##1}
-    \seq_map_variable:NNn \seq_mycmds \l__currentcmd_tl
+    \seq_map_variable:NNn \seq_mycmds_seq \l__currentcmd_tl
     {
         \tl_set:Nn \l__aliasname_tl {}
         \prop_get:NVNTF \g_txtstyles_aliases_prop \l__currentcmd_tl \l__aliasname_tl
         {
-            \seq_if_in:NVTF \g_txtstyles_cases_seq {\l__aliasname_tl}
+            \seq_if_in:NVTF \g_txtstyles_unary_seq {\l__aliasname_tl}
             {
                 \tl_set:Nx
                     \l__mytxt_tl
@@ -2050,24 +2156,25 @@
     }
     { \l__mytxt_tl }
 }
-\cs_generate_variant:Nn \txtstyles_use_direct:nn { Vn, vn, nV, nv, VV, vv }
+\cs_generate_variant:Nn \txtstyles_use_direct:nn
+    { Vn, vn, en, nV, nv, VV, vv }
 
-\cs_new:Nn \txtstyles_group_start:
+\cs_new_protected:Nn \txtstyles_group_start:
     { \group_begin: \color_group_begin: }
-\cs_new:Nn \txtstyles_group_end:
+\cs_new_protected:Nn \txtstyles_group_end:
     { \group_end: \color_group_end: }
 
-\cs_new:Npn \txtstyles_use:nn #1#2
+\cs_new_protected:Npn \txtstyles_use:nn #1#2
 {
     \txtstyles_group_start:
     \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
-        { \txtstyles_use_direct:Vn {\l_tmpa_tl}{#2} }
+        { \txtstyles_use_direct:Vn \l_tmpa_tl {#2} }
         { \txtstyles__err_missing:n{#1} }
     \txtstyles_group_end:
 }
-\cs_generate_variant:Nn \txtstyles_use:nn { Vn, vn, nv, nV, vv, VV }
+\cs_generate_variant:Nn \txtstyles_use:nn { Vn, vn, en, nV, nv, VV, vv }
 
-\cs_new:Npn \txtstyles_inline:nn #1#2
+\cs_new_protected:Npn \txtstyles_inline:nn #1#2
 {
     \txtstyles_group_start:
     \txtstyles_use_direct:nn {#1} {#2}
@@ -2075,7 +2182,7 @@
 }
 \cs_generate_variant:Nn \txtstyles_inline:nn { Vn, vn, nv, nV, vv, VV }
 
-\cs_new:Npn \txtstyles_set_inline:nN #1#2
+\cs_new_protected:Npn \txtstyles_set_inline:nN #1#2
 {
     \txtstyles_group_start:
     \tl_set:Nv #2 { \txtstyles_use_direct:nV {#1} #2 }
@@ -2083,7 +2190,7 @@
 }
 \cs_generate_variant:Nn \txtstyles_set_inline:nN { VN }
 
-\cs_new:Npn \txtstyles_gset_inline:nN #1#2
+\cs_new_protected:Npn \txtstyles_gset_inline:nN #1#2
 {
     \txtstyles_group_start:
     \tl_gset:Nv #2 { \txtstyles_use_direct:nV {#1} #2 }
@@ -2091,7 +2198,7 @@
 }
 \cs_generate_variant:Nn \txtstyles_gset_inline:nN { VN }
 
-\cs_new:Npn \txtstyles_use_or_inline:nnn #1#2#3
+\cs_new_protected:Npn \txtstyles_use_or_inline:nnn #1#2#3
 {
     \tl_if_blank:nTF {#2}
         { \tl_if_blank:nTF {#1} {#3} { \txtstyles_use:nn{#1}{#3} } }
@@ -2158,7 +2265,12 @@
 \cs_new_protected:Npn \txtstyles_show_samples:n #1
 {
     \prop_map_inline:Nn \g_txtstyles_prop
-        { \noindent \txtstyles_use:nn{##1}{•\,#1}\vspace{-\baselineskip}\hfill{\smallrrr\texttt{ ##2}}\vspace{0.2\baselineskip}\hrule\vspace{0.8\baselineskip} }
+    {
+        \noindent \txtstyles_use:nn{##1}{•\,#1}
+        \vspace{-\baselineskip}\hfill{\smallrrr\texttt{ ##2}}
+        \vspace{0.2\baselineskip}\hrule
+        \vspace{0.8\baselineskip}
+    }
 }
 \NewDocumentCommand \ShowTxtSamples { O{We've~got~a~QUICK~fox.} }
     { \txtstyles_show_samples:n{#1} }
@@ -2173,10 +2285,10 @@
 %                    font faces
 %===================================================================
 
-\cs_new:Npn \txtstyles__declare_family:nnN #1#2#3
+\cs_new_protected:Npn \txtstyles__declare_family:nnN #1#2#3
     { \newfontfamily {#3} {#1} [#2] }
 
-\cs_new:Npn \txtstyles_declare_family:nn #1#2
+\cs_new_protected:Npn \txtstyles_declare_family:nn #1#2
 {
     \exp_args:Nnnc
         \txtstyles__declare_family:nnN
@@ -2185,7 +2297,7 @@
         {#1}
 }
 
-\cs_new:Npn \txtstyles_declare_families:nnnn #1#2#3#4
+\cs_new_protected:Npn \txtstyles_declare_families:nnnn #1#2#3#4
 {
     \seq_set_from_clist:Nn \l_tmpa_clist {#3}
     \seq_map_inline:Nn \l_tmpa_clist
@@ -2203,8 +2315,11 @@
         <Latin Modern>
         {Roman, Mono}
         [SmallCapsFont = * Caps, #1]  % needs some help here
-    \DeclareTxtFontFamilies  % these don't support smallcaps
-        {Latin Modern Sans, Latin Modern Math}
+    \DeclareTxtFontFamilies  % doesn't support smallcaps
+        {Latin Modern Sans}
+        [#1]
+    \DeclareTxtFontFamilies  % doesn't support smallcaps, italic, or bold
+        {Latin Modern Math}
         [#1]
 }
 
@@ -2231,8 +2346,32 @@
 
 
 %===================================================================
+%                    defaults copied from titlesec
+%===================================================================
+
+\str_const:Nn \c_txtstyles_chapter_head_str          {huge}
+\str_const:Nn \c_txtstyles_chapter_name_str          {Huge,bold}
+\str_const:Nn \c_txtstyles_section_head_str          {Large}
+\str_const:Nn \c_txtstyles_subsection_head_str       {mid,bold}
+\str_const:Nn \c_txtstyles_paragraph_head_str        {mid,bold}
+\str_const:Nn \c_txtstyles_subparagraph_head_str     {mid,bold}
+
+
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%     ~~~   Things that should be moved to another package   ~~~
+
+
+%===================================================================
 %                    sectioning depth
 %===================================================================
+
+\msg_new:nnn{txtstyles}{invaliddepth}
+    {Depth~'#1'~is~invalid.}
+\cs_new:Npn\__txtstyles_err_invaliddepth:n #1
+    { \msg_error:nnn{txtstyles}{invaliddepth}{#1} }
+\cs_generate_variant:Nn \__txtstyles_err_invaliddepth:n { V }
+
 
 \prop_const_from_keyval:Nn \c__txtstyles_depths_prop
 {
@@ -2245,50 +2384,26 @@
 \cs_new:Npn \txtstyles_parse_depth:nN #1#2
 {
     \prop_get:NnNF \c__txtstyles_depths_prop {#1} #2
-    {} % TODO: error
+    { \__txtstyles_err_invaliddepth:n {#1} }
 }
-\cs_generate_variant:Nn \txtstyles_parse_depth:nN { VN, vN }
+\cs_generate_variant:Nn \txtstyles_parse_depth:nN { VN, vN, eN }
 
-\cs_new:Npn \txtstyles__set_counter:nV #1#2
-    { \setcounter {#1} {#2} }
-
-\cs_new:Npn \txtstyles_set_depth:nn #1#2
+\cs_new_protected:Npn \txtstyles_set_depth:nn #1#2
 {
     \txtstyles_parse_depth:nN {#2} \l_tmpa_str
-    \txtstyles__set_counter:nV {#1} \l_tmpa_str
+    \exp_args:NnV \setcounter {#1} \l_tmpa_str
 }
-\cs_generate_variant:Nn \txtstyles_set_depth:nn { nV }
-
-\cs_new:Npn \txtstyles_set_section_depth:n #1
-    { \txtstyles_set_depth:nn{secnumdepth}{#1} }
-\cs_generate_variant:Nn \txtstyles_set_section_depth:n { V }
-
-\cs_new:Npn \txtstyles_set_toc_depth:n #1
-    { \txtstyles_set_depth:nn{tocdepth}{#1} }
-\cs_generate_variant:Nn \txtstyles_set_toc_depth:n { V }
+\cs_generate_variant:Nn \txtstyles_set_depth:nn { nV, nv, ne }
 
 \NewDocumentCommand \SetSectionDepth { >{\TrimSpaces}m }
-    { \txtstyles_set_section_depth:n{#1} }
+    { \txtstyles_set_depth:nn{secnumdepth}{#1} }
 
 \NewDocumentCommand \SetTocDepth { >{\TrimSpaces}m }
-    { \txtstyles_set_toc_depth:n{#1} }
+    { \txtstyles_set_depth:nn{tocdepth}{#1} }
 
 
-
-%===================================================================
-%                    defaults copied from titlesec
-%===================================================================
-
-\str_const:Nn \c_txtstyles_chapter_head_str          {huge}
-\str_const:Nn \c_txtstyles_chapter_name_str          {Huge,bold}
-\str_const:Nn \c_txtstyles_section_head_str          {Large}
-\str_const:Nn \c_txtstyles_subsection_head_str       {mid,bold}
-\str_const:Nn \c_txtstyles_paragraph_head_str        {mid,bold}
-\str_const:Nn \c_txtstyles_subparagraph_head_str     {mid,bold}
-
-
-\cs_new:Nn \txtstyles_disable_hyphens:
-{  % probably doesn't belong here?
+\cs_new_protected:Nn \txtstyles_disable_hyphens:
+{   % probably doesn't belong here
     % 10000 is a special value that turns it off
     \pretolerance=10000
     \hyphenpenalty=10000
