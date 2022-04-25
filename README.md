@@ -17,12 +17,12 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
 
 ```latex
 \documentclass [
-    feature / minted,
-    feature / imakeidx,
-    feature / tcolorbox,
-    feature / chemmacros,
-    feature / chemfig,
-    language = en-us,
+    pkg / minted,
+    pkg / imakeidx,
+    pkg / tcolorbox,
+    pkg / chemfig,
+    mode = thesis,
+    language = USenglish,
     bib / hide-language = true,
     color / url = 0000D2,
     cref / capitalize = true,
@@ -32,15 +32,15 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
     numbering / equation = arabic,
     numbering / equation-brackets = square-bold,
     numbering / theorem-like-within = chapter,
-    style / foreign-words = {italic},
-    style / indx-starred = {HTML:550000;sans,allcaps},
-    style / nomenclature-group = {LARGE;uppertosc},
+    style / foreign-words = swash,
+    style / indx-starred = HTML:550000;sans;allcaps,
+    style / nomenclature-group = LARGE;uppertosc,
     typo / subcaption-sep = {~},
     glue / indent = 0em,
     glue-above / table-footer = 1ex plus 2pt, % rubber length
     glue-below / section = 2ex plus 1 ex minus 1ex,
     toc / depth = section,
-    ...
+    ...  % 168 total keys
 ]{desert}
 ```
 
@@ -84,7 +84,8 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
 ...
 \end{FrontChapter}
 
-\begin{SpecialChapter}[entry=Dedication, at=middle, width=0.6\textwidth]
+% This one will show in the TOC (via "entry") but won't show the title
+\begin{SpecialChapter}[entry=Dedication, at=middle, align=right, width=0.6\textwidth]
 
 \end{SpecialChapter}
 
@@ -96,7 +97,7 @@ Start of abstract.
 \ShowTableOfContents
 \ShowListOfFigures
 \ShowListOfTables
-\ShowListOfAbbrevs
+\ShowListOfAbbreviations
 \ShowNomenclature
 ```
 
@@ -216,6 +217,14 @@ Good old `figure` and `\includegraphics` work too, of course.
     \describepanels{b--c}{Photos of butterflies.}
 }
 \end{PhantomPanelFigure}
+```
+
+By the way, there's a smart `\captioning` macro:
+
+```latex
+\captioning{This is my caption.}
+\captioning[entry=My Caption]{This is my caption.}
+\captioning[entry=My Caption, caption=This is my caption., label=butterflies}
 ```
 
 #### Boxes

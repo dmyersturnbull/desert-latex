@@ -1,0 +1,186 @@
+
+\part{Documentation}
+
+\begin{LongTable}[
+    caption = {DESERT key--value options},
+    entry = {Package key--value options},
+    label = {options},
+    note{a} = {Options: GenericAFour, GenericLetter, Ucsf, Cmu, Stanford, Cambridge}
+]{
+    colspec=lll,
+    rowhead={1},
+    hline{1,Z} = 1pt,
+    hline{2} = 0.5pt,
+    cells={font=\sffamily},
+    row{1} = {font={\sffamily\bfseries}},
+}
+name & value type & description  \\
+draft & boolean &   \\
+language & boolean &   \\
+extra-languages & list * &   \\
+bidi & boolean & Enable bidirectional text  \\
+mode & thesis/article/book &   \\
+preset & macro name \TblrNote{a} &   \\
+geometry & geometry &  Options to geometry \\
+pkg / svg & - & includesvg command  \\
+pkg / kantlipsum & - & ikant command for Lorem Ipsum  \\
+pkg / chemformula & - &   \\
+pkg / chemmacros & - &    \\
+pkg / chemfig & - & Chemical diagrams  \\
+pkg / cryptocode & - &  Lots of algorithm-like environments and tools \\
+pkg / imakeidx & - & Make an index  \\
+pkg / knowledge & - & Hyperlink to topics, support index, etc.  \\
+pkg / lettrine & - &  Big first letter of chapter  \\
+pkg / minted & - &  Source code highlighting \\
+pkg / tcolorbox & - & Customizable boxes; puts source code in box  \\
+pkg / ulem & - & Underline, strikethrough, etc.  \\
+pkg / varioref & - & ``on the previous page"  \\
+bib / hide-language & boolean & Hide, e.g., \textit{en.} in references  \\
+bib / per-chapter & boolean & Show bibliography per chapter  \\
+bib / style & BibLaTeX style &   \\
+color / cite & color &   \\
+color / file & color &   \\
+color / ref & color &   \\
+color / url & color &   \\
+cref / abbreviate & boolean & Pass noabbrev to cleveref if false  \\
+cref / capitalize & boolean & Pass capitalize to cleveref  \\
+font-size / main & float ( > 0) & E.g. \textit{12}  \\
+layout / nomenclature-symbol-width & x-dimension & Between symbol and description  \\
+layout / index-cols & integer & Number of columns in index  \\
+layout / index-col-sep & x-dimension & Space between columns in index  \\
+layout / header-left & tokens &   \\
+layout / header-center & tokens &   \\
+layout / header-right & tokens &   \\
+layout / footer-left & tokens &   \\
+layout / footer-center & tokens &   \\
+layout / footer-right & tokens &   \\
+layout / footnotes-as-endnotes & boolean & Converts footnotes into an endnotes  \\
+layout / endnote-backrefs & boolean &   \\
+layout / show-toc-like-links & boolean &   \\
+layout / show-nomenclature-links & boolean &   \\
+layout / footnote-align & left/right/center &   \\
+layout / footnote-placement & * &   \\
+leading / main & float ( > 0) &   \\
+leading / caption & float ( > 0) &   \\
+leading / equation & float ( > 0) &   \\
+leading / toc & float ( > 0) &   \\
+leading / list-of & float ( > 0) &   \\
+leading / abbreviations & float ( > 0) &   \\
+leading / nomenclature & float ( > 0) &   \\
+leading / source-code & float ( > 0) &   \\
+numbering / depth & level &   \\
+numbering / back-matter-pages & numbering &   \\
+numbering / front-matter-chapters & numbering &   \\
+numbering / main-matter-chapters & numbering &   \\
+numbering / back-matter-chapters & numbering &   \\
+numbering / figure-panels & numbering &   \\
+numbering / equation-brackets & * &   \\
+numbering / equation-within & level &   \\
+numbering / float-within & level &   \\
+numbering / footnote-within & none/page/chapter &   \\
+numbering / footnotes & * &   \\
+numbering / front-matter-pages & numbering &   \\
+numbering / main-matter-pages & numbering &   \\
+numbering / theorem-like-within & level &   \\
+style / abstract-by & style &   \\
+style / abstract-authors & style &   \\
+style / abstract-title & style &   \\
+style / caption-body & style &   \\
+style / caption-label & style &   \\
+style / subcaption-body & style &   \\
+style / subcaption-label & style &   \\
+style / subref & style &   \\
+style / table-head-body & style (nullary) &   \\
+style / table-head-label & style (nullary) &   \\
+style / table-footer & style (nullary) &   \\
+style / box-label & style (nullary) &   \\
+style / box-name & style (nullary) &   \\
+style / chapter-label & style (nullary) &   \\
+style / chapter-name & style (nullary) &   \\
+style / front-chapter-title & style (nullary) &   \\
+style / part-label & style (nullary) &   \\
+style / part-name & style (nullary) &   \\
+style / chemical-diagram & style (nullary) &   \\
+style / footnote-body & style (nullary) &   \\
+style / foreign-words & style &   \\
+style / indx-starred & style &   \\
+style / nomenclature-group & style &   \\
+style / section-title & style (nullary) &   \\
+style / source-code & style (nullary) &   \\
+style / subsection-title & style (nullary) &   \\
+style / subsubsection-title & style (nullary) &   \\
+style / paragraph-title & style (nullary) &   \\
+style / toc-part-label & style (nullary) &   \\
+style / toc-chapter-label & style (nullary) &   \\
+style / toc-section-label & style (nullary) &   \\
+style / toc-subsection-label & style (nullary) &   \\
+style / toc-subsubsection-label & style (nullary) &   \\
+style / toc-page-number & style (nullary) &   \\
+toc / depth & level &   \\
+toc / references & boolean &   \\
+toc / index & boolean &   \\
+toc / endnotes & boolean &   \\
+toc / figure-panels & boolean &   \\
+typo / ban-hyphens & boolean &   \\
+typo / caption-label-sep & tokens &   \\
+typo / subref-label-sep & tokens &   \\
+typo / subref-format & * &   \\
+typo / caption-table-note-sep & tokens &   \\
+typo / caption-table-remark-sep & tokens &   \\
+glue / indent & x-dimension &   \\
+glue-left / toc-part & x-dimension &   \\
+glue-left / toc-chapter & x-dimension &   \\
+glue-left / toc-section & x-dimension &   \\
+glue-left / toc-subsection & x-dimension &   \\
+glue-left / toc-subsubsection & x-dimension &   \\
+glue-left / theorem-title & x-dimension &   \\
+glue-left / definition-title & x-dimension &   \\
+glue-left / remark-title & x-dimension &   \\
+glue-between / paragraphs & y-glue &   \\
+glue-between / items & y-glue &   \\
+glue-between / multipar-items & y-glue &   \\
+glue-between / footnotes & y-glue &   \\
+glue-between / refs & y-glue &   \\
+glue-above / footnote-list & y-glue &   \\
+glue-below / footnote-list & y-glue &   \\
+glue-above / caption & y-glue &   \\
+glue-above / subcaption & y-glue &   \\
+glue-above / table-title & y-glue &   \\
+glue-below / table-title & y-glue &   \\
+glue-above / table-footer & y-glue &   \\
+glue-below / table-footer & y-glue &   \\
+glue-above / front-chapter & y-glue &   \\
+glue-below / front-chapter & y-glue &   \\
+glue-above / chapter & y-glue &   \\
+glue-below / chapter & y-glue &   \\
+glue-below / chapter-label & y-glue &   \\
+glue-below / part-label & y-glue &   \\
+glue-above / section & y-glue &   \\
+glue-below / section & y-glue &   \\
+glue-above / subsection & y-glue &   \\
+glue-below / subsection & y-glue &   \\
+glue-above / subsubsection & y-glue &   \\
+glue-below / subsubsection & y-glue &   \\
+glue-above / nomenclature-group & y-glue &   \\
+glue-above / paragraph & y-glue & For the named command  \\
+glue-above / theorem-like & y-glue &   \\
+glue-below / theorem-like & y-glue &   \\
+glue-above / algorithm-like & y-glue &   \\
+glue-below / algorithm-like & y-glue &   \\
+glue-above / definition-like & y-glue &   \\
+glue-below / definition-like & y-glue &   \\
+glue-above / remark-like & y-glue &   \\
+glue-below / remark-like & y-glue &   \\
+glue-above / equation & y-glue &   \\
+glue-below / equation & y-glue &   \\
+glue-above / list & y-glue &   \\
+glue-above / multipar-list & y-glue &   \\
+glue-below / abstract-title & y-glue &   \\
+glue-above / abstract-authors & y-glue &   \\
+glue-above / abstract-body & y-glue &   \\
+glue-above / toc-part & y-glue &   \\
+glue-above / toc-chapter & y-glue &   \\
+glue-above / toc-section & y-glue &   \\
+glue-above / toc-subsection & y-glue &   \\
+glue-above / toc-subsubsection & y-glue &   \\
+\end{LongTable}

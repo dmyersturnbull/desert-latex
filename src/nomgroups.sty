@@ -15,7 +15,8 @@
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
 \ProvidesExplPackage {nomgroups} {2022-02-08} {0.1} {Define~nomenclature~groups}
-\RequirePackage{nomencl}
+\RequirePackage[notocbasic]{nomencl}
+\cs_generate_variant:Nn \int_max:nn { VV }
 
 \prop_new:N \g_nomgroups_prop
 \str_gset:Nn \g_nomgroups_text_str {Z}
@@ -42,36 +43,37 @@
         { \prop_put:Nnn \g_nomgroups_prop {##1} {##2} }
 }
 
-%\skip_gset:Nn \nomgroups_header_skip { 2ex plus 0.2ex minus 0.1ex }
+\skip_new:N \nomgroups_header_skip
+\skip_gset:Nn \nomgroups_header_skip { 2ex plus 0.2ex minus 0.1ex }
 
 \cs_new:Npn \nomgroups_format_header:n #1
     { \textbf{#1} }
 
 \cs_new:Npn \nomgroups_make_header:n #1
 {
-    %\vspace{\skip_use:N \nomgroups_header_skip}
-    \vspace{\baselineskip}
+    \skip_vertical:N \nomgroups_header_skip
     \item [ \hspace*{-\itemindent} \nomgroups_format_header:n{#1} ]
 }
 
-\keys_define:nn { nomgroups }
+\keys_define:nn { nomgroups / setup}
 {
-    groups .code:n = { \SetNomGroups{#1} },
-    groups .default:n = {},
-    add-default-groups .code:n = { \AddDefaultNomGroups },
-    add-default-groups .default:n = false,
-    default-text-group .tl_gset:N = \g_nomgroups_text_str,
-    default-math-group .tl_gset:N = \g_nomgroups_math_str,
-    default-unit-group .tl_gset:N = \g_nomgroups_unit_str,
-    header-skip .skip_gset:N = \g_nomgroups_header_skip,
-    header-format .code:n = { \cs_gset_eq:Nc \nomgroups_format_header:n {#1} }  % in 2022+ use .cs_gset:N
+    groups .code:n = { \SetNomGroups{#1} } ,
+    groups .initial:n = {} ,
+    add-default-groups .code:n = { \AddDefaultNomGroups } ,
+    add-default-groups .default:n = true ,
+    default-text-group .tl_gset:N = \g_nomgroups_text_str ,
+    default-math-group .tl_gset:N = \g_nomgroups_math_str ,
+    default-unit-group .tl_gset:N = \g_nomgroups_unit_str ,
+    header-skip .skip_gset:N = \g_nomgroups_header_skip ,
+    header-skip .initial:n = 1ex plus 0.1ex minus 0.025ex ,
+    header-format .code:n = { \cs_gset_eq:Nc \nomgroups_format_header:n {#1} } ,  % in 2022+ use .cs_gset:N
 }
 
 \cs_new:Npn \nomgroups_setup:n #1
 {
-    \keys_set:nn {nomgroups} {#1}
+    \keys_set:nn {nomgroups / setup} {#1}
 }
-\NewDocumentCommand \SetupNomGroups {m}
+\NewDocumentCommand \NomGroupsSetup {m}
     { \nomgroups_setup:n{#1} }
 
 \AtBeginDocument
@@ -95,13 +97,45 @@
 
 \cs_new:Npn \nomgroups_make:vvnnnnn #1#2#3#4#5#6#7
 {
-    % careful! nomencl writes to a file; we can't use expl3
+    % careful! nomencl writes to a file
     \tl_if_blank:nTF {#2}
         { \nomenclature [#1,#3] {#7} {\NomGroupLink{#5}{#4 \hfill #6}} }
         { \nomenclature [#1,#2] {#7} {\NomGroupLink{#5}{#4 \hfill #6}} }
 }
 
-% nomenclature commands: text, math, and unit
+%\renewcommand \nomlabelwidth {\dim_use:N \g_desert_nom_symbol_dim}
+
+\keys_define:nn { nomgroups / new }
+{
+    symbol .tl_set:N = \l__symbol_tl ,
+    symbol .initial:n = {} ,
+    text .tl_set:N = \l__text_tl ,
+    text .initial:n = {} ,
+    group .tl_set:N = \l__group_tl ,
+    group .initial:n = {} ,
+    sort .tl_set:N = \l__sort_tl ,
+    sort .initial:n = {} ,
+    url .tl_set:N = \l__url_tl ,
+    url .initial:n = {} ,
+    value .tl_set:N = \l__value_tl ,
+    value .initial:n = {} ,
+}
+
+\NewDocumentCommand \NewNom { m }
+{
+    \group_begin:
+    \keys_set:nn {nomgroups / new} {#1}
+    \nomgroups_make:vvnnnnn
+        {\l__group_tl}
+        {\l__sort_tl}
+        {\l__symbol_tl}
+        {\l__text_tl}
+        {\l__url_tl}
+        {\l__value_tl}
+        {\l__symbol_tl}
+    \group_end:
+}
+
 \NewDocumentCommand \NomText
 {
     >{\TrimSpaces}D(){\g_nomgroups_text_str} % 1 group

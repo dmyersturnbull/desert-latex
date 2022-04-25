@@ -28,9 +28,21 @@
     M=Sets,
     N=Sequences,
     U=Units,
-    Z=Other Symbols
+    Z=Other symbols
 }
 
+% CHOICE A: key-value syntax:
+%\NewNom { group=M, sort=a1, symbol=\Z, text=Integers }
+%\NewNom {
+%    group  = N ,
+%    symbol = $B_n$,
+%    sort   = Bn,
+%    text   = $n$th Bell number,
+%    url    = https://oeis.org/A000110,
+%    value  = $1,1,2,5,15,52,\ldots$,
+%}
+
+% CHOICE B:
 % \NomText, \NomMath, and \NomUnit wrap around \nomenclature
 
 % The full syntax (for all three) is:
@@ -43,11 +55,10 @@
 \NomText         {der.}     {Derived expression}
 \NomMath (Z) [a] {\sqrt{5}} {The square root of five} [$\approx 2.2360679775$]
 
-
 \NomUnit{M} {Molar} [\unit{\mol\per\liter}]
 \NomUnit{W} {Watt} [\unit{\kilogram \meter \squared \per \second \cubed}]
 \NomUnit{V} {Volt} [\unit{\kilogram \meter \squared \per \ampere \per \second \cubed}]
-\NomUnit{\AA} {Angstrom} [\qty{1E-10} {\meter}]
+\NomUnit{\AA} {Angstrom} [\qty{1E-10}{\meter}]
 
 % sets ("S")
 \NomMath(M) [a1] {\Z} {Integers}
@@ -73,7 +84,9 @@
 \NomMath {\indicator} {Indicator function}
 \NomMath {\mathbf{E}} {Expectation (of a random variable)}
 \NomMath {\mathbf{Var}} {Variance (of a random variable)}
-\NomMath {A \circ B} {Morphological opening of $A$ by $B$}<https://en.wikipedia.org/wiki/Opening\_(morphology)>
+\NomMath {A \circ B}
+    {Morphological opening of $A$ by $B$}
+    <https://en.wikipedia.org/wiki/Opening\_(morphology)>
 
 
 % ---- abbreviations
@@ -83,48 +96,59 @@
 \DeclareAcronym {ToD} {long=time of day}  % sets short=ToD 
 \DeclareAcronym {DAG} {long=directed acyclic graph}
 \DeclareAcronym {US} {
-    short=U.S.,
-    long=United States,
+    short=U.S\acdot ,
+    long=United States ,
     first-style=short     % only use the short
 }
 \DeclareAcronym {DoE} {long=\acs{US} Department of Energy}
-\DeclareAcronym {wrt} {short=w.r.t., long=with respect to}
+\DeclareAcronym {wrt} {short=w.r.t\acdot, long=with respect to}
 \DeclareAcronym {MAP} {long=\txtforeign{maximum a posteriori}}
 \DeclareAcronym {SAR} {long=structure–activity relationship}  % literal en dash
 \DeclareAcronym {UFF} {long=Universal Force Field, cite=uff}
 \DeclareAcronym {YOLO} {long=You Only Look Once, cite={yolov6,yolov1}}
-\DeclareAcronym {CRISPR} {long=clustered regularly interspaced short palindromic repeats}
+\DeclareAcronym {CRISPR} {
+    short=CRISPR ,
+    long=clustered regularly interspaced short palindromic repeats ,
+}
 \DeclareAcronym {MOA} {
-    long=mechanism of action,
-	long-plural=mechanisms of action
+    long=mechanism of action ,
+	long-plural=mechanisms of action ,
 }
 \DeclareAcronym {MdoA} {
-    long=mode of action,
-	long-plural=modes of action,
-	extra={Common abbreviation: \term{MoA}}
+    long=mode of action ,
+	long-plural=modes of action ,
+	extra={Common abbreviation: \term{MoA}} ,
 }
+\DeclareAcronym {etc} {
+    short = etc\acdot ,
+    long = et cetera ,
+    format = \textit ,
+    first-style = long ,
+    plural =
+}
+
 \DeclareAcronym {D1} {
-    short=D\txtsub{1},
-    short-acc=D1,
-    pdfstring=D1,
-    long=dopamine 1 receptor
+    short=D\txtsub{1} ,
+    short-acc=D1 ,
+    pdfstring=D1 ,
+    long=dopamine 1 receptor ,
 }
 % accsup with alt variant:
 \DeclareAcronym {GABA-AR} {
-    short=GABA\txtsub{A}R,
-    short-acc=GABA-AR,
-    pdfstring=GABA-AR,
-    long=GABA\txtsub{A} ionotropic receptor,
-    alt=GABA\txtsub{A},
-    alt-acc=GABA-A,
-    long-acc=GABA-A ionotropic receptor,
+    short=GABA\txtsub{A}R ,
+    short-acc=GABA-AR ,
+    pdfstring=GABA-AR ,
+    long=GABA\txtsub{A} ionotropic receptor ,
+    alt=GABA\txtsub{A} ,
+    alt-acc=GABA-A ,
+    long-acc=GABA-A ionotropic receptor ,
 }
 
 \DeclareAcronym {alpha-AR} {long=α-adrenergic receptor}
 
 \DeclareAcronym {sx} {
-    short=$\sqrt{\langle S . X \rangle }$,
-    short-acc=sqrt(<S.X>),
-    pdfstring=sqrt(<S.X>),
-    long=something-something,
+    short=$\sqrt{\langle S . X \rangle }$ ,
+    short-acc=sqrt(<S.X>) ,
+    pdfstring=sqrt(<S.X>) ,
+    long=something-something ,
 }

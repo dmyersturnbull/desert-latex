@@ -4,6 +4,7 @@
 % (at your option) any later version. The latest version of this license is
 % in http://www.latex-project.org/lppl.txt and version 1.3 or later is part of
 % all distributions of LaTeX version 2005/12/01 or later.
+% See https://github.com/dmyersturnbull/desert-latex for the most recent code.
 
 
 %=======                                                   =======
@@ -62,10 +63,22 @@
 
 \msg_new:nnn {desert} {nosuchpreset}
     {Preset~'#1'~not~available:~no~command~of~that~name.}
-
 \cs_new_protected:Npn \__desert_warn_nosuchpreset:n #1
     { \msg_warning:nnn{desert}{nosuchpreset}{#1} }
 \cs_generate_variant:Nn \__desert_warn_nosuchpreset:n { V, v }
+
+\msg_new:nnn {desert} {invaliddepth}
+    {Depth~'#1'~is~invalid.}
+\cs_new_protected:Npn \__desert_err_invaliddepth:n #1
+    { \msg_error:nnn{desert}{invaliddepth}{#1} }
+\cs_generate_variant:Nn \__desert_err_invaliddepth:n { V, v }
+
+\msg_new:nnn {desert} {generic}
+    {#1:~#2}
+\cs_new_protected:Npn \__desert_info:nv #1#2
+    { \msg_info:nnnn{desert}{generic}{#1}{#2} }
+\cs_new_protected:Npn \__desert_note:nv #1#2
+    { \msg_note:nnnn{desert}{generic}{#1}{#2} }
 
 
 
@@ -74,6 +87,7 @@
 %========================================================================================
 
 % Saving optional features
+
 
 \seq_new:N \g_desert_feature_seq
 
@@ -97,7 +111,7 @@
 }
 
 
-% STORE TXTSTYLES AND COLORS
+% STORE textiles AND COLORS
 \prop_new:N \g_desert_style_prop
 \prop_new:N \g_desert_color_prop
 
@@ -130,64 +144,69 @@ extra-languages .initial:n = {} ,
 bidi .bool_gset:N = \g_desert_bidi_bool ,
 bidi .initial:n = false ,
 
+mode .choices:nn = 
+    { thesis, article, book }
+    { \tl_set_eq:NN \g_desert_mode_str \l_keys_choice_tl } ,
+mode .initial:n = thesis ,
+
+preset .tl_set:N = \g_desert_geometry_preset_str ,
+preset .initial:n = GenericAFour ,
+
 geometry .tl_gset:N = \g_desert_geometry_tl ,
 geometry .initial:n = {} ,
 
-preset .tl_set:N = \g_desert_preset_str ,
-preset .initial:n = GenericAFourPreset ,
-
-feature / svg .code:n =
+pkg / svg .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {svg} } ,
-feature / svg .value_forbidden:n = true ,
+pkg / svg .value_forbidden:n = true ,
 
-feature / kantlipsum .code:n =
+pkg / kantlipsum .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {kantlipsum} } ,
-feature / kantlipsum .value_forbidden:n = true ,
+pkg / kantlipsum .value_forbidden:n = true ,
 
-feature / chemformula .code:n =
+pkg / chemformula .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {chemformula} } ,
-feature / chemformula .value_forbidden:n = true ,
+pkg / chemformula .value_forbidden:n = true ,
 
-feature / chemfig .code:n =
+pkg / chemfig .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {chemfig} } ,
-feature / chemfig .value_forbidden:n = true ,
+pkg / chemfig .value_forbidden:n = true ,
 
-feature / chemmacros .code:n =
+pkg / chemmacros .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {chemmacros} } ,
-feature / chemmacros .value_forbidden:n = true ,
+pkg / chemmacros .value_forbidden:n = true ,
 
-feature / cryptocode .code:n =
+pkg / cryptocode .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {cryptocode} } ,
-feature / cryptocode .value_forbidden:n = true ,
+pkg / cryptocode .value_forbidden:n = true ,
 
-feature / imakeidx .code:n =
+pkg / imakeidx .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {imakeidx} } ,
-feature / imakeidx .value_forbidden:n = true ,
+pkg / imakeidx .value_forbidden:n = true ,
 
-feature / knowledge .code:n =
+pkg / knowledge .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {knowledge} } ,
-feature / knowledge .value_forbidden:n = true ,
+pkg / knowledge .value_forbidden:n = true ,
 
-feature / lettrine .code:n =
+pkg / lettrine .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {lettrine} } ,
-feature / lettrine .value_forbidden:n = true ,
-feature / lettrine .initial:n = false ,
+pkg / lettrine .value_forbidden:n = true ,
+pkg / lettrine .initial:n = false ,
 
-feature / minted .code:n =
+pkg / minted .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {minted} } ,
-feature / minted .value_forbidden:n = true ,
+pkg / minted .value_forbidden:n = true ,
 
-feature / tcolorbox .code:n =
+pkg / tcolorbox .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {tcolorbox} } ,
-feature / tcolorbox .value_forbidden:n = true ,
+pkg / tcolorbox .value_forbidden:n = true ,
 
-feature / ulem .code:n =
+pkg / ulem .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {ulem} } ,
-feature / ulem .value_forbidden:n = true ,
+pkg / ulem .value_forbidden:n = true ,
 
-feature / varioref .code:n =
+pkg / varioref .code:n =
     { \seq_gput_right:Nn \g_desert_feature_seq {varioref} } ,
-feature / varioref .value_forbidden:n = true ,
+pkg / varioref .value_forbidden:n = true ,
 
 bib / hide-language .bool_gset:N = \g_desert_bib_hide_language_bool ,
 bib / hide-language .initial:n = false ,
@@ -219,6 +238,9 @@ cref / capitalize .initial:n = false ,
 font-size / main .tl_gset:N = \g_desert_font_size_tl ,
 font-size / main .initial:n = 11pt ,
 
+layout / nomenclature-symbol-width .dim_set:N = \g_desert_nom_symbol_dim ,
+layout / nomenclature-symbol-width .initial:n = 4em ,
+
 layout / index-cols .int_gset:N = \g_desert_layout_index_cols_int ,
 layout / index-cols .initial:n = 2 ,
 
@@ -242,13 +264,6 @@ layout / footer-center .initial:n = {} ,
 
 layout / footer-right .tl_gset:N = \g_desert_layout_footer_right_tl ,
 layout / footer-right .initial:n = \thepage ,
-layout / footer-right .initial:n = {} ,
-
-layout / hide-copyright-page-footer .bool_gset:N = \g_desert_hide_copyright_footer_bool ,
-layout / hide-copyright-page-footer .initial:n = false ,
-
-layout / hide-title-page-footer .bool_gset:N = \g_desert_hide_title_footer_bool ,
-layout / hide-title-page-footer .initial:n = false ,
 
 layout / footnotes-as-endnotes .bool_gset:N = \g_desert_force_endnotes_bool ,
 layout / footnotes-as-endnotes .initial:n = false ,
@@ -256,13 +271,21 @@ layout / footnotes-as-endnotes .initial:n = false ,
 layout / endnote-backrefs .bool_gset:N = \g_desert_endnote_backrefs_bool,
 layout / endnote-backrefs .initial:n = false ,
 
+layout / show-toc-like-links .bool_gset:N = \g_desert_show_toc_links_bool,
+layout / show-toc-like-links .initial:n = false ,
+
+layout / show-nomenclature-links .bool_gset:N = \g_desert_show_nomenclature_links_bool,
+layout / show-nomenclature-links .initial:n = false ,
+
+layout / footnote-align .choices:nn =
+    { justify, left }
+    { \tl_gset_eq:NN \g_desert_footnote_align_str \l_keys_choice_tl } ,
+layout / footnote-align .initial:n = justify ,
+
 layout / footnote-placement .choices:nn =
-    {default, abovefloats, belowfloats, bottom, bottomfloats, bottomfootnotes}
+    { default, abovefloats, belowfloats, bottom, bottomfloats, bottomfootnotes }
     { \tl_gset_eq:NN \g_desert_footnote_placement_str \l_keys_choice_tl } ,
 layout / footnote-placement .initial:n = default ,
-
-layout / hide-links-in-title .bool_gset:N = \g_desert_hide_links_in_title_bool ,
-layout / hide-links-in-title .initial:n = false ,
 
 leading / main .tl_gset:N = \g_desert_leading_main_fp ,
 leading / main .initial:n = 1.6 ,
@@ -283,23 +306,28 @@ leading / abbreviations .tl_gset:N = \g_desert_leading_abbrevs_fp ,
 leading / abbreviations .initial:n = 1.4 ,
 
 leading / nomenclature .tl_gset:N = \g_desert_leading_nomenclature_fp ,
-leading / nomenclature .initial:n = 1.4 ,
+leading / nomenclature .initial:n = 1.2 ,
 
 leading / source-code .tl_gset:N = \g_desert_leading_source_code_fp ,
 leading / source-code .initial:n = 1.2 ,
 
 numbering / depth .choices:nn =
-    { none,chapter,section,subsection,subsubsection,paragraph,subparagraph }
+    { none, chapter, section, subsection, subsubsection, paragraph, subparagraph }
     { \tl_gset_eq:NN \g_desert_numbering_depth_str \l_keys_choice_tl } ,
 numbering / depth .initial:n = subparagraph ,
 
 numbering / back-matter-pages .choices:nn =
-    {arabic,roman,Roman,alph,Alph}
+    { arabic, roman, Roman, alph, Alph }
     { \tl_gset_eq:NN \g_desert_numbering_back_str \l_keys_choice_tl } ,
 numbering / back-matter-pages .initial:n = arabic ,
 
-numbering / main-matter-chapters .choices:nn =
+numbering / front-matter-chapters .choices:nn =
     {arabic,roman,Roman,alph,Alph}
+    { \tl_gset_eq:NN \g_desert_numbering_front_chapters_str \l_keys_choice_tl } ,
+numbering / front-matter-chapters .initial:n = Roman ,
+
+numbering / main-matter-chapters .choices:nn =
+    { arabic, roman, Roman, alph, Alph }
     { \tl_gset_eq:NN \g_desert_numbering_main_chapters_str \l_keys_choice_tl } ,
 numbering / main-matter-chapters .initial:n = arabic ,
 
@@ -312,42 +340,42 @@ numbering / figure-panels .tl_gset:N = \g_desert_numbering_panels_tl ,
 numbering / figure-panels .initial:n = alph ,
 
 numbering / equation-brackets .choices:nn =
-    { none,round,square,curly,none-bold,round-bold,square-bold,curly-bold }
+    { none, round, square, curly, none-bold, round-bold, square-bold, curly-bold }
     { \tl_gset_eq:NN \g_desert_numbering_brackets_str \l_keys_choice_tl } ,
 numbering / equation-brackets .initial:n = round ,
 
 numbering / equation-within .choices:nn =
-    { none,chapter,section,subsection,subsubsection }
+    { none, chapter, section, subsection, subsubsection }
     { \tl_gset_eq:NN \g_desert_equation_within_str \l_keys_choice_tl } ,
 numbering / equation-within .initial:n = chapter ,
 
 numbering / float-within .choices:nn =
-    {none,chapter,section,subsection}
+    { none, chapter, section, subsection, subsubsection }
     { \tl_gset_eq:NN \g_desert_float_within_str \l_keys_choice_tl } ,
 numbering / float-within .initial:n = chapter ,
 
 numbering / footnote-within .choices:nn =
-    { none,page,chapter }
+    { none, page, chapter }
     { \tl_gset_eq:NN \g_desert_footnote_within_str \l_keys_choice_tl } ,
 numbering / footnote-within .tl_gset:N = \g_desert_footnote_within_str ,
 
 numbering / footnotes .choices:nn =
-    { arabic,roman,Roman,alph,Alph,lamport,lamport*,bringhurst,chicago,wiley }
+    { arabic, roman, Roman, alph, Alph, lamport, lamport*, bringhurst, chicago, wiley }
     { \tl_gset_eq:NN \g_desert_numbering_footnotes_str \l_keys_choice_tl } ,
 numbering / footnotes .initial:n = lamport* ,
 
 numbering / front-matter-pages .choices:nn =
-    {arabic,roman,Roman,alph,Alph}
+    { arabic, roman, Roman, alph, Alph }
     { \tl_gset_eq:NN \g_desert_numbering_front_str \l_keys_choice_tl } ,
 numbering / front-matter-pages .initial:n = roman ,
 
 numbering / main-matter-pages .choices:nn =
-    { arabic,roman,Roman,alph,Alph }
+    { arabic, roman, Roman, alph, Alph }
     { \tl_gset_eq:NN \g_desert_numbering_main_str \l_keys_choice_tl } ,
 numbering / main-matter-pages .initial:n = arabic ,
 
 numbering / theorem-like-within .choices:nn =
-    { none,chapter,section,subsection,subsubsection }
+    { none, chapter, section, subsection, subsubsection }
     { \tl_gset_eq:NN \g_desert_theorem_within_str \l_keys_choice_tl } ,
 numbering / theorem-like-within .initial:n = chapter ,
 
@@ -399,6 +427,12 @@ style / chapter-name .initial:n = {huge} ,
 style / front-chapter-title .prop_gput:N = \g_desert_style_prop ,
 style / front-chapter-title .initial:n = {huge;smallcaps} ,
 
+style / part-label .prop_gput:N = \g_desert_style_prop ,
+style / part-label .initial:n = {Huge;bold} ,
+
+style / part-name .prop_gput:N = \g_desert_style_prop ,
+style / part-name .initial:n = {HUGE;bold} ,
+
 style / chemical-diagram .prop_gput:N = \g_desert_style_prop ,
 style / chemical-diagram .initial:n = {sans;small} ,
 
@@ -429,11 +463,26 @@ style / subsubsection-title .initial:n = {large;bold} ,
 style / paragraph-title .prop_gput:N = \g_desert_style_prop ,
 style / paragraph-title .initial:n = {bold} ,
 
-style / chapter-toc-label .prop_gput:N = \g_desert_style_prop ,
-style / chapter-toc-label .initial:n = {large,bold} ,
+style / toc-part-label .prop_gput:N = \g_desert_style_prop ,
+style / toc-part-label .initial:n = {bold;large} ,
+
+style / toc-chapter-label .prop_gput:N = \g_desert_style_prop ,
+style / toc-chapter-label .initial:n = {bold;normalsizerr} ,
+
+style / toc-section-label .prop_gput:N = \g_desert_style_prop ,
+style / toc-section-label .initial:n = {} ,
+
+style / toc-subsection-label .prop_gput:N = \g_desert_style_prop ,
+style / toc-subsection-label .initial:n = {} ,
+
+style / toc-subsubsection-label .prop_gput:N = \g_desert_style_prop ,
+style / toc-subsubsection-label .initial:n = {} ,
+
+style / toc-page-number .prop_gput:N = \g_desert_style_prop ,
+style / toc-page-number .initial:n = {} ,
 
 toc / depth .choices:nn =
-    { none,chapter,section,subsection,subsubsection }
+    { none, chapter, section, subsection, subsubsection }
     { \tl_gset_eq:NN \g_desert_toc_depth_str \l_keys_choice_tl } ,
 toc / depth .initial:n = subsection ,
 
@@ -449,23 +498,29 @@ toc / endnotes .initial:n = false ,
 toc / figure-panels .bool_gset:N = \g_desert_toc_panels_bool ,
 toc / figure-panels .initial:n = false ,
 
-typo / allow-hyphens .bool_gset:N = \g_desert_typo_allow_hyphens_bool ,
-typo / allow-hyphens .initial:n = false ,
+typo / ban-hyphens .bool_gset:N = \g_desert_typo_ban_hyphens_bool ,
+typo / ban-hyphens .initial:n = false ,
 
 typo / caption-label-sep .tl_gset:N = \g_desert_typo_caption_label_sep_tl ,
 typo / caption-label-sep .initial:n = {\quad} ,
+
+typo / subref-label-sep .tl_gset:N = \g_desert_typo_subref_label_sep_tl ,
+typo / subref-label-sep .initial:n = {:~} ,
 
 typo / subref-format .tl_gset:N = \g_desert_typo_subref_format_tl ,
 typo / subref-format .initial:n = {parens} ,
 
 typo / caption-table-note-sep .tl_gset:N = \g_desert_typo_table_note_sep_tl ,
-typo / caption-table-note-sep .initial:n = {\enspace} ,
+typo / caption-table-note-sep .initial:n = {\thinspace} ,
 
 typo / caption-table-remark-sep .tl_gset:N = \g_desert_typo_table_remark_sep_tl ,
-typo / caption-table-remark-sep .initial:n = {\enspace} ,
+typo / caption-table-remark-sep .initial:n = {:~} ,
 
 glue / indent .skip_gset:N = \g_desert_indent_dim ,
 glue / indent .initial:n = 0pt ,
+
+glue-left / toc-part .dim_gset:N = \g_desert_toc_part_dim ,
+glue-left / toc-part .initial:n = 0pc ,
 
 glue-left / toc-chapter .dim_gset:N = \g_desert_toc_chapter_dim ,
 glue-left / toc-chapter .initial:n = 3pc ,
@@ -509,10 +564,10 @@ glue-below / footnote-list .skip_gset:N = \g_desert_below_footnotes_skip ,
 glue-below / footnote-list .initial:n = 4pc plus 12pc,  % only used when floats are below
 
 glue-above / caption .skip_gset:N = \g_desert_above_caption_skip ,
-glue-above / caption .initial:n = 1ex plus 0.5ex minus 0.125ex ,
+glue-above / caption .initial:n = 2ex plus 0.2ex minus 0.05ex ,
 
 glue-above / subcaption .skip_gset:N = \g_desert_above_subcaption_skip ,
-glue-above / subcaption .initial:n = 0.6ex plus 0.1ex minus 0.025ex ,
+glue-above / subcaption .initial:n = 1.5ex plus 0.15ex minus 0.0375ex ,
 
 glue-above / table-title .skip_gset:N = \g_desert_above_table_title_skip ,
 glue-above / table-title .initial:n = 2ex plus 4ex minus 0.25ex ,
@@ -525,17 +580,20 @@ glue-below / table-footer .skip_gset:N = \g_desert_below_table_footer_skip ,
 glue-below / table-footer .initial:n = 2ex plus 4ex minus 0.25ex ,
 
 glue-above / front-chapter .skip_gset:N = \g_desert_above_front_chapter_skip ,
-glue-above / front-chapter .initial:n = -1ex ,  % TODO: why?
+glue-above / front-chapter .initial:n = -8ex ,
 glue-below / front-chapter .skip_gset:N = \g_desert_below_front_chapter_skip ,
 glue-below / front-chapter .initial:n = 4ex plus 0.4ex minus 0.1ex ,
 
 glue-above / chapter .skip_gset:N = \g_desert_above_chapter_skip ,
-glue-above / chapter .initial:n = 0pc ,
+glue-above / chapter .initial:n = -2ex ,
 glue-below / chapter .skip_gset:N = \g_desert_below_chapter_skip ,
 glue-below / chapter .initial:n = 6ex plus 1.5ex minus 0.375ex ,
 
 glue-below / chapter-label .skip_gset:N = \g_desert_below_chapter_label_skip ,
 glue-below / chapter-label .initial:n = 2ex plus 0.2ex minus 0.05ex ,
+
+glue-below / part-label .skip_gset:N = \g_desert_below_part_label_skip ,
+glue-below / part-label .initial:n = 10ex,
 
 glue-above / section .skip_gset:N = \g_desert_above_section_skip ,
 glue-above / section .initial:n = 8ex plus 2ex minus 0.5ex ,
@@ -548,9 +606,12 @@ glue-below / subsection .skip_gset:N = \g_desert_below_subsection_skip ,
 glue-below / subsection .initial:n = 3ex plus 0.75ex minus 0.375ex ,
 
 glue-above / subsubsection .skip_gset:N = \g_desert_above_subsubsection_skip ,
-glue-below / subsubsection .initial:n = 2ex plus 0.2ex minus 0.2ex ,
+glue-below / subsubsection .initial:n = 2ex plus 0.2ex minus 0.05ex ,
 glue-below / subsubsection .skip_gset:N = \g_desert_below_subsubsection_skip ,
-glue-below / subsubsection .initial:n = 2ex plus 0.2ex minus 0.2ex ,
+glue-below / subsubsection .initial:n = 2ex plus 0.2ex minus 0.05ex ,
+
+glue-above / nomenclature-group .skip_gset:N = \g_desert_above_nomgroup_skip ,
+glue-above / nomenclature-group .initial:n = 2ex plus 0.2ex minus 0.05ex ,
 
 glue-above / paragraph .skip_gset:N = \g_desert_above_paragraph_skip ,
 glue-above / paragraph .initial:n = 2ex plus 0.2ex minus 0.2ex ,
@@ -595,8 +656,11 @@ glue-above / abstract-authors .initial:n = 2.5ex ,
 glue-above / abstract-body .skip_gset:N = \g_desert_above_abstract_body_skip ,
 glue-above / abstract-body .initial:n = 7.5ex ,
 
+glue-above / toc-part .skip_gset:N = \g_desert_above_toc_part_skip ,
+glue-above / toc-part .initial:n = 0.6pc plus 0.06pc minus 0.015pc ,
+
 glue-above / toc-chapter .skip_gset:N = \g_desert_above_toc_chapter_skip ,
-glue-above / toc-chapter .initial:n = 1.8pc plus 0.16pc minus 0.04pc ,
+glue-above / toc-chapter .initial:n = 0.3pc plus 0.03pc minus 0.0075pc ,
 
 glue-above / toc-section .skip_gset:N = \g_desert_above_toc_section_skip ,
 glue-above / toc-section .initial:n = 0pc ,
@@ -617,54 +681,25 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %                    hooks for fancy users
 %========================================================================================
 
-\ProvideDocumentCommand \BetweenChapters {}  % this one matters for articles
+
+\ProvideDocumentCommand \BetweenChapters {}
     { \clearpage }
 
-\ProvideDocumentCommand \PreFrontTitleHook {}
-    { \hypersetup{hidelinks} }
+\ProvideDocumentCommand \BeforeLoadingPackages {}
+    {  }
 
-\ProvideDocumentCommand \PreFrontCopyrightHook {}
-    { \hypersetup{hidelinks} }
+\ProvideDocumentCommand \AfterLoadingPackages {}
+    {  }
 
 \ProvideDocumentCommand \PreTocLikeListHook {}
-    { \hypersetup{hidelinks} }
-
-\ProvideDocumentCommand \PreFrontAbstractHook {}
     { }
-
-\ProvideDocumentCommand \PreFrontChapterHook {}
-    { }
-
-\ProvideDocumentCommand \PreSpecialChapterHook {}
-    { }
-
-\ProvideDocumentCommand \PreMainChapterHook {}
-    { }
-
-\ProvideDocumentCommand \PreAppendixHook {}
-    { }
-
-\ProvideDocumentCommand \DesertTocChapterHook {}
-    { \Large \bfseries }
-
-\ProvideDocumentCommand \DesertTocSectionHook {}
-    { \normalsizerr }
-
-\ProvideDocumentCommand \DesertTocSubsectionHook {}
-    { }
-
-\ProvideDocumentCommand \DesertTocSubsubsectionHook {}
-    { }
-
-\ProvideDocumentCommand \DesertTocPageNumberHook {}
-    { \normalsizerr }
-
 
 
 
 %========================================================================================
-%                    base presets
+%                    mode and preset support
 %========================================================================================
+
 
 \cs_new_protected:Nn \desert_disable_number_within:
 {
@@ -682,6 +717,25 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     \tl_gset:Nn \g_desert_leading_nomenclature_fp {2.0}
     \tl_gset:Nn \g_desert_leading_caption_fp {1.2}
     \tl_gset:Nn \g_desert_between_footnotes_skip {\baselineskip}
+}
+
+
+\cs_new_protected:Nn \desert_thesis_like:
+    {}
+
+\cs_new_protected:Nn \desert_article_like:
+{
+    \RenewDocumentCommand \BetweenChapters {}
+    \desert_disable_number_within:
+    \str_gset:Nn \g_desert_numbering_front_str {arabic}
+    % put left so it's easy to override
+    \tl_gput_left:Nn \g_desert_geometry_tl {twocolumn,}
+    % we'll also convert \Chapter into \Section (later)
+}
+
+\cs_new_protected:Nn \desert_book_like:
+{
+    \tl_gput_left:Nn \g_desert_geometry_tl {twoside, openright}
 }
 
 
@@ -705,78 +759,78 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     footskip=0.5in ,
 }
 
-\NewDocumentCommand \GenericAFourPreset {}
+
+
+%========================================================================================
+%                    presets
+%========================================================================================
+
+% A4 paper size with 2cm left/right margin and 3cm top/bottom
+\NewDocumentCommand \AFour {}
 {
     \tl_gset:NV \g_desert_geometry_tl \desert_afour_geometry_tl
 }
 
-\NewDocumentCommand \GenericAFourArticlePreset {}
-{
-    \tl_gset:Nv \g_desert_geometry_tl {\desert_afour_geometry_tl,twocolumn}
-    \desert_disable_number_within:
-    \str_gset:Nn \g_desert_numbering_front_str {arabic}
-}
 
-\NewDocumentCommand \GenericLetterPreset {}
+% letterpaper (8.5x11") paper with 1.5in left/right and 1in top/bottom
+\NewDocumentCommand \LetterPaper {}
 {
     \tl_gset:Nv \g_desert_geometry_tl {\desert_letter_geometry_tl}
 }
 
-\NewDocumentCommand \GenericLetterArticlePreset {}
-{
-    \tl_gset:Nv \g_desert_geometry_tl {\desert_letter_geometry_tl,twocolumn}
-    \desert_disable_number_within:
-    \str_gset:Nn \g_desert_numbering_front_str {arabic}
-}
-
-
-
-%========================================================================================
-%                    overly specific presets
-%========================================================================================
-
 % These may eventually be removed
 
-\NewDocumentCommand \UcsfPreset {}
+\NewDocumentCommand \Ucsf {}
 {
+    \tl_gset:Nn \g_desert_mode_str {thesis}
     \tl_gset:Nn \g_desert_geometry_tl
-        { letterpaper,  margin=1in, footskip=0.5in }
-    \bool_gset_true:N \g_desert_hide_title_footer_bool
-    \bool_gset_false:N \g_desert_hide_copyright_footer_bool
+        { letterpaper, margin=1in, footskip=0.5in }
     \desert_double_space:
 }
 
-\NewDocumentCommand \CmuPreset {}
+% CMU has requirements for footnotes that I doubt I'm handling correctly
+\NewDocumentCommand \Cmu {}
 {
+    \tl_gset:Nn \g_desert_mode_str {thesis}
     \tl_gset:Nn \g_desert_geometry_tl
         { letterpaper, margin=1in, footskip=0.25in }
     \str_gset:Nn \g_desert_footnote_placement_str {bottomfloats}
     \str_gset:Nn \g_desert_numbering_footnotes_str {arabic}
     \desert_disable_number_within:
-    \bool_gset_true:N \g_desert_hide_title_footer_bool
-    \bool_gset_true:N \g_desert_hide_copyright_footer_bool
     \desert_double_space:
 }
 
-\NewDocumentCommand \StanfordPreset {}
+% Stanford wants 2-sided for binding
+\NewDocumentCommand \Stanford {}
 {
+    \tl_gset:Nn \g_desert_mode_str {thesis}
     \tl_gset:Nn \g_desert_geometry_tl
         { letterpaper, twoside, top=1in, bottom=1in, outer=1.5in, inner=1in, footskip=0.5in }
-    \bool_gset_true:N \g_desert_hide_title_footer_bool
-    \bool_gset_false:N \g_desert_hide_copyright_footer_bool
     \bool_gset:Nn \g_desert_leading_main_fp {1.5}
 }
 
-\NewDocumentCommand \CambridgePreset {}
+% Cambridge's choices aren't completely clear
+\NewDocumentCommand \Cambridge {}
 {
+    \tl_gset:Nn \g_desert_mode_str {thesis}
     \tl_gset:Nn \g_desert_geometry_tl
         { a4paper, top=2cm, bottom=2cm, inner=3cm, outer=2cm, footskip=1cm }
     \str_gset:Nn \g_desert_numbering_front_str {arabic}
 }
 
-\cs_if_exist_use:cF { \g_desert_preset_str }
-    { \__desert_warn_nosuchpreset:V \g_desert_preset_str }
+\cs_if_exist_use:cF { \g_desert_geometry_preset_str }
+    { \__desert_warn_nosuchpreset:V \g_desert_geometry_preset_str }
 
+
+\str_const:Nn \c_desert_article_str {article}
+\str_const:Nn \c_desert_thesis_str {thesis}
+\str_const:Nn \c_desert_book_str {book}
+\tl_case:Nn \g_desert_mode_str
+{
+    \c_desert_article_str {\desert_article_like:}
+    \c_desert_thesis_str {\desert_thesis_like:}
+    \c_desert_book_str {\desert_book_like:}
+}
 
 
 
@@ -784,7 +838,18 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %                    force some options
 %========================================================================================
 
-% Pass along options:
+% Okay, some language notes:
+% Some language-aware (or region-aware) packages use tracklang or iflang
+% to determine the language (either from Babel or Polyglossia).
+% Other packages pick up documentclass-level options like USenglish
+% Mainly for technical reasons (class has to be loaded before options can be declared),
+% we're not doing this. Cleveref is one of those.
+% This means we must pass the language directly to those packages.
+% Complicating things, cleveref doesn't know what USenglish is,
+% or for that matter, en-us. It just wants 'English'.
+% We'll get the base language using Babel's `baselanguage`.
+
+% Pass languages to Babel
 \clist_new:N \g_desert_all_lang_clist
 \clist_gset:Nn \g_desert_all_lang_clist
     { \g_desert_extra_languages_str,\g_desert_lang_str }
@@ -798,6 +863,10 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %    { \PassOptionsToPackage {\g_desert_lang_str} {varioref} }
 \PassOptionsToPackage {useregional} {datetime2}
 
+% nomencl wants one of these:
+% catalan, croatian, danish, english, french, german, italian, norwegianbokmaal, norwegian-nynorsk, polish, portuguese, russian, slovene, spanish, ukrainian
+% Instead, we'll ignore these options and deal with nomencl separately
+
 \PassOptionsToPackage{babel=true}{microtype}
 \bool_if:NT \g_desert_draft_bool
     { \PassOptionsToPackage {draft=true} {microtype} }
@@ -805,18 +874,20 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 \PassOptionsToPackage {list} {subcaption}
 \bool_if:NT \g_desert_toc_panels_bool
     { \PassOptionsToPackage{list}{subcaption} }
-    
+
 \bool_if:NF \g_desert_cref_abbreviate_bool
     { \PassOptionsToPackage{noabbrev}{cleveref} }
 \bool_if:NT \g_desert_cref_capitalize_bool
     { \PassOptionsToPackage{capitalize}{cleveref} }
     
 \desert_if_feat_enabled:nT {ulem}
-    { \PassOptionsToPackage{markup}{txtstyles} }
+    { \PassOptionsToPackage{markup}{textiles} }
     
 \str_if_eq:VnF \g_desert_footnote_placement_str {default}  % for compatibility
     { \PassOptionsToPackage{\g_desert_footnote_placement_str}{footmisc} }
 
+\str_if_eq:VnF \g_desert_footnote_align_str {left}
+    { \PassOptionsToPackage{ragged}{footmisc} }
 
 
 
@@ -824,14 +895,25 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %                    load packages
 %========================================================================================
 
+% Run our friendly hook:
+\BeforeLoadingPackages
+
 % early and order-dependent:
 %\RequirePackage{xpatch}                     % needed to patch commands
 \RequirePackage{mathcommand}                 % prime, subscript, preserving commands
 
 % language:
-\RequirePackage{tracklang}                   % before packages that use it
 \RequirePackage{babel}                       % Main multilingual support
 \RequirePackage{translations}                % \gettranslation; after: Babel
+
+\RequirePackage{tracklang}                   % before packages that use it
+%\TrackPredefinedDialect{\g_desert_lang_str}
+\SetCurrentTrackedDialect{\languagename}
+\exp_args:Nne \__desert_info:nv{Language}{\CurrentTrackedLanguage}
+\exp_args:Nne \__desert_info:nv{Dialect}{\CurrentTrackedDialect}
+\exp_args:Nne \__desert_info:nv{Language~ISO~code}{\CurrentTrackedIsoCode}
+\exp_args:Nne \__desert_info:nv{Language~tag}{\CurrentTrackedLanguageTag}
+\exp_args:Nne \__desert_info:nv{Region}{\CurrentTrackedRegion}
 
 % layout control:
 \RequirePackage{fancyvrb}                    % _verbatim_ , etc.
@@ -849,11 +931,10 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 % font control and math
 % loads amsmath, unicode-math, fontspec, microtype, and fontsize:
-\RequirePackage[faces]{txtstyles}
-\RequirePackage{info}                        % requires txtstyles
+\RequirePackage[faces]{textiles}
+\RequirePackage{info}                        % requires textiles
 \RequirePackage{amsthm}                      % theorem-like environments
 \RequirePackage{thmtools}                    % \declaretheorem
-\RequirePackage{bm}                          % bold math
 \RequirePackage{mathtools}                   % better theorem-like environments
 \RequirePackage{lualatex-math}               % math-related patches
 
@@ -861,7 +942,6 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 \RequirePackage[backend=biber]{biblatex}     % BibLaTeX! after: hyperref
 \RequirePackage{accsupp}                     % before: acro
 \RequirePackage{acro}                        % for all abbreviations
-\RequirePackage{nomencl}                     % nomenclature / list of symbols
 \RequirePackage{nomgroups}                   % nomenclature groups
 
 % layout & spacing
@@ -886,7 +966,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 \UseTblrLibrary{siunitx}                     % (siunitx loaded earlier)
 \UseTblrLibrary{diagbox}                     % split desc for top-left cell
 \UseTblrLibrary{varwidth}                    % can measure table dims if cells have pars
-\RequirePackage[l3]{csvsimple}               % load CSV data
+\RequirePackage{csvsimple-l3}                % load CSV data
 
 % typography
 \RequirePackage{fvextra}                     % only needed to avoid warning in csquotes
@@ -911,28 +991,46 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %            misc language things ++ Babel, Cleveref, varioref, & knowledge
 %========================================================================================
 
-\NewExpandableDocumentCommand \MainLangBabelName {}
-    { \g_desert_lang_str }
+% See the language notes a couple sections above.
 
-% TODO: need newest Babel to get bcp
-%\txtstyles_set_case_lang:V \g_desert_bcp_str
-%\AddBabelHook {casing} {patterns}
-%    { \txtstyles_set_case_lang:V \languagename }
-
+% Get the base language name (e.g. 'english')
+% which cleveref wants.
 \str_new:N \g_desert_base_lang_str
 \str_gset:Nx \g_desert_base_lang_str
     { \baselanguage{\g_desert_lang_str} }
 
+% Just for the user.
+\NewExpandableDocumentCommand \MainLang {}
+    { \g_desert_lang_str }
+\NewExpandableDocumentCommand \MainBaseLang {}
+    { \g_desert_base_lang_str }
+
+% Case-switching is language-specific; Unicode provides language-specific rules.
+% We'll use \textile_lowercase:n instead of L3's \text_lowercase:n (e.g.).
+% \textlowercase is just \text_lowercase:nn {#1} {\g_desert_bcp_str}.
+% We tell textiles about our preferred language (e.g. 'en-us').
+% TODO: this?
+%\exp_args:Ne
+%    \textiles_set_case_lang:n
+%    {\CurrentTrackedLanguageTag}
+% TODO: update textile's language on every language switch
+%\AddBabelHook {casing} {patterns}
+%    { \textiles_set_case_lang:V \languagename }
+
+% List of all our base languages.
 \clist_new:N \g_desert_base_lang_clist
 \clist_gset:Nx \g_desert_base_lang_clist
     { \clist_map_function:NN \g_desert_all_lang_clist \baselanguage }
 
 % should always be last:
 \desert_load_feat:nn{nospace,\g_desert_base_lang_clist}{varioref}
-\desert_load_feat:n{knowledge}
+% knowledge will load cleveref
+\desert_load_feat:nn{no patch}{knowledge}
 
 \RequirePackage[\g_desert_base_lang_clist]{cleveref}  % after: varioref
 
+% Run our friendly hook:
+\AfterLoadingPackages
 
 
 
@@ -940,28 +1038,37 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %                    cleveref strings
 %========================================================================================
 
+% Things get weird again.
+% Babel contains 'captions' for each language.
+% E.g. "List of figures" for English.
+% Cleveref has a built-in massive list of names for things,
+% such as "Figure" or "Fig.". (These are selected by package options.)
+% We'll need to set new (or replace existing) cleveref names
+% wrapped inside Babel's \addto\captionsUSenglish { ... }
+% We take the values provided to \SetCrefStrings to be
+% case-insensitive, because we'll set both \Crefname and \crefname.
+
 \cs_new_protected:Npn \__desert_addto:Vn #1#2
 {
     \exp_args:Ncn \addto {captions#1} {#2}
-    %\addto \captionsenglish {#2}
 }
 
 \cs_new_protected:Npn \__desert_set_cref_aux:nVV #1#2#3
 {
     % set both \Crefname and \crefname
-    % using language-aware casing (via #1)
+    % using language-aware casing (via #1 and \textiles_lowercase:n)
     \__desert_addto:Vn \g_desert_lang_str
     {
     \exp_args:Nnee
         \Crefname
         {#1}
-        { \txtstyles_sentencecasefirst:n{#2} }
-        { \txtstyles_sentencecasefirst:n{#3} }
+        { \textiles_sentencecasefirst:n{#2} }
+        { \textiles_sentencecasefirst:n{#3} }
     \exp_args:Nnee
         \crefname
         {#1}
-        { \txtstyles_lowercase:n{#2} }
-        { \txtstyles_lowercase:n{#3} }
+        { \textiles_lowercase:n{#2} }
+        { \textiles_lowercase:n{#3} }
     }
 }
 
@@ -990,6 +1097,14 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %                    Biblatex, Babel, and Desert strings
 %========================================================================================
 
+% Now there are other mechanisms to set strings.
+% 1. ~~Cleveref~~ (DONE.)
+% 2. Biblatex's \DefineBibliographyStrings
+% 3. Babel's \setlocalecaption
+% Of these, we'll abuse the 3rd to set our own Desert-specific strings.
+% In contrast to #1, #2 and #3 are case-sensitive.
+% It is generally expected that these strings will be rendered as-is.
+
 \prop_new:N \g_desert_strings_prop
 
 \cs_new:Npn \desert_string:n #1
@@ -1015,22 +1130,64 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
         { \prop_gput:Nnn \g_desert_strings_prop {##1} {##2} }
 }
 
-\SetBabelStrings
+% If it's not "Nomenclature", the user probably loaded
+% a language option via \PassOptionsToPackage
+\tl_if_eq:VnT \nomname {Nomenclature}
 {
-    listabbreviation = List~of~abbreviations ,
+    \AtEndPreamble
+    {
+        \prop_get:NnNT \g_desert_strings_prop {seeequation} \l__tmpa_tl
+        {
+            \def \eqdeclaration #1 {,~\l__tmpa_tl\nobreakspace #1}
+        }
+        \prop_get:NnNT \g_desert_strings_prop {seepage} \l__tmpa_tl
+        {
+            \def \pagedeclaration #1 {,~\l__tmpa_tl\nobreakspace #1}
+        }
+        \prop_get:NnNT \g_desert_strings_prop {nomenclature} \l__tmpa_tl
+        {
+            \def \nomname {\l__tmpa_tl}
+        }
+        % Ignore these:
+        %\def\nomAname{Latin Letters}
+        %\def\nomGname{Greek Letters}
+        %\def\nomXname{Superscripts}
+        %\def\nomZname{Subscripts}
+    }
+}
+
+\SetBabelStrings
+{   % for USenglish default, we'll use "title-case"
+    nomenclature = Nomenclature ,
+    seeequation = see~equation ,
+    seepage = page ,
+    listabbreviation = List~of~Abbreviations ,
     listnomenclature = Nomenclature  ,
     structuralformula = Structural~formula ,
-    liststructuralformula = List~of~structural~formulas ,
+    liststructuralformula = List~of~Structural~Formulas ,
     reactionscheme = Reaction ,
-    listreactionscheme = List~of~reactions ,
+    listreactionscheme = List~of~Reactions ,
+    part = Part ,
 }
 
 
+% it's utterly weird that these can be different
+% report and book use bibname, while article uses refname
+\let \bibname \refname
+
+
 
 %========================================================================================
-%                    fixing skips
+%                          finalize things
 %========================================================================================
 
+% Send our Desert options to textiles!
+% The colors are saved to both xcolor and l3color.
+\textiles_declare_colors_from_prop:N \g_desert_color_prop
+\textiles_declare_multiple_from_prop:N \g_desert_style_prop
+
+% Some skips always appear with paragraph skips,
+% so we'll subtract those paragraph skips.
 \skip_gsub:NV \g_desert_below_abstract_title_skip \g_desert_between_paragraphs_skip
 \skip_gsub:NV \g_desert_above_abstract_author_skip \g_desert_between_paragraphs_skip
 \skip_gsub:NV \g_desert_above_abstract_body_skip \g_desert_between_paragraphs_skip
@@ -1055,14 +1212,117 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 
 %========================================================================================
-%                          fonts
+%                    a couple random things
 %========================================================================================
 
+% Latin modern fonts should always be present
+\DeclareLatinModern
 \UseLatinModern
-\DeclareLatinModerns
-\txtstyles_declare_colors_from_prop:N \g_desert_color_prop
-\txtstyles_declare_multiple_from_prop:N \g_desert_style_prop
 
+% Okay, ragged2e environments (e.g. \RaggedRight, camelcase)
+% enable hyphenations in order to appear "less" ragged
+% than their regular LaTeX counterparts (e.g. \raggedright)
+% However, they come with finite hfill rather than infinite,
+% so they're prone to causing underfull warnings.
+% This holds even for centered text, as in titles.
+% There are two reasonable choices here:
+% A -- Load ragged2e with 'originalcommands' option,
+%      and opt-in to ragged2e environments where wanted
+% B -- Load ragged2e with 'newcommands' option
+%      then set hbadness to max to suppress the warnings.
+% We'll choose option B here for simplicity :)
+\g@addto@macro{\centering}{\hbadness=\@M}
+\g@addto@macro{\raggedright}{\hbadness=\@M}
+\g@addto@macro{\raggedleft}{\hbadness=\@M}
+\g@addto@macro{\center}{\hbadness=\@M}
+\g@addto@macro{\flushleft}{\hbadness=\@M}
+\g@addto@macro{\flushright}{\hbadness=\@M}
+
+
+%========================================================================================
+%                    depths
+%========================================================================================
+
+% Se the depth of the Table of Contents and section numbering.
+
+\prop_const_from_keyval:Nn \c__desert_depths_prop
+{
+    none=-2, part=-1, chapter=0,
+    section=1, subsection=2, subsubsection=3,
+    paragraph=4, subparagraph=5,
+    -1=-1, 0=0, 1=1, 2=2, 3=3, 4=4, 5=5
+}
+
+\cs_new:Npn \desert_parse_depth:nN #1#2
+{
+    \prop_get:NnNF \c__desert_depths_prop {#1} #2
+    { \__desert_err_invaliddepth:n {#1} }
+}
+\cs_generate_variant:Nn \desert_parse_depth:nN { VN, vN }
+
+\cs_new_protected:Npn \desert_set_depth:nn #1#2
+{
+    \desert_parse_depth:nN {#2} \l_tmpa_str
+    \exp_args:NnV \setcounter {#1} \l_tmpa_str
+}
+\cs_generate_variant:Nn \desert_set_depth:nn { nV, nv }
+
+
+\desert_set_depth:nV {secnumdepth} \g_desert_numbering_depth_str
+\desert_set_depth:nV {tocdepth} \g_desert_toc_depth_str
+
+
+
+%========================================================================================
+%                          penalties
+%========================================================================================
+%\pretolerance 
+%\tolerance
+%\emergencystretch [a dimension!]
+
+% defaults:
+%\binoppenalty=700
+%\brokenpenalty=100
+%\clubpenalty=150
+%\displaywidowpenalty=50
+%\exhyphenpenalty=50
+%\floatingpenalty=20000
+%\hyphenpenalty=50
+%\interlinepenalty=0
+%\linepenalty=10
+%\postdisplaypenalty=0
+%\predisplaypenalty=10000
+%\relpenalty=500
+%\widowpenalty=150
+%`\binoppenalty` for a line break in math mode after a binary operator.
+%`\brokenpenalty` for a page break, where the last line of the previous page contains a hyphenation.
+%`\clubpenalty` for a broken page, with a single line of a paragraph remaining on the bottom of the preceding page.
+%`\displaywidowpenalty` for a break before last line of a paragraph.
+%`\exhyphenpenalty` for hyphenating a word which already contains a hyphen.
+%`\floatingpenalty` for splitting an insertion.
+%`\hyphenpenalty` for line breaking at an automatically inserted hyphen.
+%`\interlinepenalty` for the penalty added after each line of a paragraph.
+%`\linepenalty` the badness of each line within a paragraph.
+%`\postdisplaypenalty` for a break after a display.
+%`\predisplaypenalty` for a break before a display.
+%`\relpenalty` for a line break at a relation.
+%`\widowpenalty` for a broken page, with a single line of a paragraph (called "widow") remaining on the top of the succeeding page.
+
+\NewDocumentCommand \SetTexParams { m }
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \cs:w ##1 \cs_end: =##2 }
+}
+
+% Make sure hfuzz and vfuzz are 0 -- otherwise we might ignore overfull boxes
+\hfuzz=0pt
+\vfuzz=0pt
+
+\bool_if:NT \g_desert_typo_ban_hyphens_bool
+{
+    \SetTexParams {pretolerance=10000, hyphenpenalty=10000, exhyphenpenalty=10000}
+}
 
 
 %========================================================================================
@@ -1075,29 +1335,39 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 % NOTE: the order matters!!
 % We must set parindent after the others
 
-\txtstyles_use_font_size:V \g_desert_font_size_tl
-\txtstyles_set_baselinestretch:V \g_desert_leading_main_fp
+\textiles_use_font_size:V \g_desert_font_size_tl
+\textiles_set_baselinestretch:V \g_desert_leading_main_fp
 
+% \lineskip is normally 1pt and \lineskiplimit is 0pt
+% Let's get rid of \lineskip so that LaTeX does exactly what
+% we tell it when setting baselineskip=fontheight
+% I set it to 1sp (minimum positive dimension)
+% to avoid any possible weirdness of \lineskip < \lineskiplimit
+% under weird FP math rules.
+\setlength \lineskip {1sp}
 \setlength \parindent {\dim_use:N \g_desert_indent_dim}
 \setlength \parskip {\skip_use:N \g_desert_between_paragraphs_skip}
 
 \setlength {\abovedisplayskip} {\g_desert_above_equation_skip}
 \setlength {\belowdisplayskip} {\g_desert_below_equation_skip}
 
+% Please don't add extra spacing in equations for no reason
 \setdisplayskipstretch{1.0}
 
+% Let's set the baselinestretch to \g_desert_leading_equation_fp
+% for all equation-like environments
+% Note that some of these environments wrap around others,
+% so we're probably setting the baselinestretch twice in some cases.
 \clist_const:Nn \c_desert_eqn_envs_clist
     { equation, equation*, multiline, multiline*, align, align*, gather, gather* }
 
 \clist_map_inline:Nn \c_desert_eqn_envs_clist
 {
     \AtBeginEnvironment {#1}
-        { \txtstyles_use_baselinestretch:V \g_desert_leading_equation_fp }
+        { \textiles_use_baselinestretch:V \g_desert_leading_equation_fp }
 }
 
-\bool_if:NF \g_desert_typo_allow_hyphens_bool
-    { \txtstyles_disable_hyphens: }
-
+% Our everyday lists and enums, where items are ==1 paragraph at most
 \setlist
 {
     itemsep = \g_desert_between_items_skip ,
@@ -1106,6 +1376,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     parsep = \g_desert_between_paragraphs_skip ,
 }
 
+% Enums where individual items may span multiple paragraphs.
 \SetEnumitemKey {multipar}
 {
     itemsep = \g_desert_between_multipar_items_skip ,
@@ -1115,62 +1386,91 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 }
 
 
+% Set nomenclature spacing
+\cs_new:Npn \desert__nomgroup_header:n #1
+{
+    \textiles_use:nn {nomenclature-group} {#1}
+}
+\nomgroups_setup:n
+{
+    header-skip = \g_desert_above_nomgroup_skip ,
+    header-format = desert__nomgroup_header:n ,
+}
+\def \nomlabelwidth {\dim_use:N \g_desert_nom_symbol_dim}
+\setlength \nomitemsep {0ex}
+
 
 
 %========================================================================================
 %                           section titles
 %========================================================================================
 
+\titleformat {name=\part} [block]
+    { \filcenter }
+    {
+        \textiles_run_nullary:n{part-label} \desert_string:n{part}~\thepart
+        \skip_vertical:N \g_desert_below_part_label_skip
+    }
+    { 0pt }
+    { \textiles_use:nn{part-name}{#1} }
+
+\titleformat {name=\part,numberless} [display]
+    { \filcenter }
+    { }
+    { 0pt }
+    { \textiles_use:nn{part-name}{#1} }
+
 \titleformat {name=\chapter} [block]
     { }   % code before
     {     % code for label
-        \txtstyles_use:nn{chapter-label}{\chaptertitlename\ \thechapter}
+        \textiles_run_nullary:n{chapter-label} \chaptertitlename\ \thechapter
         \skip_vertical:N \g_desert_below_chapter_label_skip
     }  %(TODO: \g_desert_below_chapter_label_skip doesn't work below?
     { 0pt }  % space between label and name
-    { \txtstyles_use:nn{chapter-name}{#1} }  % code for name
+    { \textiles_use:nn{chapter-name}{#1} }  % code for name
 
 \titleformat {name=\chapter,numberless} [display]
     { \filcenter }
     { }
     { 0pt }
-    { \txtstyles_use:nn{front-chapter-title}{#1} }
+    { \textiles_run_nullary:n{front-chapter-title} #1 }
 
 \titleformat {\section} [hang]
     { }
-    { \txtstyles_use:nn{section-title}{\thetitle} }
+    { \textiles_run_nullary:n{section-title} \thetitle }
     { 1em }
-    { \txtstyles_use:nn{section-title}{#1} }
-
+    { \textiles_run_nullary:n{section-title} #1 }
 
 \titleformat {\subsection} [hang]
     { }
-    { \StyleTxt{subsection-title}{\thetitle} }
+    { \textiles_run_nullary:n{subsection-title} \thetitle }
     { 1em }
     { \StyleTxt{subsection-title}{#1} }
 
 \titleformat {\subsubsection} [hang]
     { }
-    { \StyleTxt{subsubsection-title}{\thetitle} }
+    { \textiles_run_nullary:n{subsubsection-title} \thetitle }
     { 1em }
-    { \StyleTxt{subsubsection-title}{#1} }
+    { \textiles_run_nullary:n{subsubsection-title} #1 }
 
 \titleformat {\paragraph} [runin]
     { }
-    { \StyleTxt{paragraph-title}{\thetitle} }
+    { \textiles_run_nullary:n{paragraph-title} \thetitle }
     { 1em }
-    { \StyleTxt{paragraph-title}{#1.} }
+    { \textiles_run_nullary:n{paragraph-title} #1. }
 
 \titleformat {\subparagraph} [runin]
     { }
-    { \StyleTxtInline{italic}{\thetitle} }
+    { \textiles_run_nullary_inline:n{italic} \thetitle }
     { 1em }
-    { \StyleTxtInline{italic}{#1.} }
+    { \textiles_run_nullary_inline{italic} #1. }
 
 \titlespacing {name=\chapter}
     {0pt}                                       % left space
     {\skip_use:N \g_desert_above_chapter_skip}  % top space
     {\skip_use:N \g_desert_below_chapter_skip}  % bottom space
+
+%\skip_gsub:Nn \g_desert_above_front_chapter_skip {6ex}
 
 \titlespacing {name=\chapter,numberless}
     {0pt}
@@ -1209,26 +1509,57 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %                           TOC formatting
 %========================================================================================
 
+\titlecontents {part}
+    [\g_desert_toc_part_dim]                                            % margin from left side
+    {   % code before
+        \addvspace{\g_desert_above_toc_part_skip}
+        \textiles_run_nullary:n{toc-part-label}
+    }
+    {                                                                    % code for label if numbered
+        \contentslabel
+            [
+                \hyperlink
+                    { part.\thecontentslabel }
+                    { \thecontentslabel }
+            ]
+            {\g_desert_toc_part_dim}                                     % how big the label box is
+    }
+    { \hspace*{-\g_desert_toc_part_dim} }                                % code if unnumbered (subtract the box)
+    { \textiles_run_nullary:n{toc-page-number} \titlerule*[1pc]{.} \contentspage}  % code for page number
+
 \titlecontents {chapter}
-    [\g_desert_toc_chapter_dim]                                             % margin from left side
-    { \addvspace{\g_desert_above_toc_chapter_skip} \DesertTocChapterHook }  % code before
-    {                                                                       % code for label if numbered
+    [ \dim_eval:n{\g_desert_toc_part_dim+\g_desert_toc_chapter_dim} ]
+    {   % code before
+        \addvspace{\g_desert_above_toc_chapter_skip}
+        \textiles_run_nullary:n{toc-chapter-label}
+    }
+    { 
         \contentslabel
             [
                 \hyperlink
                     { chapter.\thecontentslabel }
                     { \thecontentslabel }
             ]
-            {\g_desert_toc_chapter_dim}                                     % how big the label box is
+            {\g_desert_toc_chapter_dim}
     }
-    { \hspace*{-\g_desert_toc_chapter_dim} }                                % code if unnumbered (subtract the box)
-    { \DesertTocPageNumberHook \titlerule*[1pc]{.} \contentspage}           % code for page number
+    { \hspace*{-\g_desert_toc_chapter_dim} }
+    { \textiles_run_nullary:n{toc-page-number} \titlerule*[1pc]{.} \contentspage}
 
 % The rest are all the same
 
 \titlecontents {section}
-    [ \dim_eval:n{\g_desert_toc_chapter_dim+\g_desert_toc_section_dim} ]
-    { \addvspace{\g_desert_above_toc_section_skip} \DesertTocSectionHook }
+    [
+        \dim_eval:n
+        {
+             \g_desert_toc_part_dim
+            +\g_desert_toc_chapter_dim
+            +\g_desert_toc_section_dim
+        }
+    ]
+    {   % code before
+        \addvspace{\g_desert_above_toc_section_skip}
+        \textiles_run_nullary:n{toc-section-label}
+    }
     {
         \contentslabel
             [
@@ -1239,18 +1570,22 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
             {\g_desert_toc_section_dim}
     }
     { \hspace*{-\g_desert_toc_section_dim} }
-    {  \DesertTocPageNumberHook \titlerule*[1pc]{.} \contentspage }
+    {  \textiles_run_nullary:n{toc-page-number} \titlerule*[1pc]{.} \contentspage }
 
 \titlecontents {subsection}
     [
         \dim_eval:n
         {
-             \g_desert_toc_chapter_dim
+             \g_desert_toc_part_dim
+            +\g_desert_toc_chapter_dim
             +\g_desert_toc_section_dim
             +\g_desert_toc_subsection_dim
         }
     ]
-    { \addvspace{\g_desert_above_toc_subsection_skip} \DesertTocSubsectionHook }
+    {   % code before
+        \addvspace{\g_desert_above_toc_subsection_skip}
+        \textiles_run_nullary:n{toc-subsection-label}
+    }
     {
         \contentslabel
             [
@@ -1261,19 +1596,22 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
             {\g_desert_toc_subsection_dim}
     }
     { \hspace*{-g_desert_toc_subsection_dim} }
-    {  \DesertTocPageNumberHook \titlerule*[1pc]{.} \contentspage }
+    {  \textiles_run_nullary:n{toc-page-number} \titlerule*[1pc]{.} \contentspage }
 
 \titlecontents {subsubsection}
     [
         \dim_eval:n
         {
-             \g_desert_toc_chapter_dim
-            +\g_desert_toc_section_dim
+             \g_desert_toc_part_dim
+            +\g_desert_toc_chapter_dim
             +\g_desert_toc_subsection_dim
             +\g_desert_toc_subsubsection_dim
         }
     ]
-    { \addvspace{\g_desert_above_toc_subsubsection_skip} \DesertTocSubsubsectionHook }
+    {   % code before
+        \addvspace{\g_desert_above_toc_subsubsection_skip}
+        \textiles_run_nullary:n{toc-subsubsection-label}
+    }
     {
         \contentslabel
             [
@@ -1284,7 +1622,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
             {\g_desert_toc_subsubsection_dim}
     }
     { \hspace*{-\g_desert_toc_subsubsection_dim} }
-    { \DesertTocPageNumberHook \titlerule*[1pc]{.} \contentspage }
+    { \textiles_run_nullary:n{toc-page-number} \titlerule*[1pc]{.} \contentspage }
 
 
 
@@ -1297,11 +1635,11 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 \cs_new_protected:Npn \__desert_set_fancy_page:VVVVVV #1#2#3#4#5#6
 {
-    \fancyhead{}
+    \fancyhead {}
     \fancyhead [L] {#1}
     \fancyhead [C] {#2}
     \fancyhead [R] {#3}
-    \fancyfoot{}
+    \fancyfoot {}
     \fancyfoot [L] {#4}
     \fancyfoot [C] {#5}
     \fancyfoot [R] {#6}
@@ -1325,9 +1663,6 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %========================================================================================
 %                           basic numbering
 %========================================================================================
-
-\txtstyles_set_depth:nV {secnumdepth} \g_desert_numbering_depth_str
-\txtstyles_set_depth:nV {tocdepth} \g_desert_toc_depth_str
 
 \cs_new_protected:Npn \__desert_number_within:nV #1#2
     { \numberwithin {#1} {#2} }
@@ -1388,7 +1723,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 % apply the footnote body format
 \renewcommand* \footnotelayout
-    { \txtstyles_run_nullary:n{footnote-body} }
+    { \textiles_run_nullary:n{footnote-body} }
 
 
 
@@ -1461,19 +1796,19 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 % Reference the title, date, journal, and authors
 % Could alternatively use \DeclareCiteCommand
-\ProvideDocumentCommand \chaptersource {m}
+\NewDocumentCommand \chaptersource {m}
 {
     \AtNextCite{\defcounter{maxnames}{60}}
     \fullcite{#1}
 }
 
-\ProvideDocumentCommand \reftitle {m}
+\NewDocumentCommand \reftitle {m}
     { ``\citefield{#1}{title}" }
     
-\ProvideDocumentCommand \refdoi {m}
+\NewDocumentCommand \refdoi {m}
     { \doi{\citefield{#1}{doi}} }
     
-\ProvideDocumentCommand \refurl {m}
+\NewDocumentCommand \refurl {m}
     { \citefield{\link{#1}{url}} }
 
 
@@ -1488,13 +1823,23 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 {
     title .tl_set:N = \l__title_tl ,
     title .initial:n = {} ,
+    no-title .bool_set:N = \l__no_title_bool,  % overrides any title
+    no-title .default:n = true ,
+    no-title .initial:n = false ,
     entry .tl_set:N = \l__entry_tl ,
     entry .initial:n = {*} ,
+    no-entry .bool_set:N = \l__no_entry_bool,  % overrides any entry
+    no-entry .default:n = true ,
+    no-entry .initial:n = false ,
     label .tl_set:N = \l__label_tl ,
     label .initial:n = {*} ,
     numberless .bool_set:N = \l__numberless_bool ,
     numberless .default:n = true ,
     numberless .initial:n = false ,
+    numbered .code:n = {\bool_set_false:N \l__numberless_bool} ,
+    hide-links .bool_set:N = \l__hide_links_bool ,
+    hide-links .default:n = true ,
+    hide-links .initial:n = false ,
 }
 
 \cs_new:Npn \__desert_run_star:NV #1#2
@@ -1506,6 +1851,23 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 \cs_new_protected:Npn \__desert_run_section_like:NN #1#2
 {
     \tl_set:Nx \l__level_tl {\cs_to_str:N #1}
+    % Set entry to title
+    \tl_if_eq:NnT \l__entry_tl {*}
+        { \tl_set_eq:NN \l__entry_tl \l__title_tl }
+    % Set the label to entry (preferred) or title
+    \tl_if_eq:NnT \l__label_tl {*}
+    {
+        \tl_if_blank:VF \l__title_tl
+            { \tl_set_eq:NN \l__label_tl \l__title_tl }
+        \tl_if_blank:VF \l__entry_tl
+            { \tl_set_eq:NN \l__label_tl \l__entry_tl }
+    }
+    % Clear title or entry if requested
+    \bool_if:NT \l__no_title_bool
+        { \tl_clear:N \l__title_tl }
+    \bool_if:NT \l__no_entry_bool
+        { \tl_clear:N \l__entry_tl }
+    % okay, let's go:
     \tl_if_blank:VTF \l__title_tl
     {   % Method A: PHANTOM \section
         #2 \phantomsection
@@ -1526,6 +1888,8 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     
     \tl_if_blank:VF \l__label_tl
         { \label{\l__label_tl} }
+    \bool_if:NT \l__hide_links_bool
+        { \hypersetup{hidelinks} }
 }
 
 \cs_new_protected:Npn \__desert_set_section_like:nnnn #1#2#3#4
@@ -1536,9 +1900,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     % Process displayed title
     \tl_if_blank:VT \l__title_tl
         { \tl_set:Nn \l__title_tl {#4} }
-    % Process entry
-    \tl_if_eq:NnT \l__entry_tl {*}
-        { \tl_set_eq:NN \l__entry_tl \l__title_tl }
+    % The rest goes in run_section_like
 }
 
 \cs_new_protected:Npn \__desert_section_like:nnnnNN #1#2#3#4#5#6
@@ -1578,7 +1940,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
         {subsubsection}{#1}{#2}{#3}
         \subsubsection\prg_do_nothing:
 }
-    
+
 \NewDocumentCommand \Paragraph { s O{} G{} }
 {
     \__desert_section_like:nnnnNN
@@ -1586,7 +1948,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
         \paragraph\prg_do_nothing:
 }
 
-\NewDocumentCommand \SubPParagraph { s O{} G{} }
+\NewDocumentCommand \SubParagraph { s O{} G{} }
 {
     \__desert_section_like:nnnnNN
         {subparagraph}{#1}{#2}{#3}
@@ -1596,9 +1958,105 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 
 
+%========================================================================================
+%                  alignment commands and environments
+%========================================================================================
+
+% like the other ragged2e commands
+\let \Justifying \justifying
+
+\NewDocumentEnvironment {Justify} {}
+    { \begin{justify} }
+    { \end{justify} }
+
+\prop_const_from_keyval:Nn \c_desert__align_to_cmd_prop
+{
+    left = RaggedRight ,
+    Left = RaggedRight ,
+    flushleft = RaggedRight ,
+    FlushLeft = RaggedRight ,
+    raggedright = RaggedRight ,
+    RaggedRight = RaggedRight ,
+    right = RaggedLeft ,
+    Right = RaggedLeft ,
+    flushright = RaggedLeft ,
+    FlushRight = RaggedLeft ,
+    raggedleft = RaggedLeft ,
+    RaggedLeft = RaggedLeft ,
+    center = Centering ,
+    Center = Centering ,
+    centering = Centering ,
+    Centering = Centering ,
+    centered = Centering ,
+    Centered = Centering ,
+    justify = justifying ,
+    Justify = justifying ,
+    justifying = justifying ,
+    Justifying = justifying ,
+    justified = justifying ,
+    Justified = justifying ,
+}
+
+\prop_const_from_keyval:Nn \c_desert__align_to_env_prop
+{
+    flushleft = FlushLeft ,
+    FlushLeft = FlushLeft ,
+    left = FlushLeft ,
+    Left = FlushLeft ,
+    raggedright = FlushLeft ,
+    RaggedRight = FlushLeft ,
+    right = FlushRight ,
+    Right = FlushRight ,
+    flushright = FlushRight ,
+    raggedleft = FlushRight ,
+    RaggedLeft = FlushRight ,
+    FlushRight = FlushRight ,
+    center = Center ,
+    Center = Center ,
+    centering = Center ,
+    Centering = Center ,
+    centered = Center ,
+    Centered = Center ,
+    justify = justify ,
+    Justify = Justify ,
+    justifying = justify ,
+    Justifying = justify ,
+    justified = justify ,
+    Justified = justify ,
+}
+
+\cs_new:Npn \desert_align:n #1
+{
+    \prop_get:NnN \c_desert__align_to_cmd_prop {#1} \l_tmpa_tl
+    \cs_if_exist_use:N \l_tmpb_str
+}
+\cs_generate_variant:Nn \desert_align:n { V }
+
+\cs_new:Npn \desert__align_begin:n #1
+{
+    \prop_get:NnN \c_desert__align_to_env_prop {#1} \l_tmpa_tl
+    \exp_args:NV \begin \l_tmpa_tl
+}
+\cs_generate_variant:Nn \desert__align_begin:n { V }
+
+\cs_new:Npn \desert__align_end:n #1
+{
+    \prop_get:NnN \c_desert__align_to_env_prop {#1} \l_tmpa_tl
+    \exp_args:NV \end \l_tmpa_tl
+}
+\cs_generate_variant:Nn \desert__align_end:n { V }
+
+\NewDocumentCommand \Aligning { m }
+    { \desert_align:n{#1} }
+
+\NewDocumentEnvironment {Align} { m }
+    { \desert__align_begin:n{#1} }
+    { \desert__align_end:n{#1} }
+
+
 
 %========================================================================================
-%                        front matter
+%                         SpecialBox
 %========================================================================================
 
 \keys_define:nn { desert / special-box }
@@ -1609,31 +2067,44 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     above .initial:n = 0pc ,
     below .dim_set:N = \l__below_dim ,
     below .initial:n = 0pc ,
-    flush .bool_set:N = \l__flush_bool,
-    flush .default:n = true ,
-    flush .initial:n = false ,
-    at .choice: ,
-    at / top .code:n =
-        { \dim_set:Nn\l__above_dim{0pc} \dim_set_eq:Nn\l__below_dim{\fill} } ,
-    at / bottom .code:n =
-        { \dim_set:Nn\l__below_dim{0pc} \dim_set:Nn\l__above_dim{\fill} } ,
-    at / middle .code:n =
-        { \dim_set:Nn\l__below_dim{0.5\fill} \dim_set_eq:Nn\l__above_dim{0.5\fill} } ,
+    hide-links .bool_set:N = \l__hide_links_bool ,
+    hide-links .default:n = true ,
+    hide-links .initial:n = false ,
+    textile .tl_set:N = \l__textile_tl ,
+    textile .default:n = {} ,
+    style .tl_set:N = \l__style_tl ,
+    style .initial:n = {} ,
+    align .choices:nn =
+        { left, center, right, justify }
+        { \tl_set_eq:NN \l__align_tl \l_keys_choice_tl } ,
+    align .initial:n = center ,
+    at .choices:nn =
+        { top, bottom, middle }
+        { \tl_set_eq:NN \l__at_tl \l_keys_choice_tl } ,
+    at .initial:n = middle ,
 }
 
-\NewDocumentEnvironment {InternalSpecialBox} { }
+
+\NewDocumentEnvironment {InternalSpecialBox} { +b }
 {
-    \dim_compare:nNnT {\l__width_dim} < {0.99\textwidth}
+    \bool_if:NT \l__hide_links_bool
+        { \hypersetup{hidelinks} }
+    \tl_if_eq:NnF \l__align_tl {justify}
         { \hbadness=10000 }
-    \vspace*{\l__above_dim}
-    \bool_if:NF \l__flush_bool { \begin{center} }
+    \desert_align:V \l__align_tl
+    \tl_if_eq:NnTF \l__at_tl {top}
+        { \skip_vertical:N \l__above_dim }
+        { \vspace*{\fill} }
     \begin{minipage}{\l__width_dim}
-    \bool_if:NF \l__flush_bool { \centering }
+    \desert__align_begin:V \l__align_tl
+    \textiles_use_or_inline:VVn \l__textile_tl \l__style_tl {#1\par}
 }
 {
+    \desert__align_end:V \l__align_tl
     \end{minipage}
-    \bool_if:NF \l__flush_bool { \end{center} }
-    \vspace*{\l__below_dim}
+    \tl_if_eq:NnTF \l__at_tl {bottom}
+        { \skip_vertical:N \l__below_dim }
+        { \vfill }
 }
 
 \NewDocumentEnvironment {SpecialBox} { O{} }
@@ -1641,102 +2112,156 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     \keys_set:nn {desert / special-box} {#1}
     \begin{InternalSpecialBox}
 }
-{ \end{InternalSpecialBox} }
+{
+    \end{InternalSpecialBox}
+}
 
+
+%========================================================================================
+%                        front-matter chapters
+%========================================================================================
 
 \NewDocumentEnvironment {FrontChapter} { O{} G{} }
 {
-    \PreFrontChapterHook
-    \Chapter*[#1]{#2}
+    \bool_if:NT \g_desert_bib_per_chapter_bool { \begin{refsection} }
+    \Chapter*[numberless, #1]{#2}  % add numbered in #1
 }
-{ \acresetall }
+{
+    \ShowEndNotes
+    \bool_if:NT \g_desert_bib_per_chapter_bool
+        { \ShowSubBib \end{refsection} }
+    \acresetall
+}
 
 \keys_define:nn { desert / special-chapter }
 {
     label .tl_set:N = \l__label_tl ,
-    label .initial:n = {} ,
+    label .initial:n = {*} ,
     entry .tl_set:N = \l__entry_tl ,
-    entry .initial:n = {} ,
+    entry .initial:n = {*} ,
     title .tl_set:N = \l__title_tl ,
     title .initial:n = {} ,
-    flush .bool_set:N = \l__flush_bool,
-    flush .default:n = true,
-    flush .initial:n = false,
+    no-title .bool_set:N = \l__no_title_bool,
+    no-title .default:n = true ,
+    no-title .initial:n = false ,
+    no-entry .bool_set:N = \l__no_entry_bool,  % overrides any entry
+    no-entry .default:n = true ,
+    no-entry .initial:n = false ,
+    numberless .bool_set:N = \l__numberless_bool ,
+    numberless .default:n = true ,
+    numberless .initial:n = false ,
+    numbered .code:n = {\bool_set_false:N \l__numberless_bool} ,
     width .dim_set:N = \l__width_dim ,
     width .initial:n = {\textwidth} ,
     above .dim_set:N = \l__above_dim ,
     above .initial:n = 0pc ,
     below .dim_set:N = \l__below_dim ,
     below .initial:n = 0pc ,
-    at .choice: ,
-    at / top .code:n =
-        { \dim_set:Nn\l__above_dim{0pc} \dim_set_eq:Nn\l__below_dim{\fill} } ,
-    at / bottom .code:n =
-        { \dim_set:Nn\l__below_dim{0pc} \dim_set:Nn\l__above_dim{\fill} } ,
-    at / middle .code:n =
-        { \dim_set:Nn\l__below_dim{0.5\fill} \dim_set_eq:Nn\l__above_dim{0.5\fill} } ,
+    hide-links .bool_set:N = \l__hide_links_bool ,
+    hide-links .default:n = true ,
+    hide-links .initial:n = false ,
+    hide-header-and-footer .bool_set:N = \l__hide_header_and_footer_bool ,
+    hide-header-and-footer .default:n = true ,
+    hide-header-and-footer .initial:n = false ,
+    textile .tl_set:N = \l__textile_tl ,
+    textile .default:n = {} ,
+    style .tl_set:N = \l__style_tl ,
+    style .initial:n = {} ,
+    align .choices:nn =
+        { left, center, right, justify }
+        { \tl_set_eq:NN \l__align_tl \l_keys_choice_tl } ,
+    align .initial:n = center ,
+    at .choices:nn =
+        { top, bottom, middle }
+        { \tl_set_eq:NN \l__at_tl \l_keys_choice_tl } ,
+    at .initial:n = top ,
 }
 
-\NewDocumentEnvironment {InternalSpecialChapter} { O{} G{} }
+
+% Super-special chapters, normally centered
+\NewDocumentEnvironment {SpecialChapter} { O{} G{} }
 {
-    \keys_set:nn {desert / special-chapter} {#1}
-    \bool_set_true:N \l__numberless_bool  % force true
-    \str_if_eq:VnT \g_desert_footnote_within_str {chapter}
-        { \setcounter{footnote}{0} }
+    \keys_set:nn {desert / special-chapter} {numberless, #1}  % add numbered in #1
     \tl_if_blank:VT \l__title_tl
         { \tl_set:Nn \l__title_tl {#2} }
+    \str_if_eq:VnT \g_desert_footnote_within_str {chapter}
+        { \setcounter{footnote}{0} }  % otherwise they'll continue from the last chapter
     \__desert_run_section_like:NN\chapter\BetweenChapters
     \begin{InternalSpecialBox}
 }
 {
     \end{InternalSpecialBox}
+    \ShowEndNotes  % really, these shouldn't be used
+    \acresetall
+    \bool_if:NT \l__hide_header_and_footer_bool  % TODO
+        { \thispagestyle{empty} }
+    \acresetall
 }
 
-% Super-special chapters, normally centered
-\NewDocumentEnvironment {SpecialChapter} { O{} G{} }
-{
-    \PreSpecialChapterHook
-    \begin{InternalSpecialChapter}[#1]{#2}
-}
-{ \end{InternalSpecialChapter} \acresetall }
 
-\NewDocumentEnvironment {FrontCopyright} { O{} }
+\NewDocumentCommand \NewFrontChapter { m O{} }
 {
-    \PreFrontCopyrightHook
-    \begin{InternalSpecialChapter}[#1]{}  % don't add a title
+    % any title= will override G{#1}
+    % e.g. \NewFrontMatter{Abstract}[title=Abstracto]
+    \NewDocumentEnvironment {#1} { O{#2} G{#1} } 
+        { \begin{FrontChapter}[##1]{##2} }
+        { \end{FrontChapter} }
 }
-{ \end{InternalSpecialChapter} \acresetall }
 
-% Abstract
-\NewDocumentEnvironment {FrontAbstract} { O{} }
+\NewDocumentCommand \NewSpecialChapter { m O{} }
 {
-    \PreFrontAbstractHook
-    \Chapter*[#1]{}  % if they want a title, they can pass title=
+    % any title= will override G{#1}
+    % e.g. \NewSpecialChapter{Dedication}[title={}]
+    \NewDocumentEnvironment {#1} { O{#2} G{#1} }
+        { \begin{SpecialChapter}[##1]{##2} }
+        { \end{SpecialChapter} }
+}
+
+\NewFrontChapter   {Preface}         [entry=Preface]
+\NewFrontChapter   {Acknowledgments} [entry=Acknowledgments]
+\NewFrontChapter   {Contributions}   [entry=Contributions]
+\NewSpecialChapter {Epigraph}
+    [no-title, entry=Epigraph, style=sans;large, at=middle]
+\NewSpecialChapter {Dedication}
+    [no-title, entry=Dedication, style=sans;large;italic, at=middle]
+\NewSpecialChapter {Copyright}
+    [no-title, no-entry, hide-links, at=middle]
+\NewSpecialChapter {Title}
+    [no-title, no-entry, hide-links, hide-header-and-footer]
+
+
+
+
+%========================================================================================
+%                        abstract and title
+%========================================================================================
+
+\NewDocumentCommand \AbstractTopContents {}
+{
     \begin{center}
-    \GetTitle[style=abstract-title]
+    \GetTitle[textile=abstract-title]
     \skip_vertical:N \g_desert_below_abstract_title_skip
     \StyleTxt{abstract-by}{by}
     \skip_vertical:N \g_desert_above_abstract_author_skip
-    \GetAuthors[style=abstract-authors]
+    \GetAuthors[textile=abstract-authors]
     \skip_vertical:N \g_desert_above_abstract_body_skip
     \end{center}
 }
-{ \acresetall }
 
-\NewDocumentEnvironment {FrontTitle} {}
+% Abstract
+\NewDocumentEnvironment {Abstract} { O{no-title, entry=Abstract} }
 {
-    \PreFrontTitleHook
+    \begin{FrontChapter}[numberless, #1]
+    \AbstractTopContents
 }
-{
-    \bool_if:NT \g_desert_hide_title_footer_bool
-        { \thispagestyle{empty} }
-}
+{ \end{FrontChapter} }
 
-\ProvideDocumentCommand \TitleContents {}
+
+\NewDocumentCommand \TitleContents {}
 {
-    \GetTitle[style-inline={largerr,bold}]\\[\bigskipamount]
+    \GetTitle[style={largerr;bold}]\\[\bigskipamount]
     by\\[\bigskipamount]
-    \GetAuthors[style-inline={largerr}]\\
+    \GetAuthors[style=largerr]\\
     \vspace{1cm}
     \large
     Submitted~on~\getplaindate\ in~partial~fulfillment~of\\
@@ -1750,27 +2275,35 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 % EXAMPLE title page
 \NewDocumentCommand \ShowTitle { O{} }
 {
-    \begin{FrontTitle}
-    \begin{SpecialBox}[#1]
-    \rmfamily\largerr
+    \begin{Title}[#1]
     \TitleContents
-    \end{SpecialBox}
-    \end{FrontTitle}
+    \end{Title}
 }
 
 
-\NewDocumentEnvironment {MainChapter} { O{} G{} }
+
+
+%========================================================================================
+%                        main matter
+%========================================================================================
+
+
+\NewDocumentCommand \StartChapter { O{} G{} }
 {
-    \PreMainChapterHook
     \bool_if:NT \g_desert_bib_per_chapter_bool { \begin{refsection} }
     \Chapter[#1]{#2}
 }
+
+\NewDocumentCommand \EndChapter {}
 {
     \ShowEndNotes
     \bool_if:NT \g_desert_bib_per_chapter_bool
         { \ShowSubBib \end{refsection} }
 }
 
+\NewDocumentEnvironment {MainChapter} { O{} G{} }
+    { \StartChapter[#1]{#2} }
+    { }
 
 
 
@@ -1786,7 +2319,6 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 \NewDocumentEnvironment {Appendix} { O{} G{} }
 {
-    \PreAppendixHook
     \begin{refsection}
     \Chapter[#1]{#2}
 }
@@ -1911,6 +2443,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 
 
+
 %========================================================================================
 %                     lists of things
 %========================================================================================
@@ -1923,55 +2456,97 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
             { \chapter{\listfigurename} }
             { \chapter*{\listfigurename} }
         \@mkboth
-            {\MakeUppercase\listfigurename}
-            {\MakeUppercase\listfigurename}
+            {\listfigurename}
+            {\listfigurename}
         \@starttoc{lof}
     }
 }
 
-\NewDocumentEnvironment {TocLikeListInternal} { m }
+\cs_new_protected:Npn \__desert_fix_lot:n #1
 {
+    \renewcommand \listoftables
+    {   % listfigurename already gets set
+        \bool_if:nTF {#1}
+            { \chapter{\listtablename} }
+            { \chapter*{\listtablename} }
+        \@mkboth
+            {\listtablename}
+            {\listtablename}
+        \@starttoc{lot}
+    }
+}
+
+\NewDocumentEnvironment {LofLikeListInternal} { m }
+{
+    \bool_if:NF \g_desert_show_toc_links_bool
+        { \hypersetup{hidelinks} }
     \__desert_fix_lof:n{#1}
     \setlength{\parskip}{0ex}  % makes things confusing
     \PreTocLikeListHook
 } {}
 
 \NewDocumentEnvironment {TocLikeList} { t! }
-    { \begin{TocLikeListInternal}{#1} }
-    { \end{TocLikeListInternal} }
+    { \begin{LofLikeListInternal}{#1} }
+    { \end{LofLikeListInternal} }
+
+\cs_new:Npn \desert_maybe_add_toc:nnn #1#2#3
+{
+    \bool_if:nF {#1}
+    {
+        \bool_if:nT {#2}
+            { \addcontentsline{toc}{chapter}{#3} }
+    }
+}
 
 % Output table of contents
-\NewDocumentCommand \ShowTableOfContents { t! }
+\NewDocumentCommand \ShowTableOfContents { }
 {
-    \begin{TocLikeListInternal}{#1}
-    \txtstyles_set_baselinestretch:V \g_desert_leading_toc_fp
+    % We're just not going to allow ! or + here --
+    % It's the table of contents for God's sake.
+    \group_begin:
+    \bool_if:NF \g_desert_show_toc_links_bool
+        { \hypersetup{hidelinks} }
+    \setlength{\parskip}{0ex}  % makes things confusing
+    \PreTocLikeListHook
+    \textiles_set_baselinestretch:V \g_desert_leading_toc_fp
     \tableofcontents
-    \end{TocLikeListInternal}
+    \group_end:
 }
 
 % Output list of figures
-\NewDocumentCommand \ShowListOfFigures { t! }
+\NewDocumentCommand \ShowListOfFigures { t! t+ }
 {
-    \begin{TocLikeListInternal}{#1}
-    \txtstyles_set_baselinestretch:V \g_desert_leading_list_of_fp
+    \begin{LofLikeListInternal}{#1}
+    \textiles_set_baselinestretch:V \g_desert_leading_list_of_fp
     \listoffigures
-    \end{TocLikeListInternal}
+    \desert_maybe_add_toc:nnn{#1}{#2}{\listfigurename}
+    %\addcontentsline{toc}{chapter}{\listfigurename}
+    \end{LofLikeListInternal}
 }
 
 % Output list of tables
-\NewDocumentCommand \ShowListOfTables { t! }
+\NewDocumentCommand \ShowListOfTables { t! t+ }
 {
-    \begin{TocLikeListInternal}{#1}
-    \txtstyles_set_baselinestretch:V \g_desert_leading_list_of_fp
+    % \listoftables doesn't use \listoffigures
+    % so we follow the same logic as in LofLikeListInternal
+    \group_begin:
+    \bool_if:NF \g_desert_show_toc_links_bool
+        { \hypersetup{hidelinks} }
+    \__desert_fix_lot:n{#1}
+    \setlength{\parskip}{0ex}  % makes things confusing
+    \textiles_set_baselinestretch:V \g_desert_leading_list_of_fp
+    \PreTocLikeListHook
     \listoftables
-    \end{TocLikeListInternal}
+    %\addcontentsline{toc}{chapter}{\listtablename}
+    \desert_maybe_add_toc:nnn{#1}{#2}{\listtablename}
+    \group_end:
 }
 
 % Output list of abbreviations (via 'acro' package)
-\NewDocumentCommand \ShowListOfAbbrevs { t! }
+\NewDocumentCommand \ShowListOfAbbreviations { t! t+ }
 {
-    \begin{TocLikeListInternal}{#1}
-    \txtstyles_set_baselinestretch:V \g_desert_leading_abbrevs_fp
+    \begin{LofLikeListInternal}{#1}
+    \textiles_set_baselinestretch:V \g_desert_leading_abbrevs_fp
     % template = description|tabular|longtable|supertabular|tabularray|lof|toc
     % acceptable choices are description, toc, lof, and tabularray
     % description is the default
@@ -1985,51 +2560,70 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     \bool_if:nTF {#1}
         { \exp_last_unbraced:Ne \printacronyms {[heading=chapter, \l_tmpb_tl]} }
         { \exp_last_unbraced:Ne \printacronyms {[heading=chapter*, \l_tmpb_tl]} }
-    \end{TocLikeListInternal}
+    \desert_maybe_add_toc:nnn{#1}{#2}{\desert_string:n{listabbreviation}}
+    \end{LofLikeListInternal}
 }
 
 % Output nomenclature
-\NewDocumentCommand \ShowNomenclature { t! }
+\NewDocumentCommand \ShowNomenclature { t! t+ }
 {
-    \begin{TocLikeListInternal}{#1}
-    \renewcommand \nomname {\desert_string:n{listnomenclature}}
-    \txtstyles_set_baselinestretch:V \g_desert_leading_nomenclature_fp
-    \bool_if:nTF {#1}
-        { \printnomenclature[heading=chapter] }
-        { \printnomenclature[heading=chapter*] }
-    \end{TocLikeListInternal}
+    % nomencl doesn't use \listoffigures
+    % so, we'll turn \chapter* into \chapter
+    \group_begin:
+    \setlength{\parskip}{0ex}
+    \PreTocLikeListHook
+    \bool_if:nT {#1}
+    {
+        \let \oldchapter \chapter
+        \renewcommand {\chapter} {{\oldchapter{\desert_string:n{listnomenclature}}}}
+    }
+    \textiles_set_baselinestretch:V \g_desert_leading_nomenclature_fp
+    \bool_if:NF \g_desert_show_nomenclature_links_bool
+        { \hypersetup{hidelinks} }
+    % also uses \nomitemsep, which we earlier set to baselineskip
+    \printnomenclature
+    \desert_maybe_add_toc:nnn{#1}{#2}{\desert_string:n{listnomenclature}}
+    \group_end:
 }
 
-\NewDocumentCommand \ShowListOfTheoremLike { t! m }
+\NewDocumentCommand \ShowListOfTheoremLike { t! O{} m }
 {
-    \begin{TocLikeListInternal}{#1}
-    \txtstyles_set_baselinestretch:V \g_desert_leading_list_of_fp
-    \listoftheorems[ignoreall,#2]
-    \end{TocLikeListInternal}
+    \begin{LofLikeListInternal}{#1}
+    \textiles_set_baselinestretch:V \g_desert_leading_list_of_fp
+    \listoftheorems[#3]
+    \bool_if:nF {#1}
+    {
+        \tl_if_blank:nF {#2}
+            { \addcontentsline{toc}{chapter}{#2} }
+    }
+    \end{LofLikeListInternal}
 }
 
-\NewDocumentCommand \ShowListOfSourceCode { t! }
+\NewDocumentCommand \ShowListOfSourceCode { t! t+ }
 {
-    \begin{TocLikeListInternal}{#1}
-    \txtstyles_set_baselinestretch:V \g_desert_leading_list_of_fp
+    \begin{LofLikeListInternal}{#1}
+    \textiles_set_baselinestretch:V \g_desert_leading_list_of_fp
     \listoflistings
-    \end{TocLikeListInternal}
+    \desert_maybe_add_toc:nnn{#1}{#2}{\desert_string:n{listlisting}}
+    \end{LofLikeListInternal}
 }
 
-\NewDocumentCommand \ShowListOfReactionSchemes{ t! }
+\NewDocumentCommand \ShowListOfReactionSchemes { t! t+ }
 {
-    \begin{TocLikeListInternal}{#1}
-    \txtstyles_set_baselinestretch:V \g_desert_leading_list_of_fp
+    \begin{LofLikeListInternal}{#1}
+    \textiles_set_baselinestretch:V \g_desert_leading_list_of_fp
     \listofreactionschemes
-    \end{TocLikeListInternal}
+    \desert_maybe_add_toc:nnn{#1}{#2}{\desert_string:n{listreactionscheme}}
+    \end{LofLikeListInternal}
 }
 
-\NewDocumentCommand \ShowListOfStructuralFormulas{ t! }
+\NewDocumentCommand \ShowListOfStructuralFormulas{ t! t+ }
 {
-    \begin{TocLikeListInternal}{#1}
-    \txtstyles_set_baselinestretch:V \g_desert_leading_list_of_fp
+    \begin{LofLikeListInternal}{#1}
+    \textiles_set_baselinestretch:V \g_desert_leading_list_of_fp
     \listofstructuralformulas
-    \end{TocLikeListInternal}
+    \desert_maybe_add_toc:nnn{#1}{#2}{\desert_string:n{liststructuralformula}}
+    \end{LofLikeListInternal}
 }
 
 
@@ -2049,7 +2643,6 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     index/use = indexed ,
     format/short = \txtuppertosc
 }
-
 
 
 \NewDocumentCommand \indx { s m O{} }
@@ -2075,7 +2668,10 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     }
 }
 
-
+\desert_if_feat_enabled:nT {knowledge}
+{
+    \knowledgeconfigure{visible anchor points=\g_desert_draft_bool}
+}
 
 
 %========================================================================================
@@ -2086,9 +2682,9 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 \DeclareCaptionLabelSeparator {desert-sep} {\g_desert_typo_caption_label_sep_tl}
 
-\txtstyles_declare_cap_style:nnn {desert-caption} {caption-body} {caption-label}
-\txtstyles_declare_cap_style:nnn {desert-subcap} {subcaption-body} {subcaption-label}
-\txtstyles_declare_cap_style:nnn {desert-table} {table-head-body} {table-head-label}  % legacy tables
+\textiles_declare_cap_style:nnn {desert-caption} {caption-body} {caption-label}
+\textiles_declare_cap_style:nnn {desert-subcap} {subcaption-body} {subcaption-label}
+\textiles_declare_cap_style:nnn {desert-table} {table-head-body} {table-head-label}  % legacy tables
 
 % For all captions:
 \captionsetup
@@ -2096,6 +2692,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     singlelinecheck = false,  % do what the user tells you
     format = desert-caption ,
     labelsep = desert-sep ,
+    justification = centering ,
 }
 
 \captionsetup [figure]
@@ -2156,7 +2753,12 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     }
 }
 
-
+% make specifying e.g. align= (inner-pos) easier
+\DeclareCaptionJustification{left}{\RaggedRight}
+\DeclareCaptionJustification{right}{\RaggedLeft}
+\DeclareCaptionJustification{center}{\centering}
+\DeclareCaptionJustification{justify}{\justified}
+% caption also provides \centerfirst and \centerlast
 
 
 
@@ -2172,7 +2774,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     entry .tl_set:N = \l__entry_tl ,
     entry .initial:n = {} ,
     caption .tl_set:N = \l__caption_tl ,
-    caption .initial:n = {}
+    caption .initial:n = {} ,
 }
 
 \cs_new_protected:Nn \__desert_capkeyval:
@@ -2215,7 +2817,11 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %                 figures -- single-panel
 %========================================================================================
 
-\AtBeginEnvironment {figure} {\centering}
+\g@addto@macro\@floatboxreset\centering
+% This one no longer works!
+%\g@addto@macro\@subfloatboxreset{\centering}
+% https://tex.stackexchange.com/questions/144853/add-centering-to-all-subfigures-in-subcaption-using-gaddtomacro
+\apptocmd\subcaption@iiminipage{\centering}{}{}
 
 
 \keys_define:nn { desert / one-panel-figure }
@@ -2234,6 +2840,13 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     full .initial:n = false,
 }
 
+\cs_new:Npn \desert__include_graphics:nn #1#2
+{
+    \includegraphics[#2]{#1}
+}
+\cs_generate_variant:Nn \desert__include_graphics:nn { Ve }
+
+
 \NewDocumentEnvironment {OnePanelFigure} { s r[] }
 {
     \keys_set:nn {desert / one-panel-figure} {#2}
@@ -2246,7 +2859,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
         }
     \begin{\__my_env_str}
     \tl_if_blank:VF \l__file_tl
-        { \includegraphics[\l__graphics_options_tl]{\l__file_tl} }
+        { \desert__include_graphics:Ve \l__file_tl {\l__graphics_options_tl} }
 }
 {
     \__desert_capkeyval:
@@ -2297,14 +2910,20 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 \keys_define:nn { desert / real-panel }
 {
     file .tl_set:N = \l__panel_file_tl ,
-    file .initial:n = {...} ,
+    file .initial:n = {} ,  % "optional, but clearly wanted
     graphicx .tl_set:N = \l__panel_graphics_options_tl ,
     graphicx .initial:n = {} ,
     width .dim_set:N = \l__panel_width_dim ,
-    inner-pos .tl_set:N = \l__panel_innerpos_tl ,
+    align .tl_set:N = \l__panel_innerpos_tl ,
+    align .default:n = center ,
+    % align (inner-pos) can be 'l', 'c, 'r', or anything declared via \DeclareCaptionJustification
+    % we declared some aliases in the captioning section above
     label .tl_set:N = \l__panel_label_tl ,
+    label .initial:n = {} ,
     entry .tl_set:N = \l__panel_entry_tl ,
+    entry .initial:n = {} ,
     caption .tl_set:N = \l__panel_caption_tl ,
+    caption .initial:n = {} ,
 }
 
 \NewDocumentCommand \AddPanel { m }
@@ -2317,7 +2936,8 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
         [\l__panel_width_dim]
         [\l__panel_innerpos_tl]
         {
-            \includegraphics [\l__panel_graphics_options_tl] {\l__panel_file_tl}
+            \tl_if_blank:VF \l__file_tl
+                { \desert__include_graphics:Ve \l__file_tl {\l__graphics_options_tl} }
             \tl_if_blank:VF \l__label_tl {\label{\l__label_tl}}
         }
     \group_end:
@@ -2333,7 +2953,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 \keys_define:nn { desert / phantom-panel-figure }
 {
     file .tl_set:N = \l__file_tl ,
-    file .initial:n = {} ,
+    file .initial:n = {} ,  % "optional, but clearly wanted
     graphicx .tl_set:N = \l__graphics_options_tl ,
     graphicx .initial:n = {} ,
     label .tl_set:N = \l__label_tl ,
@@ -2359,7 +2979,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
         }
     \begin{\__my_env_str}
     \tl_if_blank:VF \l__file_tl
-        { \includegraphics[\l__graphics_options_tl]{\l__file_tl} }
+        { \desert__include_graphics:Ve \l__file_tl {\l__graphics_options_tl} }
 }
 {
     \__desert_capkeyval:
@@ -2369,7 +2989,9 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 \keys_define:nn { desert / phantom-panel }
 {
     label .tl_set:N = \l__panel_label_tl ,
+    label .initial:n = {} ,
     entry .tl_set:N = \l__panel_entry_tl ,
+    entry .initial:n = {} ,
 }
 
 \NewDocumentCommand \AddPhantomPanel { m }
@@ -2383,20 +3005,31 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 }
 
 
-\NewDocumentCommand \describepanel { m m }
-{
-    \subref{#1}\g_desert_typo_subcaption_label_sep_tl #2
-}
 \NewDocumentCommand \describepanels { m m }
 {
-    \txtstyles_use:nn
+    % TODO: split by --
+    \textiles_use:nn
         {subref}
         {
-            \g_desert_typo_subref_prefix_tl
-            #2
-            \g_desert_typo_subref_suffix_tl
+            \ProcessList{#1}{\subref}
+            \g_desert_typo_subref_label_sep_tl
         }
+        #2
 }
+\NewDocumentCommand \describepanel { m m }
+    { \describepanels{#1}{#2} }
+
+\NewDocumentCommand \describepanelrange { m m m }
+{
+    \textiles_use:nn
+        {subref}
+        {
+            \subref{#1}--\subref{#2}
+            \g_desert_typo_subref_label_sep_tl
+        }
+        #3
+}
+
 
 
 
@@ -2404,11 +3037,6 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %========================================================================================
 %                            tables
 %========================================================================================
-
-
-\AtBeginEnvironment {table} {\centering}
-\AtBeginEnvironment {tblr} {\centering}
-% The other tblr environments use tblr internally
 
 % Vertical spacing
 \SetTblrOuter
@@ -2420,10 +3048,10 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 }
 
 % Apply these font styles in all cases
-\SetTblrStyle {caption-sep} {font=\txtstyles_run_nullary:n{table-head-label}}
-\SetTblrStyle {caption-tag} {font=\txtstyles_run_nullary:n{table-head-label}}
-\SetTblrStyle {caption-text} {font=\txtstyles_run_nullary:n{table-head-body}}
-\SetTblrStyle {lastfoot} {font=\txtstyles_run_nullary:n{table-footer}}
+\SetTblrStyle {caption-sep} {font=\textiles_run_nullary:n{table-head-label}}
+\SetTblrStyle {caption-tag} {font=\textiles_run_nullary:n{table-head-label}}
+\SetTblrStyle {caption-text} {font=\textiles_run_nullary:n{table-head-body}}
+\SetTblrStyle {lastfoot} {font=\textiles_run_nullary:n{table-footer}}
 
 % Fix the separators
 % For caption, that's the only thing we'll do.
@@ -2468,7 +3096,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 \DefTblrTemplate {lastfoot} {default}  % make default
 {
-    \txtstyles_set_baselinestretch:V \g_desert_leading_caption_fp
+    \textiles_set_baselinestretch:V \g_desert_leading_caption_fp
     \UseTblrTemplate{remark}{shortfoot}
     \UseTblrTemplate{note}{shortfoot}
     \par
@@ -2476,7 +3104,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 \DefTblrTemplate {lastfoot} {shortfoot}
 {
-    \txtstyles_set_baselinestretch:V \g_desert_leading_caption_fp
+    \textiles_set_baselinestretch:V \g_desert_leading_caption_fp
     \UseTblrTemplate{remark}{shortfoot}
     \UseTblrTemplate{note}{shortfoot}
     \par
@@ -2552,9 +3180,9 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
     label .initial:n = {} ,
 }
 \dim_new:N \g_desert_box_border_dim
-\dim_gset:Nn \g_desert_box_border_dim {1.5pt }
+\dim_gset:Nn \g_desert_box_border_dim {1.2pt }
 \dim_new:N \g_desert_box_arc_dim
-\dim_gset:Nn \g_desert_box_arc_dim { 4pt }
+\dim_gset:Nn \g_desert_box_arc_dim { 0pt }
 \tl_new:N \g_desert_box_frame_color_tl
 \tl_gset:Nn \g_desert_box_frame_color_tl { blue!50!black }
 \cs_new_protected:Nn \desert_box_font_title: { \normalsizerr \bfseries }
@@ -2569,18 +3197,17 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
         \begin{tcolorbox} [
             title       =
             {
-                \txtstyles_use:nn{box-label}{#3 \g_desert_typo_caption_label_sep_tl}
-                \txtstyles_use:nn{box-name}{\l__name_tl}
+                \textiles_use:nn{box-label}{#3 \g_desert_typo_caption_label_sep_tl}
+                \textiles_use:nn{box-name}{\l__name_tl}
             } ,
             colframe    = {#1} ,
             colupper    = {#1} ,
             colback     = {#1!1!white} ,
             coltext     = black ,
-            fonttitle   = {\desert_box_font_title:} ,
             fontlower   = {} ,
             boxrule     = {\dim_use:N \g_desert_box_border_dim} ,
             arc         = {\dim_use:N \g_desert_box_arc_dim} ,
-            boxsep      = 0.5pt ,
+            boxsep      = 0.25pc ,
             #2  % here the user can override any of the above-listed defaults
         ]
         \tl_if_blank:VF \l__label_tl
@@ -2602,8 +3229,8 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 
 \dim_new:N \g_desert_minted_border_dim
-\dim_gset:Nn \g_desert_minted_border_dim { 1.5pt }
-\tl_gset:Nn \g_desert_minted_bg_color_tl { black!2!white }
+\dim_gset:Nn \g_desert_minted_border_dim { 1.2pt }
+\tl_gset:Nn \g_desert_minted_bg_color_tl { black!1!white }
 
 \desert_if_feat_enabled:nT {tcolorbox}
 {
@@ -2650,13 +3277,13 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 \NewDocumentEnvironment {SourceCode} { O{} }
 {
     \begin{listing}
-    \__desert_capkeyval:
     \keys_set:nn {desert / source-code} {#1}
+    \__desert_capkeyval:
     \desert_if_feat_enabled:nT {tcolorbox}  % box even if minted is not enabled
         { \bool_if:NF \l__no_box_bool { \begin{DesertMinted} } }
     \desert_if_feat_enabled:nT {minted}
     {
-        \txtstyles_run_nullary:n{source-code}
+        \textiles_run_nullary:n{source-code}
         \setminted{baselinestretch=\g_desert_leading_source_code_fp}
     }
 }
@@ -2668,7 +3295,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 \NewDocumentEnvironment {MintedCode} { O{} }
 {   \VerbatimEnvironment
-    \begin{SourceCode}
+    \begin{SourceCode}[#1]
     \desert_if_feat_enabled:nT {minted}
         { \begin{minted} [\l__minted_tl] {\l__lang_tl} }
 }
@@ -2722,8 +3349,8 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 {
     \keys_set:nn {desert / chem} {#1}
     \begin{reactionscheme}
-    \txtstyles_run_nullary:n {desert-chemistry}
-    \desert_has_feat:nT {chemfig}
+    \textiles_run_nullary:n {desert-chemistry}
+    \desert_if_feat_enabled:nT {chemfig}
     {
         \setchemfig{\l__chemfig_tl}
         \schemestart
@@ -2732,7 +3359,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 {
     \__desert_capkeyval:
     \end{reactionscheme}
-    \desert_has_feat:nT {chemfig}
+    \desert_if_feat_enabled:nT {chemfig}
         { \schemestop }
 }
 
@@ -2740,8 +3367,8 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 {
     \keys_set:nn {desert / chem} {#1}
     \begin{structuralformula}
-    \txtstyles_run_nullary:n {desert-chemistry}
-    \desert_has_feat:nT {chemfig}
+    \textiles_run_nullary:n {desert-chemistry}
+    \desert_if_feat_enabled:nT {chemfig}
         { \setchemfig{\l__chemfig_tl} }
 }
 {
@@ -2757,7 +3384,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 %========================================================================================
 
 \RenewDocumentCommand \foreign { m }
-    { \txtstyles_use:nn{foreign-words}{#1} }  % e.g. "et al." or "in vivo"
+    { \textiles_use:nn{foreign-words}{#1} }  % e.g. "et al." or "in vivo"
 
 
 % Really none of these should be changed, EXCEPT
@@ -2836,44 +3463,50 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
         { \printbibliography }
 }
 
-\NewDocumentCommand \StartFrontMatter {}
-{
-    \pagenumbering{\g_desert_numbering_front_str}
-    \setcounter{page}{1}
-}
-\AtBeginDocument {\StartFrontMatter}
-
 \cs_new_protected:Npn \__desert_chapter_num:N #1
 {
     \renewcommand \thechapter {#1{chapter}}
 }
 
+\NewDocumentCommand \StartFrontMatter {}
+{
+    \exp_args:Nc
+        \__desert_chapter_num:N
+        \g_desert_numbering_front_chapters_str
+    \pagenumbering{\g_desert_numbering_front_str}
+    \setcounter{page}{1}
+}
+
+\AtBeginDocument {\StartFrontMatter}
+
 \NewDocumentCommand \StartMainMatter {}
 {
+    \BetweenChapters  % clear page BEFORE changing the page numbering!
     \str_if_eq:VVF \g_desert_numbering_front_str \g_desert_numbering_main_str
     {
         \pagenumbering{\g_desert_numbering_main_str}
         \setcounter{page}{1}
     }
-    \bool_if:NT \g_desert_force_endnotes_bool
-        { \FootnotesAsEndnotes }
-    \setcounter{chapter}{0}
     \exp_args:Nc
         \__desert_chapter_num:N
         \g_desert_numbering_main_chapters_str
+    \bool_if:NT \g_desert_force_endnotes_bool
+        { \FootnotesAsEndnotes }
+    \setcounter{chapter}{0}
 }
 
 \NewDocumentCommand \StartBackMatter {}
 {
+    \BetweenChapters  % clear page BEFORE changing the page numbering!
     \str_if_eq:VVF \g_desert_numbering_main_str \g_desert_numbering_back_str
         {
             \pagenumbering{\g_desert_numbering_back_str}
             \setcounter{page}{1}
         }
-    \setcounter{chapter}{0}
     \exp_args:Nc
         \__desert_chapter_num:N
         \g_desert_numbering_back_chapters_str
+    \setcounter{chapter}{0}
 }
 
 
@@ -2885,6 +3518,9 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 
 % We're just aliasing to make them consistent.
 % Setup commands should end with 'Setup' and be camel-case.
+
+\NewDocumentCommand \KnowledgeSetup {m}
+    { \knowledgeconfigure{#1} }
 
 \NewDocumentCommand \SiSetup {m}
     { \sisetup{#1} }
@@ -3042,4 +3678,7 @@ glue-above / toc-subsubsection .initial:n = 0pc ,
 {
     \AddPdfHyperxmpData  % from info.styr
 }
+
+\bool_if:NT \g_desert_draft_bool
+    { \RequirePackage{showframe} }
 

@@ -21,6 +21,8 @@ The style is set with \code{style / indx-starred} option. \footnote{This is a gr
 (This too: \indx{space aliens}[aliens!space]).
 It is usually computed in the cloud. With \ac{CRISPR}.
 
+\textsc{This had better be in smallcaps.}
+
 \blockcquote{johnson2022}{Life is good.}
 
 We recovered \qty{5}{\tera\joule} from the craft.
@@ -80,13 +82,13 @@ Refer to \cref{mythm}.
     cell{2-999}{2-6} = {cmd=\ensuremath}  % TODO: in 2022 vr, mode=math and 2-Z
 }
 Type & Trivial & Easy & Normal & Hard & Strenuous\\
-Type 1 \TblrNote{a} (\%) & 300 & 200 & 150 & 100 & 75\\
+Type 1 (\%) \TblrNote{a} & 300 & 200 & 150 & 100 & 75\\
 Type 2 (\%) & 70 & 60 & 50 & 50 & 40\\
 Type 3 (\%) & 80 & 75 & 70 & 65 & 60\\
 \end{LongTable}
 
 
-\begin{MintedCode}[
+\begin{MintedCode} [
     lang=c++,
     label=hi,         % label, entry, and caption are the same as in \begin{tblr}
     entry=Sample~C++,
@@ -94,5 +96,16 @@ Type 3 (\%) & 80 & 75 & 70 & 65 & 60\\
 ]
 int i = 5;
 \end{MintedCode}
+
+\begin{OnePanelFigure} [
+    entry    = A figure,
+    caption  = A figure,
+    label    = figgy,
+    graphicx = {width=4cm},
+    file     = sections/person.png
+]
+%\includegraphics[width=0.1\textwidth]{sections/person.png}
+\end{OnePanelFigure}
+
 
 \end{MainChapter}

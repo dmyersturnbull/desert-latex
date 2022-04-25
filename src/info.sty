@@ -12,9 +12,10 @@
 
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage{info}{2022-02-17}{0.1}{Title pages from templates and key/value pairs.}
+\ProvidesExplPackage{info}{2022-04-17}{0.1}{Title pages from templates and key/value pairs.}
 \RequirePackage{datetime2}  % provide: calc,useregional
-\RequirePackage{txtstyles}
+\RequirePackage{textiles}
+
 
 \msg_new:nnn{info}{infomissing}
     {No~info~key~'#1'~is~defined.}
@@ -32,15 +33,17 @@
     { \msg_error:nnnn{info}{infoisdef}{#1}{#2} }
 \cs_generate_variant:Nn \info__is_def_err:nv { nv }
 
-\msg_new:nnn{info}{unknownxmpkey}
-    {Added~'#1=#2'~to~PDF~info~dictionary~('pdf#1'~is~not~a~known~PDF~XMP~key).}
-\cs_new:Npn \info__unknownxmpkey_info:nn #1#2
-    { \msg_info:nnnn{info}{unknownxmpkey}{#1}{#2} }
+\msg_new:nnn{info}{knownxmpdata}
+    {Set~XMP~data:~'#1'.}
+\cs_new:Npn \info__knownxmpdata_info:n #1
+    { \msg_info:nnn{info}{knownxmpdata}{#1} }
+\cs_generate_variant:Nn \info__knownxmpdata_info:n { V }
 
-\msg_new:nnn{info}{knownxmpkey}
-    {Set~XMP~field~'#1=#2'~from~info.}
-\cs_new:Npn \info__knownxmpkey_info:nn #1#2
-    { \msg_info:nnnn{info}{knownxmpkey}{#1}{#2} }
+\msg_new:nnn{info}{unknownxmpdata}
+    {Set~PDF~info~dictionary~data~(excludes~known~XMP~keys):~'#1'.}
+\cs_new:Npn \info__unknownxmpdata_info:n #1
+    { \msg_info:nnn{info}{unknownxmpdata}{#1} }
+\cs_generate_variant:Nn \info__unknownxmpdata_info:n { V }
 
 
 
@@ -125,7 +128,7 @@
 %    - CVoR Corrected Version of Record
 %    - EVoR Enhanced Version of Record
 
-\seq_const_from_clist:Nn \c_info_hyperxmp_seq
+\str_set:Nn \c_info_hyperxmp_str
 {
     subject, title, subtitle, keywords,
     type,      % recommended vocabulary above
@@ -157,38 +160,39 @@
     source,  % [default: .tex source name]
 }
 
-\cs_new:Npn \info_get_hyperxmp_data:N #1
+\cs_new_protected:Npn \info_split_hyperxmp_data:NN #1#2
 {
+    \str_clear:N #1
+    \str_clear:N #2
     \prop_map_inline:Nn \g_info_prop
     {
-        \seq_if_in:NnT \c_info_hyperxmp_seq {##1}
-            { \prop_put:Nnn #1 {pdf##1} {##2} }
+        \str_if_in:NnTF \c_info_hyperxmp_str {##1,}
+            { \str_put_right:Nn #1 {pdf##1~=~{##2}} }
+            { \str_put_right:Nn #2 {##1~=~{##2}} }
     }
 }
 
-\cs_new:Npn \info_get_non_hyperxmp_data:N #1
+\cs_new_protected:Npn \info_set_hyper_data: #1
 {
-    \prop_map_inline:Nn \g_info_prop
-    {
-        \seq_if_in:NnF \c_info_hyperxmp_seq {##1}
-            { \prop_put:Nnn #1 {##1} {##2} }
-    }
+    % this variant is more efficient
+    \info_split_hyperxmp_data:NN \l__tmp_hyperxmp_str \l__tmp_nonhyperxmp_str
+    \info__knownxmpdata_info:V \l__tmp_hyperxmp_str
+    \info__unknownxmpdata_info:V \l__tmp_nonhyperxmp_str
+    \exp_args:Nx \hypersetup {\l__tmp_hyperxmp_str, \l__tmp_nonhyperxmp_str}
 }
 
-\cs_new:Npn \info_set_hyperxmp_data: #1
+\cs_new_protected:Npn \info_set_hyperxmp_data: #1
 {
-    \info_get_hyperxmp_data:N \l_tmpa_prop
-    % TODO: broken!! Ignored.
-    \prop_map_function:NN \l_tmpa_prop \info__knownxmpkey_info:nn
-    %\exp_args:Nv \hypersetup { \prop_to_keyval:N \l_tmpa_prop }
+    \info_split_hyperxmp_data:NN \l__tmp_hyperxmp_str \l__tmp_nonhyperxmp_str
+    \info__knownxmpdata_info:V \l__tmp_hyperxmp_str
+    \exp_args:Nx \hypersetup {\l__tmp_hyperxmp_str}
 }
 
-\cs_new:Npn \info_set_non_hyperxmp_data: #1
+\cs_new_protected:Npn \info_set_non_hyperxmp_data: #1
 {
-    \info_get_non_hyperxmp_data:N \l_tmpa_prop
-    % TODO: broken!! Ignored.
-    \prop_map_function:NN \l_tmpa_prop \info__unknownxmpkey_info:nn
-    %\exp_args:Nv \hypersetup { \prop_to_keyval:N \l_tmpa_prop }
+    \info_split_hyperxmp_data:NN \l__tmp_hyperxmp_str \l__tmp_nonhyperxmp_str
+    \info__unknownxmpdata_info:V \l__tmp_nonhyperxmp_str
+    \exp_args:Nx \hypersetup {\l__tmp_nonhyperxmp_str}
 }
 
 \NewDocumentCommand \AddPdfHyperxmpData { }
@@ -269,10 +273,10 @@
     pre .initial:n = {},
     post .tl_set:N = \l_post_tl,
     post .initial:n = {},
-    style .tl_set:N = \l_style_tl,
+    textile .tl_set:N = \l_textile_tl,
+    textile .initial:n = {},
     style .initial:n = {},
-    style-inline .initial:n = {},
-    style-inline .tl_set:N = \l_style_inline_tl,
+    style .tl_set:N = \l_style_tl,
     if-blank .tl_set:N = \l_if_blank_tl,
     if-blank .initial:n = {},
 }
@@ -288,18 +292,19 @@
         \str_put_left:NV \l_my_str \l_pre_tl
         \str_put_right:NV \l_my_str \l_post_tl
     }
-    \txtstyles_use_or_inline:VVV \l_style_tl \l_style_inline_tl \l_my_str
+    \textiles_use_or_inline:VVV \l_textile_tl \l_style_tl \l_my_str
 }
 \cs_generate_variant:Nn \info__format_single:n { V }
 
 \NewDocumentCommand \info { >{\TrimSpaces}m O{} }
 {
+    \group_begin:
     \keys_set:nn {info / single} {#2}
     \info_get:nN {#1} \l_my_str
     \info__format_single:V \l_my_str
+    \group_end:
 }
 
-\cs_generate_variant:Nn \text_titlecase_first:n { V }
 
 \NewDocumentCommand \Info { >{\TrimSpaces}m O{} }
 {
@@ -323,14 +328,14 @@
     pre-item .initial:n = {},
     post-item .tl_set:N = \l_post_tl,
     post-item .initial:n = {},
+    item-textile .tl_set:N = \l_textile_tl,
+    item-textile .initial:n = {},
     item-style .tl_set:N = \l_style_tl,
     item-style .initial:n = {},
-    item-style-inline .tl_set:N = \l_style_inline_tl,
-    item-style-inline .initial:n = {},
+    textile .tl_set:N = \l_list_textile_tl,
+    textile .initial:n = {},
     style .tl_set:N = \l_list_style_tl,
     style .initial:n = {},
-    style-inline .tl_set:N = \l_list_style_inline_tl,
-    style-inline .initial:n = {},
     sep .tl_set:N = \l_list_sep_tl,
     sep .initial:n = {,~},
     sep-two .tl_set:N = \l_list_sep_two_tl,
@@ -367,7 +372,7 @@
         \str_put_left:NV \l_my_rendered_list_tl \l_list_pre_tl
         \str_put_right:NV \l_my_rendered_list_tl \l_list_post_tl
     }
-    \txtstyles_use_or_inline:VVV \l_list_style_tl \l_list_style_inline_tl \l_my_rendered_list_tl
+    \textiles_use_or_inline:VVV \l_list_textile_tl \l_list_style_tl \l_my_rendered_list_tl
 }
 \cs_generate_variant:Nn \info__format_list:n { V }
 

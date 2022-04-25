@@ -28,18 +28,18 @@
 
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage{txtstyles}{2022-03-22}{0.1}{Text styles}
+\ProvidesExplPackage{textiles}{2022-04-17}{0.1}{Text styles}
 \RequirePackage{l3keys2e}
 
-\keys_define:nn {txtstyles} {
-    faces .bool_gset:N = \g_txtstyles_faces_bool,
+\keys_define:nn {textiles} {
+    faces .bool_gset:N = \g_textiles_faces_bool,
     faces .default:n = true,
     faces .initial:n = false,
-    markup .bool_gset:N = \g_txtstyles_markup_bool,
+    markup .bool_gset:N = \g_textiles_markup_bool,
     markup .default:n = true,
     markup .initial:n = false,
 }
-\ProcessKeysOptions{txtstyles}
+\ProcessKeysOptions{textiles}
 
 \RequirePackage{hyperref}
 \RequirePackage{fontsize}
@@ -49,106 +49,127 @@
 \RequirePackage{setspace}
 \setdisplayskipstretch{1.0}  % force it off
 
-%\bool_if:NT \g_txtstyles_captions_bool
-%    { \RequirePackage{caption} }
+\RequirePackage{xcolor}
 
-\bool_if:NT \g_txtstyles_faces_bool
+% CSS names:
+%100 - Thin
+%200 - Extra Light (Ultra Light)
+%300 - Light
+%400 - Normal
+%500 - Medium
+%600 - Semi Bold (Demi Bold)
+%700 - Bold
+%800 - Extra Bold (Ultra Bold)
+%900 - Black (Heavy)
+
+\bool_if:NT \g_textiles_faces_bool
 {
     % These warnings are unavoidable and going to happen from 2020 on
     \PassOptionsToPackage
-        {warnings-off={mathtools-colon,mathtools-overbracket}}
+        {warnings-off={mathtools-colon,mathtools-overbracket}, math-style=ISO, bold-style=ISO}
         {unicode-math}
-    \RequirePackage{amsmath}      % helps unicode-math
-    \RequirePackage{unicode-math}
     \RequirePackage{fontspec}
+    \RequirePackage{unicode-math}
     \RequirePackage{microtype}
-    \DeclareRobustCommand \elseries     % extra-light
+    \RequirePackage{realscripts}
+    \NewDocumentCommand \thseries {}     % thin
+        { \fontseries{th} \selectfont }
+    \NewDocumentCommand \elseries {}     % extra-light
         { \fontseries{el} \selectfont }
-    \DeclareRobustCommand \ltseries     % light
+    \NewDocumentCommand \ltseries {}     % light
         { \fontseries{lt} \selectfont }
-    \DeclareRobustCommand \sbseries     % semi-bold
+    \NewDocumentCommand \rgseries {}     % Normal, preferred name of rgseries
+        { \fontseries{rg} \selectfont }
+    % DO NOT UN-COMMENT!
+    %\NewDocumentCommand \mdseries {}     % --> "mdseries" for historical LaTeX reason
+    %    { \fontseries{md} \selectfont }
+    \NewDocumentCommand \meseries {}     % Medium "meseries" (heavier than normal)
+        { \fontseries{me} \selectfont }
+    \NewDocumentCommand \sbseries {}     % semi-bold
         { \fontseries{sb} \selectfont }
-    \DeclareRobustCommand \ebseries     % extra-bold
+    \NewDocumentCommand \ebseries {}     % extra-bold (sometimes called ultra-bold)
         { \fontseries{eb} \selectfont }
+    \NewDocumentCommand \blseries {}     % black / heavy
+        { \fontseries{bl} \selectfont }
 }
 
-\bool_if:NT \g_txtstyles_markup_bool
+\bool_if:NT \g_textiles_markup_bool
 {
     \PassOptionsToPackage{normalem}{ulem}
     \RequirePackage{ulem}
 }
 
-\msg_new:nnn{txtstyles}{notunderstood}
+\msg_new:nnn{textiles}{notunderstood}
     {Command~/~name~'#1'~not~understood~while~declaring~style~'#2'.}
-\cs_new:Npn\txtstyles__err_not_understood:n #1
-    { \msg_error:nnn{txtstyles}{notunderstood}{#1} }
-\cs_generate_variant:Nn \txtstyles__err_not_understood:n { V }
+\cs_new:Npn\textiles__err_not_understood:n #1
+    { \msg_error:nnn{textiles}{notunderstood}{#1} }
+\cs_generate_variant:Nn \textiles__err_not_understood:n { V }
 
-\msg_new:nnn{txtstyles}{stylemissing}
+\msg_new:nnn{textiles}{stylemissing}
     {Cannot~use~style~'#1':~it~is~not~defined.}
-\cs_new:Npn\txtstyles__err_missing:n #1
-    { \msg_error:nnn{txtstyles}{stylemissing}{#1} }
-\cs_generate_variant:Nn \txtstyles__err_missing:n { V }
+\cs_new:Npn\textiles__err_missing:n #1
+    { \msg_error:nnn{textiles}{stylemissing}{#1} }
+\cs_generate_variant:Nn \textiles__err_missing:n { V }
     
-\msg_new:nnn{txtstyles}{stylenotdefined}
+\msg_new:nnn{textiles}{stylenotdefined}
     {Style~'#1'~is~not~defined;~cannot~renew.}
-\cs_new:Npn\txtstyles__err_not_def:n #1
-    { \msg_error:nnn{txtstyles}{stylenotdefined}{#1} }
-\cs_generate_variant:Nn \txtstyles__err_not_def:n { V }
+\cs_new:Npn\textiles__err_not_def:n #1
+    { \msg_error:nnn{textiles}{stylenotdefined}{#1} }
+\cs_generate_variant:Nn \textiles__err_not_def:n { V }
 
-\msg_new:nnn{txtstyles}{styledefined}
+\msg_new:nnn{textiles}{styledefined}
     {Style~'#1'~is~already~defined;~cannot~define.}
-\cs_new:Npn\txtstyles__err_is_def:n #1 {
-    \msg_error:nnn{txtstyles}{styledefined}{#1} }
-\cs_generate_variant:Nn \txtstyles__err_is_def:n { V }
+\cs_new:Npn\textiles__err_is_def:n #1 {
+    \msg_error:nnn{textiles}{styledefined}{#1} }
+\cs_generate_variant:Nn \textiles__err_is_def:n { V }
 
-\msg_new:nnn{txtstyles}{colormissing}
+\msg_new:nnn{textiles}{colormissing}
     {Color~'#1'~does~not~exist~in~l3colors.}
-\cs_new:Npn\__txtstyles_err_color_missing:n #1 {
-    \msg_error:nnn{txtstyles}{colormissing}{#1} }
-\cs_generate_variant:Nn \__txtstyles_err_color_missing:n { V }
+\cs_new:Npn\__textiles_err_color_missing:n #1 {
+    \msg_error:nnn{textiles}{colormissing}{#1} }
+\cs_generate_variant:Nn \__textiles_err_color_missing:n { V }
 
-\msg_new:nnn{txtstyles}{colornotdefined}
+\msg_new:nnn{textiles}{colornotdefined}
     {Color~'#1'~is~not~defined;~cannot~renew.}
-\cs_new:Npn\txtstyles__err_color_not_def:n #1 {
-    \msg_error:nnn{txtstyles}{colornotdefined}{#1} }
-\cs_generate_variant:Nn \txtstyles__err_color_not_def:n { V }
+\cs_new:Npn\textiles__err_color_not_def:n #1 {
+    \msg_error:nnn{textiles}{colornotdefined}{#1} }
+\cs_generate_variant:Nn \textiles__err_color_not_def:n { V }
 
-\msg_new:nnn{txtstyles}{colordefined}
+\msg_new:nnn{textiles}{colordefined}
     {Color~'#1'~is~already~defined;~cannot~define.}
-\cs_new:Npn\txtstyles__err_color_is_def:n #1 {
-    \msg_error:nnn{txtstyles}{colordefined}{#1} }
-\cs_generate_variant:Nn \txtstyles__err_color_is_def:n { V }
+\cs_new:Npn\textiles__err_color_is_def:n #1 {
+    \msg_error:nnn{textiles}{colordefined}{#1} }
+\cs_generate_variant:Nn \textiles__err_color_is_def:n { V }
 
-\msg_new:nnn{txtstyles}{cmdnotdefined}
+\msg_new:nnn{textiles}{cmdnotdefined}
     {No~macro~or~command~named~'#1'.}
-\cs_new:Npn\txtstyles__err_cmd_not_def:n #1 {
-    \msg_error:nnn{txtstyles}{cmdnotdefined}{#1} }
-\cs_generate_variant:Nn \txtstyles__err_cmd_not_def:n { V }
+\cs_new:Npn\textiles__err_cmd_not_def:n #1 {
+    \msg_error:nnn{textiles}{cmdnotdefined}{#1} }
+\cs_generate_variant:Nn \textiles__err_cmd_not_def:n { V }
 
-\msg_new:nnn{txtstyles}{macroismodal}
+\msg_new:nnn{textiles}{macroismodal}
     {No~macro~or~command~named~'#1'.}
-\cs_new:Npn\txtstyles__err_is_modal:n #1 {
-    \msg_error:nnn{txtstyles}{macroismodal}{#1} }
-\cs_generate_variant:Nn \txtstyles__err_is_modal:n { V }
+\cs_new:Npn\textiles__err_is_modal:n #1 {
+    \msg_error:nnn{textiles}{macroismodal}{#1} }
+\cs_generate_variant:Nn \textiles__err_is_modal:n { V }
 
-\msg_new:nnn{txtstyles}{capoption}
+\msg_new:nnn{textiles}{capoption}
     {Option~1~must~be~'label',~'text',~'both',~or~blank,~not~'#1'.}
-\cs_new:Npn\txtstyles__err_cap_option:n #1 {
-    \msg_error:nnn{txtstyles}{capoption}{#1} }
-\cs_generate_variant:Nn \txtstyles__err_cap_option:n { V }
+\cs_new:Npn\textiles__err_cap_option:n #1 {
+    \msg_error:nnn{textiles}{capoption}{#1} }
+\cs_generate_variant:Nn \textiles__err_cap_option:n { V }
 
 
 %===================================================================
 %                  text commands and aliases
 %===================================================================
 
-\str_gset:Nn \g_txtstyles_case_lang_str {none}
-\cs_new_protected:Npn \txtstyles_set_case_lang:n #1
+\str_gset:Nn \g_textiles_case_lang_str {none}
+\cs_new_protected:Npn \textiles_set_case_lang:n #1
 {
-    \str_gset:Nn \g_txtstyles_case_lang_str {#1}
+    \str_gset:Nn \g_textiles_case_lang_str {#1}
 }
-\cs_generate_variant:Nn \txtstyles_set_case_lang:n { V, v, x }
+\cs_generate_variant:Nn \textiles_set_case_lang:n { V, v, x }
 
 \cs_generate_variant:Nn \text_uppercase:n { V, e }
 \cs_generate_variant:Nn \text_lowercase:n { V, e }
@@ -159,7 +180,7 @@
 \cs_generate_variant:Nn \text_titlecase:nn { Vn, en, Vv, ev }
 \cs_generate_variant:Nn \text_titlecase_first:nn { Vn, en, Vv, ev }
 
-\bool_if:NT \g_txtstyles_faces_bool
+\bool_if:NT \g_textiles_faces_bool
 {
     \NewDocumentCommand \txtel { m }
         { \group_begin: \elseries #1 \group_end: }
@@ -174,74 +195,73 @@
 \NewDocumentCommand \txtsub {+m} { \textsubscript{#1} }
 \NewDocumentCommand \txtsup {+m} { \textsuperscript{#1} }
 
-\cs_new:Npn \txtstyles_uppercase:n #1
+\cs_new:Npn \textiles_uppercase:n #1
 {
-    \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
+    \str_if_eq:VnTF \g_textiles_case_lang_str {none}
         { \text_uppercase:n{#1} }
-        { \text_uppercase:nv{#1}{\g_txtstyles_case_lang_str} }
+        { \text_uppercase:nv{#1}{\g_textiles_case_lang_str} }
 }
-\cs_generate_variant:Nn \txtstyles_uppercase:n { V, v, e }
+\cs_generate_variant:Nn \textiles_uppercase:n { V, v, e }
 \NewDocumentCommand \txtuppercase {+m}
-    { \txtstyles_uppercase:n{#1} }
+    { \textiles_uppercase:n{#1} }
 
-\cs_new:Npn \txtstyles_lowercase:n #1
+\cs_new:Npn \textiles_lowercase:n #1
 {
-    \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
+    \str_if_eq:VnTF \g_textiles_case_lang_str {none}
         { \text_lowercase:n{#1} }
-        { \text_lowercase:nv{#1}{\g_txtstyles_case_lang_str} }
+        { \text_lowercase:nv{#1}{\g_textiles_case_lang_str} }
 }
-\cs_generate_variant:Nn \txtstyles_lowercase:n { V, v, e }
+\cs_generate_variant:Nn \textiles_lowercase:n { V, v, e }
 \NewDocumentCommand \txtlowercase {+m}
-    { \txtstyles_lowercase:n{#1} }
+    { \textiles_lowercase:n{#1} }
 
 % Uppercase first character and each first character after punctuation; lowercase the rest
 % E.g. "\txtsentencecase{grab a RED one}" --> Grab A Red One
 % The starred variant leaves intra-word casing as-is
 % the L3 kernel macros are badly named
-\cs_new:Npn \txtstyles_sentencecase:n #1
+\cs_new:Npn \textiles_sentencecase:n #1
 {
-    \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
+    \str_if_eq:VnTF \g_textiles_case_lang_str {none}
         { \text_titlecase:n{#1} }
-        { \text_titlecase:nv{#1}{\g_txtstyles_case_lang_str} }
+        { \text_titlecase:nv{#1}{\g_textiles_case_lang_str} }
 }
-\cs_generate_variant:Nn \txtstyles_titlecase:n { V, v, e }
+\cs_generate_variant:Nn \textiles_titlecase:n { V, v, e }
 \NewDocumentCommand \txtsentencecase { +m }
-    { \txtstyles_sentencecase:n{#1} }
+    { \textiles_sentencecase:n{#1} }
 
-\cs_new:Npn \txtstyles_sentencecasefirst:n #1
+\cs_new:Npn \textiles_sentencecasefirst:n #1
 {
-    \str_if_eq:VnTF \g_txtstyles_case_lang_str {none}
+    \str_if_eq:VnTF \g_textiles_case_lang_str {none}
         { \text_titlecase_first:n{#1} }
-        { \text_titlecase_first:nv{#1}{\g_txtstyles_case_lang_str} }
+        { \text_titlecase_first:nv{#1}{\g_textiles_case_lang_str} }
 }
-\cs_generate_variant:Nn \txtstyles_titlecasefirst:n { V, v, e }
+\cs_generate_variant:Nn \textiles_titlecasefirst:n { V, v, e }
 \NewDocumentCommand \txtsentencecasefirst { +m }
-    { \txtstyles_sentencecasefirst:n{#1} }
+    { \textiles_sentencecasefirst:n{#1} }
 
-\cs_new:Npn \txtstyles_force_sc:n #1
+\cs_new:Npn \textiles_force_sc:n #1
     { \textsc{\text_lowercase:n{#1}} }
 
-\regex_const:Nn \c_txtstyles_capital_letters_regex
+\regex_const:Nn \c_textiles_capital_letters_regex
     { \c[L][[:upper:]]+ }
 
 
 % converts capital letters to small-caps but leaves lowercase
 % Great for mixed-case acronyms like "ChEMBL", and acronyms no longer stand out
-\cs_new:Npn \txtstyles_uptosc:n #1
+\cs_new:Npn \textiles_uptosc:n #1
 {
-    \tl_set:Ne \l_tmpa_tl {#1}
-    \tl_log:N \l_tmpa_tl
+    \tl_set:Nx \l_tmpa_tl {#1}
     \regex_replace_all:NnN
-        \c_txtstyles_capital_letters_regex
-        { \c{txtstyles_force_sc:n} \cB\{ \0 \cE\} }
+        \c_textiles_capital_letters_regex
+        { \c{textiles_force_sc:n} \cB\{ \0 \cE\} }
         \l_tmpa_tl
     \l_tmpa_tl
 }
-\cs_generate_variant:Nn \txtstyles_uptosc:n { v, e, x }
+\cs_generate_variant:Nn \textiles_uptosc:n { v, e, x }
 \NewDocumentCommand \txtuppertosc {+m}
-    { \txtstyles_uptosc:n{#1} }
+    { \textiles_uptosc:n{#1} }
 
-\cs_new:Npn \txtstyles_add_word_space:n #1#2
+\cs_new:Npn \textiles_add_word_space:n #1#2
 {
     \tl_set:Nx \l_tmpa_tl {#2}
     \regex_replace_all:nnN
@@ -251,9 +271,9 @@
     \tl_use:N \l_tmpa_tl
 }
 
-\cs_generate_variant:Nn \txtstyles_add_word_space:nn { vn, en, xn }
+\cs_generate_variant:Nn \textiles_add_word_space:nn { vn, en, xn }
 \NewDocumentCommand \txtemwordspace { O{1em} +m }
-    { \txtstyles_add_word_space:nn{#1}{#2} }
+    { \textiles_add_word_space:nn{#1}{#2} }
 
 % Just for symmetry with \txtuptosc
 \NewDocumentCommand \txtalltosc {+m}
@@ -290,7 +310,7 @@
 %===================================================================
 
 % CSS 3 / SVG 2 colors (140 unique) & xkcd colors
-\prop_const_from_keyval:Nn \c_txtstyles_std_colors_prop
+\prop_const_from_keyval:Nn \c_textiles_std_colors_prop
 {
     aliceblue = F0F8FF,
     antiquewhite = FAEBD7,
@@ -1397,10 +1417,11 @@
 %===================================================================
 
 % build up aliases for style commands
-\prop_new:N \g_txtstyles_aliases_prop
+\prop_new:N \g_textiles_aliases_prop
 \prop_clear:N \g_tmpa_prop
 \prop_gset_from_keyval:Nn \g_tmpa_prop
 {
+    emphasize=emph,
     normal=normalfont,           % reset
     rm=rmfamily,                 % families
     roman=rmfamily,
@@ -1408,6 +1429,11 @@
     sans=sffamily,
     tt=ttfamily,
     mono=ttfamily,
+    typewriter=ttfamily,
+    th=thseries,                % series -- thin
+    textth=thseries,
+    hairline=thseries,
+    thin=thseries,
     el=elseries,                 % series -- extra-light
     extralight=elseries,
     extra-light=elseries,
@@ -1422,11 +1448,15 @@
     semi-bold=sbseries,
     bf=bfseries,                 % series -- bold
     bold=bfseries,
+    boldface=bfseries,
     textbf=bfseries,
     eb=ebseries,                 % series -- extra-bold
     extrabold=ebseries,
     extra-bold=ebseries,
     texteb=ebseries,
+    bl=blseries ,                % series -- black
+    textbl=blseries,
+    heavy = blseries,
     up=upshape,                  % shapes -- upright
     upright=upshape,
     it=itshape,                  % shapes -- italic
@@ -1514,35 +1544,31 @@
     brackets=txtinbrackets,
     braces=txtinbraces,
     angles=txtinangles,
-    uline=uline,
-    ul=uline,
     underline=uline,
     uuline=uuline,
     double-underline=uuline,
-    double-ul=uuline,
-    uwave=uwave,
+    double-uline=uuline,
     wave-underline=uwave,
-    wave-ul=uwave,
+    wave-uline=uwave,
     strikethrough=sout,
     strikeout=sout,
     strike=sout,
     dashuline=dashuline,
     dash-underline=dashuline,
-    dash-ul=dashuline,
+    dash-uline=dashuline,
     dotuline=dotuline,
     dot-underline=dotuline,
-    dot-ul=dotuline,
-    xout=xout,
+    dot-uline=dotuline,
     hashout=xout,
 }
 \prop_map_inline:Nn \g_tmpa_prop
 {
-    \prop_put:Nnn \g_txtstyles_aliases_prop {#2}{#2}
-    \prop_put:Nnn \g_txtstyles_aliases_prop {#1}{#2}
+    \prop_put:Nnn \g_textiles_aliases_prop {#2}{#2}
+    \prop_put:Nnn \g_textiles_aliases_prop {#1}{#2}
 }
 
-\seq_new:N \g_txtstyles_unary_seq
-\seq_gset_from_clist:Nn \g_txtstyles_unary_seq
+\seq_new:N \g_textiles_unary_seq
+\seq_gset_from_clist:Nn \g_textiles_unary_seq
 {
     txtuppercase,
     txtlowercase,
@@ -1568,17 +1594,17 @@
 %                    font size and stretch
 %===================================================================
 
-\regex_const:Nn \c_txtstyles_font_pt_regex
+\regex_const:Nn \c_textiles_font_pt_regex
     { ([0-9]+(?:\.[0-9]+)?)(?:/([0-9]+(?:\.[0-9]+)))?~*pt }
 
-\regex_const:Nn \c_txtstyles_lspace_regex
+\regex_const:Nn \c_textiles_lspace_regex
     { >(.+) }
 
-\cs_new_protected:Npn \txtstyles_change_font_size_pt:nn #1#2
+\cs_new_protected:Npn \textiles_change_font_size_pt:nn #1#2
     { \changefontsize[#1]{#2} }
-\cs_generate_variant:Nn \txtstyles_change_font_size_pt:nn { VV, vv }
+\cs_generate_variant:Nn \textiles_change_font_size_pt:nn { VV, vv }
 
-\cs_new_protected:Npn \txtstyles_set_baselinestretch:n #1
+\cs_new_protected:Npn \textiles_set_baselinestretch:n #1
 {
     \str_if_in:nnTF {#1} {*}
         { \str_set:Nx \l__tmpa_str {\str_tail:N{#1}} }
@@ -1586,30 +1612,30 @@
     \def\baselinestretch{\l__tmpa_str}
     \@currsize  % there's also f@size
 }
-\cs_generate_variant:Nn \txtstyles_set_baselinestretch:n { V, v }
+\cs_generate_variant:Nn \textiles_set_baselinestretch:n { V, v }
 
 \NewDocumentCommand \UseBaselineStretch { >{\TrimSpaces}m }
-    { \txtstyles_set_baselinestretch:n{#1} }
+    { \textiles_set_baselinestretch:n{#1} }
 
-\cs_new_protected:Npn \txtstyles_font_pt:n #1
+\cs_new_protected:Npn \textiles_font_pt:n #1
 {
-    \regex_extract_once:NnNTF \c_txtstyles_font_pt_regex {#1} \l_tmpb_seq
+    \regex_extract_once:NnNTF \c_textiles_font_pt_regex {#1} \l_tmpb_seq
     {
         \seq_head:NN \l_tmpb_seq \l_tmpa_tl
-        \txtstyles_change_font_size_pt:VV \l_tmpa_tl \l_tmpa_tl
+        \textiles_change_font_size_pt:VV \l_tmpa_tl \l_tmpa_tl
         \prg_return_true:
     }
     { \prg_return_false: }
 }
 
-\cs_new_protected:Npn \txtstyles_use_font_size:V #1
+\cs_new_protected:Npn \textiles_use_font_size:V #1
     { \changefontsize[#1]{#1} }  % makes baselinestretch make sense
 
 \NewDocumentCommand \UseFontSize { >{\TrimSpaces}m }
     { \changefontsize[#1]{#1} }  % makes baselinestretch make sense
 
 % parindent and parskip from expl3 skips
-\cs_new_protected:Npn \txtstyles_set_par_skips:NN #1#2
+\cs_new_protected:Npn \textiles_set_par_skips:NN #1#2
 {
     \exp_args:NNx \setlength \parskip {\skip_use:N #1}
     \exp_args:NNx \setlength \parindent {\skip_use:N #2}
@@ -1620,144 +1646,144 @@
 %                    color handling
 %===================================================================
 
-\cs_new_protected:Npn \txtstyles__def_color_three:Vnn #1#2#3
+\cs_new_protected:Npn \textiles__def_color_three:Vnn #1#2#3
     { \color_set:nnn {#1} {#2} {#3} }
 
-\cs_new_protected:Npn \txtstyles__def_color_x:Vnn #1#2#3
+\cs_new_protected:Npn \textiles__def_color_x:Vnn #1#2#3
     { \definecolor {#1} {#2} {#3} }
 
-\cs_new_protected:Npn \txtstyles_def_color:nnn #1#2#3
+\cs_new_protected:Npn \textiles_def_color:nnn #1#2#3
 {
     \str_set:Nn \l_tmpa_str {#1}
     %\str_remove_all:Nn \l_tmpa_str {~}
     %\str_remove_all:Nn \l_tmpa_str {-}
     %\str_remove_all:Nn \l_tmpa_str {_}
-    \txtstyles__def_color_x:Vnn \l_tmpa_str {#2} {#3}
-    \txtstyles__def_color_three:Vnn \l_tmpa_str {#2} {#3}
+    \textiles__def_color_x:Vnn \l_tmpa_str {#2} {#3}
+    \textiles__def_color_three:Vnn \l_tmpa_str {#2} {#3}
 }
-\cs_generate_variant:Nn \txtstyles_def_color:nnn { nVV, VVV }
+\cs_generate_variant:Nn \textiles_def_color:nnn { nVV, VVV }
 
-\prop_map_inline:Nn \c_txtstyles_std_colors_prop
-    { \txtstyles_def_color:nnn{#1}{HTML}{#2} }
+\prop_map_inline:Nn \c_textiles_std_colors_prop
+    { \textiles_def_color:nnn{#1}{HTML}{#2} }
 
-\prg_new_conditional:Npnn \txtstyles_color_if_exist:n #1 { T, F, TF }
+\prg_new_conditional:Npnn \textiles_color_if_exist:n #1 { T, F, TF }
 {
     \l3color_if_defined:nTF {#1}
         {\prg_return_true:}
         {\prg_return_false:}
 }
 
-\prg_new_conditional:Npnn \txtstyles_color_require_exists:n #1 { T, TF }
+\prg_new_conditional:Npnn \textiles_color_require_exists:n #1 { T, TF }
 {
     \l3color_if_defined:nTF {#1}
         {\prg_return_true:}
-        {\__txtstyles_err_color_missing:n{#1} \prg_return_false:}
+        {\__textiles_err_color_missing:n{#1} \prg_return_false:}
 }
 
-\prg_new_conditional:Npnn \txtstyles__color_req_exist:n #1 { T, TF }
+\prg_new_conditional:Npnn \textiles__color_req_exist:n #1 { T, TF }
 {
     \l3color_if_defined:nTF {#1}
         {\prg_return_true:}
-        {\txtstyles__err_color_not_def:n{#1} \prg_return_false:}
+        {\textiles__err_color_not_def:n{#1} \prg_return_false:}
 }
-\prg_new_conditional:Npnn \txtstyles__color_req_not_exist:n #1 { T, TF }
+\prg_new_conditional:Npnn \textiles__color_req_not_exist:n #1 { T, TF }
 {
     \l3color_if_defined:nTF {#1}
         {\prg_return_false:}
-        {\txtstyles__err_color_is_def:n{#1} \prg_return_true:}
+        {\textiles__err_color_is_def:n{#1} \prg_return_true:}
 }
-\regex_const:Nn \c_txtstyles_color_html_regex
+\regex_const:Nn \c_textiles_color_html_regex
     { [0-9A-fa-f]{6} }
 
-\regex_const:Nn \c_txtstyles_color_other_regex
+\regex_const:Nn \c_textiles_color_other_regex
     { ([A-Za-z]+):(.+) }
 
 \cs_generate_variant:Nn \color_select:n { V }
 
-\str_new:N \g__txtstyles_tmpcolor_str
-\cs_new_protected:Npn \txtstyles__declare_color:nnn #1#2#3
+\str_new:N \g__textiles_tmpcolor_str
+\cs_new_protected:Npn \textiles__declare_color:nnn #1#2#3
 {
-    \str_gset:Nn \g__txtstyles_tmpcolor_str {#1}
-    \regex_match:NnTF \c_txtstyles_color_html_regex {#2}
+    \str_gset:Nn \g__textiles_tmpcolor_str {#1}
+    \regex_match:NnTF \c_textiles_color_html_regex {#2}
     {
-        \txtstyles_def_color:nnn {#1} {HTML} {#2}
+        \textiles_def_color:nnn {#1} {HTML} {#2}
     }
     {
-        \regex_extract_once:NnNT \c_txtstyles_color_other_regex {#2} \l_tmpa_seq
+        \regex_extract_once:NnNT \c_textiles_color_other_regex {#2} \l_tmpa_seq
         {
-            \str_gset:Nn \g__txtstyles_tmpcolor_str {#3}
+            \str_gset:Nn \g__textiles_tmpcolor_str {#3}
             \seq_pop_left:NN \l_tmpa_seq \l_tmpa_tl  % remove group 0
             \seq_get_left:NN \l_tmpa_seq \l_tmpa_tl  % group 1: model
             \seq_get_right:NN \l_tmpa_seq \l_tmpb_tl % group 2: value
-            \txtstyles_def_color:nVV {#3} \l_tmpa_tl \l_tmpb_tl
+            \textiles_def_color:nVV {#3} \l_tmpa_tl \l_tmpb_tl
         }
     }
 }
 
 % special case: declare and immediately use
-\cs_new_protected:Npn \txtstyles_use_color:n #1
+\cs_new_protected:Npn \textiles_use_color:n #1
 {
-    \txtstyles__declare_color:nnn {#1} {#1} {tmpcolor}
-    \color_select:V \g__txtstyles_tmpcolor_str
+    \textiles__declare_color:nnn {#1} {#1} {tmpcolor}
+    \color_select:V \g__textiles_tmpcolor_str
 }
-\cs_generate_variant:Nn \txtstyles_use_color:n { V }
+\cs_generate_variant:Nn \textiles_use_color:n { V }
 
-\cs_generate_variant:Nn \txtstyles_use_color:n { V }
+\cs_generate_variant:Nn \textiles_use_color:n { V }
 
-\cs_new_protected:Npn \txtstyles_declare_color:nn #1#2
-    { \txtstyles__declare_color:nnn {#1} {#2} {#1} }
-\cs_generate_variant:Nn \txtstyles_declare_color:nn { nV, VV }
+\cs_new_protected:Npn \textiles_declare_color:nn #1#2
+    { \textiles__declare_color:nnn {#1} {#2} {#1} }
+\cs_generate_variant:Nn \textiles_declare_color:nn { nV, VV }
 \NewDocumentCommand \DeclareColor { m m }
-    { \txtstyles_declare_color:nn{#1}{#2} }
+    { \textiles_declare_color:nn{#1}{#2} }
 
-\cs_new_protected:Npn \txtstyles_new_color:nn #1#2
+\cs_new_protected:Npn \textiles_new_color:nn #1#2
 {
-    \txtstyles__color_req_not_exist:nT {#1}
-    { \txtstyles__declare_color:nnn {#1} {#2} {#1} }
+    \textiles__color_req_not_exist:nT {#1}
+    { \textiles__declare_color:nnn {#1} {#2} {#1} }
 }
-\cs_generate_variant:Nn \txtstyles_new_color:nn { nV, VV }
+\cs_generate_variant:Nn \textiles_new_color:nn { nV, VV }
 \NewDocumentCommand \NewColor { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_new_color:nn{#1}{#2} }
+    { \textiles_new_color:nn{#1}{#2} }
 
-\cs_new_protected:Npn \txtstyles_provide_color:nn #1#2
+\cs_new_protected:Npn \textiles_provide_color:nn #1#2
 {
-    \txtstyles_color_if_exist:nF {#1}
-    { \txtstyles__declare_color:nnn {#1} {#2} {#1} }
+    \textiles_color_if_exist:nF {#1}
+    { \textiles__declare_color:nnn {#1} {#2} {#1} }
 }
-\cs_generate_variant:Nn \txtstyles_provide_color:nn { nV, VV }
+\cs_generate_variant:Nn \textiles_provide_color:nn { nV, VV }
 \NewDocumentCommand \ProvideColor { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_provide_color:nn{#1}{#2} }
+    { \textiles_provide_color:nn{#1}{#2} }
 
-\cs_new_protected:Npn \txtstyles_declare_colors:n #1
+\cs_new_protected:Npn \textiles_declare_colors:n #1
 {
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
     { 
-        \txtstyles_declare_color:nn {##1} {##2}
+        \textiles_declare_color:nn {##1} {##2}
     }
 }
-\cs_generate_variant:Nn \txtstyles_declare_colors:n { V, v }
+\cs_generate_variant:Nn \textiles_declare_colors:n { V, v }
 
-\cs_new_protected:Npn \txtstyles_declare_colors_from_prop:N #1
+\cs_new_protected:Npn \textiles_declare_colors_from_prop:N #1
 {
     \prop_map_inline:Nn #1
     { 
-        \txtstyles_declare_color:nn {##1} {##2}
+        \textiles_declare_color:nn {##1} {##2}
     }
 }
 
 \NewDocumentCommand \DeclareColors { m }
-    { \txtstyles_declare_colors:n{#1} }
+    { \textiles_declare_colors:n{#1} }
 
-\cs_new_protected:Npn \txtstyles_load_colors:n #1
+\cs_new_protected:Npn \textiles_load_colors:n #1
 {
     \ior_open:Nn \g_tmpa_ior {#1}
     \ior_str_get:NN \g_tmpa_ior \l_tmpa_tl
     \ior_close:N \g_tmpa_ior
-    \txtstyles_declare_colors:n{\l_tmpa_tl}
+    \textiles_declare_colors:n{\l_tmpa_tl}
 }
 \NewDocumentCommand \ReadColors { m }
-    { \txtstyles_load_colors:n{#1} }
+    { \textiles_load_colors:n{#1} }
 
 
 
@@ -1766,56 +1792,56 @@
 %===================================================================
 
 % our main list
-\prop_new:N \g_txtstyles_prop
+\prop_new:N \g_textiles_prop
 
 
-\prg_new_conditional:Npnn \txtstyles_if_exist:n #1 { T, F, TF }
+\prg_new_conditional:Npnn \textiles_if_exist:n #1 { T, F, TF }
 {
-    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
+    \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpa_tl
         { \prg_return_true: }
         { \prg_return_false: }
 }
 
-\prg_new_conditional:Npnn \txtstyles_require_exists:n #1 { T, TF }
+\prg_new_conditional:Npnn \textiles_require_exists:n #1 { T, TF }
 {
-    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
+    \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpa_tl
         { \prg_return_true: }
-        { \__txtstyles_err_missing:n{#1} \prg_return_false: }
+        { \__textiles_err_missing:n{#1} \prg_return_false: }
 }
 
-\prg_new_conditional:Npnn \txtstyles__req_exist:n #1 { T, TF }
+\prg_new_conditional:Npnn \textiles__req_exist:n #1 { T, TF }
 {
-    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
+    \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpa_tl
         { \prg_return_true: }
-        { \txtstyles__err_not_def:n{#1} \prg_return_false: }
+        { \textiles__err_not_def:n{#1} \prg_return_false: }
 }
 
-\prg_new_conditional:Npnn \txtstyles__req_not_exist:n #1 { T, TF }
+\prg_new_conditional:Npnn \textiles__req_not_exist:n #1 { T, TF }
 {
-    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
-        { \txtstyles__err_is_def:n{#1} \prg_return_false: }
+    \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpa_tl
+        { \textiles__err_is_def:n{#1} \prg_return_false: }
         {  \prg_return_true: }
 }
 
-\cs_new_protected:Npn \txtstyles_get:n #1
+\cs_new_protected:Npn \textiles_get:n #1
 {
-    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
+    \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpa_tl
         { \l_tmpa_tl }
-        { \txtstyles__err_missing:n{#1} }
+        { \textiles__err_missing:n{#1} }
 }
-\cs_generate_variant:Nn \txtstyles_get:n { V, v }
+\cs_generate_variant:Nn \textiles_get:n { V, v }
 
-\cs_new_protected:Npn \txtstyles_get:nN #1#2
+\cs_new_protected:Npn \textiles_get:nN #1#2
 {
-    \prop_get:NnNTF \g_txtstyles_prop {#1} #2
+    \prop_get:NnNTF \g_textiles_prop {#1} #2
         { #2 }
-        { \txtstyles__err_missing:n{#1} }
+        { \textiles__err_missing:n{#1} }
 }
-\cs_generate_variant:Nn \txtstyles_get:nN { nc, VN, Vc }
+\cs_generate_variant:Nn \textiles_get:nN { nc, VN, Vc }
 
 % this shouldn't be needed much:
-\NewDocumentCommand \GetTxtStyle { m }
-    { \txtstyles_get:n{#1} }
+\NewDocumentCommand \GetTextile { m }
+    { \textiles_get:n{#1} }
 
 
 
@@ -1823,149 +1849,150 @@
 %                    captions
 %===================================================================
 
-\cs_new_protected:Npn \txtstyles_declare_cap_label_style:n #1
-    { \DeclareCaptionLabelFormat {#1} { \txtstyles_use:nn{#1}{##1} } }
+\cs_new_protected:Npn \textiles_declare_cap_label_style:n #1
+    { \DeclareCaptionLabelFormat {#1} { \textiles_use:nn{#1}{##1} } }
 \NewDocumentCommand \DeclareCapLabelStyle { m }
-    { \txtstyles_declare_cap_label_style:n{#1} }
+    { \textiles_declare_cap_label_style:n{#1} }
 
-\cs_new_protected:Npn \txtstyles_declare_cap_text_style:n #1
-    { \DeclareCaptionTextFormat {#1} { \txtstyles_use:nn{#1}{##1} } }
+\cs_new_protected:Npn \textiles_declare_cap_text_style:n #1
+    { \DeclareCaptionTextFormat {#1} { \textiles_use:nn{#1}{##1} } }
 \NewDocumentCommand \DeclareCapTextStyle { m }
-    { \txtstyles_declare_cap_text_style:n{#1} }
+    { \textiles_declare_cap_text_style:n{#1} }
 
-\cs_new_protected:Npn \txtstyles_declare_cap_label_style_inline:n #1
-    { \DeclareCaptionLabelFormat {#1} { \txtstyles_inline:nn{#1}{##1} } }
-\cs_generate_variant:Nn \txtstyles_declare_cap_label_style_inline:nnn { nV }
+\cs_new_protected:Npn \textiles_declare_cap_label_style_inline:n #1
+    { \DeclareCaptionLabelFormat {#1} { \textiles_inline:nn{#1}{##1} } }
+\cs_generate_variant:Nn \textiles_declare_cap_label_style_inline:nnn { nV }
 
-\cs_new_protected:Npn \txtstyles_declare_cap_text_style_inline:n #1
-    { \DeclareCaptionTextFormat {#1} { \txtstyles_inline:nn{#1}{##1} } }
-\cs_generate_variant:Nn \txtstyles_declare_cap_text_style_inline:nnn { nV }
+\cs_new_protected:Npn \textiles_declare_cap_text_style_inline:n #1
+    { \DeclareCaptionTextFormat {#1} { \textiles_inline:nn{#1}{##1} } }
+\cs_generate_variant:Nn \textiles_declare_cap_text_style_inline:nnn { nV }
 
-\cs_new_protected:Npn \txtstyles_declare_cap_style:nnn #1#2#3
+\cs_new_protected:Npn \textiles_declare_cap_style:nnn #1#2#3
 {
     \DeclareCaptionFormat {#1}
     {
-        \txtstyles_use:nn {#2}  % body goes first
+        \textiles_use:nn {#2}  % body goes first
             % TODO: firstifboth, etc.
-            { \txtstyles_use:nn{#3}{##1##2} ##3\par }
+            { \textiles_use:nn{#3}{##1##2} ##3\par }
     }
 }
 \NewDocumentCommand \DeclareCapStyle { >{\TrimSpaces}m >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_declare_cap_style:nnn{#1}{#2}{#3} }
+    { \textiles_declare_cap_style:nnn{#1}{#2}{#3} }
 
-\cs_new_protected:Npn \txtstyles_declare_cap_style_inline:nnn #1#2#3
+\cs_new_protected:Npn \textiles_declare_cap_style_inline:nnn #1#2#3
 {
     \DeclareCaptionFormat {#1}
     {
-        \txtstyles_inline:nn {#2}
-            { \txtstyles_inline:nn{#3}{##1##2}  ##3\exp_not:n{\par} }
+        \textiles_inline:nn
+            {#2}
+            { \textiles_inline:nn{#3}{##1##2} ##3\par }
     }
 }
-\cs_generate_variant:Nn \txtstyles_declare_cap_style_inline:nnn { nVV }
+\cs_generate_variant:Nn \textiles_declare_cap_style_inline:nnn { nVV }
 \NewDocumentCommand \DeclareCapStyleInline { >{\TrimSpaces}m O{small,sans,*1.0} O{bold} }
-    { \txtstyles_declare_cap_style_inline:nnn{#1}{#2}{#3} }
+    { \textiles_declare_cap_style_inline:nnn{#1}{#2}{#3} }
 
 
 %===================================================================
 %                    declaring styles
 %===================================================================
 
-\cs_new_protected:Npn \txtstyles__check:n #1
+\cs_new_protected:Npn \textiles__check:n #1
 {
     % nothing yet
 }
 
-\cs_new_protected:Npn \txtstyles__check_nullary:n #1
+\cs_new_protected:Npn \textiles__check_nullary:n #1
 {
     \tl_set:Nn \l__aliasname_tl {}
-    \prop_get:NnNTF \g_txtstyles_aliases_prop {#1} \l__aliasname_tl
+    \prop_get:NnNTF \g_textiles_aliases_prop {#1} \l__aliasname_tl
     {
-        \seq_if_in:NVT \g_txtstyles_unary_seq \l__aliasname_tl
-            { \txtstyles__err_is_unary:n{#1} }
+        \seq_if_in:NVT \g_textiles_unary_seq \l__aliasname_tl
+            { \textiles__err_is_unary:n{#1} }
     }
 }
 
-\cs_new_protected:Npn \txtstyles__split:NN #1#2
+\cs_new_protected:Npn \textiles__split:NN #1#2
 {
     \tl_replace_all:Nnn #1 {;} {,}
     \clist_set:NV #2 #1
 }
 
-\cs_new_protected:Npn \txtstyles__split_check:nNN #1#2#3
+\cs_new_protected:Npn \textiles__split_check:nNN #1#2#3
 {
     \tl_set:Nn \l_tmpb_tl {#1}
-    \txtstyles__split:NN \l_tmpb_tl #3
+    \textiles__split:NN \l_tmpb_tl #3
     \use_none:n { \clist_map_function:NN #3 #2 }
 }
-\cs_generate_variant:Nn \txtstyles__split_check:nNN { VNN }
+\cs_generate_variant:Nn \textiles__split_check:nNN { VNN }
 
 
-\cs_new_protected:Npn \txtstyles_declare:nn #1#2
+\cs_new_protected:Npn \textiles_declare:nn #1#2
 {
-    \txtstyles__split_check:nNN {#2} \txtstyles__check:n \l_tmpa_clist
-    \prop_gput:Nnn \g_txtstyles_prop {#1} {#2}
+    \textiles__split_check:nNN {#2} \textiles__check:n \l_tmpa_clist
+    \prop_gput:Nnn \g_textiles_prop {#1} {#2}
 }
-\cs_generate_variant:Nn \txtstyles_declare:nn { nV }
-\NewDocumentCommand \DeclareTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_declare:nn{#1}{#2} }
+\cs_generate_variant:Nn \textiles_declare:nn { nV }
+\NewDocumentCommand \DeclareTextile { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_declare:nn{#1}{#2} }
 
 % related commands a la [New/Renew/etc.]DocumentCommand
 
-% NewTxtStyle
-\cs_new_protected:Npn \txtstyles_new:nn #1#2
-    { \txtstyles__req_not_exist:nT {#1} { \txtstyles_declare:nn{#1}{#2} } }
-\cs_generate_variant:Nn \txtstyles_new:nn { nV }
-\NewDocumentCommand \NewTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_new:nn{#1}{#2} }
+% NewTextile
+\cs_new_protected:Npn \textiles_new:nn #1#2
+    { \textiles__req_not_exist:nT {#1} { \textiles_declare:nn{#1}{#2} } }
+\cs_generate_variant:Nn \textiles_new:nn { nV }
+\NewDocumentCommand \NewTextile { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_new:nn{#1}{#2} }
 
-% RenewTxtStyle
-\cs_new_protected:Npn \txtstyles_renew:nn #1#2
-    { \txtstyles__req_exist:nT {#1} { \txtstyles_declare:nn{#1}{#2} } }
-\cs_generate_variant:Nn \txtstyles_renew:nn { nV }
-\NewDocumentCommand \RenewTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_renew:nn{#1}{#2} }
-
-
-% ProvideTxtStyle
-\cs_new_protected:Npn \txtstyles_provide:nn #1#2
-    { \txtstyles_if_exist:nF {#1} { \txtstyles_declare:nn{#1}{#2} } }
-\cs_generate_variant:Nn \txtstyles_provide:nn { nV }
-\NewDocumentCommand \ProvideTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_provide:nn{#1}{#2} }
+% RenewTextile
+\cs_new_protected:Npn \textiles_renew:nn #1#2
+    { \textiles__req_exist:nT {#1} { \textiles_declare:nn{#1}{#2} } }
+\cs_generate_variant:Nn \textiles_renew:nn { nV }
+\NewDocumentCommand \RenewTextile { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_renew:nn{#1}{#2} }
 
 
-\cs_new:Npn \txtstyles_declare_nullary:nn #1#2
+% ProvideTextile
+\cs_new_protected:Npn \textiles_provide:nn #1#2
+    { \textiles_if_exist:nF {#1} { \textiles_declare:nn{#1}{#2} } }
+\cs_generate_variant:Nn \textiles_provide:nn { nV }
+\NewDocumentCommand \ProvideTextile { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_provide:nn{#1}{#2} }
+
+
+\cs_new:Npn \textiles_declare_nullary:nn #1#2
 {
-    \txtstyles__split_check:nNN {#2} \txtstyles__check_nullary:n \l_tmpa_clist
-    \prop_gput:Nnn \g_txtstyles_prop {#1} {#2}
+    \textiles__split_check:nNN {#2} \textiles__check_nullary:n \l_tmpa_clist
+    \prop_gput:Nnn \g_textiles_prop {#1} {#2}
 }
-\cs_generate_variant:Nn \txtstyles_declare_nullary:nn { nV }
-\NewDocumentCommand \DeclareTxtStyleNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_declare_nullary:nn{#1}{#2} }
+\cs_generate_variant:Nn \textiles_declare_nullary:nn { nV }
+\NewDocumentCommand \DeclareTextileNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_declare_nullary:nn{#1}{#2} }
 
 % related commands a la [New/Renew/etc.]DocumentCommand
 
-% NewTxtStyle
-\cs_new:Npn \txtstyles_new_nullary:nn #1#2
-    { \txtstyles__req_not_exist:nT {#1} { \txtstyles_declare_nullary:nn{#1}{#2} } }
-\cs_generate_variant:Nn \txtstyles_new_nullary:nn { nV }
-\NewDocumentCommand \NewTxtStyleNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_new_nullary:nn{#1}{#2} }
+% NewTextile
+\cs_new:Npn \textiles_new_nullary:nn #1#2
+    { \textiles__req_not_exist:nT {#1} { \textiles_declare_nullary:nn{#1}{#2} } }
+\cs_generate_variant:Nn \textiles_new_nullary:nn { nV }
+\NewDocumentCommand \NewTextileNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_new_nullary:nn{#1}{#2} }
 
-% RenewTxtStyle
-\cs_new:Npn \txtstyles_renew_nullary:nn #1#2
-    { \txtstyles__req_exist:nT {#1} { \txtstyles_declare_nullary:nn{#1}{#2} } }
-\cs_generate_variant:Nn \txtstyles_renew_nullary:nn { nV }
-\NewDocumentCommand \RenewTxtStyleNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_renew_nullary:nn{#1}{#2} }
+% RenewTextile
+\cs_new:Npn \textiles_renew_nullary:nn #1#2
+    { \textiles__req_exist:nT {#1} { \textiles_declare_nullary:nn{#1}{#2} } }
+\cs_generate_variant:Nn \textiles_renew_nullary:nn { nV }
+\NewDocumentCommand \RenewTextileNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_renew_nullary:nn{#1}{#2} }
 
 
-% ProvideTxtStyle
-\cs_new:Npn \txtstyles_provide_nullary:nn #1#2
-    { \txtstyles_if_exist:nF {#1} { \txtstyles_declare_nullary:nn{#1}{#2} } }
-\cs_generate_variant:Nn \txtstyles_provide_nullary:nn { nV }
-\NewDocumentCommand \ProvideTxtStyleNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_provide_nullary:nn{#1}{#2} }
+% ProvideTextile
+\cs_new:Npn \textiles_provide_nullary:nn #1#2
+    { \textiles_if_exist:nF {#1} { \textiles_declare_nullary:nn{#1}{#2} } }
+\cs_generate_variant:Nn \textiles_provide_nullary:nn { nV }
+\NewDocumentCommand \ProvideTextileNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_provide_nullary:nn{#1}{#2} }
 
 
 
@@ -1973,33 +2000,33 @@
 %                    declaring styles from aliases
 %===================================================================
 
-% AliasTxtStyle
+% AliasTextile
 
-\cs_new_protected:Npn \txtstyles_alias:nn #1#2
+\cs_new_protected:Npn \textiles_alias:nn #1#2
 {
-    \prop_get:NnNTF \g_txtstyles_prop {#2} \l_tmpa_tl
-    { \txtstyles_declare:nV {#1} \l_tmpa_tl }
-    { \txtstyles__err_not_def:n{#2} }
+    \prop_get:NnNTF \g_textiles_prop {#2} \l_tmpa_tl
+    { \textiles_declare:nV {#1} \l_tmpa_tl }
+    { \textiles__err_not_def:n{#2} }
 }
-\cs_generate_variant:Nn \txtstyles_alias:nn { VV, Vn, nV }
-\NewDocumentCommand \AliasTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_alias:nn{#1}{#2} }
+\cs_generate_variant:Nn \textiles_alias:nn { VV, Vn, nV }
+\NewDocumentCommand \AliasTextile { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_alias:nn{#1}{#2} }
 
 
-\cs_new_protected:Npn \txtstyles_alias_new:nn #1#2
+\cs_new_protected:Npn \textiles_alias_new:nn #1#2
 {
-    \txtstyles__req_exist:nT {#2}
+    \textiles__req_exist:nT {#2}
     {
-        \txtstyles__req_not_exist:nT {#1}
+        \textiles__req_not_exist:nT {#1}
         {
-            \prop_get:NnN \g_txtstyles_prop {#2} \l_tmpa_tl
-            \txtstyles_declare:nV {#1} \l_tmpa_tl
+            \prop_get:NnN \g_textiles_prop {#2} \l_tmpa_tl
+            \textiles_declare:nV {#1} \l_tmpa_tl
         }
     }
 }
-\cs_generate_variant:Nn \txtstylesalias_new:nn { VV, Vn, nV }
-\NewDocumentCommand \NewAliasTxtStyle { >{\TrimSpaces}m >{\TrimSpaces}m }
-    { \txtstyles_alias_new:nn{#1}{#2} }
+\cs_generate_variant:Nn \textilesalias_new:nn { VV, Vn, nV }
+\NewDocumentCommand \NewAliasTextile { >{\TrimSpaces}m >{\TrimSpaces}m }
+    { \textiles_alias_new:nn{#1}{#2} }
 
 
 
@@ -2007,46 +2034,46 @@
 %                    declaring multiple styles
 %===================================================================
 
-\cs_new_protected:Npn \txtstyles_new_multiple:n #1
+\cs_new_protected:Npn \textiles_new_multiple:n #1
 {
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
-        { \txtstyles_new:nn{##1}{##2} }
+        { \textiles_new:nn{##1}{##2} }
 }
-\cs_generate_variant:Nn \txtstyles_new_multiple:n { V, v }
+\cs_generate_variant:Nn \textiles_new_multiple:n { V, v }
 
-\NewDocumentCommand \NewTxtStyles {m}
-    { \txtstyles_new_multiple:n{#1} }
+\NewDocumentCommand \Newtextiles {m}
+    { \textiles_new_multiple:n{#1} }
 
 
-\cs_new_protected:Npn \txtstyles_provide_multiple:n #1
+\cs_new_protected:Npn \textiles_provide_multiple:n #1
 {
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
-        { \txtstyles_provide:nn{##1}{##2} }
+        { \textiles_provide:nn{##1}{##2} }
 }
-\cs_generate_variant:Nn \txtstyles_provide_multiple:n { V, v }
+\cs_generate_variant:Nn \textiles_provide_multiple:n { V, v }
 
-\NewDocumentCommand \ProvideTxtStyles {m}
-    { \txtstyles_provide_multiple:n{#1} }
+\NewDocumentCommand \Providetextiles {m}
+    { \textiles_provide_multiple:n{#1} }
 
 
-\cs_new_protected:Npn \txtstyles_declare_multiple:n #1
+\cs_new_protected:Npn \textiles_declare_multiple:n #1
 {
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
-        { \txtstyles_declare:nn{##1}{##2} }
+        { \textiles_declare:nn{##1}{##2} }
 }
-\cs_generate_variant:Nn \txtstyles_declare_multiple:n { V, v }
+\cs_generate_variant:Nn \textiles_declare_multiple:n { V, v }
 
-\NewDocumentCommand \DeclareTxtStyles {m}
-    { \txtstyles_declare_multiple:n{#1} }
+\NewDocumentCommand \Declaretextiles {m}
+    { \textiles_declare_multiple:n{#1} }
 
-\cs_new_protected:Npn \txtstyles_declare_multiple_from_prop:N #1
+\cs_new_protected:Npn \textiles_declare_multiple_from_prop:N #1
 {
     \prop_map_inline:Nn #1
     {
-        \txtstyles_declare:nn {##1} {##2}
+        \textiles_declare:nn {##1} {##2}
     }
 }
 
@@ -2054,25 +2081,25 @@
 %                    saving / loading styles
 %===================================================================
 
-\cs_new_protected:Npn \txtstyles_save:n #1
+\cs_new_protected:Npn \textiles_save:n #1
 {
     \iow_open:Nn \g_tmpa_iow {#1}
-    \iow_now:Nx \g_tmpa_iow { \SayTxtStyles }
+    \iow_now:Nx \g_tmpa_iow { \Saytextiles }
     \iow_close:N \g_tmpa_iow
 }
-\NewDocumentCommand \WriteTxtStyles {m}
-    { \txtstyles_save:n{#1} }
+\NewDocumentCommand \Writetextiles {m}
+    { \textiles_save:n{#1} }
 
 
-\cs_new_protected:Npn \txtstyles_load:Nn #1#2
+\cs_new_protected:Npn \textiles_load:Nn #1#2
 {
     \ior_open:Nn \g_tmpa_ior {#2}
     \ior_str_get:NN \g_tmpa_ior \l_tmpa_tl
     \ior_close:N \g_tmpa_ior
-    \txtstyles_declare_multiple{\l_tmpa_tl}
+    \textiles_declare_multiple{\l_tmpa_tl}
 }
-\NewDocumentCommand \ReadTxtStyles {m}
-    { \txtstyles_load:n{#1} }
+\NewDocumentCommand \Readtextiles {m}
+    { \textiles_load:n{#1} }
 
 
 
@@ -2082,14 +2109,14 @@
 
 % this is only needed for compatibility with other packages or legacy code
 
-\cs_new_protected:Npn \txtstyles_run_nullary_inline:n #1
+\cs_new_protected:Npn \textiles_run_nullary_inline:n #1
 {
-    \txtstyles__split_check:nNN {#1} \txtstyles__check_nullary:n \l_tmpa_clist
+    \textiles__split_check:nNN {#1} \textiles__check_nullary:n \l_tmpa_clist
     \seq_set_from_clist:NV \seq_mycmds_seq \l_tmpa_clist
     \seq_map_variable:NNn \seq_mycmds_seq \l__currentcmd_tl
     {
        \tl_set:Nn \l__aliasname_tl {}
-        \prop_get:NVNTF \g_txtstyles_aliases_prop \l__currentcmd_tl \l__aliasname_tl
+        \prop_get:NVNTF \g_textiles_aliases_prop \l__currentcmd_tl \l__aliasname_tl
         {
             \cs_if_exist_use:c {\l__aliasname_tl}
         }
@@ -2097,47 +2124,47 @@
             \cs_if_exist_use:cF { \l__currentcmd_tl }
             {
                 \str_if_in:NnTF \l__currentcmd_tl {*}
-                    { \txtstyles_set_baselinestretch:V \l__currentcmd_tl }
-                    { \txtstyles_use_color:V \l__currentcmd_tl }
+                    { \textiles_set_baselinestretch:V \l__currentcmd_tl }
+                    { \textiles_use_color:V \l__currentcmd_tl }
             }
         }
     }
 }
-\cs_generate_variant:Nn \txtstyles_run_nullary_inline:n { V }
+\cs_generate_variant:Nn \textiles_run_nullary_inline:n { V }
 
-\NewDocumentCommand \RunNullaryTxtStyleInline { >{\TrimSpaces}m }
-    { \txtstyles_run_nullary:n{#1} }
+\NewDocumentCommand \RunNullaryTextileInline { >{\TrimSpaces}m }
+    { \textiles_run_nullary:n{#1} }
 
-\cs_new_protected:Npn \txtstyles_run_nullary:n #1
+\cs_new_protected:Npn \textiles_run_nullary:n #1
 {
-    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpb_tl
-        { \txtstyles_run_nullary_inline:V \l_tmpb_tl }
-        { \txtstyles__err_missing:n{#1} }
+    \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpb_tl
+        { \textiles_run_nullary_inline:V \l_tmpb_tl }
+        { \textiles__err_missing:n{#1} }
 }
-\cs_generate_variant:Nn \txtstyles_run_nullary:n { V }
+\cs_generate_variant:Nn \textiles_run_nullary:n { V }
 
-\NewDocumentCommand \RunNullaryTxtStyle { >{\TrimSpaces}m }
-    { \txtstyles_run_nullary:n{#1} }
+\NewDocumentCommand \RunNullaryTextile { >{\TrimSpaces}m }
+    { \textiles_run_nullary:n{#1} }
 
 
 
 %===================================================================
-%                    main macro -- \txtstyles_use:nn
+%                    main macro -- \textiles_use:nn
 %===================================================================
 
 \cs_generate_variant:Nn \seq_set_from_clist:Nn {NV}
 
-\cs_new_protected:Npn \txtstyles_use_direct:nn #1#2
+\cs_new_protected:Npn \textiles_use_direct:nn #1#2
 {
-    \txtstyles__split_check:nNN {#1} \txtstyles__check:n \l_tmpa_clist
+    \textiles__split_check:nNN {#1} \textiles__check:n \l_tmpa_clist
     \seq_set_from_clist:NV \seq_mycmds_seq \l_tmpa_clist
     \tl_set:Nn \l__mytxt_tl {#2}
     \seq_map_variable:NNn \seq_mycmds_seq \l__currentcmd_tl
     {
         \tl_set:Nn \l__aliasname_tl {}
-        \prop_get:NVNTF \g_txtstyles_aliases_prop \l__currentcmd_tl \l__aliasname_tl
+        \prop_get:NVNTF \g_textiles_aliases_prop \l__currentcmd_tl \l__aliasname_tl
         {
-            \seq_if_in:NVTF \g_txtstyles_unary_seq {\l__aliasname_tl}
+            \seq_if_in:NVTF \g_textiles_unary_seq {\l__aliasname_tl}
             {
                 \tl_set:Nx
                     \l__mytxt_tl
@@ -2149,111 +2176,111 @@
             \cs_if_exist_use:cF { \l__currentcmd_tl }
             {
                 \str_if_in:NnTF \l__currentcmd_tl {*}
-                    { \txtstyles_set_baselinestretch:V \l__currentcmd_tl }
-                    { \txtstyles_use_color:V \l__currentcmd_tl }
+                    { \textiles_set_baselinestretch:V \l__currentcmd_tl }
+                    { \textiles_use_color:V \l__currentcmd_tl }
             }
         }
     }
     { \l__mytxt_tl }
 }
-\cs_generate_variant:Nn \txtstyles_use_direct:nn
+\cs_generate_variant:Nn \textiles_use_direct:nn
     { Vn, vn, en, nV, nv, VV, vv }
 
-\cs_new_protected:Nn \txtstyles_group_start:
+\cs_new_protected:Nn \textiles_group_start:
     { \group_begin: \color_group_begin: }
-\cs_new_protected:Nn \txtstyles_group_end:
+\cs_new_protected:Nn \textiles_group_end:
     { \group_end: \color_group_end: }
 
-\cs_new_protected:Npn \txtstyles_use:nn #1#2
+\cs_new_protected:Npn \textiles_use:nn #1#2
 {
-    \txtstyles_group_start:
-    \prop_get:NnNTF \g_txtstyles_prop {#1} \l_tmpa_tl
-        { \txtstyles_use_direct:Vn \l_tmpa_tl {#2} }
-        { \txtstyles__err_missing:n{#1} }
-    \txtstyles_group_end:
+    \textiles_group_start:
+    \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpa_tl
+        { \textiles_use_direct:Vn \l_tmpa_tl {#2} }
+        { \textiles__err_missing:n{#1} }
+    \textiles_group_end:
 }
-\cs_generate_variant:Nn \txtstyles_use:nn { Vn, vn, en, nV, nv, VV, vv }
+\cs_generate_variant:Nn \textiles_use:nn { Vn, vn, en, nV, nv, VV, vv }
 
-\cs_new_protected:Npn \txtstyles_inline:nn #1#2
+\cs_new_protected:Npn \textiles_inline:nn #1#2
 {
-    \txtstyles_group_start:
-    \txtstyles_use_direct:nn {#1} {#2}
-    \txtstyles_group_end:
+    \textiles_group_start:
+    \textiles_use_direct:nn {#1} {#2}
+    \textiles_group_end:
 }
-\cs_generate_variant:Nn \txtstyles_inline:nn { Vn, vn, nv, nV, vv, VV }
+\cs_generate_variant:Nn \textiles_inline:nn { Vn, vn, nv, nV, vv, VV }
 
-\cs_new_protected:Npn \txtstyles_set_inline:nN #1#2
+\cs_new_protected:Npn \textiles_set_inline:nN #1#2
 {
-    \txtstyles_group_start:
-    \tl_set:Nv #2 { \txtstyles_use_direct:nV {#1} #2 }
-    \txtstyles_group_end:
+    \textiles_group_start:
+    \tl_set:Nv #2 { \textiles_use_direct:nV {#1} #2 }
+    \textiles_group_end:
 }
-\cs_generate_variant:Nn \txtstyles_set_inline:nN { VN }
+\cs_generate_variant:Nn \textiles_set_inline:nN { VN }
 
-\cs_new_protected:Npn \txtstyles_gset_inline:nN #1#2
+\cs_new_protected:Npn \textiles_gset_inline:nN #1#2
 {
-    \txtstyles_group_start:
-    \tl_gset:Nv #2 { \txtstyles_use_direct:nV {#1} #2 }
-    \txtstyles_group_end:
+    \textiles_group_start:
+    \tl_gset:Nv #2 { \textiles_use_direct:nV {#1} #2 }
+    \textiles_group_end:
 }
-\cs_generate_variant:Nn \txtstyles_gset_inline:nN { VN }
+\cs_generate_variant:Nn \textiles_gset_inline:nN { VN }
 
-\cs_new_protected:Npn \txtstyles_use_or_inline:nnn #1#2#3
+\cs_new_protected:Npn \textiles_use_or_inline:nnn #1#2#3
 {
     \tl_if_blank:nTF {#2}
-        { \tl_if_blank:nTF {#1} {#3} { \txtstyles_use:nn{#1}{#3} } }
-        { \txtstyles_inline:nn{#2}{#3} }
+        { \tl_if_blank:nTF {#1} {#3} { \textiles_use:nn{#1}{#3} } }
+        { \textiles_inline:nn{#2}{#3} }
 }
-\cs_generate_variant:Nn \txtstyles_use_or_inline:nnn { VVn, VVV }
+\cs_generate_variant:Nn \textiles_use_or_inline:nnn { VVn, VVV }
 
 % user commands:
 
 \NewDocumentCommand \StyleTxt { >{\TrimSpaces}m +m }
-    { \txtstyles_use:nn{#1}{#2} }
+    { \textiles_use:nn{#1}{#2} }
 \NewDocumentCommand \styletxt { >{\TrimSpaces}m +m }
-    { \txtstyles_use:nn{#1}{#2} }
+    { \textiles_use:nn{#1}{#2} }
 
 \NewDocumentCommand \StylePar { >{\TrimSpaces}m +m }
-    { \txtstyles_use:nn{#1}{#2\par} }
+    { \textiles_use:nn{#1}{#2\par} }
 \NewDocumentCommand \stylepar { >{\TrimSpaces}m +m }
-    { \txtstyles_use:nn{#1}{#2\par} }
+    { \textiles_use:nn{#1}{#2\par} }
 
 \NewDocumentCommand \StyleTxtInline { >{\TrimSpaces}m +m }
-    { \txtstyles_inline:nn{#1}{#2} }
+    { \textiles_inline:nn{#1}{#2} }
 \NewDocumentCommand \styletxtinline { >{\TrimSpaces}m +m }
-    { \txtstyles_inline:nn{#1}{#2} }
+    { \textiles_inline:nn{#1}{#2} }
     
 \NewDocumentCommand \StyleParInline { >{\TrimSpaces}m +m }
-    { \txtstyles_inline:nn{#1}{#2\par} }
+    { \textiles_inline:nn{#1}{#2\par} }
 \NewDocumentCommand \styleparinline { >{\TrimSpaces}m +m }
-    { \txtstyles_inline:nn{#1}{#2\par} }
+    { \textiles_inline:nn{#1}{#2\par} }
 
-\NewDocumentEnvironment {TxtStyle} { >{\TrimSpaces}m +b }
-    { \txtstyles_use:nn{#1} #2 }
+\NewDocumentEnvironment {Textile} { >{\TrimSpaces}m +b }
+    { \textiles_use:nn{#1}{#2} }
     {}
-\NewDocumentEnvironment {txtstyle} { >{\TrimSpaces}m +b }
-    { \txtstyles_use:nn{#1} #2 }
+\NewDocumentEnvironment {textile} { >{\TrimSpaces}m +b }
+    { \textiles_use:nn{#1}{#2} }
     {}
 
 \NewDocumentEnvironment {ParStyle} { >{\TrimSpaces}m +b }
-    { \txtstyles_use:nn{#1} #2\par }
+    { \textiles_use:nn{#1}{#2}\par }
     {}
 \NewDocumentEnvironment {parstyle} { >{\TrimSpaces}m +b }
-    { \txtstyles_use:nn{#1} #2\par }
+    { \textiles_use:nn{#1}{#2}\par }
     {}
 
-\NewDocumentEnvironment {TxtStyleInline} { >{\TrimSpaces}m +b }
-    { \txtstyles_inline:nn{#1} #2 }
+\NewDocumentEnvironment {TextileInline} { >{\TrimSpaces}m +b }
+    { \textiles_inline:nn{#1}{#2} }
     {}
-\NewDocumentEnvironment {txtstyleinline} { >{\TrimSpaces}m +b }
-    { \txtstyles_inline:nn{#1} #2 }
+\NewDocumentEnvironment {textileinline} { >{\TrimSpaces}m +b }
+    { \textiles_inline:nn{#1}{#2} }
     {}
 
 \NewDocumentEnvironment {ParStyleInline} { >{\TrimSpaces}m +b }
-    { \txtstyles_inline:nn{#1} #2\par }
+    { \textiles_inline:nn{#1}{#2}\par }
     {}
 \NewDocumentEnvironment {parstyleinline} { >{\TrimSpaces}m +b }
-    { \txtstyles_inline:nn{#1} #2\par }
+    { \textiles_inline:nn{#1}{#2}\par }
     {}
 
 
@@ -2262,22 +2289,22 @@
 %===================================================================
 
 
-\cs_new_protected:Npn \txtstyles_show_samples:n #1
+\cs_new_protected:Npn \textiles_show_samples:n #1
 {
-    \prop_map_inline:Nn \g_txtstyles_prop
+    \prop_map_inline:Nn \g_textiles_prop
     {
-        \noindent \txtstyles_use:nn{##1}{•\,#1}
+        \noindent \textiles_use:nn{##1}{•\,#1}
         \vspace{-\baselineskip}\hfill{\smallrrr\texttt{ ##2}}
         \vspace{0.2\baselineskip}\hrule
         \vspace{0.8\baselineskip}
     }
 }
 \NewDocumentCommand \ShowTxtSamples { O{We've~got~a~QUICK~fox.} }
-    { \txtstyles_show_samples:n{#1} }
+    { \textiles_show_samples:n{#1} }
 
 \NewDocumentCommand \ShowParSamples
     { O{The~QUICK~brown~fox~jumped\newline\ldots~over~the~lazy~dog.} }
-    { \txtstyles_show_samples:n{#1\par} }
+    { \textiles_show_samples:n{#1\par} }
 
 
 
@@ -2285,63 +2312,112 @@
 %                    font faces
 %===================================================================
 
-\cs_new_protected:Npn \txtstyles__declare_family:nnN #1#2#3
+\cs_new_protected:Npn \textiles__declare_family:nnN #1#2#3
     { \newfontfamily {#3} {#1} [#2] }
 
-\cs_new_protected:Npn \txtstyles_declare_family:nn #1#2
+\cs_new_protected:Npn \textiles_declare_family:nn #1#2
 {
     \exp_args:Nnnc
-        \txtstyles__declare_family:nnN
+        \textiles__declare_family:nnN
         {#1}
         {#2}
         {#1}
 }
 
-\cs_new_protected:Npn \txtstyles_declare_families:nnnn #1#2#3#4
+\NewDocumentCommand \DeclareTxtFontFamily { m O{} }
+    { \textiles_declare_family:nn {#1} {#2} }
+
+\cs_new_protected:Npn \textiles_declare_families:nnnn #1#2#3#4
 {
     \seq_set_from_clist:Nn \l_tmpa_clist {#3}
     \seq_map_inline:Nn \l_tmpa_clist
-        { \txtstyles_declare_family:nn {#1 ##1 #2} {#4} }
+        { \textiles_declare_family:nn {#1 ##1 #2} {#4} }
 }
-\NewDocumentCommand \DeclareTxtFontFamily { m O{} }
-    { txtstyles_declare_family:nn {#1} {#2} }
-
 \NewDocumentCommand \DeclareTxtFontFamilies { D<>{} D<>{} m O{} }
-    { \txtstyles_declare_families:nnnn {#1}{#2}{#3}{#4} }
+    { \textiles_declare_families:nnnn {#1}{#2}{#3}{#4} }
 
-\NewDocumentCommand \DeclareLatinModerns { O{} }
+\tl_const:Nn \c_source_pro_help_tl {
+    FontFace = {el}{n}{*-ExtraLight} ,
+    FontFace = {lt}{n}{*-Light} ,
+    FontFace = {sb}{n}{*-Semi-Bold} ,
+    FontFace = {eb}{n}{*-Black} ,
+}
+
+\tl_const:Nn \c_lmmono_help_tl {
+    ItalicFont     = lmmono10-italic.otf ,  % TODO: optical sizes?
+    BoldFont       = lmmonolt10-bold.otf ,
+    BoldItalicFont = lmmonolt10-boldoblique.otf ,
+}
+
+\tl_const:Nn \c_noto_help_tl {
+    % no thin or extra-bold
+    FontFace = {el}{n}{*-ExtraLight} ,  % 200
+    FontFace = {lt}{n}{*-Light} ,       % 300
+    FontFace = {sb}{n}{*-SemiBold} ,    % 600
+    FontFace = {bl}{n}{*-Black} ,       % 900
+}
+
+\NewDocumentCommand \DeclareStix { }
+{
+    \newfontfamily \stix {STIX Two Text}
+}
+
+\NewDocumentCommand \DeclareSourcePro { }
+{
+    \DeclareTxtFontFamilies
+        { Source Serif Pro, Source Sans Pro, Source Code Pro }
+        [ \prop_use:N \c_source_pros_help_tl ]
+}
+
+\NewDocumentCommand \DeclareLatinModern { }
 {
     \DeclareTxtFontFamilies
         <Latin Modern>
         {Roman, Mono}
-        [SmallCapsFont = * Caps, #1]  % needs some help here
+        [SmallCapsFont = * Caps]  % needs some help here
     \DeclareTxtFontFamilies  % doesn't support smallcaps
         {Latin Modern Sans}
-        [#1]
     \DeclareTxtFontFamilies  % doesn't support smallcaps, italic, or bold
         {Latin Modern Math}
-        [#1]
 }
 
-\NewDocumentCommand \DeclareSourcePros { O{} }
+\NewDocumentCommand \UseLatinModern { }
 {
-    \DeclareTxtFontFamilies
-        {Source Serif Pro, Source Sans Pro, Source Code Pro}
-        [  % % needs some help here
-            FontFace = {el}{n}{SourceSansPro-ExtraLight},
-            FontFace = {lt}{n}{SourceSansPro-Light},
-            FontFace = {sb}{n}{SourceSansPro-Semi-Bold},
-            FontFace = {eb}{n}{SourceSansPro-Black},
-            #1
-        ]
-}
-
-\NewDocumentCommand \UseLatinModern {}
-{
-    \setmainfont {Latin Modern Roman} [ SmallCapsFont = * Caps ]
     \setsansfont {Latin Modern Sans}
+    \setmonofont {Latin Modern Mono} [ \c_lmmono_help_tl ]
+    \setmainfont {Latin Modern Roman}
+        [ SmallCapsFont = Latin Modern Roman Caps ]
     \setmathfont {Latin Modern Math}
-    \setmonofont {Latin Modern Mono}  [ SmallCapsFont = * Caps ]
+}
+
+\NewDocumentCommand \UseStix { }
+{
+    \setmainfont {STIX Two Text}
+    \setmathfont {STIX Two Math}
+}
+
+\NewDocumentCommand \UseStixAndSourcePro { }
+{
+    \setmainfont {STIX Two Text}
+    \setmathfont {STIX Two Math}
+    % probably the closest we'll get to STIX:
+    \setsansfont {Source Sans Pro}  [ \c_source_pro_help_tl ]
+    \setmonofont {Source Code Pro}   [ \c_source_pro_help_tl ]
+}
+
+\NewDocumentCommand \UseSourcePro { }
+{
+    \setmainfont {Source Serif Pro} [ \c_source_pro_help_tl ]
+    \setsansfont {Source Sans Pro}  [ \c_source_pro_help_tl ]
+    \setmonofont {Source Code Pro}  [ \c_source_pro_help_tl ]
+}
+
+\NewDocumentCommand \UseNoto { }
+{
+    \setmainfont {NotoSerif} [\c_noto_help_tl]
+    \setsansfont {NotoSans} [\c_noto_help_tl]
+    \setmonofont {NotoSansSerif} [\c_noto_help_tl]
+    \setmathfont {NotoSansMath}  [\c_noto_help_tl]
 }
 
 
@@ -2349,63 +2425,10 @@
 %                    defaults copied from titlesec
 %===================================================================
 
-\str_const:Nn \c_txtstyles_chapter_head_str          {huge}
-\str_const:Nn \c_txtstyles_chapter_name_str          {Huge,bold}
-\str_const:Nn \c_txtstyles_section_head_str          {Large}
-\str_const:Nn \c_txtstyles_subsection_head_str       {mid,bold}
-\str_const:Nn \c_txtstyles_paragraph_head_str        {mid,bold}
-\str_const:Nn \c_txtstyles_subparagraph_head_str     {mid,bold}
+\str_const:Nn \c_textiles_chapter_head_str          {huge}
+\str_const:Nn \c_textiles_chapter_name_str          {Huge,bold}
+\str_const:Nn \c_textiles_section_head_str          {Large}
+\str_const:Nn \c_textiles_subsection_head_str       {mid,bold}
+\str_const:Nn \c_textiles_paragraph_head_str        {mid,bold}
+\str_const:Nn \c_textiles_subparagraph_head_str     {mid,bold}
 
-
-
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-%     ~~~   Things that should be moved to another package   ~~~
-
-
-%===================================================================
-%                    sectioning depth
-%===================================================================
-
-\msg_new:nnn{txtstyles}{invaliddepth}
-    {Depth~'#1'~is~invalid.}
-\cs_new:Npn\__txtstyles_err_invaliddepth:n #1
-    { \msg_error:nnn{txtstyles}{invaliddepth}{#1} }
-\cs_generate_variant:Nn \__txtstyles_err_invaliddepth:n { V }
-
-
-\prop_const_from_keyval:Nn \c__txtstyles_depths_prop
-{
-    none=-2, part=-1, chapter=0,
-    section=1, subsection=2, subsubsection=3,
-    paragraph=4, subparagraph=5,
-    -1=-1, 0=0, 1=1, 2=2, 3=3, 4=4, 5=5
-}
-
-\cs_new:Npn \txtstyles_parse_depth:nN #1#2
-{
-    \prop_get:NnNF \c__txtstyles_depths_prop {#1} #2
-    { \__txtstyles_err_invaliddepth:n {#1} }
-}
-\cs_generate_variant:Nn \txtstyles_parse_depth:nN { VN, vN, eN }
-
-\cs_new_protected:Npn \txtstyles_set_depth:nn #1#2
-{
-    \txtstyles_parse_depth:nN {#2} \l_tmpa_str
-    \exp_args:NnV \setcounter {#1} \l_tmpa_str
-}
-\cs_generate_variant:Nn \txtstyles_set_depth:nn { nV, nv, ne }
-
-\NewDocumentCommand \SetSectionDepth { >{\TrimSpaces}m }
-    { \txtstyles_set_depth:nn{secnumdepth}{#1} }
-
-\NewDocumentCommand \SetTocDepth { >{\TrimSpaces}m }
-    { \txtstyles_set_depth:nn{tocdepth}{#1} }
-
-
-\cs_new_protected:Nn \txtstyles_disable_hyphens:
-{   % probably doesn't belong here
-    % 10000 is a special value that turns it off
-    \pretolerance=10000
-    \hyphenpenalty=10000
-    \exhyphenpenalty=10000
-}

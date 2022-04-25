@@ -11,10 +11,10 @@
 }
 
 \SetBabelStrings {
-    contents           = Contents ,
-    listfigure         = Figures ,
+    contents           = Table of Contents ,
+    listfigure         = List of Figures ,
     reactionscheme     = Reaction ,
-    listreactionscheme = Reactions ,
+    listreactionscheme = List of Reactions ,
     listendnote        = Notes ,
 }
 
@@ -62,21 +62,21 @@
 
 % Set document info
 \SetInfo {
-    subject = Physics,                     % some some mapped to XMP metadata
+    subject = Physics,                     % some mapped to XMP metadata
     title = Xenodynamic cloud computing,
     keywords = {xenodynamics},
     author = Karen Johnson,                % a comma-separated list
-    degree = Doctor of Philosophy,         % arbitary extra data
+    degree = Doctor of Philosophy,         % arbitrary extra data
     university = University of Washington,
     plaindate = 2022-03-22
 }
 
-\RenewDocumentCommand \TitleContents {} {
-	``\info{title}"\\
-	\Info{degree} \info{subject}[pre={in ``}, post={"}]\\
-	Keywords: \infolist{keywords}[sep=|, style-inline={red;bold}]\\
-	Authors: \infolist{author}[sep={, }, sep-two={ and }, sep-last={ and }]
-}
+%\RenewDocumentCommand \TitleContents {} {
+%	``\info{title}"\\
+%	\Info{degree} \info{subject}[pre={in ``}, post={"}]\\
+%	Keywords: \infolist{keywords}[sep=|, style-inline={red;bold}]\\
+%	Authors: \infolist{author}[sep={, }, sep-two={ and }, sep-last={ and }]
+%}
 
 % More likely:
 %\RenewDocumentCommand \ShowTitle {} {
@@ -84,7 +84,7 @@
 %}
 
 \begin{document}
-\LoadFrontDocs{sections/front}
+\LoadFrontDocs{sections/doc, sections/front}
 \LoadMainDocs{sections/chapter1, sections/chapter2}
 \LoadBackDocs{sections/back}
 \end{document}
