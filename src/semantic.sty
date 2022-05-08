@@ -1,0 +1,162 @@
+% Copyright 2022 Douglas Myers-Turnbull
+% This work may be distributed and/or modified under the conditions of the LaTeX Project Public
+% License, either version 1.3 of this license or (at your option) any later version. The latest
+% version of this license is in http://www.latex-project.org/lppl.txt and version 1.3 or later is
+% part of all distributions of LaTeX version 2005/12/01 or later.
+%==================================================================================================
+
+
+%=======                                                   =======
+%=======                 Semantic Links                    =======
+%=======                                                   =======
+
+\NeedsTeXFormat {LaTeX2e} [2020-10-01]
+\ExplSyntaxOn
+\ProvidesExplPackage {semantic} {2022-02-28} {0.1.1} {Semantic~links~and~other~things}
+\RequirePackage {hyperxmp}
+\RequirePackage {academicons}
+
+
+
+%==================================================================================================
+%                        text
+%==================================================================================================
+
+% mostly stolen from package "semantic-markup"
+% I would load it, but it contains too many extra features and dependencies
+
+% These are all standard; \foreign is the only debatable one.
+
+\NewExpandableDocumentCommand \foreign { m }
+    { \textit{#1} }  % e.g. "et al." or "in vivo"
+
+\NewExpandableDocumentCommand \code { m }
+    { \texttt{#1} }
+
+\NewExpandableDocumentCommand \term { m }
+    { \textit{#1} }
+
+\NewExpandableDocumentCommand \mentioned { m }
+    { \textit{#1} }
+
+\NewExpandableDocumentCommand \worktitle { m }
+    { \textit{#1} }
+
+\NewExpandableDocumentCommand \parttitle { m }
+    { ``#1" }
+
+\NewExpandableDocumentCommand \quoteaddition { m }
+    { [#1] }
+
+\NewExpandableDocumentCommand \quoteomission { }
+    { [\ldots] }
+
+
+\NewDocumentCommand \brokensequence { m }
+{
+    \group_begin:
+    \ttfamily
+    \seq_set_split:Nnn \l_tmpa_seq {\space} { #1 }
+    \seq_use:Nn \l_tmpa_seq { \linebreak[0] }
+    \group_end:
+}
+
+
+%==================================================================================================
+%                    math
+%==================================================================================================
+
+% punctuation at the end of an equation, normally either a comma or period
+\NewExpandableDocumentCommand \punc { m }
+    { \,\text{#1} }
+
+% Math commands with proper amsmath format
+\NewExpandableDocumentCommand \angled { m }
+    { \left\langle #1 \right\rangle }
+
+\NewExpandableDocumentCommand \abs { m }
+    { \left\lvert #1 \right\rvert }
+
+\NewExpandableDocumentCommand \norm { m }
+    { \left\lVert #1 \right\rVert }
+
+\NewExpandableDocumentCommand \floor { m }
+    { \left\lfloor #1 \right\rfloor }
+
+\NewExpandableDocumentCommand \ceil { m }
+    { \left\lceil #1 \right\rceil }
+
+
+%==================================================================================================
+%                    links
+%==================================================================================================
+
+\cs_new_protected:Npn \semantic_link:nnn #1#2#3
+{
+    \tl_if_blank:nTF {#2}
+    {
+        #2  % if the url (#3) is empty, don't make a link
+    }
+    {
+        \bool_if:nT {#1}
+        {
+            \group_begin:
+            \hypersetup{hidelinks} #1
+        }
+        \tl_if_blank:nTF {#3}
+            { \href{#2}{#2} }   % no text provided -- use the url itself
+            { \href{#2}{#3} }   % text provided
+        \bool_if:nT {#1} {\group_end:}
+    }
+}
+
+\NewDocumentCommand \link { s >{\TrimSpaces}m o }
+{
+    \semantic_link:nnn{#1}{#2}{#3}
+}
+
+
+\NewDocumentCommand \doi { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://doi.org/#1} {\textsc{doi}:#1} }
+\NewDocumentCommand \doix { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://doi.org/#1} {\aiDoi\thinspace#1} }
+
+\NewDocumentCommand \arXiv { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://arxiv.org/abs/#1} {arXiv:#1} }
+\NewDocumentCommand \arxivx { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://arxiv.org/abs/#1} {\aiarXiv\thinspace#1} }
+
+\NewDocumentCommand \bioarxiv { s >{\TrimSpaces}m }
+    {semantics_link:nnn {#1} {https://www.biorxiv.org/content/#1} {bioRxiv:#1} }
+\NewDocumentCommand \bioarxivx { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://www.biorxiv.org/content/#1} {\aibioRxiv\thinspace#1} }
+
+\NewDocumentCommand \orcid { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://orcid.org/#1} }
+\NewDocumentCommand \orcidx { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://orcid.org/#1} {\aiOrcid\thinspace#1} }
+
+\NewDocumentCommand \dblp { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://dblp.org/pid/#1} }
+\NewDocumentCommand \dblpx { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://dblp.org/pid/#1} {\aidblp\thinspace#1} }
+
+\NewDocumentCommand \rrid { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://scicrunch.org/resolver/#1} {\textsc{rrid}:#1} }
+\NewDocumentCommand \rridx { s m }
+    { \semantic_link:nnn {#1} {https://scicrunch.org/resolver/#1} {\textsc{rrid}:#1} }
+
+\NewDocumentCommand \semanticscholar { s >{\TrimSpaces}m } % e.g. 1403902308
+    { \semantic_link:nnn {#1} {https://semanticscholar.org/author/#1} }
+\NewDocumentCommand \semanticscholarx { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://semanticscholar.org/author/#1} {\aiSemanticScholar\thinspace#1} }
+
+\NewDocumentCommand \ieeeauthor { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://ieeexplore.ieee.org/author/#1} }
+\NewDocumentCommand \ieeeauthorx { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://ieeexplore.ieee.org/author/#1} {\aiIEEE\thinspace#1} }
+
+\NewDocumentCommand \ctan { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://ctan.org/pkg/#1} }
+\NewDocumentCommand \ctanx { s >{\TrimSpaces}m }
+    { \semantic_link:nnn {#1} {https://ctan.org/pkg/#1} }

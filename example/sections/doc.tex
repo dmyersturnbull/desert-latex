@@ -1,11 +1,48 @@
 
 \part{Documentation}
 
-\begin{LongTable}[
+\chapter{Class options and config}
+
+Abbreviations:
+
+\begin{description}
+\item [bib] Bibliography
+\item [cref] Cleveref
+\item [stretch] Line spacing
+\item [sty] Text styles via \ctan{textiles}
+\item [num] Numbering
+\item [toc] Table of contents
+\item [typo] Typography
+\item [glue<] Padding left
+\item [glue>] Padding right
+\item [glue'] Vertical padding above
+\item [glue.] Vertical padding below
+\item [glue:] Vertical padding between
+\item [chap] \textit{chap}
+\item [lang] \textit{language}
+\item [subsec] \textit{subsection}
+\item [subsubsec] \textit{subsubsection}
+\item [subsec] \textit{subsection}
+\item [abbrev] \textit{abbreviate}
+\item [abbrevs] \textit{abbreviations}
+\item [fnote] \textit{footnote}
+\item [nom] \textit{figure}
+\item [fig] \textit{subsection}
+\item [eqn] \textit{equation}
+\item [def] \textit{definition}
+\item [thm] \textit{theorem}
+\item [alg] \textit{algorithm}
+\item [rem] \textit{remark}
+\item [ref] \textit{reference}
+\item [nullary] Only no-args macros are allowed (e.g. \ctan{smallcaps})
+\item [unary] Text-modifying macros are allowed 
+\end{description}
+
+\begin{LongTable} [
     caption = {DESERT key--value options},
     entry = {Package key--value options},
     label = {options},
-    note{a} = {Options: GenericAFour, GenericLetter, Ucsf, Cmu, Stanford, Cambridge}
+    note{a} = {Options: AFour, LetterPaper, Ucsf, Cmu, Stanford, Cambridge}
 ]{
     colspec=lll,
     rowhead={1},
@@ -15,172 +52,401 @@
     row{1} = {font={\sffamily\bfseries}},
 }
 name & value type & description  \\
-draft & boolean &   \\
-language & boolean &   \\
-extra-languages & list * &   \\
-bidi & boolean & Enable bidirectional text  \\
-mode & thesis/article/book &   \\
-preset & macro name \TblrNote{a} &   \\
-geometry & geometry &  Options to geometry \\
+\textbf{draft} & boolean &   \\
+\textbf{langs} & clist &   \\
+\textbf{mode} & thesis/article/book &   \\
+\textbf{preset} & macro name \TblrNote{a} &   \\
 pkg / svg & - & includesvg command  \\
 pkg / kantlipsum & - & ikant command for Lorem Ipsum  \\
 pkg / chemformula & - &   \\
 pkg / chemmacros & - &    \\
 pkg / chemfig & - & Chemical diagrams  \\
 pkg / cryptocode & - &  Lots of algorithm-like environments and tools \\
-pkg / imakeidx & - & Make an index  \\
+\textbf{pkg / imakeidx} & - & Make an index  \\
 pkg / knowledge & - & Hyperlink to topics, support index, etc.  \\
+pkg / tikz & - & Core Tikz libraries \\
+pkg / graphs & - & Tikz graph-drawing \\
 pkg / lettrine & - &  Big first letter of chapter  \\
-pkg / minted & - &  Source code highlighting \\
-pkg / tcolorbox & - & Customizable boxes; puts source code in box  \\
+\textbf{pkg / minted} & - &  Source code highlighting \\
+\textbf{pkg / tcolorbox} & - & Customizable boxes; puts source code in box  \\
+\textbf{pkg / awesomebox} & - & Admonition boxes with fontawesome symbols \\
 pkg / ulem & - & Underline, strikethrough, etc.  \\
 pkg / varioref & - & ``on the previous page"  \\
-bib / hide-language & boolean & Hide, e.g., \textit{en.} in references  \\
-bib / per-chapter & boolean & Show bibliography per chapter  \\
-bib / style & BibLaTeX style &   \\
-color / cite & color &   \\
+\textbf{bib / hide-lang} & boolean & Hide, e.g., \textit{en.} in references  \\
+\textbf{bib / per-chap} & boolean & Show bibliography per chapter  \\
+\textbf{bib / style} & BibLaTeX style &   \\
+\textbf{color / cite} & color &   \\
 color / file & color &   \\
-color / ref & color &   \\
-color / url & color &   \\
-cref / abbreviate & boolean & Pass noabbrev to cleveref if false  \\
-cref / capitalize & boolean & Pass capitalize to cleveref  \\
-font-size / main & float ( > 0) & E.g. \textit{12}  \\
-layout / nomenclature-symbol-width & x-dimension & Between symbol and description  \\
+\textbf{color / ref} & color &   \\
+\textbf{color / url} & color &   \\
+\textbf{cref / abbrev} & boolean & Pass noabbrev to cleveref if false  \\
+\textbf{cref / capitalize} & boolean & Pass capitalize to cleveref  \\
+\textbf{font / size} & float ( > 0) & E.g. \textit{12}  \\
+\textbf{font / leading} & float ( > 0) & Space between baselines  \\
+\textbf{layout / geometry} & geometry &  Options to geometry \\
+layout / nom-symbol-width & x-dimension & Between symbol and description  \\
 layout / index-cols & integer & Number of columns in index  \\
 layout / index-col-sep & x-dimension & Space between columns in index  \\
 layout / header-left & tokens &   \\
 layout / header-center & tokens &   \\
 layout / header-right & tokens &   \\
 layout / footer-left & tokens &   \\
-layout / footer-center & tokens &   \\
-layout / footer-right & tokens &   \\
-layout / footnotes-as-endnotes & boolean & Converts footnotes into an endnotes  \\
+\textbf{layout / footer-center} & tokens &   \\
+\textbf{layout / footer-right} & tokens &   \\
+layout / fnotes-to-endnotes & boolean & Converts footnotes into endnotes  \\
 layout / endnote-backrefs & boolean &   \\
 layout / show-toc-like-links & boolean &   \\
-layout / show-nomenclature-links & boolean &   \\
-layout / footnote-align & left/right/center &   \\
-layout / footnote-placement & * &   \\
-leading / main & float ( > 0) &   \\
-leading / caption & float ( > 0) &   \\
-leading / equation & float ( > 0) &   \\
-leading / toc & float ( > 0) &   \\
-leading / list-of & float ( > 0) &   \\
-leading / abbreviations & float ( > 0) &   \\
-leading / nomenclature & float ( > 0) &   \\
-leading / source-code & float ( > 0) &   \\
-numbering / depth & level &   \\
-numbering / back-matter-pages & numbering &   \\
-numbering / front-matter-chapters & numbering &   \\
-numbering / main-matter-chapters & numbering &   \\
-numbering / back-matter-chapters & numbering &   \\
-numbering / figure-panels & numbering &   \\
-numbering / equation-brackets & * &   \\
-numbering / equation-within & level &   \\
-numbering / float-within & level &   \\
-numbering / footnote-within & none/page/chapter &   \\
-numbering / footnotes & * &   \\
-numbering / front-matter-pages & numbering &   \\
-numbering / main-matter-pages & numbering &   \\
-numbering / theorem-like-within & level &   \\
-style / abstract-by & style &   \\
-style / abstract-authors & style &   \\
-style / abstract-title & style &   \\
-style / caption-body & style &   \\
-style / caption-label & style &   \\
-style / subcaption-body & style &   \\
-style / subcaption-label & style &   \\
-style / subref & style &   \\
-style / table-head-body & style (nullary) &   \\
-style / table-head-label & style (nullary) &   \\
-style / table-footer & style (nullary) &   \\
-style / box-label & style (nullary) &   \\
-style / box-name & style (nullary) &   \\
-style / chapter-label & style (nullary) &   \\
-style / chapter-name & style (nullary) &   \\
-style / front-chapter-title & style (nullary) &   \\
-style / part-label & style (nullary) &   \\
-style / part-name & style (nullary) &   \\
-style / chemical-diagram & style (nullary) &   \\
-style / footnote-body & style (nullary) &   \\
-style / foreign-words & style &   \\
-style / indx-starred & style &   \\
-style / nomenclature-group & style &   \\
-style / section-title & style (nullary) &   \\
-style / source-code & style (nullary) &   \\
-style / subsection-title & style (nullary) &   \\
-style / subsubsection-title & style (nullary) &   \\
-style / paragraph-title & style (nullary) &   \\
-style / toc-part-label & style (nullary) &   \\
-style / toc-chapter-label & style (nullary) &   \\
-style / toc-section-label & style (nullary) &   \\
-style / toc-subsection-label & style (nullary) &   \\
-style / toc-subsubsection-label & style (nullary) &   \\
-style / toc-page-number & style (nullary) &   \\
-toc / depth & level &   \\
-toc / references & boolean &   \\
+layout / show-nom-links & boolean &   \\
+layout / fnote-align & left/right/center &   \\
+layout / fnote-placement & * &   \\
+\textbf{stretch / main} & float ( > 0) &   \\
+\textbf{stretch / caption} & float ( > 0) &   \\
+\textbf{stretch / eqn} & float ( > 0) &   \\
+stretch / toc & float ( > 0) &   \\
+stretch / list-of & float ( > 0) &   \\
+stretch / abbrevs & float ( > 0) &   \\
+stretch / nom & float ( > 0) &   \\
+stretch / source-code & float ( > 0) &   \\
+\textbf{num / depth} & level &   \\
+\textbf{num / back-pages} & numbering &   \\
+\textbf{num / front-chaps} & numbering &   \\
+num / main-chaps & numbering &   \\
+num / back-chaps & numbering &   \\
+\textbf{num / fig-panels} & numbering &   \\
+num / eqn-brackets & * &   \\
+\textbf{num / eqn-in} & level &   \\
+\textbf{num / float-in} & level &   \\
+\textbf{num / fnote-in} & none/page/chapter &   \\
+\textbf{num / fnotes} & * &   \\
+\textbf{num / front-pages} & numbering &   \\
+num / main-pages & numbering &   \\
+\textbf{num / thm-like-in} & level &   \\
+sty / abstract-by & style &   \\
+sty / abstract-authors & style &   \\
+sty / abstract-title & style &   \\
+sty / caption-body & style &   \\
+sty / caption-label & style &   \\
+sty / subcaption-body & style &   \\
+sty / subcaption-label & style &   \\
+sty / subref & style &   \\
+sty / table-head-body & style (nullary) &   \\
+sty / table-head-label & style (nullary) &   \\
+sty / table-footer & style (nullary) &   \\
+sty / box-label & style (nullary) &   \\
+sty / box-name & style (nullary) &   \\
+sty / chap-label & style (nullary) &   \\
+sty / chap-name & style (nullary) &   \\
+sty / front-chap-title & style (nullary) &   \\
+sty / part-label & style (nullary) &   \\
+sty / part-name & style (nullary) &   \\
+sty / chemical-diagram & style (nullary) &   \\
+sty / fnote-body & style (nullary) &   \\
+sty / foreign-words & style &   \\
+sty / indx-starred & style &   \\
+sty / nom-group & style &   \\
+sty / section-title & style (nullary) &   \\
+sty / source-code & style (nullary) &   \\
+sty / subsec-title & style (nullary) &   \\
+sty / subsubsec-title & style (nullary) &   \\
+sty / paragraph-title & style (nullary) &   \\
+sty / toc-part-label & style (nullary) &   \\
+sty / toc-chap-label & style (nullary) &   \\
+sty / toc-section-label & style (nullary) &   \\
+sty / toc-subsec-label & style (nullary) &   \\
+sty / toc-subsubsec-label & style (nullary) &   \\
+sty / toc-page-number & style (nullary) &   \\
+\textbf{toc / depth} & level &   \\
+toc / refs & boolean &   \\
 toc / index & boolean &   \\
 toc / endnotes & boolean &   \\
-toc / figure-panels & boolean &   \\
-typo / ban-hyphens & boolean &   \\
+toc / fig-panels & boolean &   \\
+\textbf{typo / ban-hyphens} & boolean &   \\
 typo / caption-label-sep & tokens &   \\
 typo / subref-label-sep & tokens &   \\
 typo / subref-format & * &   \\
 typo / caption-table-note-sep & tokens &   \\
-typo / caption-table-remark-sep & tokens &   \\
-glue / indent & x-dimension &   \\
-glue-left / toc-part & x-dimension &   \\
-glue-left / toc-chapter & x-dimension &   \\
-glue-left / toc-section & x-dimension &   \\
-glue-left / toc-subsection & x-dimension &   \\
-glue-left / toc-subsubsection & x-dimension &   \\
-glue-left / theorem-title & x-dimension &   \\
-glue-left / definition-title & x-dimension &   \\
-glue-left / remark-title & x-dimension &   \\
-glue-between / paragraphs & y-glue &   \\
-glue-between / items & y-glue &   \\
-glue-between / multipar-items & y-glue &   \\
-glue-between / footnotes & y-glue &   \\
-glue-between / refs & y-glue &   \\
-glue-above / footnote-list & y-glue &   \\
-glue-below / footnote-list & y-glue &   \\
-glue-above / caption & y-glue &   \\
-glue-above / subcaption & y-glue &   \\
-glue-above / table-title & y-glue &   \\
-glue-below / table-title & y-glue &   \\
-glue-above / table-footer & y-glue &   \\
-glue-below / table-footer & y-glue &   \\
-glue-above / front-chapter & y-glue &   \\
-glue-below / front-chapter & y-glue &   \\
-glue-above / chapter & y-glue &   \\
-glue-below / chapter & y-glue &   \\
-glue-below / chapter-label & y-glue &   \\
-glue-below / part-label & y-glue &   \\
-glue-above / section & y-glue &   \\
-glue-below / section & y-glue &   \\
-glue-above / subsection & y-glue &   \\
-glue-below / subsection & y-glue &   \\
-glue-above / subsubsection & y-glue &   \\
-glue-below / subsubsection & y-glue &   \\
-glue-above / nomenclature-group & y-glue &   \\
-glue-above / paragraph & y-glue & For the named command  \\
-glue-above / theorem-like & y-glue &   \\
-glue-below / theorem-like & y-glue &   \\
-glue-above / algorithm-like & y-glue &   \\
-glue-below / algorithm-like & y-glue &   \\
-glue-above / definition-like & y-glue &   \\
-glue-below / definition-like & y-glue &   \\
-glue-above / remark-like & y-glue &   \\
-glue-below / remark-like & y-glue &   \\
-glue-above / equation & y-glue &   \\
-glue-below / equation & y-glue &   \\
-glue-above / list & y-glue &   \\
-glue-above / multipar-list & y-glue &   \\
-glue-below / abstract-title & y-glue &   \\
-glue-above / abstract-authors & y-glue &   \\
-glue-above / abstract-body & y-glue &   \\
-glue-above / toc-part & y-glue &   \\
-glue-above / toc-chapter & y-glue &   \\
-glue-above / toc-section & y-glue &   \\
-glue-above / toc-subsection & y-glue &   \\
-glue-above / toc-subsubsection & y-glue &   \\
+typo / caption-table-rem-sep & tokens &   \\
+\textbf{glue> / indent} & x-dim &   \\
+glue< / toc-part & x-dim &   \\
+glue< / toc-chap & x-dim &   \\
+glue< / toc-section & x-dim &   \\
+glue< / toc-subsec & x-dim &   \\
+glue< / toc-subsubsec & x-dim &   \\
+glue< / thm-title & x-dim &   \\
+glue< / def-title & x-dim &   \\
+glue< / rem-title & x-dim &   \\
+\textbf{glue: / paragraphs} & y-glue &   \\
+glue: / items & y-glue &   \\
+glue: / long-items & y-glue &   \\
+glue: / fnotes & y-glue &   \\
+glue: / refs & y-glue &   \\
+glue' / fnote-list & y-glue &   \\
+glue. / fnote-list & y-glue &   \\
+glue' / caption & y-glue &   \\
+glue' / subcaption & y-glue &   \\
+glue' / table-title & y-glue &   \\
+glue. / table-title & y-glue &   \\
+glue' / table-footer & y-glue &   \\
+glue. / table-footer & y-glue &   \\
+glue' / front-chap & y-glue &   \\
+glue. / front-chap & y-glue &   \\
+glue' / chap & y-glue &   \\
+glue. / chap & y-glue &   \\
+glue. / chap-label & y-glue &   \\
+glue. / part-label & y-glue &   \\
+glue' / section & y-glue &   \\
+glue. / section & y-glue &   \\
+glue' / subsec & y-glue &   \\
+glue. / subsec & y-glue &   \\
+glue' / subsubsec & y-glue &   \\
+glue. / subsubsec & y-glue &   \\
+glue' / nom-group & y-glue &   \\
+glue' / paragraph & y-glue & For the named command  \\
+glue' / thm-like & y-glue &   \\
+glue. / thm-like & y-glue &   \\
+glue' / alg-like & y-glue &   \\
+glue. / alg-like & y-glue &   \\
+glue' / def-like & y-glue &   \\
+glue. / def-like & y-glue &   \\
+glue' / rem-like & y-glue &   \\
+glue. / rem-like & y-glue &   \\
+glue' / proof & y-glue &   \\
+glue. / proof & y-glue &   \\
+glue' / eqn & y-glue &   \\
+glue. / eqn & y-glue &   \\
+glue' / list & y-glue &   \\
+glue' / long-list & y-glue &   \\
+glue. / abstract-title & y-glue &   \\
+glue' / abstract-authors & y-glue &   \\
+glue' / abstract-body & y-glue &   \\
+glue' / toc-part & y-glue &   \\
+glue' / toc-chapter & y-glue &   \\
+glue' / toc-section & y-glue &   \\
+glue' / toc-subsec & y-glue &   \\
+glue' / toc-subsubsec & y-glue &   \\
 \end{LongTable}
+
+
+Packages not to load:
+
+\begin{itemize}
+\item \textbf{bibtex or natbib} (use \ctan{biblatex} and \ctan{biber})
+\item \textbf{any font package} (use \ctan{fontspec})
+\item \textbf{mathbb, mathscr, or mathcal} (use fontspec and \ctan{unicode-math})
+\item \textbf{tabularx, longtable, threepartable, etc.} (use \ctan{tabularray})
+\item polyglossia (use \ctan{babel})
+\item titletoc (use \ctan{titlesec})
+\item subref, subfigure, or subfig (use \ctan{subcaption})
+\item makeindex or other index packages (use \ctan{imakeidx} via \code{pkg / imakeidx})
+\item appendix (use Desert's environment instead)
+\item authblk (use Info's \code{getinfo}, \code{getinfolist}, etc. instead)
+\item datetime (use \ctan{datetime2})
+\item glossary, acronym, or glossaries (use \ctan{acro})
+\item wrapfig (use \ctan{wrapfig2})
+\end{itemize}
+
+
+
+\chapter{Tutorial}
+
+\section {Sections and layout}
+
+Use \term|Chapter|, etc.
+There's \term|SpecialBox|.
+
+
+\section {Fonts}
+
+Use \ctan{fontspec}.
+
+
+\section {Abbreviations}
+
+Use \ctan{acro}.
+
+
+\section {Nomenclature}
+
+Use \ctan{nomencl}.
+Consider \ctan{knowledge} via \term|feat / knowledge|.
+
+
+\section {Index}
+Use \term|index| and/or \term|indx| and \term|indx*|.
+
+
+\section {Languages}
+
+Use \ctan{babel}.
+
+
+\section {Math}
+
+Uses \ctan{amsmath}, etc.
+
+
+\section {Tables}
+
+Use \ctan{tabularray}.
+
+
+\section {Figures}
+
+Use \term|\OnePanelFigure|, \term|\MultiPanelFigure|, and \term|\PhantonPanelFigure|.
+
+
+\section {Labels}
+
+Use \ctan{cleveref}: \term|\cref| as well as \term|\Caption| (yes, capitalized).
+
+
+\section {Theorems, etc.}
+
+Use \ctan{thmtools}, which is backed by \ctan{amsthm}.
+
+
+\section{Source code}
+
+Use \ctan{minted} and \term|SourceCode|.
+
+
+\section{Chemistry}
+
+Use \ctan{chemformula}, \ctan{chemmacros}, and \ctan{chemfig}.
+
+
+\section{Diagrams and boxes}
+
+Use \ctan{tikz}, \ctan{tcolorbox}, and others.
+
+
+
+\chapter{Supporting packages}
+
+\section{Textiles}
+
+Textiles allows you to pass key--value args for styles (under \code{sty / }).
+Provides \term|DeclareTextile|, \term|NewTextile|, \term|RenewTextile|, and \term|ProvideTextile|; and
+\term|DeclareTextileNullary|, \term|NewTextileNullary|
+\term|RenewTextileNullary|, and \term|ProvideTextileNullary|.
+There's also \term|DeclareTextiles|, \term|NewTextiles|, and \term|ProvideTextiles|, to define multiple.
+Define colors via \term|DeclareColor|, \term|NewColor|, \term|RenewColor|, and \term|ProvideColor|;
+this will use both l3color and xcolor.
+Use \term|StyleTxt|, \term|StylePar|, \term|StyleTxtInline|, and \term|StyleParInline|.
+\term|ShowParSamples| to show.
+Also see \term|DeclareCapLabelStyle|, etc.
+Font support macros \term|UseStix|, \term|UseNoto|, \term|UseLatinModern|, 
+\term|DeclareSourcePro|, etc.
+
+Families:
+
+rm, roman, rmfamily\\
+sf, sans, sffamily\\
+tt, mono, ttfamily\\
+
+Weights:
+
+th, thin (or 'hairline')\\
+el, extralight\\
+lt, light\\
+rg, regular (LaTeX calls this 'mdseries')\\
+me, medium\\
+sb, semibold\\
+bf, bold\\
+eb, extrabold\\
+bl, heavy (or 'black')\\
+
+Shapes:
+
+up, upright\\
+it, italic\\
+sl, slant\\
+sw, swash\\
+sc, smallcaps\\
+
+Sizes:
+
+micro[rrr] (scriptsize[rrr])\\
+tiny[rrr] (footnotesize[rrr])\\
+small[rrr]\\
+mid[rrr] (normalsize[rrr])\\
+large[rrr]\\
+Large[rrr]\\
+LARGE[rrr]\\
+huge[rrr]\\
+Huge[rrr]\\
+HUGE[rrr]\\
+
+Capitalization (unary):
+
+upper, uppercase, allcaps\\
+lower, lowercase\\
+sentence\\
+sentence*\\
+uptosc, uppertosmallcaps
+
+
+Wrapping (unary):
+
+squoted, singlequoted\\
+dquoted, doublequoted\\
+parens\\
+brackets\\
+braces\\
+angles\\
+etc.\\
+
+Markup (with markup option):
+underline\\
+doubleunderline\\
+etc.\\
+
+
+\section{Info}
+
+Info provides \term|SetInfo|, \term|AddInfo|, etc.
+Also adds XMP metadata to the PDF and provides \term|getinfo|, \term|GetInfo|,
+\term|getinfolist|, and \term|GetInfoList|.
+Support for authors, author affiliations, and author notes is forthcoming.
+
+
+\section{Pidgin}
+
+Pidgin provides clean interfaces for passing language options to other packages.
+Provides \term|SetBiblatexStrings|, \term|SetBabelStrings|, \term|SetCrefStrings|,
+and \term|SetTranslationStrings|.
+
+
+\section{Noms}
+
+Provides for nomenclature grouping, a \term|NomsSetup| command, and 
+\term|NewNom|, \term|NomMath|, \term|NomTex|, and \term|NomUnit|.
+
+
+\section{Semantic}
+
+Provides \term|foreign|, \term|doi|, \term|doix|, \term|arxiv|, etc.
+The \term|x| variants use small SVG symbols as the prefix instead of text.
+Add a \term|*| to hide the link color.
+
+
+\section{Tarmac}
+
+A document author is unlikely to use this directly.
+Provides a \term|Tarmac| command to set spacing options.
+
+
+\section{Glue}
+
+A document author is unlikely to use this directly.
+Provides rubber component -preserving glue calculations.
+In particular, \term|glue\_scale:nN| and \term|glue\_collapse:NN|.
+
+
+
+\chapter{Appendices}
+
+List of environments.
+
+List of commands.
+

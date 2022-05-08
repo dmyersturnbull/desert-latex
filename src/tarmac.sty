@@ -1,0 +1,323 @@
+% Copyright 2022 Douglas Myers-tarmac
+% This work may be distributed and/or modified under the conditions of the LaTeX Project Public
+% License, either version 1.3 of this license or (at your option) any later version. The latest
+% version of this license is in http://www.latex-project.org/lppl.txt and version 1.3 or later is
+% part of all distributions of LaTeX version 2005/12/01 or later.
+%==================================================================================================
+
+
+%=======                                                   =======
+%=======                       tarmac                        =======
+%=======                                                   =======
+
+\NeedsTeXFormat {LaTeX2e} [2020-10-01]
+\ExplSyntaxOn
+\ProvidesExplPackage {tarmac} {2022-05-04} {0.1.0}
+    { Fixes~setspace }
+
+\RequirePackage {fontsize}
+\RequirePackage {calc}
+\RequirePackage {ragged2e}
+\RequirePackage [] {setspace}
+
+
+%========================================================================================
+%                    depths
+%========================================================================================
+
+% Se the depth of the Table of Contents and section numbering.
+
+\prop_const_from_keyval:Nn \c__tarmac_depths_prop
+{
+    none=-2, part=-1, chapter=0,
+    section=1, subsection=2, subsubsection=3,
+    paragraph=4, subparagraph=5,
+    -1=-1, 0=0, 1=1, 2=2, 3=3, 4=4, 5=5
+}
+
+\cs_new:Npn \tarmac_parse_depth:nN #1#2
+{
+    \prop_get:NnNF \c__tarmac_depths_prop {#1} #2
+    { \__tarmac_err_invaliddepth:n {#1} }
+}
+\cs_generate_variant:Nn \tarmac_parse_depth:nN { VN, vN }
+
+\cs_new_protected:Npn \tarmac_set_depth:nn #1#2
+{
+    \tarmac_parse_depth:nN {#2} \l_tmpa_str
+    \exp_args:NnV \setcounter {#1} \l_tmpa_str
+}
+\cs_generate_variant:Nn \tarmac_set_depth:nn { nV, nv }
+
+
+
+%========================================================================================
+%                    ragged
+%========================================================================================
+
+% Okay, ragged2e environments (e.g. \RaggedRight, camelcase)
+% enable hyphenations in order to appear "less" ragged
+% than their regular LaTeX counterparts (e.g. \raggedright)
+% However, they come with finite hfill rather than infinite,
+% so they're prone to causing underfull warnings.
+% This holds even for centered text, as in titles.
+% There are two reasonable choices here:
+% A -- Load ragged2e with 'originalcommands' option,
+%      and opt-in to ragged2e environments where wanted
+% B -- Load ragged2e with 'newcommands' option
+%      then set hbadness to max to suppress the warnings.
+% We'll choose option B here for simplicity :)
+\g@addto@macro {\centering}   {\hbadness=\@M}
+\g@addto@macro {\raggedright} {\hbadness=\@M}
+\g@addto@macro {\raggedleft}  {\hbadness=\@M}
+\g@addto@macro {\center}      {\hbadness=\@M}
+\g@addto@macro {\flushleft}   {\hbadness=\@M}
+\g@addto@macro {\flushright}  {\hbadness=\@M}
+
+
+%========================================================================================
+%                          penalties
+%========================================================================================
+%\pretolerance 
+%\tolerance
+%\emergencystretch [a dimension!]
+
+% defaults:
+%\binoppenalty=700
+%\brokenpenalty=100
+%\clubpenalty=150
+%\displaywidowpenalty=50
+%\exhyphenpenalty=50
+%\floatingpenalty=20000
+%\hyphenpenalty=50
+%\interlinepenalty=0
+%\linepenalty=10
+%\postdisplaypenalty=0
+%\predisplaypenalty=10000
+%\relpenalty=500
+%\widowpenalty=150
+%`\binoppenalty` for a line break in math mode after a binary operator.
+%`\brokenpenalty` for a page break, where the last line of the previous page contains a hyphenation.
+%`\clubpenalty` for a broken page, with a single line of a paragraph remaining on the bottom of the preceding page.
+%`\displaywidowpenalty` for a break before last line of a paragraph.
+%`\exhyphenpenalty` for hyphenating a word which already contains a hyphen.
+%`\floatingpenalty` for splitting an insertion.
+%`\hyphenpenalty` for line breaking at an automatically inserted hyphen.
+%`\interlinepenalty` for the penalty added after each line of a paragraph.
+%`\linepenalty` the badness of each line within a paragraph.
+%`\postdisplaypenalty` for a break after a display.
+%`\predisplaypenalty` for a break before a display.
+%`\relpenalty` for a line break at a relation.
+%`\widowpenalty` for a broken page, with a single line of a paragraph (called "widow") remaining on the top of the succeeding page.
+
+\NewDocumentCommand \SetTexParams { m }
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \cs:w ##1 \cs_end: =##2 }
+}
+
+\NewDocumentCommand \BanHyphens {}
+{
+    \SetTexParams
+    {
+        pretolerance    = 10000 ,
+        hyphenpenalty   = 10000 ,
+        exhyphenpenalty = 10000 ,
+    }
+}
+
+
+%========================================================================================
+%                          setspace fixing
+%========================================================================================
+
+% setspace added this:
+% \abovedisplayskip \displayskipstretch\abovedisplayskip
+% (the same as \abovedisplayskip=\displayskipstretch\abovedisplayskip)
+% Multiplying a tarmac (abovedisplayskip) by a scalar (displayskipstretch)
+% zeroes the stretch and shrink components
+% That's terrible.
+% nodisplayskipstretch sets displayskipstretch=1.0, so that doesn't help.
+% Fortunately, setting it to an empty value works.
+\setdisplayskipstretch {}
+
+%\RenewDocumentCommand \setstretch {m}
+%    \def \baselinestretch {#1}
+    %\@currsize
+%}
+
+\skip_new:N \g__tarmac_last_skip
+
+\RenewDocumentEnvironment {spacing} { m }
+{
+    \group_begin:
+    \par
+    \setstretch {#1}
+}
+{
+    \skip_gset:Nn \g__tarmac_last_skip { \baselineskip + \parskip }
+    \group_end:
+    \par
+    \skip_set:Nn \l_tmpa_skip { \baselineskip + \parskip }
+    \addvspace { \skip_use:N \g__tarmac_last_skip }
+    \addvspace { \skip_use:N \l_tmpa_skip }
+}
+
+\DeclareDocumentEnvironment {singlespace} {}
+    { \begin{spacing}{1.0} }
+    { \end{spacing} }
+\DeclareDocumentEnvironment {singlespace*} {}
+    { \begin{spacing}{1.0} }
+    { \end{spacing} }
+
+\DeclareDocumentEnvironment {doublespace} {}
+    { \begin{spacing}{2.0} }
+    { \end{spacing} }
+\DeclareDocumentEnvironment {doublespace*} {}
+    { \begin{spacing}{2.0} }
+    { \end{spacing} }
+    
+\DeclareDocumentEnvironment {onehalfspace} {}
+    { \begin{spacing}{1.5} }
+    { \end{spacing} }
+\DeclareDocumentEnvironment {onehalfspace*} {}
+    { \begin{spacing}{1.5} }
+    { \end{spacing} }
+
+
+% https://tex.stackexchange.com/questions/264624/where-and-why-does-lualatex-scale-down-the-requested-base-font-size/264639#264639
+% https://tex.stackexchange.com/questions/30073/why-is-the-linespread-factor-as-it-is
+% https://tex.stackexchange.com/questions/410250/understanding-line-height-line-spacing-baselineskip-in-latex
+% 
+
+% parindent and parskip from expl3 skips
+\cs_new_protected:Npn \tarmac__length:NV #1#2
+{
+    \tl_if_blank:eF {#2}
+        { \setlength #1 {#2} }
+}
+
+\cs_new_protected:Npn \tarmac__font_size_aux:nn #1#2
+{
+    \changefontsize [#2] {#1}
+}
+\newlength \tmptarmaclength
+\cs_new_protected:Npn \tarmac__font_size:VVV #1#2#3
+{
+    \tl_if_blank:eF {#1}
+    {
+        \tl_if_blank:eTF {#2}
+        {
+            \setlength \tmptarmaclength {#1}
+            \changefontsize [#3~\tmptarmaclength] {#1}
+        }
+        {
+            \changefontsize [#2] {#1}
+        }
+    }
+}
+
+\cs_new_protected:Npn \tarmac__line_stretch:V #1
+{
+    \tl_if_blank:eF {#1}
+        { \def \baselinestretch {#1} }
+}
+
+
+% Let's set the baselinestretch to \g_tarmac_leading_equation_fp
+% for all equation-like environments
+% Note that some of these environments wrap around others,
+% so we're probably setting the baselinestretch twice in some cases.
+% \everydisplay isn't a good option because of:
+% https://tex.stackexchange.com/questions/11778/modifying-everydisplay-causes-the-align-environment-to-stop-working
+
+\clist_const:Nn \c_tarmac_eqn_envs_clist
+    { equation, equation*, multiline, multiline*, align, align*, gather, gather* }
+
+\cs_new_protected:Npn \tarmac__display_line_stretch:V #1
+{
+    \tl_if_blank:eF {#1}
+    {
+        \clist_map_inline:Nn \c_tarmac_eqn_envs_clist
+            { \AtBeginEnvironment {##1} { \def \baselinestretch {#1} } }
+    }
+}
+
+\cs_new_protected:Npn \tarmac__par_skip:VV #1#2
+{
+    \tl_if_blank:eTF {#1}
+    {
+         \tl_if_blank:eF {#2}
+         {
+             %\skip_set:Nn \l_tmpa_skip {\baselineskip}
+             %\skip_set:Nn \l_tmpa_skip { \glue_rescale:nN {#2} \l_tmpa_skip }
+             %\skip_set:Nn \l_tmpa_skip { #2 \l_tmpa_skip }  % TODO rubber
+             %\exp_args:NNe \setlength \parskip {\skip_use:N \l_tmpa_skip}
+             \setlength \parskip {#1~\baselineskip}
+        }
+    }
+    { \setlength \parskip {#1} }
+}
+
+\cs_new_protected:Nn \tarmac__simplify:
+{
+    % \lineskip is normally 1pt and \lineskiplimit is 0pt
+    % Let's get rid of \lineskip so that LaTeX does exactly what
+    % we tell it when setting baselineskip=fontheight
+    \setlength \lineskip {0sp}
+    \setlength \lineskiplimit {-1sp}
+    % Make sure hfuzz and vfuzz are 0 -- otherwise we might ignore overfull boxes
+    \hfuzz=0pt
+    \vfuzz=0pt
+
+}
+
+
+\keys_define:nn { tarmac / spacing }
+{
+    font .tl_gset:N             = \g__font_pt_tl ,
+    font .initial:n             = {} ,
+    leading .tl_gset:N          = \g__led_pt_tl ,
+    leading .initial:n          = {} ,
+    leading-ratio .tl_gset:N    = \g__led_ratio_tl ,
+    leading-ratio .initial:n    = 1.2 ,
+    stretch .tl_gset:N          = \g__linestretch_tl ,
+    stretch .initial:n          = {} ,
+    dm-stretch .tl_gset:N       = \g__displaylinestretch_tl ,
+    dm-stretch .initial:n       = {} ,
+    parskip .tl_gset:N          = \g__parskip_tl ,
+    parskip .initial:n          = {} ,
+    parskip-ratio .tl_gset:N    = \g__parskip_ratio_tl ,
+    parskip-ratio .initial:n    = {} ,
+    indent .tl_gset:N           = \g__indent_tl ,
+    indent .initial:n           = {} ,
+    above-dm .tl_gset:N         = \g__above_display_tl ,
+    above-dm .initial:n         = {} ,
+    below-dm .tl_gset:N         = \g__below_display_tl ,
+    below-dm .initial:n         = {} ,
+    above-short-dm .tl_gset:N   = \g__above_short_display_tl ,
+    above-short-dm .initial:n   = {} ,
+    below-short-dm .tl_gset:N   = \g__below_short_display_tl ,
+    below-short-dm .initial:n   = {} ,
+}
+
+
+\cs_new_protected:Npn \tarmac_set:e #1
+{
+    \keys_set:nn {tarmac / spacing} {#1}
+    \tarmac__font_size:VVV \g__font_pt_tl \g__led_pt_tl \g__led_ratio_tl
+    \tarmac__line_stretch:V \g__linestretch_tl
+    \tarmac__par_skip:VV \g__parskip_tl \g__parskip_ratio_tl
+    \tarmac__length:NV \parindent \g__indent_tl
+    \tarmac__display_line_stretch:V \g__displaylinestretch_tl
+    \tarmac__length:NV \abovedisplayskip \g__above_display_tl
+    \tarmac__length:NV \belowdisplayskip \g__below_display_tl
+    \tarmac__length:NV \abovedisplayshortskip \g__above_short_display_tl
+    \tarmac__length:NV \belowdisplayshortskip \g__below_short_display_tl
+}
+
+
+\NewDocumentCommand \Tarmac { m }
+    { \tarmac_set:e{#1} }
+

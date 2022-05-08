@@ -1,8 +1,8 @@
 %=======                    D E S E R T                    =======
 
 \documentclass [
-    feature / tcolorbox ,
-    feature / minted ,
+    pkg / tcolorbox ,
+    pkg / minted ,
 ] {desert}
 
 \SetCrefStrings {
@@ -24,8 +24,8 @@
 
 % like \DeclareTColorBox, but with defaults
 % set nice colors with () and/or pass any tcolorbox options with []
-\DeclareDesertBox [] {Note}
-\DeclareDesertBox (green!50!black) {Hint}
+\DeclareDezBox [] {Note}
+\DeclareDezBox (green!50!black) {Hint}
 
 \NewTheoremEnvs [style=plain] {
     Theorem     = thm./thms. ,
@@ -35,13 +35,13 @@
 \NewTheoremEnvs {  % guesses the style
     Definition = defn./defns. ,
     Remark     = rem./rems. ,
-    Criterion = criterion/criteria ,
-    Property = property/properties ,
+    Criterion  = criterion/criteria ,
+    Property   = property/properties ,
 }
 % Load extra packages:
 \RequirePackage{pdfpages}  % to include a PDF
 
-%\SetEnumitemKey {multipar} { ... }  % override multipar enum style
+%\SetEnumitemKey {long} { ... }  % override 'long' enum style
 % Setup interfaces provided by various packages:
 \AcroSetup {
      pages/display = first ,  % show page numbers
@@ -65,10 +65,10 @@
     subject = Physics,                     % some mapped to XMP metadata
     title = Xenodynamic cloud computing,
     keywords = {xenodynamics},
-    author = Karen Johnson,                % a comma-separated list
     degree = Doctor of Philosophy,         % arbitrary extra data
     university = University of Washington,
-    plaindate = 2022-03-22
+    plaindate = 2022-03-22,
+    author = Karen Johnson, 
 }
 
 %\RenewDocumentCommand \TitleContents {} {
@@ -84,7 +84,8 @@
 %}
 
 \begin{document}
-\LoadFrontDocs{sections/doc, sections/front}
+%\LoadFrontDocs{sections/doc, sections/front}
+\LoadFrontDocs{sections/front}
 \LoadMainDocs{sections/chapter1, sections/chapter2}
 \LoadBackDocs{sections/back}
 \end{document}

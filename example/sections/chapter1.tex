@@ -36,7 +36,7 @@ We recovered \qty{5}{\tera\joule} from the craft.
 \newpage
 \section{And then...}
 
-\begin{itemize}[multipar]
+\begin{itemize}[long]
     \item
     This is a bullet point that can contain multiple paragraphs. Please use responsibly.
     This is a bullet point that can contain multiple paragraphs. Please use responsibly.
@@ -66,13 +66,13 @@ Refer to \cref{mythm}.
 % Use tblr, talltblr, longtblr, etc.
 % In 2022+, use booktabs, talltabs, and longtabs
 
-\begin{LongTable}[
+\begin{longtblr} [
     caption = {Difficulty modifiers},
     entry = {Difficulty modifiers},
     label = {difficulty},
     note{a} = {Rescue funds are something really important.},
     remark{x} = {Some random remark.},
-]{
+] {
     colspec=lrrrrr, % TODO
     rowhead={1},
     hline{1,Z} = 1pt,
@@ -85,14 +85,14 @@ Type & Trivial & Easy & Normal & Hard & Strenuous\\
 Type 1 (\%) \TblrNote{a} & 300 & 200 & 150 & 100 & 75\\
 Type 2 (\%) & 70 & 60 & 50 & 50 & 40\\
 Type 3 (\%) & 80 & 75 & 70 & 65 & 60\\
-\end{LongTable}
+\end{longtblr}
 
 
 \begin{MintedCode} [
     lang=c++,
     label=hi,         % label, entry, and caption are the same as in \begin{tblr}
     entry=Sample~C++,
-    caption=This is some C++ code
+    caption=This is some C++ code,
 ]
 int i = 5;
 \end{MintedCode}
@@ -102,7 +102,7 @@ int i = 5;
     caption  = A figure,
     label    = figgy,
     graphicx = {width=4cm},
-    file     = sections/person.png
+    file     = sections/person.png,
 ]
 %\includegraphics[width=0.1\textwidth]{sections/person.png}
 \end{OnePanelFigure}

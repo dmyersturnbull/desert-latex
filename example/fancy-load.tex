@@ -1,0 +1,25 @@
+
+\documentclass[
+    pkg / minted ,      % ...................................... Minted for source code
+    pkg / imakeidx ,    % ...................................... Index
+    pkg / tcolorbox ,   % ...................................... Fancy boxes
+    bib / hide-lang = true ,   % ............................... Hide e.g. "en" for language
+	header / center = \small\italic\gettitle  % ................ Page header
+    color / url = 0000D2 ,         % ........................... or named color, etc.
+    cref / capitalize = true ,     % ........................... E.g. "Figure 2"
+    font / size / main = 11.8pt ,    % ......................... Decimal font size :)
+    stretch / main = 1.6 ,          % .......................... Leading is 160% of font size
+    num / fnotes = alph , % .................................... Footnotes a, b, ...
+    num / eqn-within = chapter ,  % ............................ Get "Equation [2.3]":
+    num / eqn-brackets = square-bold ,  % ...................... Use []
+    num / thm-like-in = chapter ,   % .......................... Number theorems, etc. per chapter
+    num / fnotes = lamport* ,               % .................. Footnote numbering with symbols
+    layout / fnotes-to-endnotes = true ,          % ............ Force to endnotes in main-matter
+    sty / foreign-words = italic ,               % ............. Set text "styles":
+    sty / indx-starred = xkcd algae green;italic , % ........... Affects \indx*
+    sty / nom-group = LARGE;uppertosc , % ...................... uppertosc: uppercase -> smallcaps
+    glue> / indent = 0em ,                            % ........ Set indent (fixed length)
+    glue: / paragraphs = 2ex plus 0.2ex minus 0.2ex , % ........ Space between paragraphs (rubber)
+    glue' / subsec = 2ex plus 0.2 ex minus 0.1ex ,  % .......... Another rubbery glue
+    toc / depth = subsec , % ................................... Max depth in TOC
+]{desert}

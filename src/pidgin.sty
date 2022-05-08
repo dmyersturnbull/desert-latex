@@ -1,0 +1,285 @@
+% Copyright 2022 Douglas Myers-Turnbull
+% This work may be distributed and/or modified under the conditions of the LaTeX Project Public
+% License, either version 1.3 of this license or (at your option) any later version. The latest
+% version of this license is in http://www.latex-project.org/lppl.txt and version 1.3 or later is
+% part of all distributions of LaTeX version 2005/12/01 or later.
+%==================================================================================================
+
+
+%=======                                                   =======
+%=======                      Pidgin                       =======
+%=======                                                   =======
+
+\NeedsTeXFormat {LaTeX2e} [2020-10-01]
+\ExplSyntaxOn
+\ProvidesExplPackage {pidgin} {2022-04-25} {0.1}
+    { Pidgin:~tools~for~language-aware~packages }
+
+\cs_generate_variant:Nn \text_lowercase:nn { Vn }
+\cs_generate_variant:Nn \text_uppercase:nn { Vn }
+\cs_generate_variant:Nn \text_titlecase:nn { Vn }
+\cs_generate_variant:Nn \text_titlecase_first:nn { Vn }
+
+% Okay, some language notes:
+% Some language-aware (or region-aware) packages use tracklang or iflang
+% to determine the language (either from Babel or Polyglossia).
+% Other packages pick up documentclass-level options like USenglish
+% Mainly for technical reasons (class has to be loaded before options can be declared),
+% we're not doing this. Cleveref is one of those.
+% This means we must pass the language directly to those packages.
+% Complicating things, cleveref doesn't know what USenglish is,
+% or for that matter, en-us. It just wants 'English'.
+% We'll get the base language using Babel's `baselanguage`.
+
+% nomencl wants one of these:
+% catalan, croatian, danish, english, french, german, italian, norwegianbokmaal,
+% norwegian-nynorsk, polish, portuguese, russian, slovene, spanish, ukrainian
+% Instead, we'll ignore these options and deal with nomencl separately
+
+% Uppercase first character and each first character after punctuation; lowercase the rest
+% E.g. "\txtsentencecase{grab a RED one}" --> Grab A Red One
+% The starred variant leaves intra-word casing as-is
+% the L3 kernel macros are badly named
+% Case-switching is language-specific; Unicode provides language-specific rules.
+% We'll use \textile_lowercase:n instead of L3's \text_lowercase:n (e.g.).
+% \textlowercase is just \text_lowercase:nn {#1} {\g_pidgin_bcp_str}.
+% We tell pidgin about our preferred language (e.g. 'en-us').
+% TODO: this?
+%\exp_args:Ne
+%    \pidgin_set_case_lang:n
+%    {\CurrentTrackedLanguageTag}
+% TODO: update textile's language on every language switch
+%\AddBabelHook {casing} {patterns}
+%    { \pidgin_set_case_lang:V \languagename }
+
+% For cref, things get weird again.
+% Babel contains 'captions' for each language.
+% E.g. "List of figures" for English.
+% Cleveref has a built-in massive list of names for things,
+% such as "Figure" or "Fig.". (These are selected by package options.)
+% We'll need to set new (or replace existing) cleveref names
+% wrapped inside Babel's \addto\captionsUSenglish { ... }
+% We take the values provided to \SetCrefStrings to be
+% case-insensitive, because we'll set both \Crefname and \crefname.
+
+% Now there are other mechanisms to set strings.
+% 1. ~~Cleveref~~ (DONE.)
+% 2. Biblatex's \DefineBibliographyStrings
+% 3. Babel's \setlocalecaption
+% Of these, we'll abuse the 3rd to set our own pidgin-specific strings.
+% In contrast to #1, #2 and #3 are case-sensitive.
+% It is generally expected that these strings will be rendered as-is.
+
+% Babel's \bbl@captionslist is:
+% preface, ref, abstract, bib, chapter, appendix ,
+% contents, listfigure, listtable, index,
+% figure, table, part, encl, cc, headto, page ,
+% see, also, proof, glossary ,
+
+\msg_new:nnn {pidgin} {generic}
+    {#1:~#2}
+
+\cs_new_protected:Npn \pidgin__info:nV #1#2
+    { \msg_info:nnnn {pidgin} {generic} {#1} {#2} }
+
+\str_new:N   \g_pidgin_main_str
+\clist_new:N \g_pidgin_lang_clist
+\clist_new:N \g_pidgin_base_clist
+\str_new:N   \g_pidgin_base_str
+\str_new:N   \g_pidgin_tag_str
+\prop_new:N  \g_pidgin_strings_prop
+
+\str_const:Nn \c_pidgin__defaults_en_us_tl
+    {   % for USenglish default, we'll use "title-case"
+        listabbreviation    = List~of~Abbreviations ,
+        nomenclature        = Nomenclature ,
+        listnomenclature    = Nomenclature  ,
+        seeequation         = see~equation ,
+        seepage             = page ,
+        part                = Part ,
+    }
+
+\str_const:Nn \c_pidgin__defaults_en_gb_tl
+    {
+        listabbreviation    = List~of~abbreviations ,
+        nomenclature        = Nomenclature ,
+        listnomenclature    = Nomenclature  ,
+        seeequation         = see~equation ,
+        seepage             = page ,
+        part                = Part ,
+    }
+
+\cs_new_protected:Npn \pidgin_set_langs:e #1
+{
+    \clist_gset:Nn \g_pidgin_lang_clist {#1}
+    \clist_get:NN \g_pidgin_lang_clist \l_tmpa_tl
+    \str_gset:Nx \g_pidgin_main_str {\l_tmpa_tl}
+}
+% Call after setting language(s), but before loading language-dependent packages
+\cs_new_protected:Nn \pidgin_start:
+{
+    \RequirePackage [
+        \g_pidgin_lang_clist ,
+        safe = none ,
+        bidi = basic ,
+    ] {babel}
+    
+    \RequirePackage {tracklang}
+    \SetCurrentTrackedDialect {\languagename}
+    \RequirePackage {translations}
+    \str_gset:Nn \g_pidgin_tag_str {en-us} % fallback
+    \str_gset:Nx \g_pidgin_tag_str
+        { \str_lowercase:f { \CurrentTrackedLanguageTag } }
+    \exp_args:Nne \pidgin__info:nV {Language} \CurrentTrackedLanguage
+    \exp_args:Nne \pidgin__info:nV {Dialect} \CurrentTrackedDialect
+    \exp_args:Nne \pidgin__info:nV {Language~ISO~code} \CurrentTrackedIsoCode
+    \exp_args:Nne \pidgin__info:nV {Language~tag}  \CurrentTrackedLanguageTag
+    \exp_args:Nne \pidgin__info:nV {Region} \CurrentTrackedRegion
+    
+    \str_gset:Nx \g_pidgin_base_str
+        { \baselanguage {\g_pidgin_main_str} }
+    
+    \clist_gset:Nx \g_pidgin_base_clist
+        { \clist_map_function:NN \g_pidgin_lang_clist \baselanguage }
+
+    \PassOptionsToPackage {\g_pidgin_base_clist, nospace} {varioref}
+    
+    \exp_args:NV \SetBabelStrings \c_pidgin__defaults_en_us_tl
+}
+
+\NewDocumentCommand \OpenPidgin {m}
+{
+    \pidgin_set_langs:e{#1}
+    \pidgin_start:
+}
+
+\cs_new:Npn \pidgin_uppercase:n #1
+    { \text_uppercase:Vn \CurrentTrackedLanguageTag {#1} }
+
+\cs_new:Npn \pidgin_lowercase:n #1
+    { \text_lowercase:Vn \CurrentTrackedLanguageTag {#1} }
+
+\cs_new:Npn \pidgin_sentencecase:n #1
+    { \text_titlecase:Vn  \CurrentTrackedLanguageTag {#1} }
+
+\cs_new:Npn \pidgin_sentencecase_first:n #1
+    { \text_titlecase_first:Vn \CurrentTrackedLanguageTag {#1} }
+
+
+\NewExpandableDocumentCommand \PidginMainLang {}
+    { \g_pidgin_main_str }
+\NewExpandableDocumentCommand \PidginMainBase {}
+    { \g_pidgin_base_str }
+\NewExpandableDocumentCommand \PidginMainTag {}
+    { \g_pidgin_tag_str }
+
+
+\cs_new_protected:Npn \pidgin__addto:Vn #1#2
+{
+    \exp_args:Ncn \addto {captions#1} {#2}
+}
+
+\cs_new_protected:Npn \pidgin__set_cref_auxi:Nnee #1#2#3#4
+{
+    #1 {#2} {#3} {#4}
+}
+
+\cs_new_protected:Npn \pidgin__set_cref_aux:nVV #1#2#3
+{
+    % set both \Crefname and \crefname
+    % using language-aware casing (via #1 and \pidgin_lowercase:n)
+    \pidgin__addto:Vn \g_pidgin_main_str
+    {
+        \pidgin__set_cref_auxi:Nnee
+            \Crefname
+            {#1}
+            { \pidgin_sentencecase_first:n{#2} }
+            { \pidgin_sentencecase_first:n{#3} }
+        \pidgin__set_cref_auxi:Nnee
+            \crefname
+            {#1}
+            { \pidgin_lowercase:n{#2} }
+            { \pidgin_lowercase:n{#3} }
+    }
+}
+
+\cs_new_protected:Npn \pidgin__set_cref:nn #1#2
+{
+    \seq_set_split:Nnn \l_tmpa_seq {/} {#2}
+    \seq_get_left:NN \l_tmpa_seq \l_tmpa_tl
+    \seq_get_right:NN \l_tmpa_seq \l_tmpb_tl  % could be the same
+    \pidgin__set_cref_aux:nVV {#1} \l_tmpa_tl \l_tmpb_tl
+}
+
+\NewDocumentCommand \SetCrefStrings { m }
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \pidgin__set_cref:nn {##1} {##2} }
+}
+
+
+\cs_new:Npn \pidgin_string:n #1
+    { \prop_item:Nn \g_pidgin_strings_prop {#1} }
+
+
+\NewDocumentCommand \SetTranslationStrings { m }
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \DeclareTranslation {\g_pidgin_main_str} {##1} {##2} }
+}
+
+\NewDocumentCommand \SetBiblatexStrings { m }
+{
+    \DefineBibliographyStrings {\g_pidgin_main_str} {#1}
+}
+
+\NewDocumentCommand \SetBabelStrings { m }
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \setlocalecaption {\g_pidgin_main_str} {##1} {##2} }
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \prop_gput:Nnn \g_pidgin_strings_prop {##1} {##2} }
+}
+
+\cs_new_protected:Nn \pidgin__nomenclature_internal:
+{
+    \prop_get:NnNT \g_pidgin_strings_prop {seeequation} \l__tmpa_tl
+    {
+        \def \eqdeclaration ##1 {,~\l__tmpa_tl \nobreakspace ##1}
+    }
+    \prop_get:NnNT \g_pidgin_strings_prop {seepage} \l__tmpa_tl
+    {
+        \def \pagedeclaration ##1 {,~\l__tmpa_tl \nobreakspace ##1}
+    }
+    \prop_get:NnNT \g_pidgin_strings_prop {nomenclature} \l__tmpa_tl
+    {
+        \def \nomname {\l__tmpa_tl}
+    }
+    % ignore nomAname, nomGname, etc.
+}
+
+\cs_new_protected:Nn \pidgin__nomenclature:
+{
+    \cs_if_exist:cT {nomname}
+    {
+        % If it's not "Nomenclature", the user probably loaded it with a language option
+        \tl_if_eq:VnT \nomname {Nomenclature}
+        {
+            \AtEndPreamble { \pidgin__nomenclature_internal: }
+        }
+    }
+}
+
+
+% Call after loading all your packages
+\cs_new_protected:Nn \pidgin_close:
+{
+    \RequirePackage [\g_pidgin_base_clist] {cleveref}
+    \pidgin__nomenclature:
+}
+
+\NewDocumentCommand \ClosePidgin {}
+    { \pidgin_close: }

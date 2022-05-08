@@ -26,30 +26,29 @@
 % TODO: highlight color, font & lead pt size, start case, quoting
 
 
-\NeedsTeXFormat{LaTeX2e}[2020-10-01]
+\NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage{textiles}{2022-04-17}{0.1}{Text styles}
-\RequirePackage{l3keys2e}
+\ProvidesExplPackage {textiles} {2022-04-28} {0.1.1} {Text~styles}
+\RequirePackage {l3keys2e}
 
 \keys_define:nn {textiles} {
-    faces .bool_gset:N = \g_textiles_faces_bool,
-    faces .default:n = true,
-    faces .initial:n = false,
-    markup .bool_gset:N = \g_textiles_markup_bool,
-    markup .default:n = true,
-    markup .initial:n = false,
+    faces .bool_gset:N    = \g_textiles_faces_bool,
+    faces .default:n      = true,
+    faces .initial:n      = false,
+    markup .bool_gset:N   = \g_textiles_markup_bool,
+    markup .default:n     = true,
+    markup .initial:n     = false,
 }
-\ProcessKeysOptions{textiles}
+\ProcessKeysOptions {textiles}
 
-\RequirePackage{hyperref}
-\RequirePackage{fontsize}
+\RequirePackage {hyperref}
+\RequirePackage {fontsize}
 %\RequirePackage{spbmark}  % maybe? TODO: [text,math]
 
 % we'll just load it to avoid problems if a user loads it later
-\RequirePackage{setspace}
-\setdisplayskipstretch{1.0}  % force it off
+\RequirePackage {setspace}
 
-\RequirePackage{xcolor}
+\RequirePackage {xcolor}
 
 % CSS names:
 %100 - Thin
@@ -66,12 +65,16 @@
 {
     % These warnings are unavoidable and going to happen from 2020 on
     \PassOptionsToPackage
-        {warnings-off={mathtools-colon,mathtools-overbracket}, math-style=ISO, bold-style=ISO}
+        {
+            warnings-off={mathtools-colon,mathtools-overbracket} ,
+            math-style=ISO ,
+            bold-style=ISO ,
+        }
         {unicode-math}
-    \RequirePackage{fontspec}
-    \RequirePackage{unicode-math}
-    \RequirePackage{microtype}
-    \RequirePackage{realscripts}
+    \RequirePackage {fontspec}
+    \RequirePackage {unicode-math}
+    \RequirePackage {microtype}
+    \RequirePackage {realscripts}
     \NewDocumentCommand \thseries {}     % thin
         { \fontseries{th} \selectfont }
     \NewDocumentCommand \elseries {}     % extra-light
@@ -95,152 +98,148 @@
 
 \bool_if:NT \g_textiles_markup_bool
 {
-    \PassOptionsToPackage{normalem}{ulem}
-    \RequirePackage{ulem}
+    \PassOptionsToPackage {normalem} {ulem}
+    \RequirePackage {ulem}
 }
 
-\msg_new:nnn{textiles}{notunderstood}
-    {Command~/~name~'#1'~not~understood~while~declaring~style~'#2'.}
-\cs_new:Npn\textiles__err_not_understood:n #1
-    { \msg_error:nnn{textiles}{notunderstood}{#1} }
+\msg_new:nnn {textiles} {notunderstood}
+    { Command~/~name~'#1'~not~understood~while~declaring~style~'#2'. }
+\cs_new_protected:Npn \textiles__err_not_understood:n #1
+    { \msg_error:nnn {textiles} {notunderstood} {#1} }
 \cs_generate_variant:Nn \textiles__err_not_understood:n { V }
 
-\msg_new:nnn{textiles}{stylemissing}
-    {Cannot~use~style~'#1':~it~is~not~defined.}
-\cs_new:Npn\textiles__err_missing:n #1
-    { \msg_error:nnn{textiles}{stylemissing}{#1} }
+\msg_new:nnn {textiles} {stylemissing}
+    { Cannot~use~style~'#1':~it~is~not~defined. }
+\cs_new_protected:Npn\textiles__err_missing:n #1
+    { \msg_error:nnn {textiles} {stylemissing} {#1} }
 \cs_generate_variant:Nn \textiles__err_missing:n { V }
     
-\msg_new:nnn{textiles}{stylenotdefined}
-    {Style~'#1'~is~not~defined;~cannot~renew.}
-\cs_new:Npn\textiles__err_not_def:n #1
-    { \msg_error:nnn{textiles}{stylenotdefined}{#1} }
+\msg_new:nnn {textiles} {stylenotdefined}
+    { Style~'#1'~is~not~defined;~cannot~renew. }
+\cs_new_protected:Npn \textiles__err_not_def:n #1
+    { \msg_error:nnn {textiles} {stylenotdefined} {#1} }
 \cs_generate_variant:Nn \textiles__err_not_def:n { V }
 
-\msg_new:nnn{textiles}{styledefined}
-    {Style~'#1'~is~already~defined;~cannot~define.}
-\cs_new:Npn\textiles__err_is_def:n #1 {
-    \msg_error:nnn{textiles}{styledefined}{#1} }
+\msg_new:nnn {textiles} {styledefined}
+    { Style~'#1'~is~already~defined;~cannot~define. }
+\cs_new_protected:Npn \textiles__err_is_def:n #1 {
+    \msg_error:nnn {textiles} {styledefined} {#1} }
 \cs_generate_variant:Nn \textiles__err_is_def:n { V }
 
-\msg_new:nnn{textiles}{colormissing}
-    {Color~'#1'~does~not~exist~in~l3colors.}
-\cs_new:Npn\__textiles_err_color_missing:n #1 {
-    \msg_error:nnn{textiles}{colormissing}{#1} }
+\msg_new:nnn {textiles} {colormissing}
+    { Color~'#1'~does~not~exist~in~l3colors. }
+\cs_new_protected:Npn \__textiles_err_color_missing:n #1 {
+    \msg_error:nnn {textiles} {colormissing} {#1} }
 \cs_generate_variant:Nn \__textiles_err_color_missing:n { V }
 
-\msg_new:nnn{textiles}{colornotdefined}
-    {Color~'#1'~is~not~defined;~cannot~renew.}
-\cs_new:Npn\textiles__err_color_not_def:n #1 {
-    \msg_error:nnn{textiles}{colornotdefined}{#1} }
+\msg_new:nnn {textiles} {colornotdefined}
+    { Color~'#1'~is~not~defined;~cannot~renew. }
+\cs_new_protected:Npn \textiles__err_color_not_def:n #1 {
+    \msg_error:nnn {textiles} {colornotdefined} {#1} }
 \cs_generate_variant:Nn \textiles__err_color_not_def:n { V }
 
-\msg_new:nnn{textiles}{colordefined}
-    {Color~'#1'~is~already~defined;~cannot~define.}
-\cs_new:Npn\textiles__err_color_is_def:n #1 {
-    \msg_error:nnn{textiles}{colordefined}{#1} }
+\msg_new:nnn {textiles} {colordefined}
+    { Color~'#1'~is~already~defined;~cannot~define. }
+\cs_new_protected:Npn \textiles__err_color_is_def:n #1 {
+    \msg_error:nnn {textiles} {colordefined} {#1} }
 \cs_generate_variant:Nn \textiles__err_color_is_def:n { V }
 
-\msg_new:nnn{textiles}{cmdnotdefined}
-    {No~macro~or~command~named~'#1'.}
-\cs_new:Npn\textiles__err_cmd_not_def:n #1 {
-    \msg_error:nnn{textiles}{cmdnotdefined}{#1} }
+\msg_new:nnn {textiles} {cmdnotdefined}
+    { No~macro~or~command~named~'#1'. }
+\cs_new_protected:Npn \textiles__err_cmd_not_def:n #1 {
+    \msg_error:nnn {textiles} {cmdnotdefined} {#1} }
 \cs_generate_variant:Nn \textiles__err_cmd_not_def:n { V }
 
-\msg_new:nnn{textiles}{macroismodal}
-    {No~macro~or~command~named~'#1'.}
-\cs_new:Npn\textiles__err_is_modal:n #1 {
-    \msg_error:nnn{textiles}{macroismodal}{#1} }
-\cs_generate_variant:Nn \textiles__err_is_modal:n { V }
+\msg_new:nnn {textiles} {macroisunary}
+    { Unary~macro~'#1'~cannot~be~used~in~nullary~textile. }
+\cs_new_protected:Npn \textiles__err_is_modal:n #1 {
+    \msg_error:nnn {textiles} {macroisunary} {#1} }
+\cs_generate_variant:Nn \textiles__err_is_unary:n { V }
 
-\msg_new:nnn{textiles}{capoption}
-    {Option~1~must~be~'label',~'text',~'both',~or~blank,~not~'#1'.}
-\cs_new:Npn\textiles__err_cap_option:n #1 {
-    \msg_error:nnn{textiles}{capoption}{#1} }
+\msg_new:nnn {textiles} {capoption}
+    { Option~1~must~be~'label',~'text',~'both',~or~blank,~not~'#1'. }
+\cs_new_protected:Npn \textiles__err_cap_option:n #1 {
+    \msg_error:nnn {textiles} {capoption} {#1} }
 \cs_generate_variant:Nn \textiles__err_cap_option:n { V }
+
+\msg_new:nnn {textiles} {defcolor}
+    { Defined~color~'#1'='#2:#3' }
+\cs_new_protected:Npn \textiles__info_color:nnn #1#2#3
+    { \msg_info:nnnnn {textiles} {defcolor} {#1} {#2} {#3} }
+
+\msg_new:nnn {textiles} {defunary}
+    { Defined~unary~style~'#1'='#2' }
+\cs_new_protected:Npn \textiles__info_unary:nn #1#2
+    { \msg_info:nnnn {textiles} {defunary} {#1} {#2} }
+
+\msg_new:nnn {textiles} {defnullary}
+    { Defined~nullary~style~'#1'='#2' }
+\cs_new_protected:Npn \textiles__info_nullary:nn #1#2
+    { \msg_info:nnnn {textiles} {defnullary} {#1} {#2} }
+
 
 
 %===================================================================
 %                  text commands and aliases
 %===================================================================
 
-\str_gset:Nn \g_textiles_case_lang_str {none}
-\cs_new_protected:Npn \textiles_set_case_lang:n #1
-{
-    \str_gset:Nn \g_textiles_case_lang_str {#1}
-}
-\cs_generate_variant:Nn \textiles_set_case_lang:n { V, v, x }
-
-\cs_generate_variant:Nn \text_uppercase:n { V, e }
-\cs_generate_variant:Nn \text_lowercase:n { V, e }
-\cs_generate_variant:Nn \text_titlecase:n { V, e }
-\cs_generate_variant:Nn \text_titlecase_first:n { V, e }
-\cs_generate_variant:Nn \text_uppercase:nn { Vn, en, Vv, ev }
-\cs_generate_variant:Nn \text_lowercase:nn { Vn, en, Vv, ev }
-\cs_generate_variant:Nn \text_titlecase:nn { Vn, en, Vv, ev }
-\cs_generate_variant:Nn \text_titlecase_first:nn { Vn, en, Vv, ev }
 
 \bool_if:NT \g_textiles_faces_bool
 {
-    \NewDocumentCommand \txtel { m }
+    \NewExpandableDocumentCommand \txtel { m }
         { \group_begin: \elseries #1 \group_end: }
-    \NewDocumentCommand \txtlt { m }
+    \NewExpandableDocumentCommand \txtlt { m }
         { \group_begin: \ltseries #1 \group_end: }
-    \NewDocumentCommand \txtsb { m }
+    \NewExpandableDocumentCommand \txtsb { m }
         { \group_begin: \sbseries #1 \group_end: }
-    \NewDocumentCommand \txteb { m }
+    \NewExpandableDocumentCommand \txteb { m }
         { \group_begin: \ebseries #1 \group_end: }
 }
 
-\NewDocumentCommand \txtsub {+m} { \textsubscript{#1} }
-\NewDocumentCommand \txtsup {+m} { \textsuperscript{#1} }
+\NewExpandableDocumentCommand \txtsub {+m} { \textsubscript{#1} }
+\NewExpandableDocumentCommand \txtsup {+m} { \textsuperscript{#1} }
 
-\cs_new:Npn \textiles_uppercase:n #1
+% Expandable versions:
+\NewExpandableDocumentCommand \faketextsuperscript {m}
 {
-    \str_if_eq:VnTF \g_textiles_case_lang_str {none}
-        { \text_uppercase:n{#1} }
-        { \text_uppercase:nv{#1}{\g_textiles_case_lang_str} }
+    \raisebox {10.25ex} {\scriptsize #1}
 }
-\cs_generate_variant:Nn \textiles_uppercase:n { V, v, e }
-\NewDocumentCommand \txtuppercase {+m}
-    { \textiles_uppercase:n{#1} }
-
-\cs_new:Npn \textiles_lowercase:n #1
+\NewExpandableDocumentCommand \faketextsubscript {m}
 {
-    \str_if_eq:VnTF \g_textiles_case_lang_str {none}
+    \raisebox {-0.25ex} {\scriptsize #1}
+}
+
+
+\NewExpandableDocumentCommand \txtuppercase {+m}
+{
+    \cs_if_exist:cTF {pidgin_uppercase:n}
+    { \pidgin_uppercase:n{#1} }
+    { \text_uppercase:n{#1} }
+}
+
+\NewExpandableDocumentCommand \txtlowercase {+m}
+{
+    \cs_if_exist:cTF {pidgin_lowercase:n}
+        { \pidgin_lowercase:n{#1} }
         { \text_lowercase:n{#1} }
-        { \text_lowercase:nv{#1}{\g_textiles_case_lang_str} }
 }
-\cs_generate_variant:Nn \textiles_lowercase:n { V, v, e }
-\NewDocumentCommand \txtlowercase {+m}
-    { \textiles_lowercase:n{#1} }
 
-% Uppercase first character and each first character after punctuation; lowercase the rest
-% E.g. "\txtsentencecase{grab a RED one}" --> Grab A Red One
-% The starred variant leaves intra-word casing as-is
-% the L3 kernel macros are badly named
-\cs_new:Npn \textiles_sentencecase:n #1
+\NewExpandableDocumentCommand \txtsentencecase {+m}
 {
-    \str_if_eq:VnTF \g_textiles_case_lang_str {none}
+    \cs_if_exist:cTF {pidgin_sentencecase:n}
+        { \pidgin_sentencecase:n{#1} }
         { \text_titlecase:n{#1} }
-        { \text_titlecase:nv{#1}{\g_textiles_case_lang_str} }
 }
-\cs_generate_variant:Nn \textiles_titlecase:n { V, v, e }
-\NewDocumentCommand \txtsentencecase { +m }
-    { \textiles_sentencecase:n{#1} }
 
-\cs_new:Npn \textiles_sentencecasefirst:n #1
+\NewExpandableDocumentCommand \txtsentencecasefirst {+m}
 {
-    \str_if_eq:VnTF \g_textiles_case_lang_str {none}
+    \cs_if_exist:cTF {pidgin_sentencecase_first:n}
+        { \pidgin_sentencecase_first:n{#1} }
         { \text_titlecase_first:n{#1} }
-        { \text_titlecase_first:nv{#1}{\g_textiles_case_lang_str} }
 }
-\cs_generate_variant:Nn \textiles_titlecasefirst:n { V, v, e }
-\NewDocumentCommand \txtsentencecasefirst { +m }
-    { \textiles_sentencecasefirst:n{#1} }
 
 \cs_new:Npn \textiles_force_sc:n #1
-    { \textsc{\text_lowercase:n{#1}} }
+    { \textsc{\txtlowercase{#1}} }
 
 \regex_const:Nn \c_textiles_capital_letters_regex
     { \c[L][[:upper:]]+ }
@@ -248,7 +247,7 @@
 
 % converts capital letters to small-caps but leaves lowercase
 % Great for mixed-case acronyms like "ChEMBL", and acronyms no longer stand out
-\cs_new:Npn \textiles_uptosc:n #1
+\NewDocumentCommand \txtuppertosc {+m}
 {
     \tl_set:Nx \l_tmpa_tl {#1}
     \regex_replace_all:NnN
@@ -257,11 +256,8 @@
         \l_tmpa_tl
     \l_tmpa_tl
 }
-\cs_generate_variant:Nn \textiles_uptosc:n { v, e, x }
-\NewDocumentCommand \txtuppertosc {+m}
-    { \textiles_uptosc:n{#1} }
 
-\cs_new:Npn \textiles_add_word_space:n #1#2
+\cs_new_protected:Npn \textiles_add_word_space:n #1#2
 {
     \tl_set:Nx \l_tmpa_tl {#2}
     \regex_replace_all:nnN
@@ -271,38 +267,39 @@
     \tl_use:N \l_tmpa_tl
 }
 
-\cs_generate_variant:Nn \textiles_add_word_space:nn { vn, en, xn }
-\NewDocumentCommand \txtemwordspace { O{1em} +m }
-    { \textiles_add_word_space:nn{#1}{#2} }
+\NewDocumentCommand \txtemwordspace { +m }
+{
+    \textiles_add_word_space:nn{1em}{#1}
+}
 
 % Just for symmetry with \txtuptosc
-\NewDocumentCommand \txtalltosc {+m}
-    { \textsc{\text_lowercase:n{#1}} }
+\NewExpandableDocumentCommand \txtalltosc {+m}
+    { \textsc{\txtlowercase{#1}} }
 
-\NewDocumentCommand \txtdquoted {+m}
+\NewExpandableDocumentCommand \txtdquoted {+m}
     { ``#1" }
 
-\NewDocumentCommand \txtsquoted {+m}
+\NewExpandableDocumentCommand \txtsquoted {+m}
     { `#1' }
 
-\NewDocumentCommand \txtinparens {+m}
+\NewExpandableDocumentCommand \txtinparens {+m}
     { (#1) }
 
-\NewDocumentCommand \txtinbrackets {+m}
+\NewExpandableDocumentCommand \txtinbrackets {+m}
     { [#1] }
 
-\NewDocumentCommand \txtinbraces {+m}
+\NewExpandableDocumentCommand \txtinbraces {+m}
     { \{#1\} }
 
-\NewDocumentCommand \txtinangles {+m}
+\NewExpandableDocumentCommand \txtinangles {+m}
     {〈#1〉 }
-    
+
 
 \NewDocumentCommand \HideLinks {}
-    { \hypersetup{hidelinks=true} }
+    { \hypersetup {hidelinks=true} }
 
 \NewDocumentCommand \ShowLinks {}
-    { \hypersetup{hidelinks=false} }
+    { \hypersetup {hidelinks=false} }
 
 
 %===================================================================
@@ -312,1103 +309,1103 @@
 % CSS 3 / SVG 2 colors (140 unique) & xkcd colors
 \prop_const_from_keyval:Nn \c_textiles_std_colors_prop
 {
-    aliceblue = F0F8FF,
-    antiquewhite = FAEBD7,
-    aqua = 00FFFF,
-    aquamarine = 7FFFD4,
-    azure = F0FFFF,
-    beige = F5F5DC,
-    bisque = FFE4C4,
-    black = 000000,
-    blanchedalmond = FFEBCD,
-    blue = 0000FF,
-    blueviolet = 8A2BE2,
-    brown = A52A2A,
-    burlywood = DEB887,
-    cadetblue = 5F9EA0,
-    chartreuse = 7FFF00,
-    chocolate = D2691E,
-    coral = FF7F50,
-    cornflowerblue = 6495ED,
-    cornsilk = FFF8DC,
-    crimson = DC143C,
-    cyan = 00FFFF,
-    darkblue = 00008B,
-    darkcyan = 008B8B,
-    darkgoldenrod = B8860B,
-    darkgray = A9A9A9,
-    darkgreen = 006400,
-    darkgrey = A9A9A9,
-    darkkhaki = BDB76B,
-    darkmagenta = 8B008B,
-    darkolivegreen = 556B2F,
-    darkorange = FF8C00,
-    darkorchid = 9932CC,
-    darkred = 8B0000,
-    darksalmon = E9967A,
-    darkseagreen = 8FBC8F,
-    darkslateblue = 483D8B,
-    darkslategray = 2F4F4F,
-    darkslategrey = 2F4F4F,
-    darkturquoise = 00CED1,
-    darkviolet = 9400D3,
-    deeppink = FF1493,
-    deepskyblue = 00BFFF,
-    dimgray = 696969,
-    dimgrey = 696969,
-    dodgerblue = 1E90FF,
-    firebrick = B22222,
-    floralwhite = FFFAF0,
-    forestgreen = 228B22,
-    fuchsia = FF00FF,
-    gainsboro = DCDCDC,
-    ghostwhite = F8F8FF,
-    gold = FFD700,
-    goldenrod = DAA520,
-    gray = 808080,
-    green = 008000,
-    greenyellow = ADFF2F,
-    grey = 808080,
-    honeydew = F0FFF0,
-    hotpink = FF69B4,
-    indianred = CD5C5C,
-    indigo = 4B0082,
-    ivory = FFFFF0,
-    khaki = F0E68C,
-    lavender = E6E6FA,
-    lavenderblush = FFF0F5,
-    lawngreen = 7CFC00,
-    lemonchiffon = FFFACD,
-    lightblue = ADD8E6,
-    lightcoral = F08080,
-    lightcyan = E0FFFF,
-    lightgoldenrodyellow = FAFAD2,
-    lightgray = D3D3D3,
-    lightgreen = 90EE90,
-    lightgrey = D3D3D3,
-    lightpink = FFB6C1,
-    lightsalmon = FFA07A,
-    lightseagreen = 20B2AA,
-    lightskyblue = 87CEFA,
-    lightslategray = 778899,
-    lightslategrey = 778899,
-    lightsteelblue = B0C4DE,
-    lightyellow = FFFFE0,
-    lime = 00FF00,
-    limegreen = 32CD32,
-    linen = FAF0E6,
-    magenta = FF00FF,
-    maroon = 800000,
-    mediumaquamarine = 66CDAA,
-    mediumblue = 0000CD,
-    mediumorchid = BA55D3,
-    mediumpurple = 9370DB,
-    mediumseagreen = 3CB371,
-    mediumslateblue = 7B68EE,
-    mediumspringgreen = 00FA9A,
-    mediumturquoise = 48D1CC,
-    mediumvioletred = C71585,
-    midnightblue = 191970,
-    mintcream = F5FFFA,
-    mistyrose = FFE4E1,
-    moccasin = FFE4B5,
-    navajowhite = FFDEAD,
-    navy = 000080,
-    oldlace = FDF5E6,
-    olive = 808000,
-    olivedrab = 6B8E23,
-    orange = FFA500,
-    orangered = FF4500,
-    orchid = DA70D6,
-    palegoldenrod = EEE8AA,
-    palegreen = 98FB98,
-    paleturquoise = AFEEEE,
-    palevioletred = DB7093,
-    papayawhip = FFEFD5,
-    peachpuff = FFDAB9,
-    peru = CD853F,
-    pink = FFC0CB,
-    plum = DDA0DD,
-    powderblue = B0E0E6,
-    purple = 800080,
-    rebeccapurple = 663399,
-    red = FF0000,
-    rosybrown = BC8F8F,
-    royalblue = 4169E1,
-    saddlebrown = 8B4513,
-    salmon = FA8072,
-    sandybrown = F4A460,
-    seagreen = 2E8B57,
-    seashell = FFF5EE,
-    sienna = A0522D,
-    silver = C0C0C0,
-    skyblue = 87CEEB,
-    slateblue = 6A5ACD,
-    slategray = 708090,
-    slategrey = 708090,
-    snow = FFFAFA,
-    springgreen = 00FF7F,
-    steelblue = 4682B4,
-    tan = D2B48C,
-    teal = 008080,
-    thistle = D8BFD8,
-    tomato = FF6347,
-    turquoise = 40E0D0,
-    violet = EE82EE,
-    wheat = F5DEB3,
-    white = FFFFFF,
-    whitesmoke = F5F5F5,
-    yellow = FFFF00,
-    yellowgreen = 9ACD32,
-    xkcd cloudy blue = acc2d9,
-    xkcd dark pastel green = 56ae57,
-    xkcd dust = b2996e,
-    xkcd electric lime = a8ff04,
-    xkcd fresh green = 69d84f,
-    xkcd light eggplant = 894585,
-    xkcd nasty green = 70b23f,
-    xkcd really light blue = d4ffff,
-    xkcd tea = 65ab7c,
-    xkcd warm purple = 952e8f,
-    xkcd yellowish tan = fcfc81,
-    xkcd cement = a5a391,
-    xkcd dark grass green = 388004,
-    xkcd dusty teal = 4c9085,
-    xkcd grey teal = 5e9b8a,
-    xkcd macaroni and cheese = efb435,
-    xkcd pinkish tan = d99b82,
-    xkcd spruce = 0a5f38,
-    xkcd strong blue = 0c06f7,
-    xkcd toxic green = 61de2a,
-    xkcd windows blue = 3778bf,
-    xkcd blue blue = 2242c7,
-    xkcd blue with a hint of purple = 533cc6,
-    xkcd booger = 9bb53c,
-    xkcd bright sea green = 05ffa6,
-    xkcd dark green blue = 1f6357,
-    xkcd deep turquoise = 017374,
-    xkcd green teal = 0cb577,
-    xkcd strong pink = ff0789,
-    xkcd bland = afa88b,
-    xkcd deep aqua = 08787f,
-    xkcd lavender pink = dd85d7,
-    xkcd light moss green = a6c875,
-    xkcd light seafoam green = a7ffb5,
-    xkcd olive yellow = c2b709,
-    xkcd pig pink = e78ea5,
-    xkcd deep lilac = 966ebd,
-    xkcd desert = ccad60,
-    xkcd dusty lavender = ac86a8,
-    xkcd purpley grey = 947e94,
-    xkcd purply = 983fb2,
-    xkcd candy pink = ff63e9,
-    xkcd light pastel green = b2fba5,
-    xkcd boring green = 63b365,
-    xkcd kiwi green = 8ee53f,
-    xkcd light grey green = b7e1a1,
-    xkcd orange pink = ff6f52,
-    xkcd tea green = bdf8a3,
-    xkcd very light brown = d3b683,
-    xkcd egg shell = fffcc4,
-    xkcd eggplant purple = 430541,
-    xkcd powder pink = ffb2d0,
-    xkcd reddish grey = 997570,
-    xkcd baby shit brown = ad900d,
-    xkcd liliac = c48efd,
-    xkcd stormy blue = 507b9c,
-    xkcd ugly brown = 7d7103,
-    xkcd custard = fffd78,
-    xkcd darkish pink = da467d,
-    xkcd deep brown = 410200,
-    xkcd greenish beige = c9d179,
-    xkcd manilla = fffa86,
-    xkcd off blue = 5684ae,
-    xkcd battleship grey = 6b7c85,
-    xkcd browny green = 6f6c0a,
-    xkcd bruise = 7e4071,
-    xkcd kelley green = 009337,
-    xkcd sickly yellow = d0e429,
-    xkcd sunny yellow = fff917,
-    xkcd azul = 1d5dec,
-    xkcd darkgreen = 054907,
-    xkcd green/yellow = b5ce08,
-    xkcd lichen = 8fb67b,
-    xkcd light light green = c8ffb0,
-    xkcd pale gold = fdde6c,
-    xkcd sun yellow = ffdf22,
-    xkcd tan green = a9be70,
-    xkcd burple = 6832e3,
-    xkcd butterscotch = fdb147,
-    xkcd toupe = c7ac7d,
-    xkcd dark cream = fff39a,
-    xkcd indian red = 850e04,
-    xkcd light lavendar = efc0fe,
-    xkcd poison green = 40fd14,
-    xkcd baby puke green = b6c406,
-    xkcd bright yellow green = 9dff00,
-    xkcd charcoal grey = 3c4142,
-    xkcd squash = f2ab15,
-    xkcd cinnamon = ac4f06,
-    xkcd light pea green = c4fe82,
-    xkcd radioactive green = 2cfa1f,
-    xkcd raw sienna = 9a6200,
-    xkcd baby purple = ca9bf7,
-    xkcd cocoa = 875f42,
-    xkcd light royal blue = 3a2efe,
-    xkcd orangeish = fd8d49,
-    xkcd rust brown = 8b3103,
-    xkcd sand brown = cba560,
-    xkcd swamp = 698339,
-    xkcd tealish green = 0cdc73,
-    xkcd burnt siena = b75203,
-    xkcd camo = 7f8f4e,
-    xkcd dusk blue = 26538d,
-    xkcd fern = 63a950,
-    xkcd old rose = c87f89,
-    xkcd pale light green = b1fc99,
-    xkcd peachy pink = ff9a8a,
-    xkcd rosy pink = f6688e,
-    xkcd light bluish green = 76fda8,
-    xkcd light bright green = 53fe5c,
-    xkcd light neon green = 4efd54,
-    xkcd light seafoam = a0febf,
-    xkcd tiffany blue = 7bf2da,
-    xkcd washed out green = bcf5a6,
-    xkcd browny orange = ca6b02,
-    xkcd nice blue = 107ab0,
-    xkcd sapphire = 2138ab,
-    xkcd greyish teal = 719f91,
-    xkcd orangey yellow = fdb915,
-    xkcd parchment = fefcaf,
-    xkcd straw = fcf679,
-    xkcd very dark brown = 1d0200,
-    xkcd terracota = cb6843,
-    xkcd ugly blue = 31668a,
-    xkcd clear blue = 247afd,
-    xkcd creme = ffffb6,
-    xkcd foam green = 90fda9,
-    xkcd grey/green = 86a17d,
-    xkcd light gold = fddc5c,
-    xkcd seafoam blue = 78d1b6,
-    xkcd topaz = 13bbaf,
-    xkcd violet pink = fb5ffc,
-    xkcd wintergreen = 20f986,
-    xkcd yellow tan = ffe36e,
-    xkcd dark fuchsia = 9d0759,
-    xkcd indigo blue = 3a18b1,
-    xkcd light yellowish green = c2ff89,
-    xkcd pale magenta = d767ad,
-    xkcd rich purple = 720058,
-    xkcd sunflower yellow = ffda03,
-    xkcd green/blue = 01c08d,
-    xkcd leather = ac7434,
-    xkcd racing green = 014600,
-    xkcd vivid purple = 9900fa,
-    xkcd dark royal blue = 02066f,
-    xkcd hazel = 8e7618,
-    xkcd muted pink = d1768f,
-    xkcd booger green = 96b403,
-    xkcd canary = fdff63,
-    xkcd cool grey = 95a3a6,
-    xkcd dark taupe = 7f684e,
-    xkcd darkish purple = 751973,
-    xkcd true green = 089404,
-    xkcd coral pink = ff6163,
-    xkcd dark sage = 598556,
-    xkcd dark slate blue = 214761,
-    xkcd flat blue = 3c73a8,
-    xkcd mushroom = ba9e88,
-    xkcd rich blue = 021bf9,
-    xkcd dirty purple = 734a65,
-    xkcd greenblue = 23c48b,
-    xkcd icky green = 8fae22,
-    xkcd light khaki = e6f2a2,
-    xkcd warm blue = 4b57db,
-    xkcd dark hot pink = d90166,
-    xkcd deep sea blue = 015482,
-    xkcd carmine = 9d0216,
-    xkcd dark yellow green = 728f02,
-    xkcd pale peach = ffe5ad,
-    xkcd plum purple = 4e0550,
-    xkcd golden rod = f9bc08,
-    xkcd neon red = ff073a,
-    xkcd old pink = c77986,
-    xkcd very pale blue = d6fffe,
-    xkcd blood orange = fe4b03,
-    xkcd grapefruit = fd5956,
-    xkcd sand yellow = fce166,
-    xkcd clay brown = b2713d,
-    xkcd dark blue grey = 1f3b4d,
-    xkcd flat green = 699d4c,
-    xkcd light green blue = 56fca2,
-    xkcd warm pink = fb5581,
-    xkcd dodger blue = 3e82fc,
-    xkcd gross green = a0bf16,
-    xkcd ice = d6fffa,
-    xkcd metallic blue = 4f738e,
-    xkcd pale salmon = ffb19a,
-    xkcd sap green = 5c8b15,
-    xkcd algae = 54ac68,
-    xkcd bluey grey = 89a0b0,
-    xkcd greeny grey = 7ea07a,
-    xkcd highlighter green = 1bfc06,
-    xkcd light light blue = cafffb,
-    xkcd light mint = b6ffbb,
-    xkcd raw umber = a75e09,
-    xkcd vivid blue = 152eff,
-    xkcd deep lavender = 8d5eb7,
-    xkcd dull teal = 5f9e8f,
-    xkcd light greenish blue = 63f7b4,
-    xkcd mud green = 606602,
-    xkcd pinky = fc86aa,
-    xkcd red wine = 8c0034,
-    xkcd shit green = 758000,
-    xkcd tan brown = ab7e4c,
-    xkcd darkblue = 030764,
-    xkcd rosa = fe86a4,
-    xkcd lipstick = d5174e,
-    xkcd pale mauve = fed0fc,
-    xkcd claret = 680018,
-    xkcd dandelion = fedf08,
-    xkcd orangered = fe420f,
-    xkcd poop green = 6f7c00,
-    xkcd ruby = ca0147,
-    xkcd dark = 1b2431,
-    xkcd greenish turquoise = 00fbb0,
-    xkcd pastel red = db5856,
-    xkcd piss yellow = ddd618,
-    xkcd bright cyan = 41fdfe,
-    xkcd dark coral = cf524e,
-    xkcd algae green = 21c36f,
-    xkcd darkish red = a90308,
-    xkcd reddy brown = 6e1005,
-    xkcd blush pink = fe828c,
-    xkcd camouflage green = 4b6113,
-    xkcd lawn green = 4da409,
-    xkcd putty = beae8a,
-    xkcd vibrant blue = 0339f8,
-    xkcd dark sand = a88f59,
-    xkcd purple/blue = 5d21d0,
-    xkcd saffron = feb209,
-    xkcd twilight = 4e518b,
-    xkcd warm brown = 964e02,
-    xkcd bluegrey = 85a3b2,
-    xkcd bubble gum pink = ff69af,
-    xkcd duck egg blue = c3fbf4,
-    xkcd greenish cyan = 2afeb7,
-    xkcd petrol = 005f6a,
-    xkcd royal = 0c1793,
-    xkcd butter = ffff81,
-    xkcd dusty orange = f0833a,
-    xkcd off yellow = f1f33f,
-    xkcd pale olive green = b1d27b,
-    xkcd orangish = fc824a,
-    xkcd leaf = 71aa34,
-    xkcd light blue grey = b7c9e2,
-    xkcd dried blood = 4b0101,
-    xkcd lightish purple = a552e6,
-    xkcd rusty red = af2f0d,
-    xkcd lavender blue = 8b88f8,
-    xkcd light grass green = 9af764,
-    xkcd light mint green = a6fbb2,
-    xkcd sunflower = ffc512,
-    xkcd velvet = 750851,
-    xkcd brick orange = c14a09,
-    xkcd lightish red = fe2f4a,
-    xkcd pure blue = 0203e2,
-    xkcd twilight blue = 0a437a,
-    xkcd violet red = a50055,
-    xkcd yellowy brown = ae8b0c,
-    xkcd carnation = fd798f,
-    xkcd muddy yellow = bfac05,
-    xkcd dark seafoam green = 3eaf76,
-    xkcd deep rose = c74767,
-    xkcd dusty red = b9484e,
-    xkcd grey/blue = 647d8e,
-    xkcd lemon lime = bffe28,
-    xkcd purple/pink = d725de,
-    xkcd brown yellow = b29705,
-    xkcd purple brown = 673a3f,
-    xkcd wisteria = a87dc2,
-    xkcd banana yellow = fafe4b,
-    xkcd lipstick red = c0022f,
-    xkcd water blue = 0e87cc,
-    xkcd brown grey = 8d8468,
-    xkcd vibrant purple = ad03de,
-    xkcd baby green = 8cff9e,
-    xkcd barf green = 94ac02,
-    xkcd eggshell blue = c4fff7,
-    xkcd sandy yellow = fdee73,
-    xkcd cool green = 33b864,
-    xkcd pale = fff9d0,
-    xkcd blue/grey = 758da3,
-    xkcd hot magenta = f504c9,
-    xkcd greyblue = 77a1b5,
-    xkcd purpley = 8756e4,
-    xkcd baby shit green = 889717,
-    xkcd brownish pink = c27e79,
-    xkcd dark aquamarine = 017371,
-    xkcd diarrhea = 9f8303,
-    xkcd light mustard = f7d560,
-    xkcd pale sky blue = bdf6fe,
-    xkcd turtle green = 75b84f,
-    xkcd bright olive = 9cbb04,
-    xkcd dark grey blue = 29465b,
-    xkcd greeny brown = 696006,
-    xkcd lemon green = adf802,
-    xkcd light periwinkle = c1c6fc,
-    xkcd seaweed green = 35ad6b,
-    xkcd sunshine yellow = fffd37,
-    xkcd ugly purple = a442a0,
-    xkcd medium pink = f36196,
-    xkcd puke brown = 947706,
-    xkcd very light pink = fff4f2,
-    xkcd viridian = 1e9167,
-    xkcd bile = b5c306,
-    xkcd faded yellow = feff7f,
-    xkcd very pale green = cffdbc,
-    xkcd vibrant green = 0add08,
-    xkcd bright lime = 87fd05,
-    xkcd spearmint = 1ef876,
-    xkcd light aquamarine = 7bfdc7,
-    xkcd light sage = bcecac,
-    xkcd yellowgreen = bbf90f,
-    xkcd baby poo = ab9004,
-    xkcd dark seafoam = 1fb57a,
-    xkcd deep teal = 00555a,
-    xkcd heather = a484ac,
-    xkcd rust orange = c45508,
-    xkcd dirty blue = 3f829d,
-    xkcd fern green = 548d44,
-    xkcd bright lilac = c95efb,
-    xkcd weird green = 3ae57f,
-    xkcd peacock blue = 016795,
-    xkcd avocado green = 87a922,
-    xkcd faded orange = f0944d,
-    xkcd grape purple = 5d1451,
-    xkcd hot green = 25ff29,
-    xkcd lime yellow = d0fe1d,
-    xkcd mango = ffa62b,
-    xkcd shamrock = 01b44c,
-    xkcd bubblegum = ff6cb5,
-    xkcd purplish brown = 6b4247,
-    xkcd vomit yellow = c7c10c,
-    xkcd pale cyan = b7fffa,
-    xkcd key lime = aeff6e,
-    xkcd tomato red = ec2d01,
-    xkcd lightgreen = 76ff7b,
-    xkcd merlot = 730039,
-    xkcd night blue = 040348,
-    xkcd purpleish pink = df4ec8,
-    xkcd apple = 6ecb3c,
-    xkcd baby poop green = 8f9805,
-    xkcd green apple = 5edc1f,
-    xkcd heliotrope = d94ff5,
-    xkcd yellow/green = c8fd3d,
-    xkcd almost black = 070d0d,
-    xkcd cool blue = 4984b8,
-    xkcd leafy green = 51b73b,
-    xkcd mustard brown = ac7e04,
-    xkcd dusk = 4e5481,
-    xkcd dull brown = 876e4b,
-    xkcd frog green = 58bc08,
-    xkcd vivid green = 2fef10,
-    xkcd bright light green = 2dfe54,
-    xkcd fluro green = 0aff02,
-    xkcd kiwi = 9cef43,
-    xkcd seaweed = 18d17b,
-    xkcd navy green = 35530a,
-    xkcd ultramarine blue = 1805db,
-    xkcd iris = 6258c4,
-    xkcd pastel orange = ff964f,
-    xkcd yellowish orange = ffab0f,
-    xkcd perrywinkle = 8f8ce7,
-    xkcd tealish = 24bca8,
-    xkcd dark plum = 3f012c,
-    xkcd pear = cbf85f,
-    xkcd pinkish orange = ff724c,
-    xkcd midnight purple = 280137,
-    xkcd light urple = b36ff6,
-    xkcd dark mint = 48c072,
-    xkcd greenish tan = bccb7a,
-    xkcd light burgundy = a8415b,
-    xkcd turquoise blue = 06b1c4,
-    xkcd ugly pink = cd7584,
-    xkcd sandy = f1da7a,
-    xkcd electric pink = ff0490,
-    xkcd muted purple = 805b87,
-    xkcd mid green = 50a747,
-    xkcd greyish = a8a495,
-    xkcd neon yellow = cfff04,
-    xkcd banana = ffff7e,
-    xkcd carnation pink = ff7fa7,
-    xkcd tomato = ef4026,
-    xkcd sea = 3c9992,
-    xkcd muddy brown = 886806,
-    xkcd turquoise green = 04f489,
-    xkcd buff = fef69e,
-    xkcd fawn = cfaf7b,
-    xkcd muted blue = 3b719f,
-    xkcd pale rose = fdc1c5,
-    xkcd dark mint green = 20c073,
-    xkcd amethyst = 9b5fc0,
-    xkcd blue/green = 0f9b8e,
-    xkcd chestnut = 742802,
-    xkcd sick green = 9db92c,
-    xkcd pea = a4bf20,
-    xkcd rusty orange = cd5909,
-    xkcd stone = ada587,
-    xkcd rose red = be013c,
-    xkcd pale aqua = b8ffeb,
-    xkcd deep orange = dc4d01,
-    xkcd earth = a2653e,
-    xkcd mossy green = 638b27,
-    xkcd grassy green = 419c03,
-    xkcd pale lime green = b1ff65,
-    xkcd light grey blue = 9dbcd4,
-    xkcd pale grey = fdfdfe,
-    xkcd asparagus = 77ab56,
-    xkcd blueberry = 464196,
-    xkcd purple red = 990147,
-    xkcd pale lime = befd73,
-    xkcd greenish teal = 32bf84,
-    xkcd caramel = af6f09,
-    xkcd deep magenta = a0025c,
-    xkcd light peach = ffd8b1,
-    xkcd milk chocolate = 7f4e1e,
-    xkcd ocher = bf9b0c,
-    xkcd off green = 6ba353,
-    xkcd purply pink = f075e6,
-    xkcd lightblue = 7bc8f6,
-    xkcd dusky blue = 475f94,
-    xkcd golden = f5bf03,
-    xkcd light beige = fffeb6,
-    xkcd butter yellow = fffd74,
-    xkcd dusky purple = 895b7b,
-    xkcd french blue = 436bad,
-    xkcd ugly yellow = d0c101,
-    xkcd greeny yellow = c6f808,
-    xkcd orangish red = f43605,
-    xkcd shamrock green = 02c14d,
-    xkcd orangish brown = b25f03,
-    xkcd tree green = 2a7e19,
-    xkcd deep violet = 490648,
-    xkcd gunmetal = 536267,
-    xkcd blue/purple = 5a06ef,
-    xkcd cherry = cf0234,
-    xkcd sandy brown = c4a661,
-    xkcd warm grey = 978a84,
-    xkcd dark indigo = 1f0954,
-    xkcd midnight = 03012d,
-    xkcd bluey green = 2bb179,
-    xkcd grey pink = c3909b,
-    xkcd soft purple = a66fb5,
-    xkcd blood = 770001,
-    xkcd brown red = 922b05,
-    xkcd medium grey = 7d7f7c,
-    xkcd berry = 990f4b,
-    xkcd poo = 8f7303,
-    xkcd purpley pink = c83cb9,
-    xkcd light salmon = fea993,
-    xkcd snot = acbb0d,
-    xkcd easter purple = c071fe,
-    xkcd light yellow green = ccfd7f,
-    xkcd dark navy blue = 00022e,
-    xkcd drab = 828344,
-    xkcd light rose = ffc5cb,
-    xkcd rouge = ab1239,
-    xkcd purplish red = b0054b,
-    xkcd slime green = 99cc04,
-    xkcd baby poop = 937c00,
-    xkcd irish green = 019529,
-    xkcd pink/purple = ef1de7,
-    xkcd dark navy = 000435,
-    xkcd greeny blue = 42b395,
-    xkcd light plum = 9d5783,
-    xkcd pinkish grey = c8aca9,
-    xkcd dirty orange = c87606,
-    xkcd rust red = aa2704,
-    xkcd pale lilac = e4cbff,
-    xkcd orangey red = fa4224,
-    xkcd primary blue = 0804f9,
-    xkcd kermit green = 5cb200,
-    xkcd brownish purple = 76424e,
-    xkcd murky green = 6c7a0e,
-    xkcd wheat = fbdd7e,
-    xkcd very dark purple = 2a0134,
-    xkcd bottle green = 044a05,
-    xkcd watermelon = fd4659,
-    xkcd deep sky blue = 0d75f8,
-    xkcd fire engine red = fe0002,
-    xkcd yellow ochre = cb9d06,
-    xkcd pumpkin orange = fb7d07,
-    xkcd pale olive = b9cc81,
-    xkcd light lilac = edc8ff,
-    xkcd lightish green = 61e160,
-    xkcd carolina blue = 8ab8fe,
-    xkcd mulberry = 920a4e,
-    xkcd shocking pink = fe02a2,
-    xkcd auburn = 9a3001,
-    xkcd bright lime green = 65fe08,
-    xkcd celadon = befdb7,
-    xkcd pinkish brown = b17261,
-    xkcd poo brown = 885f01,
-    xkcd bright sky blue = 02ccfe,
-    xkcd celery = c1fd95,
-    xkcd dirt brown = 836539,
-    xkcd strawberry = fb2943,
-    xkcd dark lime = 84b701,
-    xkcd copper = b66325,
-    xkcd medium brown = 7f5112,
-    xkcd muted green = 5fa052,
-    xkcd robin's egg = 6dedfd,
-    xkcd bright aqua = 0bf9ea,
-    xkcd bright lavender = c760ff,
-    xkcd ivory = ffffcb,
-    xkcd very light purple = f6cefc,
-    xkcd light navy = 155084,
-    xkcd pink red = f5054f,
-    xkcd olive brown = 645403,
-    xkcd poop brown = 7a5901,
-    xkcd mustard green = a8b504,
-    xkcd ocean green = 3d9973,
-    xkcd very dark blue = 000133,
-    xkcd dusty green = 76a973,
-    xkcd light navy blue = 2e5a88,
-    xkcd minty green = 0bf77d,
-    xkcd adobe = bd6c48,
-    xkcd barney = ac1db8,
-    xkcd jade green = 2baf6a,
-    xkcd bright light blue = 26f7fd,
-    xkcd light lime = aefd6c,
-    xkcd dark khaki = 9b8f55,
-    xkcd orange yellow = ffad01,
-    xkcd ocre = c69c04,
-    xkcd maize = f4d054,
-    xkcd faded pink = de9dac,
-    xkcd british racing green = 05480d,
-    xkcd sandstone = c9ae74,
-    xkcd mud brown = 60460f,
-    xkcd light sea green = 98f6b0,
-    xkcd robin egg blue = 8af1fe,
-    xkcd aqua marine = 2ee8bb,
-    xkcd dark sea green = 11875d,
-    xkcd soft pink = fdb0c0,
-    xkcd orangey brown = b16002,
-    xkcd cherry red = f7022a,
-    xkcd burnt yellow = d5ab09,
-    xkcd brownish grey = 86775f,
-    xkcd camel = c69f59,
-    xkcd purplish grey = 7a687f,
-    xkcd marine = 042e60,
-    xkcd greyish pink = c88d94,
-    xkcd pale turquoise = a5fbd5,
-    xkcd pastel yellow = fffe71,
-    xkcd bluey purple = 6241c7,
-    xkcd canary yellow = fffe40,
-    xkcd faded red = d3494e,
-    xkcd sepia = 985e2b,
-    xkcd coffee = a6814c,
-    xkcd bright magenta = ff08e8,
-    xkcd mocha = 9d7651,
-    xkcd ecru = feffca,
-    xkcd purpleish = 98568d,
-    xkcd cranberry = 9e003a,
-    xkcd darkish green = 287c37,
-    xkcd brown orange = b96902,
-    xkcd dusky rose = ba6873,
-    xkcd melon = ff7855,
-    xkcd sickly green = 94b21c,
-    xkcd silver = c5c9c7,
-    xkcd purply blue = 661aee,
-    xkcd purpleish blue = 6140ef,
-    xkcd hospital green = 9be5aa,
-    xkcd shit brown = 7b5804,
-    xkcd mid blue = 276ab3,
-    xkcd amber = feb308,
-    xkcd easter green = 8cfd7e,
-    xkcd soft blue = 6488ea,
-    xkcd cerulean blue = 056eee,
-    xkcd golden brown = b27a01,
-    xkcd bright turquoise = 0ffef9,
-    xkcd red pink = fa2a55,
-    xkcd red purple = 820747,
-    xkcd greyish brown = 7a6a4f,
-    xkcd vermillion = f4320c,
-    xkcd russet = a13905,
-    xkcd steel grey = 6f828a,
-    xkcd lighter purple = a55af4,
-    xkcd bright violet = ad0afd,
-    xkcd prussian blue = 004577,
-    xkcd slate green = 658d6d,
-    xkcd dirty pink = ca7b80,
-    xkcd dark blue green = 005249,
-    xkcd pine = 2b5d34,
-    xkcd yellowy green = bff128,
-    xkcd dark gold = b59410,
-    xkcd bluish = 2976bb,
-    xkcd darkish blue = 014182,
-    xkcd dull red = bb3f3f,
-    xkcd pinky red = fc2647,
-    xkcd bronze = a87900,
-    xkcd pale teal = 82cbb2,
-    xkcd military green = 667c3e,
-    xkcd barbie pink = fe46a5,
-    xkcd bubblegum pink = fe83cc,
-    xkcd pea soup green = 94a617,
-    xkcd dark mustard = a88905,
-    xkcd shit = 7f5f00,
-    xkcd medium purple = 9e43a2,
-    xkcd very dark green = 062e03,
-    xkcd dirt = 8a6e45,
-    xkcd dusky pink = cc7a8b,
-    xkcd red violet = 9e0168,
-    xkcd lemon yellow = fdff38,
-    xkcd pistachio = c0fa8b,
-    xkcd dull yellow = eedc5b,
-    xkcd dark lime green = 7ebd01,
-    xkcd denim blue = 3b5b92,
-    xkcd teal blue = 01889f,
-    xkcd lightish blue = 3d7afd,
-    xkcd purpley blue = 5f34e7,
-    xkcd light indigo = 6d5acf,
-    xkcd swamp green = 748500,
-    xkcd brown green = 706c11,
-    xkcd dark maroon = 3c0008,
-    xkcd hot purple = cb00f5,
-    xkcd dark forest green = 002d04,
-    xkcd faded blue = 658cbb,
-    xkcd drab green = 749551,
-    xkcd light lime green = b9ff66,
-    xkcd snot green = 9dc100,
-    xkcd yellowish = faee66,
-    xkcd light blue green = 7efbb3,
-    xkcd bordeaux = 7b002c,
-    xkcd light mauve = c292a1,
-    xkcd ocean = 017b92,
-    xkcd marigold = fcc006,
-    xkcd muddy green = 657432,
-    xkcd dull orange = d8863b,
-    xkcd steel = 738595,
-    xkcd electric purple = aa23ff,
-    xkcd fluorescent green = 08ff08,
-    xkcd yellowish brown = 9b7a01,
-    xkcd blush = f29e8e,
-    xkcd soft green = 6fc276,
-    xkcd bright orange = ff5b00,
-    xkcd lemon = fdff52,
-    xkcd purple grey = 866f85,
-    xkcd acid green = 8ffe09,
-    xkcd pale lavender = eecffe,
-    xkcd violet blue = 510ac9,
-    xkcd light forest green = 4f9153,
-    xkcd burnt red = 9f2305,
-    xkcd khaki green = 728639,
-    xkcd cerise = de0c62,
-    xkcd faded purple = 916e99,
-    xkcd apricot = ffb16d,
-    xkcd dark olive green = 3c4d03,
-    xkcd grey brown = 7f7053,
-    xkcd green grey = 77926f,
-    xkcd true blue = 010fcc,
-    xkcd pale violet = ceaefa,
-    xkcd periwinkle blue = 8f99fb,
-    xkcd light sky blue = c6fcff,
-    xkcd blurple = 5539cc,
-    xkcd green brown = 544e03,
-    xkcd bluegreen = 017a79,
-    xkcd bright teal = 01f9c6,
-    xkcd brownish yellow = c9b003,
-    xkcd pea soup = 929901,
-    xkcd forest = 0b5509,
-    xkcd barney purple = a00498,
-    xkcd ultramarine = 2000b1,
-    xkcd purplish = 94568c,
-    xkcd puke yellow = c2be0e,
-    xkcd bluish grey = 748b97,
-    xkcd dark periwinkle = 665fd1,
-    xkcd dark lilac = 9c6da5,
-    xkcd reddish = c44240,
-    xkcd light maroon = a24857,
-    xkcd dusty purple = 825f87,
-    xkcd terra cotta = c9643b,
-    xkcd avocado = 90b134,
-    xkcd marine blue = 01386a,
-    xkcd teal green = 25a36f,
-    xkcd slate grey = 59656d,
-    xkcd lighter green = 75fd63,
-    xkcd electric green = 21fc0d,
-    xkcd dusty blue = 5a86ad,
-    xkcd golden yellow = fec615,
-    xkcd bright yellow = fffd01,
-    xkcd light lavender = dfc5fe,
-    xkcd umber = b26400,
-    xkcd poop = 7f5e00,
-    xkcd dark peach = de7e5d,
-    xkcd jungle green = 048243,
-    xkcd eggshell = ffffd4,
-    xkcd denim = 3b638c,
-    xkcd yellow brown = b79400,
-    xkcd dull purple = 84597e,
-    xkcd chocolate brown = 411900,
-    xkcd wine red = 7b0323,
-    xkcd neon blue = 04d9ff,
-    xkcd dirty green = 667e2c,
-    xkcd light tan = fbeeac,
-    xkcd ice blue = d7fffe,
-    xkcd cadet blue = 4e7496,
-    xkcd dark mauve = 874c62,
-    xkcd very light blue = d5ffff,
-    xkcd grey purple = 826d8c,
-    xkcd pastel pink = ffbacd,
-    xkcd very light green = d1ffbd,
-    xkcd dark sky blue = 448ee4,
-    xkcd evergreen = 05472a,
-    xkcd dull pink = d5869d,
-    xkcd aubergine = 3d0734,
-    xkcd mahogany = 4a0100,
-    xkcd reddish orange = f8481c,
-    xkcd deep green = 02590f,
-    xkcd vomit green = 89a203,
-    xkcd purple pink = e03fd8,
-    xkcd dusty pink = d58a94,
-    xkcd faded green = 7bb274,
-    xkcd camo green = 526525,
-    xkcd pinky purple = c94cbe,
-    xkcd pink purple = db4bda,
-    xkcd brownish red = 9e3623,
-    xkcd dark rose = b5485d,
-    xkcd mud = 735c12,
-    xkcd brownish = 9c6d57,
-    xkcd emerald green = 028f1e,
-    xkcd pale brown = b1916e,
-    xkcd dull blue = 49759c,
-    xkcd burnt umber = a0450e,
-    xkcd medium green = 39ad48,
-    xkcd clay = b66a50,
-    xkcd light aqua = 8cffdb,
-    xkcd light olive green = a4be5c,
-    xkcd brownish orange = cb7723,
-    xkcd dark aqua = 05696b,
-    xkcd purplish pink = ce5dae,
-    xkcd dark salmon = c85a53,
-    xkcd greenish grey = 96ae8d,
-    xkcd jade = 1fa774,
-    xkcd ugly green = 7a9703,
-    xkcd dark beige = ac9362,
-    xkcd emerald = 01a049,
-    xkcd pale red = d9544d,
-    xkcd light magenta = fa5ff7,
-    xkcd sky = 82cafc,
-    xkcd light cyan = acfffc,
-    xkcd yellow orange = fcb001,
-    xkcd reddish purple = 910951,
-    xkcd reddish pink = fe2c54,
-    xkcd orchid = c875c4,
-    xkcd dirty yellow = cdc50a,
-    xkcd orange red = fd411e,
-    xkcd deep red = 9a0200,
-    xkcd orange brown = be6400,
-    xkcd cobalt blue = 030aa7,
-    xkcd neon pink = fe019a,
-    xkcd rose pink = f7879a,
-    xkcd greyish purple = 887191,
-    xkcd raspberry = b00149,
-    xkcd aqua green = 12e193,
-    xkcd salmon pink = fe7b7c,
-    xkcd tangerine = ff9408,
-    xkcd brownish green = 6a6e09,
-    xkcd red brown = 8b2e16,
-    xkcd greenish brown = 696112,
-    xkcd pumpkin = e17701,
-    xkcd pine green = 0a481e,
-    xkcd charcoal = 343837,
-    xkcd baby pink = ffb7ce,
-    xkcd cornflower = 6a79f7,
-    xkcd blue violet = 5d06e9,
-    xkcd chocolate = 3d1c02,
-    xkcd greyish green = 82a67d,
-    xkcd scarlet = be0119,
-    xkcd green yellow = c9ff27,
-    xkcd dark olive = 373e02,
-    xkcd sienna = a9561e,
-    xkcd pastel purple = caa0ff,
-    xkcd terracotta = ca6641,
-    xkcd aqua blue = 02d8e9,
-    xkcd sage green = 88b378,
-    xkcd blood red = 980002,
-    xkcd deep pink = cb0162,
-    xkcd grass = 5cac2d,
-    xkcd moss = 769958,
-    xkcd pastel blue = a2bffe,
-    xkcd bluish green = 10a674,
-    xkcd green blue = 06b48b,
-    xkcd dark tan = af884a,
-    xkcd greenish blue = 0b8b87,
-    xkcd pale orange = ffa756,
-    xkcd vomit = a2a415,
-    xkcd forrest green = 154406,
-    xkcd dark lavender = 856798,
-    xkcd dark violet = 34013f,
-    xkcd purple blue = 632de9,
-    xkcd dark cyan = 0a888a,
-    xkcd olive drab = 6f7632,
-    xkcd pinkish = d46a7e,
-    xkcd cobalt = 1e488f,
-    xkcd neon purple = bc13fe,
-    xkcd light turquoise = 7ef4cc,
-    xkcd apple green = 76cd26,
-    xkcd dull green = 74a662,
-    xkcd wine = 80013f,
-    xkcd powder blue = b1d1fc,
-    xkcd off white = ffffe4,
-    xkcd electric blue = 0652ff,
-    xkcd dark turquoise = 045c5a,
-    xkcd blue purple = 5729ce,
-    xkcd azure = 069af3,
-    xkcd bright red = ff000d,
-    xkcd pinkish red = f10c45,
-    xkcd cornflower blue = 5170d7,
-    xkcd light olive = acbf69,
-    xkcd grape = 6c3461,
-    xkcd greyish blue = 5e819d,
-    xkcd purplish blue = 601ef9,
-    xkcd yellowish green = b0dd16,
-    xkcd greenish yellow = cdfd02,
-    xkcd medium blue = 2c6fbb,
-    xkcd dusty rose = c0737a,
-    xkcd light violet = d6b4fc,
-    xkcd midnight blue = 020035,
-    xkcd bluish purple = 703be7,
-    xkcd red orange = fd3c06,
-    xkcd dark magenta = 960056,
-    xkcd greenish = 40a368,
-    xkcd ocean blue = 03719c,
-    xkcd coral = fc5a50,
-    xkcd cream = ffffc2,
-    xkcd reddish brown = 7f2b0a,
-    xkcd burnt sienna = b04e0f,
-    xkcd brick = a03623,
-    xkcd sage = 87ae73,
-    xkcd grey green = 789b73,
-    xkcd white = ffffff,
-    xkcd robin's egg blue = 98eff9,
-    xkcd moss green = 658b38,
-    xkcd steel blue = 5a7d9a,
-    xkcd eggplant = 380835,
-    xkcd light yellow = fffe7a,
-    xkcd leaf green = 5ca904,
-    xkcd light grey = d8dcd6,
-    xkcd puke = a5a502,
-    xkcd pinkish purple = d648d7,
-    xkcd sea blue = 047495,
-    xkcd pale purple = b790d4,
-    xkcd slate blue = 5b7c99,
-    xkcd blue grey = 607c8e,
-    xkcd hunter green = 0b4008,
-    xkcd fuchsia = ed0dd9,
-    xkcd crimson = 8c000f,
-    xkcd pale yellow = ffff84,
-    xkcd ochre = bf9005,
-    xkcd mustard yellow = d2bd0a,
-    xkcd light red = ff474c,
-    xkcd cerulean = 0485d1,
-    xkcd pale pink = ffcfdc,
-    xkcd deep blue = 040273,
-    xkcd rust = a83c09,
-    xkcd light teal = 90e4c1,
-    xkcd slate = 516572,
-    xkcd goldenrod = fac205,
-    xkcd dark yellow = d5b60a,
-    xkcd dark grey = 363737,
-    xkcd army green = 4b5d16,
-    xkcd grey blue = 6b8ba4,
-    xkcd seafoam = 80f9ad,
-    xkcd puce = a57e52,
-    xkcd spring green = a9f971,
-    xkcd dark orange = c65102,
-    xkcd sand = e2ca76,
-    xkcd pastel green = b0ff9d,
-    xkcd mint = 9ffeb0,
-    xkcd light orange = fdaa48,
-    xkcd bright pink = fe01b1,
-    xkcd chartreuse = c1f80a,
-    xkcd deep purple = 36013f,
-    xkcd dark brown = 341c02,
-    xkcd taupe = b9a281,
-    xkcd pea green = 8eab12,
-    xkcd puke green = 9aae07,
-    xkcd kelly green = 02ab2e,
-    xkcd seafoam green = 7af9ab,
-    xkcd blue green = 137e6d,
-    xkcd khaki = aaa662,
-    xkcd burgundy = 610023,
-    xkcd dark teal = 014d4e,
-    xkcd brick red = 8f1402,
-    xkcd royal purple = 4b006e,
-    xkcd plum = 580f41,
-    xkcd mint green = 8fff9f,
-    xkcd gold = dbb40c,
-    xkcd baby blue = a2cffe,
-    xkcd yellow green = c0fb2d,
-    xkcd bright purple = be03fd,
-    xkcd dark red = 840000,
-    xkcd pale blue = d0fefe,
-    xkcd grass green = 3f9b0b,
-    xkcd navy = 01153e,
-    xkcd aquamarine = 04d8b2,
-    xkcd burnt orange = c04e01,
-    xkcd neon green = 0cff0c,
-    xkcd bright blue = 0165fc,
-    xkcd rose = cf6275,
-    xkcd light pink = ffd1df,
-    xkcd mustard = ceb301,
-    xkcd indigo = 380282,
-    xkcd lime = aaff32,
-    xkcd sea green = 53fca1,
-    xkcd periwinkle = 8e82fe,
-    xkcd dark pink = cb416b,
-    xkcd olive green = 677a04,
-    xkcd peach = ffb07c,
-    xkcd pale green = c7fdb5,
-    xkcd light brown = ad8150,
-    xkcd hot pink = ff028d,
-    xkcd black = 000000,
-    xkcd lilac = cea2fd,
-    xkcd navy blue = 001146,
-    xkcd royal blue = 0504aa,
-    xkcd beige = e6daa6,
-    xkcd salmon = ff796c,
-    xkcd olive = 6e750e,
-    xkcd maroon = 650021,
-    xkcd bright green = 01ff07,
-    xkcd dark purple = 35063e,
-    xkcd mauve = ae7181,
-    xkcd forest green = 06470c,
-    xkcd aqua = 13eac9,
-    xkcd cyan = 00ffff,
-    xkcd tan = d1b26f,
-    xkcd dark blue = 00035b,
-    xkcd lavender = c79fef,
-    xkcd turquoise = 06c2ac,
-    xkcd dark green = 033500,
-    xkcd violet = 9a0eea,
-    xkcd light purple = bf77f6,
-    xkcd lime green = 89fe05,
-    xkcd grey = 929591,
-    xkcd sky blue = 75bbfd,
-    xkcd yellow = ffff14,
-    xkcd magenta = c20078,
-    xkcd light green = 96f97b,
-    xkcd orange = f97306,
-    xkcd teal = 029386,
-    xkcd light blue = 95d0fc,
-    xkcd red = e50000,
-    xkcd brown = 653700,
-    xkcd pink = ff81c0,
-    xkcd blue = 0343df,
-    xkcd green = 15b01a,
-    xkcd purple = 7e1e9c
+    aliceblue = F0F8FF ,
+    antiquewhite = FAEBD7 ,
+    aqua = 00FFFF ,
+    aquamarine = 7FFFD4 ,
+    azure = F0FFFF ,
+    beige = F5F5DC ,
+    bisque = FFE4C4 ,
+    black = 000000 ,
+    blanchedalmond = FFEBCD ,
+    blue = 0000FF ,
+    blueviolet = 8A2BE2 ,
+    brown = A52A2A ,
+    burlywood = DEB887 ,
+    cadetblue = 5F9EA0 ,
+    chartreuse = 7FFF00 ,
+    chocolate = D2691E ,
+    coral = FF7F50 ,
+    cornflowerblue = 6495ED ,
+    cornsilk = FFF8DC ,
+    crimson = DC143C ,
+    cyan = 00FFFF ,
+    darkblue = 00008B ,
+    darkcyan = 008B8B ,
+    darkgoldenrod = B8860B ,
+    darkgray = A9A9A9 ,
+    darkgreen = 006400 ,
+    darkgrey = A9A9A9 ,
+    darkkhaki = BDB76B ,
+    darkmagenta = 8B008B ,
+    darkolivegreen = 556B2F ,
+    darkorange = FF8C00 ,
+    darkorchid = 9932CC ,
+    darkred = 8B0000 ,
+    darksalmon = E9967A ,
+    darkseagreen = 8FBC8F ,
+    darkslateblue = 483D8B ,
+    darkslategray = 2F4F4F ,
+    darkslategrey = 2F4F4F ,
+    darkturquoise = 00CED1 ,
+    darkviolet = 9400D3 ,
+    deeppink = FF1493 ,
+    deepskyblue = 00BFFF ,
+    dimgray = 696969 ,
+    dimgrey = 696969 ,
+    dodgerblue = 1E90FF ,
+    firebrick = B22222 ,
+    floralwhite = FFFAF0 ,
+    forestgreen = 228B22 ,
+    fuchsia = FF00FF ,
+    gainsboro = DCDCDC ,
+    ghostwhite = F8F8FF ,
+    gold = FFD700 ,
+    goldenrod = DAA520 ,
+    gray = 808080 ,
+    green = 008000 ,
+    greenyellow = ADFF2F ,
+    grey = 808080 ,
+    honeydew = F0FFF0 ,
+    hotpink = FF69B4 ,
+    indianred = CD5C5C ,
+    indigo = 4B0082 ,
+    ivory = FFFFF0 ,
+    khaki = F0E68C ,
+    lavender = E6E6FA ,
+    lavenderblush = FFF0F5 ,
+    lawngreen = 7CFC00 ,
+    lemonchiffon = FFFACD ,
+    lightblue = ADD8E6 ,
+    lightcoral = F08080 ,
+    lightcyan = E0FFFF ,
+    lightgoldenrodyellow = FAFAD2 ,
+    lightgray = D3D3D3 ,
+    lightgreen = 90EE90 ,
+    lightgrey = D3D3D3 ,
+    lightpink = FFB6C1 ,
+    lightsalmon = FFA07A ,
+    lightseagreen = 20B2AA ,
+    lightskyblue = 87CEFA ,
+    lightslategray = 778899 ,
+    lightslategrey = 778899 ,
+    lightsteelblue = B0C4DE ,
+    lightyellow = FFFFE0 ,
+    lime = 00FF00 ,
+    limegreen = 32CD32 ,
+    linen = FAF0E6 ,
+    magenta = FF00FF ,
+    maroon = 800000 ,
+    mediumaquamarine = 66CDAA ,
+    mediumblue = 0000CD ,
+    mediumorchid = BA55D3 ,
+    mediumpurple = 9370DB ,
+    mediumseagreen = 3CB371 ,
+    mediumslateblue = 7B68EE ,
+    mediumspringgreen = 00FA9A ,
+    mediumturquoise = 48D1CC ,
+    mediumvioletred = C71585 ,
+    midnightblue = 191970 ,
+    mintcream = F5FFFA ,
+    mistyrose = FFE4E1 ,
+    moccasin = FFE4B5 ,
+    navajowhite = FFDEAD ,
+    navy = 000080 ,
+    oldlace = FDF5E6 ,
+    olive = 808000 ,
+    olivedrab = 6B8E23 ,
+    orange = FFA500 ,
+    orangered = FF4500 ,
+    orchid = DA70D6 ,
+    palegoldenrod = EEE8AA ,
+    palegreen = 98FB98 ,
+    paleturquoise = AFEEEE ,
+    palevioletred = DB7093 ,
+    papayawhip = FFEFD5 ,
+    peachpuff = FFDAB9 ,
+    peru = CD853F ,
+    pink = FFC0CB ,
+    plum = DDA0DD ,
+    powderblue = B0E0E6 ,
+    purple = 800080 ,
+    rebeccapurple = 663399 ,
+    red = FF0000 ,
+    rosybrown = BC8F8F ,
+    royalblue = 4169E1 ,
+    saddlebrown = 8B4513 ,
+    salmon = FA8072 ,
+    sandybrown = F4A460 ,
+    seagreen = 2E8B57 ,
+    seashell = FFF5EE ,
+    sienna = A0522D ,
+    silver = C0C0C0 ,
+    skyblue = 87CEEB ,
+    slateblue = 6A5ACD ,
+    slategray = 708090 ,
+    slategrey = 708090 ,
+    snow = FFFAFA ,
+    springgreen = 00FF7F ,
+    steelblue = 4682B4 ,
+    tan = D2B48C ,
+    teal = 008080 ,
+    thistle = D8BFD8 ,
+    tomato = FF6347 ,
+    turquoise = 40E0D0 ,
+    violet = EE82EE ,
+    wheat = F5DEB3 ,
+    white = FFFFFF ,
+    whitesmoke = F5F5F5 ,
+    yellow = FFFF00 ,
+    yellowgreen = 9ACD32 ,
+    xkcd~cloudy~blue = ACC2D9 ,
+    xkcd~dark~pastel~green = 56AE57 ,
+    xkcd~dust = B2996E ,
+    xkcd~electric~lime = A8FF04 ,
+    xkcd~fresh~green = 69D84F ,
+    xkcd~light~eggplant = 894585 ,
+    xkcd~nasty~green = 70B23F ,
+    xkcd~really~light~blue = D4FFFF ,
+    xkcd~tea = 65AB7C ,
+    xkcd~warm~purple = 952E8F ,
+    xkcd~yellowish~tan = FCFC81 ,
+    xkcd~cement = A5A391 ,
+    xkcd~dark~grass~green = 388004 ,
+    xkcd~dusty~teal = 4C9085 ,
+    xkcd~grey~teal = 5E9B8A ,
+    xkcd~macaroni~and~cheese = EFB435 ,
+    xkcd~pinkish~tan = D99B82 ,
+    xkcd~spruce = 0A5F38 ,
+    xkcd~strong~blue = 0C06F7 ,
+    xkcd~toxic~green = 61DE2A ,
+    xkcd~windows~blue = 3778BF ,
+    xkcd~blue~blue = 2242C7 ,
+    xkcd~blue~with~a hint~of~purple = 533CC6 ,
+    xkcd~booger = 9BB53C ,
+    xkcd~bright~sea~green = 05FFA6 ,
+    xkcd~dark~green~blue = 1F6357 ,
+    xkcd~deep~turquoise = 017374 ,
+    xkcd~green~teal = 0CB577 ,
+    xkcd~strong~pink = FF0789 ,
+    xkcd~bland = AFA88B ,
+    xkcd~deep~aqua = 08787F ,
+    xkcd~lavender~pink = DD85D7 ,
+    xkcd~light~moss~green = A6C875 ,
+    xkcd~light~seafoam~green = A7FFB5 ,
+    xkcd~olive~yellow = C2B709 ,
+    xkcd~pig~pink = E78EA5 ,
+    xkcd~deep~lilac = 966EBD ,
+    xkcd~desert = CCAD60 ,
+    xkcd~dusty~lavender = AC86A8 ,
+    xkcd~purpley~grey = 947E94 ,
+    xkcd~purply = 983FB2 ,
+    xkcd~candy~pink = FF63E9 ,
+    xkcd~light~pastel~green = B2FBA5 ,
+    xkcd~boring~green = 63B365 ,
+    xkcd~kiwi~green = 8EE53F ,
+    xkcd~light~grey~green = B7E1A1 ,
+    xkcd~orange~pink = FF6F52 ,
+    xkcd~tea~green = BDF8A3 ,
+    xkcd~very~light~brown = D3B683 ,
+    xkcd~egg~shell = FFFCC4 ,
+    xkcd~eggplant~purple = 430541 ,
+    xkcd~powder~pink = FFB2D0 ,
+    xkcd~reddish~grey = 997570 ,
+    xkcd~baby~shit~brown = AD900D ,
+    xkcd~liliac = C48EFD ,
+    xkcd~stormy~blue = 507B9C ,
+    xkcd~ugly~brown = 7D7103 ,
+    xkcd~custard = FFFD78 ,
+    xkcd~darkish~pink = DA467D ,
+    xkcd~deep~brown = 410200 ,
+    xkcd~greenish~beige = C9D179 ,
+    xkcd~manilla = FFFA86 ,
+    xkcd~off~blue = 5684AE ,
+    xkcd~battleship~grey = 6B7C85 ,
+    xkcd~browny~green = 6F6C0A ,
+    xkcd~bruise = 7E4071 ,
+    xkcd~kelley~green = 009337 ,
+    xkcd~sickly~yellow = D0E429 ,
+    xkcd~sunny~yellow = FFF917 ,
+    xkcd~azul = 1D5DEC ,
+    xkcd~darkgreen = 054907 ,
+    xkcd~green/yellow = B5CE08 ,
+    xkcd~lichen = 8FB67B ,
+    xkcd~light~light~green = C8FFB0 ,
+    xkcd~pale~gold = FDDE6C ,
+    xkcd~sun~yellow = FFDF22 ,
+    xkcd~tan~green = A9BE70 ,
+    xkcd~burple = 6832E3 ,
+    xkcd~butterscotch = FDB147 ,
+    xkcd~toupe = C7AC7D ,
+    xkcd~dark~cream = FFF39A ,
+    xkcd~indian~red = 850E04 ,
+    xkcd~light~lavendar = EFC0FE ,
+    xkcd~poison~green = 40FD14 ,
+    xkcd~baby~puke~green = B6C406 ,
+    xkcd~bright~yellow~green = 9DFF00 ,
+    xkcd~charcoal~grey = 3C4142 ,
+    xkcd~squash = F2AB15 ,
+    xkcd~cinnamon = AC4F06 ,
+    xkcd~light~pea~green = C4FE82 ,
+    xkcd~radioactive~green = 2CFA1F ,
+    xkcd~raw~sienna = 9A6200 ,
+    xkcd~baby~purple = CA9BF7 ,
+    xkcd~cocoa = 875F42 ,
+    xkcd~light~royal~blue = 3A2EFE ,
+    xkcd~orangeish = FD8D49 ,
+    xkcd~rust~brown = 8B3103 ,
+    xkcd~sand~brown = CBA560 ,
+    xkcd~swamp = 698339 ,
+    xkcd~tealish~green = 0CDC73 ,
+    xkcd~burnt~siena = B75203 ,
+    xkcd~camo = 7F8F4E ,
+    xkcd~dusk~blue = 26538D ,
+    xkcd~fern = 63A950 ,
+    xkcd~old~rose = C87F89 ,
+    xkcd~pale~light~green = B1FC99 ,
+    xkcd~peachy~pink = FF9A8A ,
+    xkcd~rosy~pink = F6688E ,
+    xkcd~light~bluish~green = 76FDA8 ,
+    xkcd~light~bright~green = 53FE5C ,
+    xkcd~light~neon~green = 4EFD54 ,
+    xkcd~light~seafoam = A0FEBF ,
+    xkcd~tiffany~blue = 7BF2DA ,
+    xkcd~washed~out~green = BCF5A6 ,
+    xkcd~browny~orange = CA6B02 ,
+    xkcd~nice~blue = 107AB0 ,
+    xkcd~sapphire = 2138AB ,
+    xkcd~greyish~teal = 719F91 ,
+    xkcd~orangey~yellow = FDB915 ,
+    xkcd~parchment = FEFCAF ,
+    xkcd~straw = FCF679 ,
+    xkcd~very~dark~brown = 1D0200 ,
+    xkcd~terracota = CB6843 ,
+    xkcd~ugly~blue = 31668A ,
+    xkcd~clear~blue = 247AFD ,
+    xkcd~creme = FFFFB6 ,
+    xkcd~foam~green = 90FDA9 ,
+    xkcd~grey/green = 86A17D ,
+    xkcd~light~gold = FDDC5C ,
+    xkcd~seafoam~blue = 78D1B6 ,
+    xkcd~topaz = 13BBAF ,
+    xkcd~violet~pink = FB5FFC ,
+    xkcd~wintergreen = 20F986 ,
+    xkcd~yellow~tan = FFE36E ,
+    xkcd~dark~fuchsia = 9D0759 ,
+    xkcd~indigo~blue = 3A18B1 ,
+    xkcd~light~yellowish~green = C2FF89 ,
+    xkcd~pale~magenta = D767AD ,
+    xkcd~rich~purple = 720058 ,
+    xkcd~sunflower~yellow = FFDA03 ,
+    xkcd~green/blue = 01C08D ,
+    xkcd~leather = AC7434 ,
+    xkcd~racing~green = 014600 ,
+    xkcd~vivid~purple = 9900FA ,
+    xkcd~dark~royal~blue = 02066F ,
+    xkcd~hazel = 8E7618 ,
+    xkcd~muted~pink = D1768F ,
+    xkcd~booger~green = 96B403 ,
+    xkcd~canary = FDFF63 ,
+    xkcd~cool~grey = 95A3A6 ,
+    xkcd~dark~taupe = 7F684E ,
+    xkcd~darkish~purple = 751973 ,
+    xkcd~true~green = 089404 ,
+    xkcd~coral~pink = FF6163 ,
+    xkcd~dark~sage = 598556 ,
+    xkcd~dark~slate~blue = 214761 ,
+    xkcd~flat~blue = 3C73A8 ,
+    xkcd~mushroom = BA9E88 ,
+    xkcd~rich~blue = 021BF9 ,
+    xkcd~dirty~purple = 734A65 ,
+    xkcd~greenblue = 23C48B ,
+    xkcd~icky~green = 8FAE22 ,
+    xkcd~light~khaki = E6F2A2 ,
+    xkcd~warm~blue = 4B57DB ,
+    xkcd~dark~hot~pink = D90166 ,
+    xkcd~deep~sea~blue = 015482 ,
+    xkcd~carmine = 9D0216 ,
+    xkcd~dark~yellow~green = 728F02 ,
+    xkcd~pale~peach = FFE5AD ,
+    xkcd~plum~purple = 4E0550 ,
+    xkcd~golden~rod = F9BC08 ,
+    xkcd~neon~red = FF073A ,
+    xkcd~old~pink = C77986 ,
+    xkcd~very~pale~blue = D6FFFE ,
+    xkcd~blood~orange = FE4B03 ,
+    xkcd~grapefruit = FD5956 ,
+    xkcd~sand~yellow = FCE166 ,
+    xkcd~clay~brown = B2713D ,
+    xkcd~dark~blue~grey = 1F3B4D ,
+    xkcd~flat~green = 699D4C ,
+    xkcd~light~green~blue = 56FCA2 ,
+    xkcd~warm~pink = FB5581 ,
+    xkcd~dodger~blue = 3E82FC ,
+    xkcd~gross~green = A0BF16 ,
+    xkcd~ice = D6FFFA ,
+    xkcd~metallic~blue = 4F738E ,
+    xkcd~pale~salmon = FFB19A ,
+    xkcd~sap~green = 5C8B15 ,
+    xkcd~algae = 54AC68 ,
+    xkcd~bluey~grey = 89A0B0 ,
+    xkcd~greeny~grey = 7EA07A ,
+    xkcd~highlighter~green = 1BFC06 ,
+    xkcd~light~light~blue = CAFFFB ,
+    xkcd~light~mint = B6FFBB ,
+    xkcd~raw~umber = A75E09 ,
+    xkcd~vivid~blue = 152EFF ,
+    xkcd~deep~lavender = 8D5EB7 ,
+    xkcd~dull~teal = 5F9E8F ,
+    xkcd~light~greenish~blue = 63F7B4 ,
+    xkcd~mud~green = 606602 ,
+    xkcd~pinky = FC86AA ,
+    xkcd~red~wine = 8C0034 ,
+    xkcd~shit~green = 758000 ,
+    xkcd~tan~brown = AB7E4C ,
+    xkcd~darkblue = 030764 ,
+    xkcd~rosa = FE86A4 ,
+    xkcd~lipstick = D5174E ,
+    xkcd~pale~mauve = FED0FC ,
+    xkcd~claret = 680018 ,
+    xkcd~dandelion = FEDF08 ,
+    xkcd~orangered = FE420F ,
+    xkcd~poop~green = 6F7C00 ,
+    xkcd~ruby = CA0147 ,
+    xkcd~dark = 1B2431 ,
+    xkcd~greenish~turquoise = 00FBB0 ,
+    xkcd~pastel~red = DB5856 ,
+    xkcd~piss~yellow = DDD618 ,
+    xkcd~bright~cyan = 41FDFE ,
+    xkcd~dark~coral = CF524E ,
+    xkcd~algae~green = 21C36F ,
+    xkcd~darkish~red = A90308 ,
+    xkcd~reddy~brown = 6E1005 ,
+    xkcd~blush~pink = FE828C ,
+    xkcd~camouflage~green = 4B6113 ,
+    xkcd~lawn~green = 4DA409 ,
+    xkcd~putty = BEAE8A ,
+    xkcd~vibrant~blue = 0339F8 ,
+    xkcd~dark~sand = A88F59 ,
+    xkcd~purple/blue = 5D21D0 ,
+    xkcd~saffron = FEB209 ,
+    xkcd~twilight = 4E518B ,
+    xkcd~warm~brown = 964E02 ,
+    xkcd~bluegrey = 85A3B2 ,
+    xkcd~bubble~gum~pink = FF69AF ,
+    xkcd~duck~egg~blue = C3FBF4 ,
+    xkcd~greenish~cyan = 2AFEB7 ,
+    xkcd~petrol = 005F6A ,
+    xkcd~royal = 0C1793 ,
+    xkcd~butter = FFFF81 ,
+    xkcd~dusty~orange = F0833A ,
+    xkcd~off~yellow = F1F33F ,
+    xkcd~pale~olive~green = B1D27B ,
+    xkcd~orangish = FC824A ,
+    xkcd~leaf = 71AA34 ,
+    xkcd~light~blue~grey = B7C9E2 ,
+    xkcd~dried~blood = 4B0101 ,
+    xkcd~lightish~purple = A552E6 ,
+    xkcd~rusty~red = AF2F0D ,
+    xkcd~lavender~blue = 8B88F8 ,
+    xkcd~light~grass~green = 9AF764 ,
+    xkcd~light~mint~green = A6FBB2 ,
+    xkcd~sunflower = FFC512 ,
+    xkcd~velvet = 750851 ,
+    xkcd~brick~orange = C14A09 ,
+    xkcd~lightish~red = FE2F4A ,
+    xkcd~pure~blue = 0203E2 ,
+    xkcd~twilight~blue = 0A437A ,
+    xkcd~violet~red = A50055 ,
+    xkcd~yellowy~brown = AE8B0C ,
+    xkcd~carnation = FD798F ,
+    xkcd~muddy~yellow = BFAC05 ,
+    xkcd~dark~seafoam~green = 3EAF76 ,
+    xkcd~deep~rose = C74767 ,
+    xkcd~dusty~red = B9484E ,
+    xkcd~grey/blue = 647D8E ,
+    xkcd~lemon~lime = BFFE28 ,
+    xkcd~purple/pink = D725DE ,
+    xkcd~brown~yellow = B29705 ,
+    xkcd~purple~brown = 673A3F ,
+    xkcd~wisteria = A87DC2 ,
+    xkcd~banana~yellow = FAFE4B ,
+    xkcd~lipstick~red = C0022F ,
+    xkcd~water~blue = 0E87CC ,
+    xkcd~brown~grey = 8D8468 ,
+    xkcd~vibrant~purple = AD03DE ,
+    xkcd~baby~green = 8CFF9E ,
+    xkcd~barf~green = 94AC02 ,
+    xkcd~eggshell~blue = C4FFF7 ,
+    xkcd~sandy~yellow = FDEE73 ,
+    xkcd~cool~green = 33B864 ,
+    xkcd~pale = FFF9D0 ,
+    xkcd~blue/grey = 758DA3 ,
+    xkcd~hot~magenta = F504C9 ,
+    xkcd~greyblue = 77A1B5 ,
+    xkcd~purpley = 8756E4 ,
+    xkcd~baby~shit~green = 889717 ,
+    xkcd~brownish~pink = C27E79 ,
+    xkcd~dark~aquamarine = 017371 ,
+    xkcd~diarrhea = 9F8303 ,
+    xkcd~light~mustard = F7D560 ,
+    xkcd~pale~sky~blue = BDF6FE ,
+    xkcd~turtle~green = 75B84F ,
+    xkcd~bright~olive = 9CBB04 ,
+    xkcd~dark~grey~blue = 29465B ,
+    xkcd~greeny~brown = 696006 ,
+    xkcd~lemon~green = ADF802 ,
+    xkcd~light~periwinkle = C1C6FC ,
+    xkcd~seaweed~green = 35AD6B ,
+    xkcd~sunshine~yellow = FFFD37 ,
+    xkcd~ugly~purple = A442A0 ,
+    xkcd~medium~pink = F36196 ,
+    xkcd~puke~brown = 947706 ,
+    xkcd~very~light~pink = FFF4F2 ,
+    xkcd~viridian = 1E9167 ,
+    xkcd~bile = B5C306 ,
+    xkcd~faded~yellow = FEFF7F ,
+    xkcd~very~pale~green = CFFDBC ,
+    xkcd~vibrant~green = 0ADD08 ,
+    xkcd~bright~lime = 87FD05 ,
+    xkcd~spearmint = 1EF876 ,
+    xkcd~light~aquamarine = 7BFDC7 ,
+    xkcd~light~sage = BCECAC ,
+    xkcd~yellowgreen = BBF90F ,
+    xkcd~baby~poo = AB9004 ,
+    xkcd~dark~seafoam = 1FB57A ,
+    xkcd~deep~teal = 00555A ,
+    xkcd~heather = A484AC ,
+    xkcd~rust~orange = C45508 ,
+    xkcd~dirty~blue = 3F829D ,
+    xkcd~fern~green = 548D44 ,
+    xkcd~bright~lilac = C95EFB ,
+    xkcd~weird~green = 3AE57F ,
+    xkcd~peacock~blue = 016795 ,
+    xkcd~avocado~green = 87A922 ,
+    xkcd~faded~orange = F0944D ,
+    xkcd~grape~purple = 5D1451 ,
+    xkcd~hot~green = 25FF29 ,
+    xkcd~lime~yellow = D0FE1D ,
+    xkcd~mango = FFA62B ,
+    xkcd~shamrock = 01B44C ,
+    xkcd~bubblegum = FF6CB5 ,
+    xkcd~purplish~brown = 6B4247 ,
+    xkcd~vomit~yellow = C7C10C ,
+    xkcd~pale~cyan = B7FFFA ,
+    xkcd~key~lime = AEFF6E ,
+    xkcd~tomato~red = EC2D01 ,
+    xkcd~lightgreen = 76FF7B ,
+    xkcd~merlot = 730039 ,
+    xkcd~night~blue = 040348 ,
+    xkcd~purpleish~pink = DF4EC8 ,
+    xkcd~apple = 6ECB3C ,
+    xkcd~baby~poop~green = 8F9805 ,
+    xkcd~green~apple = 5EDC1F ,
+    xkcd~heliotrope = D94FF5 ,
+    xkcd~yellow/green = C8FD3D ,
+    xkcd~almost~black = 070D0D ,
+    xkcd~cool~blue = 4984B8 ,
+    xkcd~leafy~green = 51B73B ,
+    xkcd~mustard~brown = AC7E04 ,
+    xkcd~dusk = 4E5481 ,
+    xkcd~dull~brown = 876E4B ,
+    xkcd~frog~green = 58BC08 ,
+    xkcd~vivid~green = 2FEF10 ,
+    xkcd~bright~light~green = 2DFE54 ,
+    xkcd~fluro~green = 0AFF02 ,
+    xkcd~kiwi = 9CEF43 ,
+    xkcd~seaweed = 18D17B ,
+    xkcd~navy~green = 35530A ,
+    xkcd~ultramarine~blue = 1805DB ,
+    xkcd~iris = 6258C4 ,
+    xkcd~pastel~orange = FF964F ,
+    xkcd~yellowish~orange = FFAB0F ,
+    xkcd~perrywinkle = 8F8CE7 ,
+    xkcd~tealish = 24BCA8 ,
+    xkcd~dark~plum = 3F012C ,
+    xkcd~pear = CBF85F ,
+    xkcd~pinkish~orange = FF724C ,
+    xkcd~midnight~purple = 280137 ,
+    xkcd~light~urple = B36FF6 ,
+    xkcd~dark~mint = 48C072 ,
+    xkcd~greenish~tan = BCCB7A ,
+    xkcd~light~burgundy = A8415B ,
+    xkcd~turquoise~blue = 06B1C4 ,
+    xkcd~ugly~pink = CD7584 ,
+    xkcd~sandy = F1DA7A ,
+    xkcd~electric~pink = FF0490 ,
+    xkcd~muted~purple = 805B87 ,
+    xkcd~mid~green = 50A747 ,
+    xkcd~greyish = A8A495 ,
+    xkcd~neon~yellow = CFFF04 ,
+    xkcd~banana = FFFF7E ,
+    xkcd~carnation~pink = FF7FA7 ,
+    xkcd~tomato = EF4026 ,
+    xkcd~sea = 3C9992 ,
+    xkcd~muddy~brown = 886806 ,
+    xkcd~turquoise~green = 04F489 ,
+    xkcd~buff = FEF69E ,
+    xkcd~fawn = CFAF7B ,
+    xkcd~muted~blue = 3B719F ,
+    xkcd~pale~rose = FDC1C5 ,
+    xkcd~dark~mint~green = 20C073 ,
+    xkcd~amethyst = 9B5FC0 ,
+    xkcd~blue/green = 0F9B8E ,
+    xkcd~chestnut = 742802 ,
+    xkcd~sick~green = 9DB92C ,
+    xkcd~pea = A4BF20 ,
+    xkcd~rusty~orange = CD5909 ,
+    xkcd~stone = ADA587 ,
+    xkcd~rose~red = BE013C ,
+    xkcd~pale~aqua = B8FFEB ,
+    xkcd~deep~orange = DC4D01 ,
+    xkcd~earth = A2653E ,
+    xkcd~mossy~green = 638B27 ,
+    xkcd~grassy~green = 419C03 ,
+    xkcd~pale~lime~green = B1FF65 ,
+    xkcd~light~grey~blue = 9DBCD4 ,
+    xkcd~pale~grey = FDFDFE ,
+    xkcd~asparagus = 77AB56 ,
+    xkcd~blueberry = 464196 ,
+    xkcd~purple~red = 990147 ,
+    xkcd~pale~lime = BEFD73 ,
+    xkcd~greenish~teal = 32BF84 ,
+    xkcd~caramel = AF6F09 ,
+    xkcd~deep~magenta = A0025C ,
+    xkcd~light~peach = FFD8B1 ,
+    xkcd~milk~chocolate = 7F4E1E ,
+    xkcd~ocher = BF9B0C ,
+    xkcd~off~green = 6BA353 ,
+    xkcd~purply~pink = F075E6 ,
+    xkcd~lightblue = 7BC8F6 ,
+    xkcd~dusky~blue = 475F94 ,
+    xkcd~golden = F5BF03 ,
+    xkcd~light~beige = FFFEB6 ,
+    xkcd~butter~yellow = FFFD74 ,
+    xkcd~dusky~purple = 895B7B ,
+    xkcd~french~blue = 436BAD ,
+    xkcd~ugly~yellow = D0C101 ,
+    xkcd~greeny~yellow = C6F808 ,
+    xkcd~orangish~red = F43605 ,
+    xkcd~shamrock~green = 02C14D ,
+    xkcd~orangish~brown = B25F03 ,
+    xkcd~tree~green = 2A7E19 ,
+    xkcd~deep~violet = 490648 ,
+    xkcd~gunmetal = 536267 ,
+    xkcd~blue/purple = 5A06EF ,
+    xkcd~cherry = CF0234 ,
+    xkcd~sandy~brown = C4A661 ,
+    xkcd~warm~grey = 978A84 ,
+    xkcd~dark~indigo = 1F0954 ,
+    xkcd~midnight = 03012D ,
+    xkcd~bluey~green = 2BB179 ,
+    xkcd~grey~pink = C3909B ,
+    xkcd~soft~purple = A66FB5 ,
+    xkcd~blood = 770001 ,
+    xkcd~brown~red = 922B05 ,
+    xkcd~medium~grey = 7D7F7C ,
+    xkcd~berry = 990F4B ,
+    xkcd~poo = 8F7303 ,
+    xkcd~purpley~pink = C83CB9 ,
+    xkcd~light~salmon = FEA993 ,
+    xkcd~snot = ACBB0D ,
+    xkcd~easter~purple = C071FE ,
+    xkcd~light~yellow~green = CCFD7F ,
+    xkcd~dark~navy~blue = 00022E ,
+    xkcd~drab = 828344 ,
+    xkcd~light~rose = FFC5CB ,
+    xkcd~rouge = AB1239 ,
+    xkcd~purplish~red = B0054B ,
+    xkcd~slime~green = 99CC04 ,
+    xkcd~baby~poop = 937C00 ,
+    xkcd~irish~green = 019529 ,
+    xkcd~pink/purple = EF1DE7 ,
+    xkcd~dark~navy = 000435 ,
+    xkcd~greeny~blue = 42B395 ,
+    xkcd~light~plum = 9D5783 ,
+    xkcd~pinkish~grey = C8ACA9 ,
+    xkcd~dirty~orange = C87606 ,
+    xkcd~rust~red = AA2704 ,
+    xkcd~pale~lilac = E4CBFF ,
+    xkcd~orangey~red = FA4224 ,
+    xkcd~primary~blue = 0804F9 ,
+    xkcd~kermit~green = 5CB200 ,
+    xkcd~brownish~purple = 76424E ,
+    xkcd~murky~green = 6C7A0E ,
+    xkcd~wheat = FBDD7E ,
+    xkcd~very~dark~purple = 2A0134 ,
+    xkcd~bottle~green = 044A05 ,
+    xkcd~watermelon = FD4659 ,
+    xkcd~deep~sky~blue = 0D75F8 ,
+    xkcd~fire~engine~red = FE0002 ,
+    xkcd~yellow~ochre = CB9D06 ,
+    xkcd~pumpkin~orange = FB7D07 ,
+    xkcd~pale~olive = B9CC81 ,
+    xkcd~light~lilac = EDC8FF ,
+    xkcd~lightish~green = 61E160 ,
+    xkcd~carolina~blue = 8AB8FE ,
+    xkcd~mulberry = 920A4E ,
+    xkcd~shocking~pink = FE02A2 ,
+    xkcd~auburn = 9A3001 ,
+    xkcd~bright~lime~green = 65FE08 ,
+    xkcd~celadon = BEFDB7 ,
+    xkcd~pinkish~brown = B17261 ,
+    xkcd~poo~brown = 885F01 ,
+    xkcd~bright~sky~blue = 02CCFE ,
+    xkcd~celery = C1FD95 ,
+    xkcd~dirt~brown = 836539 ,
+    xkcd~strawberry = FB2943 ,
+    xkcd~dark~lime = 84B701 ,
+    xkcd~copper = B66325 ,
+    xkcd~medium~brown = 7F5112 ,
+    xkcd~muted~green = 5FA052 ,
+    xkcd~robin's~egg = 6DEDFD ,
+    xkcd~bright~aqua = 0BF9EA ,
+    xkcd~bright~lavender = C760FF ,
+    xkcd~ivory = FFFFCB ,
+    xkcd~very~light~purple = F6CEFC ,
+    xkcd~light~navy = 155084 ,
+    xkcd~pink~red = F5054F ,
+    xkcd~olive~brown = 645403 ,
+    xkcd~poop~brown = 7A5901 ,
+    xkcd~mustard~green = A8B504 ,
+    xkcd~ocean~green = 3D9973 ,
+    xkcd~very~dark~blue = 000133 ,
+    xkcd~dusty~green = 76A973 ,
+    xkcd~light~navy~blue = 2E5A88 ,
+    xkcd~minty~green = 0BF77D ,
+    xkcd~adobe = BD6C48 ,
+    xkcd~barney = AC1DB8 ,
+    xkcd~jade~green = 2BAF6A ,
+    xkcd~bright~light~blue = 26F7FD ,
+    xkcd~light~lime = AEFD6C ,
+    xkcd~dark~khaki = 9B8F55 ,
+    xkcd~orange~yellow = FFAD01 ,
+    xkcd~ocre = C69C04 ,
+    xkcd~maize = F4D054 ,
+    xkcd~faded~pink = DE9DAC ,
+    xkcd~british~racing~green = 05480D ,
+    xkcd~sandstone = C9AE74 ,
+    xkcd~mud~brown = 60460F ,
+    xkcd~light~sea~green = 98F6B0 ,
+    xkcd~robin~egg~blue = 8AF1FE ,
+    xkcd~aqua~marine = 2EE8BB ,
+    xkcd~dark~sea~green = 11875D ,
+    xkcd~soft~pink = FDB0C0 ,
+    xkcd~orangey~brown = B16002 ,
+    xkcd~cherry~red = F7022A ,
+    xkcd~burnt~yellow = D5AB09 ,
+    xkcd~brownish~grey = 86775F ,
+    xkcd~camel = C69F59 ,
+    xkcd~purplish~grey = 7A687F ,
+    xkcd~marine = 042E60 ,
+    xkcd~greyish~pink = C88D94 ,
+    xkcd~pale~turquoise = A5FBD5 ,
+    xkcd~pastel~yellow = FFFE71 ,
+    xkcd~bluey~purple = 6241C7 ,
+    xkcd~canary~yellow = FFFE40 ,
+    xkcd~faded~red = D3494E ,
+    xkcd~sepia = 985E2B ,
+    xkcd~coffee = A6814C ,
+    xkcd~bright~magenta = FF08E8 ,
+    xkcd~mocha = 9D7651 ,
+    xkcd~ecru = FEFFCA ,
+    xkcd~purpleish = 98568D ,
+    xkcd~cranberry = 9E003A ,
+    xkcd~darkish~green = 287C37 ,
+    xkcd~brown~orange = B96902 ,
+    xkcd~dusky~rose = BA6873 ,
+    xkcd~melon = FF7855 ,
+    xkcd~sickly~green = 94B21C ,
+    xkcd~silver = C5C9C7 ,
+    xkcd~purply~blue = 661AEE ,
+    xkcd~purpleish~blue = 6140EF ,
+    xkcd~hospital~green = 9BE5AA ,
+    xkcd~shit~brown = 7B5804 ,
+    xkcd~mid~blue = 276AB3 ,
+    xkcd~amber = FEB308 ,
+    xkcd~easter~green = 8CFD7E ,
+    xkcd~soft~blue = 6488EA ,
+    xkcd~cerulean~blue = 056EEE ,
+    xkcd~golden~brown = B27A01 ,
+    xkcd~bright~turquoise = 0FFEF9 ,
+    xkcd~red~pink = FA2A55 ,
+    xkcd~red~purple = 820747 ,
+    xkcd~greyish~brown = 7A6A4F ,
+    xkcd~vermillion = F4320C ,
+    xkcd~russet = A13905 ,
+    xkcd~steel~grey = 6F828A ,
+    xkcd~lighter~purple = A55AF4 ,
+    xkcd~bright~violet = AD0AFD ,
+    xkcd~prussian~blue = 004577 ,
+    xkcd~slate~green = 658D6D ,
+    xkcd~dirty~pink = CA7B80 ,
+    xkcd~dark~blue~green = 005249 ,
+    xkcd~pine = 2B5D34 ,
+    xkcd~yellowy~green = BFF128 ,
+    xkcd~dark~gold = B59410 ,
+    xkcd~bluish = 2976BB ,
+    xkcd~darkish~blue = 014182 ,
+    xkcd~dull~red = BB3F3F ,
+    xkcd~pinky~red = FC2647 ,
+    xkcd~bronze = A87900 ,
+    xkcd~pale~teal = 82CBB2 ,
+    xkcd~military~green = 667C3E ,
+    xkcd~barbie~pink = FE46A5 ,
+    xkcd~bubblegum~pink = FE83CC ,
+    xkcd~pea~soup~green = 94A617 ,
+    xkcd~dark~mustard = A88905 ,
+    xkcd~shit = 7F5F00 ,
+    xkcd~medium~purple = 9E43A2 ,
+    xkcd~very~dark~green = 062E03 ,
+    xkcd~dirt = 8A6E45 ,
+    xkcd~dusky~pink = CC7A8B ,
+    xkcd~red~violet = 9E0168 ,
+    xkcd~lemon~yellow = FDFF38 ,
+    xkcd~pistachio = C0FA8B ,
+    xkcd~dull~yellow = EEDC5B ,
+    xkcd~dark~lime~green = 7EBD01 ,
+    xkcd~denim~blue = 3B5B92 ,
+    xkcd~teal~blue = 01889F ,
+    xkcd~lightish~blue = 3D7AFD ,
+    xkcd~purpley~blue = 5F34E7 ,
+    xkcd~light~indigo = 6D5ACF ,
+    xkcd~swamp~green = 748500 ,
+    xkcd~brown~green = 706C11 ,
+    xkcd~dark~maroon = 3C0008 ,
+    xkcd~hot~purple = CB00F5 ,
+    xkcd~dark~forest~green = 002D04 ,
+    xkcd~faded~blue = 658CBB ,
+    xkcd~drab~green = 749551 ,
+    xkcd~light~lime~green = B9FF66 ,
+    xkcd~snot~green = 9DC100 ,
+    xkcd~yellowish = FAEE66 ,
+    xkcd~light~blue~green = 7EFBB3 ,
+    xkcd~bordeaux = 7B002C ,
+    xkcd~light~mauve = C292A1 ,
+    xkcd~ocean = 017B92 ,
+    xkcd~marigold = FCC006 ,
+    xkcd~muddy~green = 657432 ,
+    xkcd~dull~orange = D8863B ,
+    xkcd~steel = 738595 ,
+    xkcd~electric~purple = AA23FF ,
+    xkcd~fluorescent~green = 08FF08 ,
+    xkcd~yellowish~brown = 9B7A01 ,
+    xkcd~blush = F29E8E ,
+    xkcd~soft~green = 6FC276 ,
+    xkcd~bright~orange = FF5B00 ,
+    xkcd~lemon = FDFF52 ,
+    xkcd~purple~grey = 866F85 ,
+    xkcd~acid~green = 8FFE09 ,
+    xkcd~pale~lavender = EECFFE ,
+    xkcd~violet~blue = 510AC9 ,
+    xkcd~light~forest~green = 4F9153 ,
+    xkcd~burnt~red = 9F2305 ,
+    xkcd~khaki~green = 728639 ,
+    xkcd~cerise = DE0C62 ,
+    xkcd~faded~purple = 916E99 ,
+    xkcd~apricot = FFB16D ,
+    xkcd~dark~olive~green = 3C4D03 ,
+    xkcd~grey~brown = 7F7053 ,
+    xkcd~green~grey = 77926F ,
+    xkcd~true~blue = 010FCC ,
+    xkcd~pale~violet = CEAEFA ,
+    xkcd~periwinkle~blue = 8F99FB ,
+    xkcd~light~sky~blue = C6FCFF ,
+    xkcd~blurple = 5539CC ,
+    xkcd~green~brown = 544E03 ,
+    xkcd~bluegreen = 017A79 ,
+    xkcd~bright~teal = 01F9C6 ,
+    xkcd~brownish~yellow = C9B003 ,
+    xkcd~pea~soup = 929901 ,
+    xkcd~forest = 0B5509 ,
+    xkcd~barney~purple = A00498 ,
+    xkcd~ultramarine = 2000B1 ,
+    xkcd~purplish = 94568C ,
+    xkcd~puke~yellow = C2BE0E ,
+    xkcd~bluish~grey = 748B97 ,
+    xkcd~dark~periwinkle = 665FD1 ,
+    xkcd~dark~lilac = 9C6DA5 ,
+    xkcd~reddish = C44240 ,
+    xkcd~light~maroon = A24857 ,
+    xkcd~dusty~purple = 825F87 ,
+    xkcd~terra~cotta = C9643B ,
+    xkcd~avocado = 90B134 ,
+    xkcd~marine~blue = 01386A ,
+    xkcd~teal~green = 25A36F ,
+    xkcd~slate~grey = 59656D ,
+    xkcd~lighter~green = 75FD63 ,
+    xkcd~electric~green = 21FC0D ,
+    xkcd~dusty~blue = 5A86AD ,
+    xkcd~golden~yellow = FEC615 ,
+    xkcd~bright~yellow = FFFD01 ,
+    xkcd~light~lavender = DFC5FE ,
+    xkcd~umber = B26400 ,
+    xkcd~poop = 7F5E00 ,
+    xkcd~dark~peach = DE7E5D ,
+    xkcd~jungle~green = 048243 ,
+    xkcd~eggshell = FFFFD4 ,
+    xkcd~denim = 3B638C ,
+    xkcd~yellow~brown = B79400 ,
+    xkcd~dull~purple = 84597E ,
+    xkcd~chocolate~brown = 411900 ,
+    xkcd~wine~red = 7B0323 ,
+    xkcd~neon~blue = 04D9FF ,
+    xkcd~dirty~green = 667E2C ,
+    xkcd~light~tan = FBEEAC ,
+    xkcd~ice~blue = D7FFFE ,
+    xkcd~cadet~blue = 4E7496 ,
+    xkcd~dark~mauve = 874C62 ,
+    xkcd~very~light~blue = D5FFFF ,
+    xkcd~grey~purple = 826D8C ,
+    xkcd~pastel~pink = FFBACD ,
+    xkcd~very~light~green = D1FFBD ,
+    xkcd~dark~sky~blue = 448EE4 ,
+    xkcd~evergreen = 05472A ,
+    xkcd~dull~pink = D5869D ,
+    xkcd~aubergine = 3D0734 ,
+    xkcd~mahogany = 4A0100 ,
+    xkcd~reddish~orange = F8481C ,
+    xkcd~deep~green = 02590F ,
+    xkcd~vomit~green = 89A203 ,
+    xkcd~purple~pink = E03FD8 ,
+    xkcd~dusty~pink = D58A94 ,
+    xkcd~faded~green = 7BB274 ,
+    xkcd~camo~green = 526525 ,
+    xkcd~pinky~purple = C94CBE ,
+    xkcd~pink~purple = DB4BDA ,
+    xkcd~brownish~red = 9E3623 ,
+    xkcd~dark~rose = B5485D ,
+    xkcd~mud = 735C12 ,
+    xkcd~brownish = 9C6D57 ,
+    xkcd~emerald~green = 028F1E ,
+    xkcd~pale~brown = B1916E ,
+    xkcd~dull~blue = 49759C ,
+    xkcd~burnt~umber = A0450E ,
+    xkcd~medium~green = 39AD48 ,
+    xkcd~clay = B66A50 ,
+    xkcd~light~aqua = 8CFFDB ,
+    xkcd~light~olive~green = A4BE5C ,
+    xkcd~brownish~orange = CB7723 ,
+    xkcd~dark~aqua = 05696B ,
+    xkcd~purplish~pink = CE5DAE ,
+    xkcd~dark~salmon = C85A53 ,
+    xkcd~greenish~grey = 96AE8D ,
+    xkcd~jade = 1FA774 ,
+    xkcd~ugly~green = 7A9703 ,
+    xkcd~dark~beige = AC9362 ,
+    xkcd~emerald = 01A049 ,
+    xkcd~pale~red = D9544D ,
+    xkcd~light~magenta = FA5FF7 ,
+    xkcd~sky = 82CAFC ,
+    xkcd~light~cyan = ACFFFC ,
+    xkcd~yellow~orange = FCB001 ,
+    xkcd~reddish~purple = 910951 ,
+    xkcd~reddish~pink = FE2C54 ,
+    xkcd~orchid = C875C4 ,
+    xkcd~dirty~yellow = CDC50A ,
+    xkcd~orange~red = FD411E ,
+    xkcd~deep~red = 9A0200 ,
+    xkcd~orange~brown = BE6400 ,
+    xkcd~cobalt~blue = 030AA7 ,
+    xkcd~neon~pink = FE019A ,
+    xkcd~rose~pink = F7879A ,
+    xkcd~greyish~purple = 887191 ,
+    xkcd~raspberry = B00149 ,
+    xkcd~aqua~green = 12E193 ,
+    xkcd~salmon~pink = FE7B7C ,
+    xkcd~tangerine = FF9408 ,
+    xkcd~brownish~green = 6A6E09 ,
+    xkcd~red~brown = 8B2E16 ,
+    xkcd~greenish~brown = 696112 ,
+    xkcd~pumpkin = E17701 ,
+    xkcd~pine~green = 0A481E ,
+    xkcd~charcoal = 343837 ,
+    xkcd~baby~pink = FFB7CE ,
+    xkcd~cornflower = 6A79F7 ,
+    xkcd~blue~violet = 5D06E9 ,
+    xkcd~chocolate = 3D1C02 ,
+    xkcd~greyish~green = 82A67D ,
+    xkcd~scarlet = BE0119 ,
+    xkcd~green~yellow = C9FF27 ,
+    xkcd~dark~olive = 373E02 ,
+    xkcd~sienna = A9561E ,
+    xkcd~pastel~purple = CAA0FF ,
+    xkcd~terracotta = CA6641 ,
+    xkcd~aqua~blue = 02D8E9 ,
+    xkcd~sage~green = 88B378 ,
+    xkcd~blood~red = 980002 ,
+    xkcd~deep~pink = CB0162 ,
+    xkcd~grass = 5CAC2D ,
+    xkcd~moss = 769958 ,
+    xkcd~pastel~blue = A2BFFE ,
+    xkcd~bluish~green = 10A674 ,
+    xkcd~green~blue = 06B48B ,
+    xkcd~dark~tan = AF884A ,
+    xkcd~greenish~blue = 0B8B87 ,
+    xkcd~pale~orange = FFA756 ,
+    xkcd~vomit = A2A415 ,
+    xkcd~forrest~green = 154406 ,
+    xkcd~dark~lavender = 856798 ,
+    xkcd~dark~violet = 34013F ,
+    xkcd~purple~blue = 632DE9 ,
+    xkcd~dark~cyan = 0A888A ,
+    xkcd~olive~drab = 6F7632 ,
+    xkcd~pinkish = D46A7E ,
+    xkcd~cobalt = 1E488F ,
+    xkcd~neon~purple = BC13FE ,
+    xkcd~light~turquoise = 7EF4CC ,
+    xkcd~apple~green = 76CD26 ,
+    xkcd~dull~green = 74A662 ,
+    xkcd~wine = 80013F ,
+    xkcd~powder~blue = B1D1FC ,
+    xkcd~off~white = FFFFE4 ,
+    xkcd~electric~blue = 0652FF ,
+    xkcd~dark~turquoise = 045C5A ,
+    xkcd~blue~purple = 5729CE ,
+    xkcd~azure = 069AF3 ,
+    xkcd~bright~red = FF000D ,
+    xkcd~pinkish~red = F10C45 ,
+    xkcd~cornflower~blue = 5170D7 ,
+    xkcd~light~olive = ACBF69 ,
+    xkcd~grape = 6C3461 ,
+    xkcd~greyish~blue = 5E819D ,
+    xkcd~purplish~blue = 601EF9 ,
+    xkcd~yellowish~green = B0DD16 ,
+    xkcd~greenish~yellow = CDFD02 ,
+    xkcd~medium~blue = 2C6FBB ,
+    xkcd~dusty~rose = C0737A ,
+    xkcd~light~violet = D6B4FC ,
+    xkcd~midnight~blue = 020035 ,
+    xkcd~bluish~purple = 703BE7 ,
+    xkcd~red~orange = FD3C06 ,
+    xkcd~dark~magenta = 960056 ,
+    xkcd~greenish = 40A368 ,
+    xkcd~ocean~blue = 03719C ,
+    xkcd~coral = FC5A50 ,
+    xkcd~cream = FFFFC2 ,
+    xkcd~reddish~brown = 7F2B0A ,
+    xkcd~burnt~sienna = B04E0F ,
+    xkcd~brick = A03623 ,
+    xkcd~sage = 87AE73 ,
+    xkcd~grey~green = 789B73 ,
+    xkcd~white = FFFFFF ,
+    xkcd~robin's~egg~blue = 98EFF9 ,
+    xkcd~moss~green = 658B38 ,
+    xkcd~steel~blue = 5A7D9A ,
+    xkcd~eggplant = 380835 ,
+    xkcd~light~yellow = FFFE7A ,
+    xkcd~leaf~green = 5CA904 ,
+    xkcd~light~grey = D8DCD6 ,
+    xkcd~puke = A5A502 ,
+    xkcd~pinkish~purple = D648D7 ,
+    xkcd~sea~blue = 047495 ,
+    xkcd~pale~purple = B790D4 ,
+    xkcd~slate~blue = 5B7C99 ,
+    xkcd~blue~grey = 607C8E ,
+    xkcd~hunter~green = 0B4008 ,
+    xkcd~fuchsia = ED0DD9 ,
+    xkcd~crimson = 8C000F ,
+    xkcd~pale~yellow = FFFF84 ,
+    xkcd~ochre = BF9005 ,
+    xkcd~mustard~yellow = D2BD0A ,
+    xkcd~light~red = FF474C ,
+    xkcd~cerulean = 0485D1 ,
+    xkcd~pale~pink = FFCFDC ,
+    xkcd~deep~blue = 040273 ,
+    xkcd~rust = A83C09 ,
+    xkcd~light~teal = 90E4C1 ,
+    xkcd~slate = 516572 ,
+    xkcd~goldenrod = FAC205 ,
+    xkcd~dark~yellow = D5B60A ,
+    xkcd~dark~grey = 363737 ,
+    xkcd~army~green = 4B5D16 ,
+    xkcd~grey~blue = 6B8BA4 ,
+    xkcd~seafoam = 80F9AD ,
+    xkcd~puce = A57E52 ,
+    xkcd~spring~green = A9F971 ,
+    xkcd~dark~orange = C65102 ,
+    xkcd~sand = E2CA76 ,
+    xkcd~pastel~green = B0FF9D ,
+    xkcd~mint = 9FFEB0 ,
+    xkcd~light~orange = FDAA48 ,
+    xkcd~bright~pink = FE01B1 ,
+    xkcd~chartreuse = C1F80A ,
+    xkcd~deep~purple = 36013F ,
+    xkcd~dark~brown = 341C02 ,
+    xkcd~taupe = B9A281 ,
+    xkcd~pea~green = 8EAB12 ,
+    xkcd~puke~green = 9AAE07 ,
+    xkcd~kelly~green = 02AB2E ,
+    xkcd~seafoam~green = 7AF9AB ,
+    xkcd~blue~green = 137E6D ,
+    xkcd~khaki = AAA662 ,
+    xkcd~burgundy = 610023 ,
+    xkcd~dark~teal = 014D4E ,
+    xkcd~brick~red = 8F1402 ,
+    xkcd~royal~purple = 4B006E ,
+    xkcd~plum = 580F41 ,
+    xkcd~mint~green = 8FFF9F ,
+    xkcd~gold = DBB40C ,
+    xkcd~baby~blue = A2CFFE ,
+    xkcd~yellow~green = C0FB2D ,
+    xkcd~bright~purple = BE03FD ,
+    xkcd~dark~red = 840000 ,
+    xkcd~pale~blue = D0FEFE ,
+    xkcd~grass~green = 3F9B0B ,
+    xkcd~navy = 01153E ,
+    xkcd~aquamarine = 04D8B2 ,
+    xkcd~burnt~orange = C04E01 ,
+    xkcd~neon~green = 0CFF0C ,
+    xkcd~bright~blue = 0165FC ,
+    xkcd~rose = CF6275 ,
+    xkcd~light~pink = FFD1DF ,
+    xkcd~mustard = CEB301 ,
+    xkcd~indigo = 380282 ,
+    xkcd~lime = AAFF32 ,
+    xkcd~sea~green = 53FCA1 ,
+    xkcd~periwinkle = 8E82FE ,
+    xkcd~dark~pink = CB416B ,
+    xkcd~olive~green = 677A04 ,
+    xkcd~peach = FFB07C ,
+    xkcd~pale~green = C7FDB5 ,
+    xkcd~light~brown = AD8150 ,
+    xkcd~hot~pink = FF028D ,
+    xkcd~black = 000000 ,
+    xkcd~lilac = CEA2FD ,
+    xkcd~navy~blue = 001146 ,
+    xkcd~royal~blue = 0504AA ,
+    xkcd~beige = E6DAA6 ,
+    xkcd~salmon = FF796C ,
+    xkcd~olive = 6E750E ,
+    xkcd~maroon = 650021 ,
+    xkcd~bright~green = 01FF07 ,
+    xkcd~dark~purple = 35063E ,
+    xkcd~mauve = AE7181 ,
+    xkcd~forest~green = 06470C ,
+    xkcd~aqua = 13EAC9 ,
+    xkcd~cyan = 00FFFF ,
+    xkcd~tan = D1B26F ,
+    xkcd~dark~blue = 00035B ,
+    xkcd~lavender = C79FEF ,
+    xkcd~turquoise = 06C2AC ,
+    xkcd~dark~green = 033500 ,
+    xkcd~violet = 9A0EEA ,
+    xkcd~light~purple = BF77F6 ,
+    xkcd~lime~green = 89FE05 ,
+    xkcd~grey = 929591 ,
+    xkcd~sky~blue = 75BBFD ,
+    xkcd~yellow = FFFF14 ,
+    xkcd~magenta = C20078 ,
+    xkcd~light~green = 96F97B ,
+    xkcd~orange = F97306 ,
+    xkcd~teal = 029386 ,
+    xkcd~light~blue = 95D0FC ,
+    xkcd~red = E50000 ,
+    xkcd~brown = 653700 ,
+    xkcd~pink = FF81C0 ,
+    xkcd~blue = 0343DF ,
+    xkcd~green = 15B01A ,
+    xkcd~purple = 7E1E9C ,
 }
 
 
@@ -1421,173 +1418,174 @@
 \prop_clear:N \g_tmpa_prop
 \prop_gset_from_keyval:Nn \g_tmpa_prop
 {
-    emphasize=emph,
-    normal=normalfont,           % reset
-    rm=rmfamily,                 % families
-    roman=rmfamily,
-    sf=sffamily,
-    sans=sffamily,
-    tt=ttfamily,
-    mono=ttfamily,
-    typewriter=ttfamily,
-    th=thseries,                % series -- thin
-    textth=thseries,
-    hairline=thseries,
-    thin=thseries,
-    el=elseries,                 % series -- extra-light
-    extralight=elseries,
-    extra-light=elseries,
-    textel=elseries,
-    lt=ltseries,                 % series -- light
-    light=ltseries,
-    textlt=ltseries,
-    md=mediumseries,             % series -- medium
-    medium=mediumseries,
-    sb=sbseries,                 % series -- semi-bold
-    semibold=sbseries,
-    semi-bold=sbseries,
-    bf=bfseries,                 % series -- bold
-    bold=bfseries,
-    boldface=bfseries,
-    textbf=bfseries,
-    eb=ebseries,                 % series -- extra-bold
-    extrabold=ebseries,
-    extra-bold=ebseries,
-    texteb=ebseries,
-    bl=blseries ,                % series -- black
-    textbl=blseries,
-    heavy = blseries,
-    up=upshape,                  % shapes -- upright
-    upright=upshape,
-    it=itshape,                  % shapes -- italic
-    italic=itshape,
-    textit=itshape,
-    sl=slshape,                  % shapes -- slant
-    slant=slshape,
-    slanted=slshape,
-    textsl=slshape,
-    sw=swshape,
-    swash=swshape,               % shapes -- swash
-    textsw=swshape,
-    sc=scshape,                  % shapes -- smallcaps
-    smallcaps=scshape,
-    textsc=scshape,
-    micro=scriptsize,            % sizes -- script (avoid functional name)
-    micror=scriptsizer,
-    microrr=scriptsizerr,
-    microrrr=scriptsizerrr,
-    mini=footnotesize,           % sizes -- footnote (avoid functional name)
-    minir=footnotesizer,
-    minirr=footnotesizerr,
-    minirrr=footnotesizerrr,
-    mid=normalsize,              % sizes -- normal (just hate the 'size' suffix)
-    midr=normalsizer,
-    midrr=normalsizerr,
-    midrrr=normalsizerrr,
-    tiny=tiny,
-    tinyr=tinyr,
-    tinyrr=tinyrr,
-    tinyrrr=tinyrrr,
-    small=small,
-    smallr=smallr,
-    smallrr=smallrr,
-    smallrrr=smallrrr,
-    large=large,
-    larger=larger,
-    largerr=largerr,
-    largerrr=largerrr,
-    Large=Large,
-    Larger=Larger,
-    Largerr=Largerr,
-    Largerrr=Largerrr,
-    LARGE=LARGE,
-    LARGEr=LARGEr,
-    LARGErr=LARGErr,
-    LARGErrr=LARGErrr,
-    huge=huge,
-    huger=huger,
-    hugerr=hugerr,
-    hugerrr=hugerrr,
-    Huge=Huge,
-    Huger=Huger,
-    Hugerr=Hugerr,
-    Hugerrr=Hugerrr,
-    HUGE=HUGE,
-    HUGEr=HUGEr,
-    HUGErr=HUGErr,
-    HUGErrr=HUGErrr,
-    upcase=txtuppercase,         % lower/uppercase
-    caps=txtuppercase,
-    allcaps=txtuppercase,
-    fullcaps=txtuppercase,
-    uppercase=txtuppercase,
-    downcase=txtlowercase,
-    lowercase=txtlowercase,
-    uptosc=txtuppertosc,         % fancy cases
-    uppertosc=txtuppertosc,
-    capstosc=txtuppertosc,
-    alltosc=txtalltosc,
-    sentencecase=txtsentencecase,
-    sentencecase*=txtsentencecasefirst,
-    dquoted=txtdquoted,
-    dquotes=txtdquoted,
-    quotes=txtdquoted,
-    quoted=txtdquoted,
-    doublequoted=txtdquoted,
-    doublequotes=txtdquoted,
-    squoted=txtsquoted,
-    squotes=txtsquoted,
-    singlequoted=txtsquoted,
-    singlequotes=txtsquoted,
-    parenthesis=txtinparens,
-    parens=txtinparens,
-    brackets=txtinbrackets,
-    braces=txtinbraces,
-    angles=txtinangles,
-    underline=uline,
-    uuline=uuline,
-    double-underline=uuline,
-    double-uline=uuline,
-    wave-underline=uwave,
-    wave-uline=uwave,
-    strikethrough=sout,
-    strikeout=sout,
-    strike=sout,
-    dashuline=dashuline,
-    dash-underline=dashuline,
-    dash-uline=dashuline,
-    dotuline=dotuline,
-    dot-underline=dotuline,
-    dot-uline=dotuline,
-    hashout=xout,
+    emphasize=emph ,
+    normal=normalfont ,           % reset
+    rm=rmfamily ,                 % families
+    roman=rmfamily ,
+    sf=sffamily ,
+    sans=sffamily ,
+    tt=ttfamily ,
+    mono=ttfamily ,
+    typewriter=ttfamily ,
+    th=thseries ,                % series -- thin
+    textth=thseries ,
+    hairline=thseries ,
+    thin=thseries ,
+    el=elseries ,                 % series -- extra-light
+    extralight=elseries ,
+    extra-light=elseries ,
+    textel=elseries ,
+    lt=ltseries ,                 % series -- light
+    light=ltseries ,
+    textlt=ltseries ,
+    md=mediumseries ,             % series -- medium
+    medium=mediumseries ,
+    sb=sbseries ,                 % series -- semi-bold
+    semibold=sbseries ,
+    semi-bold=sbseries ,
+    bf=bfseries ,                 % series -- bold
+    bold=bfseries ,
+    boldface=bfseries ,
+    textbf=bfseries ,
+    eb=ebseries ,                 % series -- extra-bold
+    extrabold=ebseries ,
+    extra-bold=ebseries ,
+    texteb=ebseries ,
+    bl=blseries  ,                % series -- black
+    textbl=blseries ,
+    heavy = blseries ,
+    up=upshape ,                  % shapes -- upright
+    upright=upshape ,
+    it=itshape ,                  % shapes -- italic
+    italic=itshape ,
+    textit=itshape ,
+    sl=slshape ,                  % shapes -- slant
+    slant=slshape ,
+    slanted=slshape ,
+    textsl=slshape ,
+    sw=swshape ,
+    swash=swshape ,               % shapes -- swash
+    textsw=swshape ,
+    sc=scshape ,                  % shapes -- smallcaps
+    smallcaps=scshape ,
+    textsc=scshape ,
+    micro=scriptsize ,            % sizes -- script (avoid functional name)
+    micror=scriptsizer ,
+    microrr=scriptsizerr ,
+    microrrr=scriptsizerrr ,
+    mini=footnotesize ,           % sizes -- footnote (avoid functional name)
+    minir=footnotesizer ,
+    minirr=footnotesizerr ,
+    minirrr=footnotesizerrr ,
+    mid=normalsize ,              % sizes -- normal (just hate the 'size' suffix)
+    midr=normalsizer ,
+    midrr=normalsizerr ,
+    midrrr=normalsizerrr ,
+    tiny=tiny ,
+    tinyr=tinyr ,
+    tinyrr=tinyrr ,
+    tinyrrr=tinyrrr ,
+    small=small ,
+    smallr=smallr ,
+    smallrr=smallrr ,
+    smallrrr=smallrrr ,
+    large=large ,
+    larger=larger ,
+    largerr=largerr ,
+    largerrr=largerrr ,
+    Large=Large ,
+    Larger=Larger ,
+    Largerr=Largerr ,
+    Largerrr=Largerrr ,
+    LARGE=LARGE ,
+    LARGEr=LARGEr ,
+    LARGErr=LARGErr ,
+    LARGErrr=LARGErrr ,
+    huge=huge ,
+    huger=huger ,
+    hugerr=hugerr ,
+    hugerrr=hugerrr ,
+    Huge=Huge ,
+    Huger=Huger ,
+    Hugerr=Hugerr ,
+    Hugerrr=Hugerrr ,
+    HUGE=HUGE ,
+    HUGEr=HUGEr ,
+    HUGErr=HUGErr ,
+    HUGErrr=HUGErrr ,
+    upcase=txtuppercase ,         % lower/uppercase
+    caps=txtuppercase ,
+    allcaps=txtuppercase ,
+    fullcaps=txtuppercase ,
+    uppercase=txtuppercase ,
+    downcase=txtlowercase ,
+    lowercase=txtlowercase ,
+    uptosc=txtuppertosc ,         % fancy cases
+    uppertosc=txtuppertosc ,
+    capstosc=txtuppertosc ,
+    alltosc=txtalltosc ,
+    sentencecase=txtsentencecase ,
+    sentencecase*=txtsentencecasefirst ,
+    dquoted=txtdquoted ,
+    dquotes=txtdquoted ,
+    quotes=txtdquoted ,
+    quoted=txtdquoted ,
+    doublequoted=txtdquoted ,
+    doublequotes=txtdquoted ,
+    squoted=txtsquoted ,
+    squotes=txtsquoted ,
+    singlequoted=txtsquoted ,
+    singlequotes=txtsquoted ,
+    parenthesis=txtinparens ,
+    parens=txtinparens ,
+    brackets=txtinbrackets ,
+    braces=txtinbraces ,
+    angles=txtinangles ,
+    underline=uline ,
+    uuline=uuline ,
+    double-underline=uuline ,
+    double-uline=uuline ,
+    wave-underline=uwave ,
+    wave-uline=uwave ,
+    strikethrough=sout ,
+    strikeout=sout ,
+    strike=sout ,
+    dashuline=dashuline ,
+    dash-underline=dashuline ,
+    dash-uline=dashuline ,
+    dotuline=dotuline ,
+    dot-underline=dotuline ,
+    dot-uline=dotuline ,
+    hashout=xout ,
 }
 \prop_map_inline:Nn \g_tmpa_prop
 {
-    \prop_put:Nnn \g_textiles_aliases_prop {#2}{#2}
-    \prop_put:Nnn \g_textiles_aliases_prop {#1}{#2}
+    \prop_put:Nnn \g_textiles_aliases_prop {#2} {#2}
+    \prop_put:Nnn \g_textiles_aliases_prop {#1} {#2}
 }
 
 \seq_new:N \g_textiles_unary_seq
 \seq_gset_from_clist:Nn \g_textiles_unary_seq
 {
-    txtuppercase,
-    txtlowercase,
-    txtuppertosc,
-    txtalltosc,
-    txtsentencecase,
-    txtquoted,
-    txtinparens,
-    txtinbrackets,
-    txtinbraces,
-    txtinangles,
-    uline,
-    uuline,
-    uwave,
-    sout,
-    xout,
-    dashuline,
-    dotuline
+    txtuppercase ,
+    txtlowercase ,
+    txtuppertosc ,
+    txtalltosc ,
+    txtsentencecase ,
+    txtquoted ,
+    txtinparens ,
+    txtinbrackets ,
+    txtinbraces ,
+    txtinangles ,
+    uline ,
+    uuline ,
+    uwave ,
+    sout ,
+    xout ,
+    dashuline ,
+    dotuline ,
 }
+
 
 
 %===================================================================
@@ -1602,44 +1600,29 @@
 
 \cs_new_protected:Npn \textiles_change_font_size_pt:nn #1#2
     { \changefontsize[#1]{#2} }
-\cs_generate_variant:Nn \textiles_change_font_size_pt:nn { VV, vv }
+\cs_generate_variant:Nn \textiles_change_font_size_pt:nn { VV }
 
 \cs_new_protected:Npn \textiles_set_baselinestretch:n #1
 {
     \str_if_in:nnTF {#1} {*}
         { \str_set:Nx \l__tmpa_str {\str_tail:N{#1}} }
         { \str_set:Nn \l__tmpa_str {#1} }
-    \def\baselinestretch{\l__tmpa_str}
+    \def \baselinestretch {\l__tmpa_str}
     \@currsize  % there's also f@size
 }
-\cs_generate_variant:Nn \textiles_set_baselinestretch:n { V, v }
-
-\NewDocumentCommand \UseBaselineStretch { >{\TrimSpaces}m }
-    { \textiles_set_baselinestretch:n{#1} }
+\cs_generate_variant:Nn \textiles_set_baselinestretch:n { V }
 
 \cs_new_protected:Npn \textiles_font_pt:n #1
 {
     \regex_extract_once:NnNTF \c_textiles_font_pt_regex {#1} \l_tmpb_seq
     {
-        \seq_head:NN \l_tmpb_seq \l_tmpa_tl
-        \textiles_change_font_size_pt:VV \l_tmpa_tl \l_tmpa_tl
-        \prg_return_true:
+      \seq_head:NN \l_tmpb_seq \l_tmpa_tl
+      \textiles_change_font_size_pt:VV \l_tmpa_tl \l_tmpa_tl
+      \prg_return_true:
     }
     { \prg_return_false: }
 }
 
-\cs_new_protected:Npn \textiles_use_font_size:V #1
-    { \changefontsize[#1]{#1} }  % makes baselinestretch make sense
-
-\NewDocumentCommand \UseFontSize { >{\TrimSpaces}m }
-    { \changefontsize[#1]{#1} }  % makes baselinestretch make sense
-
-% parindent and parskip from expl3 skips
-\cs_new_protected:Npn \textiles_set_par_skips:NN #1#2
-{
-    \exp_args:NNx \setlength \parskip {\skip_use:N #1}
-    \exp_args:NNx \setlength \parindent {\skip_use:N #2}
-}
 
 
 %===================================================================
@@ -1647,50 +1630,57 @@
 %===================================================================
 
 \cs_new_protected:Npn \textiles__def_color_three:Vnn #1#2#3
-    { \color_set:nnn {#1} {#2} {#3} }
+    { \color_set:nnn{#1}{#2}{#3} }
 
 \cs_new_protected:Npn \textiles__def_color_x:Vnn #1#2#3
-    { \definecolor {#1} {#2} {#3} }
+    { \definecolor {#1}{#2}{#3} }
 
 \cs_new_protected:Npn \textiles_def_color:nnn #1#2#3
 {
     \str_set:Nn \l_tmpa_str {#1}
-    %\str_remove_all:Nn \l_tmpa_str {~}
-    %\str_remove_all:Nn \l_tmpa_str {-}
-    %\str_remove_all:Nn \l_tmpa_str {_}
-    \textiles__def_color_x:Vnn \l_tmpa_str {#2} {#3}
+    \textiles__def_color_x:Vnn     \l_tmpa_str {#2} {#3}
     \textiles__def_color_three:Vnn \l_tmpa_str {#2} {#3}
+    \textiles__info_color:nnn {#1} {#2} {#3}
 }
 \cs_generate_variant:Nn \textiles_def_color:nnn { nVV, VVV }
 
 \prop_map_inline:Nn \c_textiles_std_colors_prop
-    { \textiles_def_color:nnn{#1}{HTML}{#2} }
+    { \textiles_def_color:nnn {#1} {HTML} {#2} }
 
 \prg_new_conditional:Npnn \textiles_color_if_exist:n #1 { T, F, TF }
 {
     \l3color_if_defined:nTF {#1}
-        {\prg_return_true:}
-        {\prg_return_false:}
+        { \prg_return_true: }
+        { \prg_return_false: }
 }
 
-\prg_new_conditional:Npnn \textiles_color_require_exists:n #1 { T, TF }
+\prg_new_protected_conditional:Npnn \textiles_color_require_exists:n #1 { T, TF }
 {
     \l3color_if_defined:nTF {#1}
-        {\prg_return_true:}
-        {\__textiles_err_color_missing:n{#1} \prg_return_false:}
+        { \prg_return_true: }
+        {
+          \__textiles_err_color_missing:n{#1}
+          \prg_return_false:
+        }
 }
 
-\prg_new_conditional:Npnn \textiles__color_req_exist:n #1 { T, TF }
+\prg_new_protected_conditional:Npnn \textiles__color_req_exist:n #1 { T, TF }
 {
     \l3color_if_defined:nTF {#1}
-        {\prg_return_true:}
-        {\textiles__err_color_not_def:n{#1} \prg_return_false:}
+        { \prg_return_true: }
+        {
+          \textiles__err_color_not_def:n{#1}
+          \prg_return_false:
+        }
 }
-\prg_new_conditional:Npnn \textiles__color_req_not_exist:n #1 { T, TF }
+\prg_new_protected_conditional:Npnn \textiles__color_req_not_exist:n #1 { T, TF }
 {
     \l3color_if_defined:nTF {#1}
-        {\prg_return_false:}
-        {\textiles__err_color_is_def:n{#1} \prg_return_true:}
+        { \prg_return_false: }
+        {
+          \textiles__err_color_is_def:n{#1}
+          \prg_return_true:
+        }
 }
 \regex_const:Nn \c_textiles_color_html_regex
     { [0-9A-fa-f]{6} }
@@ -1728,10 +1718,8 @@
 }
 \cs_generate_variant:Nn \textiles_use_color:n { V }
 
-\cs_generate_variant:Nn \textiles_use_color:n { V }
-
 \cs_new_protected:Npn \textiles_declare_color:nn #1#2
-    { \textiles__declare_color:nnn {#1} {#2} {#1} }
+    { \textiles__declare_color:nnn{#1}{#2}{#1} }
 \cs_generate_variant:Nn \textiles_declare_color:nn { nV, VV }
 \NewDocumentCommand \DeclareColor { m m }
     { \textiles_declare_color:nn{#1}{#2} }
@@ -1739,7 +1727,7 @@
 \cs_new_protected:Npn \textiles_new_color:nn #1#2
 {
     \textiles__color_req_not_exist:nT {#1}
-    { \textiles__declare_color:nnn {#1} {#2} {#1} }
+    { \textiles__declare_color:nnn{#1}{#2}{#1} }
 }
 \cs_generate_variant:Nn \textiles_new_color:nn { nV, VV }
 \NewDocumentCommand \NewColor { >{\TrimSpaces}m >{\TrimSpaces}m }
@@ -1748,7 +1736,7 @@
 \cs_new_protected:Npn \textiles_provide_color:nn #1#2
 {
     \textiles_color_if_exist:nF {#1}
-    { \textiles__declare_color:nnn {#1} {#2} {#1} }
+    { \textiles__declare_color:nnn{#1}{#2}{#1} }
 }
 \cs_generate_variant:Nn \textiles_provide_color:nn { nV, VV }
 \NewDocumentCommand \ProvideColor { >{\TrimSpaces}m >{\TrimSpaces}m }
@@ -1759,10 +1747,10 @@
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
     { 
-        \textiles_declare_color:nn {##1} {##2}
+        \textiles_declare_color:nn{##1}{##2}
     }
 }
-\cs_generate_variant:Nn \textiles_declare_colors:n { V, v }
+\cs_generate_variant:Nn \textiles_declare_colors:n { V }
 
 \cs_new_protected:Npn \textiles_declare_colors_from_prop:N #1
 {
@@ -1780,7 +1768,7 @@
     \ior_open:Nn \g_tmpa_ior {#1}
     \ior_str_get:NN \g_tmpa_ior \l_tmpa_tl
     \ior_close:N \g_tmpa_ior
-    \textiles_declare_colors:n{\l_tmpa_tl}
+    \textiles_declare_colors:V \l_tmpa_tl
 }
 \NewDocumentCommand \ReadColors { m }
     { \textiles_load_colors:n{#1} }
@@ -1802,21 +1790,21 @@
         { \prg_return_false: }
 }
 
-\prg_new_conditional:Npnn \textiles_require_exists:n #1 { T, TF }
+\prg_new_protected_conditional:Npnn \textiles_require_exists:n #1 { T, TF }
 {
     \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpa_tl
         { \prg_return_true: }
         { \__textiles_err_missing:n{#1} \prg_return_false: }
 }
 
-\prg_new_conditional:Npnn \textiles__req_exist:n #1 { T, TF }
+\prg_new_protected_conditional:Npnn \textiles__req_exist:n #1 { T, TF }
 {
     \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpa_tl
         { \prg_return_true: }
         { \textiles__err_not_def:n{#1} \prg_return_false: }
 }
 
-\prg_new_conditional:Npnn \textiles__req_not_exist:n #1 { T, TF }
+\prg_new_protected_conditional:Npnn \textiles__req_not_exist:n #1 { T, TF }
 {
     \prop_get:NnNTF \g_textiles_prop {#1} \l_tmpa_tl
         { \textiles__err_is_def:n{#1} \prg_return_false: }
@@ -1829,7 +1817,7 @@
         { \l_tmpa_tl }
         { \textiles__err_missing:n{#1} }
 }
-\cs_generate_variant:Nn \textiles_get:n { V, v }
+\cs_generate_variant:Nn \textiles_get:n { V }
 
 \cs_new_protected:Npn \textiles_get:nN #1#2
 {
@@ -1931,6 +1919,7 @@
 {
     \textiles__split_check:nNN {#2} \textiles__check:n \l_tmpa_clist
     \prop_gput:Nnn \g_textiles_prop {#1} {#2}
+    \textiles__info_unary:nn{#1}{#2}
 }
 \cs_generate_variant:Nn \textiles_declare:nn { nV }
 \NewDocumentCommand \DeclareTextile { >{\TrimSpaces}m >{\TrimSpaces}m }
@@ -1961,10 +1950,11 @@
     { \textiles_provide:nn{#1}{#2} }
 
 
-\cs_new:Npn \textiles_declare_nullary:nn #1#2
+\cs_new_protected:Npn \textiles_declare_nullary:nn #1#2
 {
     \textiles__split_check:nNN {#2} \textiles__check_nullary:n \l_tmpa_clist
-    \prop_gput:Nnn \g_textiles_prop {#1} {#2}
+    \textiles__info_nullary:nn{#1}{#2}
+    \prop_gput:Nnn \g_textiles_prop{#1}{#2}
 }
 \cs_generate_variant:Nn \textiles_declare_nullary:nn { nV }
 \NewDocumentCommand \DeclareTextileNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
@@ -1973,14 +1963,14 @@
 % related commands a la [New/Renew/etc.]DocumentCommand
 
 % NewTextile
-\cs_new:Npn \textiles_new_nullary:nn #1#2
+\cs_new_protected:Npn \textiles_new_nullary:nn #1#2
     { \textiles__req_not_exist:nT {#1} { \textiles_declare_nullary:nn{#1}{#2} } }
 \cs_generate_variant:Nn \textiles_new_nullary:nn { nV }
 \NewDocumentCommand \NewTextileNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
     { \textiles_new_nullary:nn{#1}{#2} }
 
 % RenewTextile
-\cs_new:Npn \textiles_renew_nullary:nn #1#2
+\cs_new_protected:Npn \textiles_renew_nullary:nn #1#2
     { \textiles__req_exist:nT {#1} { \textiles_declare_nullary:nn{#1}{#2} } }
 \cs_generate_variant:Nn \textiles_renew_nullary:nn { nV }
 \NewDocumentCommand \RenewTextileNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
@@ -1988,7 +1978,7 @@
 
 
 % ProvideTextile
-\cs_new:Npn \textiles_provide_nullary:nn #1#2
+\cs_new_protected:Npn \textiles_provide_nullary:nn #1#2
     { \textiles_if_exist:nF {#1} { \textiles_declare_nullary:nn{#1}{#2} } }
 \cs_generate_variant:Nn \textiles_provide_nullary:nn { nV }
 \NewDocumentCommand \ProvideTextileNullary { >{\TrimSpaces}m >{\TrimSpaces}m }
@@ -2040,9 +2030,9 @@
     \prop_map_inline:Nn \l_tmpa_prop
         { \textiles_new:nn{##1}{##2} }
 }
-\cs_generate_variant:Nn \textiles_new_multiple:n { V, v }
+\cs_generate_variant:Nn \textiles_new_multiple:n { V }
 
-\NewDocumentCommand \Newtextiles {m}
+\NewDocumentCommand \NewTextiles {m}
     { \textiles_new_multiple:n{#1} }
 
 
@@ -2052,9 +2042,9 @@
     \prop_map_inline:Nn \l_tmpa_prop
         { \textiles_provide:nn{##1}{##2} }
 }
-\cs_generate_variant:Nn \textiles_provide_multiple:n { V, v }
+\cs_generate_variant:Nn \textiles_provide_multiple:n { V }
 
-\NewDocumentCommand \Providetextiles {m}
+\NewDocumentCommand \ProvideTextiles {m}
     { \textiles_provide_multiple:n{#1} }
 
 
@@ -2064,16 +2054,16 @@
     \prop_map_inline:Nn \l_tmpa_prop
         { \textiles_declare:nn{##1}{##2} }
 }
-\cs_generate_variant:Nn \textiles_declare_multiple:n { V, v }
+\cs_generate_variant:Nn \textiles_declare_multiple:n { V }
 
-\NewDocumentCommand \Declaretextiles {m}
+\NewDocumentCommand \DeclareTextiles {m}
     { \textiles_declare_multiple:n{#1} }
 
 \cs_new_protected:Npn \textiles_declare_multiple_from_prop:N #1
 {
     \prop_map_inline:Nn #1
     {
-        \textiles_declare:nn {##1} {##2}
+        \textiles_declare:nn{##1}{##2}
     }
 }
 
@@ -2087,7 +2077,7 @@
     \iow_now:Nx \g_tmpa_iow { \Saytextiles }
     \iow_close:N \g_tmpa_iow
 }
-\NewDocumentCommand \Writetextiles {m}
+\NewDocumentCommand \WriteTextiles {m}
     { \textiles_save:n{#1} }
 
 
@@ -2096,9 +2086,9 @@
     \ior_open:Nn \g_tmpa_ior {#2}
     \ior_str_get:NN \g_tmpa_ior \l_tmpa_tl
     \ior_close:N \g_tmpa_ior
-    \textiles_declare_multiple{\l_tmpa_tl}
+    \textiles_declare_multiple:V \l_tmpa_tl
 }
-\NewDocumentCommand \Readtextiles {m}
+\NewDocumentCommand \ReadTextiles {m}
     { \textiles_load:n{#1} }
 
 
@@ -2152,7 +2142,7 @@
 %                    main macro -- \textiles_use:nn
 %===================================================================
 
-\cs_generate_variant:Nn \seq_set_from_clist:Nn {NV}
+\cs_generate_variant:Nn \seq_set_from_clist:Nn { NV }
 
 \cs_new_protected:Npn \textiles_use_direct:nn #1#2
 {
@@ -2184,7 +2174,7 @@
     { \l__mytxt_tl }
 }
 \cs_generate_variant:Nn \textiles_use_direct:nn
-    { Vn, vn, en, nV, nv, VV, vv }
+    { Vn, nV, VV }
 
 \cs_new_protected:Nn \textiles_group_start:
     { \group_begin: \color_group_begin: }
@@ -2199,15 +2189,15 @@
         { \textiles__err_missing:n{#1} }
     \textiles_group_end:
 }
-\cs_generate_variant:Nn \textiles_use:nn { Vn, vn, en, nV, nv, VV, vv }
+\cs_generate_variant:Nn \textiles_use:nn { Vn, nV, VV }
 
 \cs_new_protected:Npn \textiles_inline:nn #1#2
 {
     \textiles_group_start:
-    \textiles_use_direct:nn {#1} {#2}
+    \textiles_use_direct:nn{#1}{#2}
     \textiles_group_end:
 }
-\cs_generate_variant:Nn \textiles_inline:nn { Vn, vn, nv, nV, vv, VV }
+\cs_generate_variant:Nn \textiles_inline:nn { Vn, nV, VV }
 
 \cs_new_protected:Npn \textiles_set_inline:nN #1#2
 {
@@ -2231,7 +2221,7 @@
         { \tl_if_blank:nTF {#1} {#3} { \textiles_use:nn{#1}{#3} } }
         { \textiles_inline:nn{#2}{#3} }
 }
-\cs_generate_variant:Nn \textiles_use_or_inline:nnn { VVn, VVV }
+\cs_generate_variant:Nn \textiles_use_or_inline:nnn { VVn, VVV, eee }
 
 % user commands:
 
@@ -2241,9 +2231,9 @@
     { \textiles_use:nn{#1}{#2} }
 
 \NewDocumentCommand \StylePar { >{\TrimSpaces}m +m }
-    { \textiles_use:nn{#1}{#2\par} }
+    { \textiles_use:nn{#1}{#2 \par} }
 \NewDocumentCommand \stylepar { >{\TrimSpaces}m +m }
-    { \textiles_use:nn{#1}{#2\par} }
+    { \textiles_use:nn{#1}{#2 \par} }
 
 \NewDocumentCommand \StyleTxtInline { >{\TrimSpaces}m +m }
     { \textiles_inline:nn{#1}{#2} }
@@ -2251,9 +2241,9 @@
     { \textiles_inline:nn{#1}{#2} }
     
 \NewDocumentCommand \StyleParInline { >{\TrimSpaces}m +m }
-    { \textiles_inline:nn{#1}{#2\par} }
+    { \textiles_inline:nn{#1}{#2 \par} }
 \NewDocumentCommand \styleparinline { >{\TrimSpaces}m +m }
-    { \textiles_inline:nn{#1}{#2\par} }
+    { \textiles_inline:nn{#1}{#2 \par} }
 
 \NewDocumentEnvironment {Textile} { >{\TrimSpaces}m +b }
     { \textiles_use:nn{#1}{#2} }
@@ -2263,10 +2253,10 @@
     {}
 
 \NewDocumentEnvironment {ParStyle} { >{\TrimSpaces}m +b }
-    { \textiles_use:nn{#1}{#2}\par }
+    { \textiles_use:nn{#1}{#2} \par }
     {}
 \NewDocumentEnvironment {parstyle} { >{\TrimSpaces}m +b }
-    { \textiles_use:nn{#1}{#2}\par }
+    { \textiles_use:nn{#1}{#2} \par }
     {}
 
 \NewDocumentEnvironment {TextileInline} { >{\TrimSpaces}m +b }
@@ -2277,10 +2267,10 @@
     {}
 
 \NewDocumentEnvironment {ParStyleInline} { >{\TrimSpaces}m +b }
-    { \textiles_inline:nn{#1}{#2}\par }
+    { \textiles_inline:nn{#1}{#2} \par }
     {}
 \NewDocumentEnvironment {parstyleinline} { >{\TrimSpaces}m +b }
-    { \textiles_inline:nn{#1}{#2}\par }
+    { \textiles_inline:nn{#1}{#2} \par }
     {}
 
 
@@ -2293,10 +2283,10 @@
 {
     \prop_map_inline:Nn \g_textiles_prop
     {
-        \noindent \textiles_use:nn{##1}{•\,#1}
-        \vspace{-\baselineskip}\hfill{\smallrrr\texttt{ ##2}}
-        \vspace{0.2\baselineskip}\hrule
-        \vspace{0.8\baselineskip}
+        \noindent \textiles_use:nn {##1} {•\,#1}
+        \vspace {-\baselineskip} \hfill {\smallrrr\texttt{ ##2}}
+        \vspace {0.2\baselineskip} \hrule
+        \vspace {0.8\baselineskip}
     }
 }
 \NewDocumentCommand \ShowTxtSamples { O{We've~got~a~QUICK~fox.} }
@@ -2304,7 +2294,7 @@
 
 \NewDocumentCommand \ShowParSamples
     { O{The~QUICK~brown~fox~jumped\newline\ldots~over~the~lazy~dog.} }
-    { \textiles_show_samples:n{#1\par} }
+    { \textiles_show_samples:n {#1\par} }
 
 
 
@@ -2334,7 +2324,7 @@
         { \textiles_declare_family:nn {#1 ##1 #2} {#4} }
 }
 \NewDocumentCommand \DeclareTxtFontFamilies { D<>{} D<>{} m O{} }
-    { \textiles_declare_families:nnnn {#1}{#2}{#3}{#4} }
+    { \textiles_declare_families:nnnn {#1} {#2} {#3} {#4} }
 
 \tl_const:Nn \c_source_pro_help_tl {
     FontFace = {el}{n}{*-ExtraLight} ,
@@ -2366,7 +2356,7 @@
 {
     \DeclareTxtFontFamilies
         { Source Serif Pro, Source Sans Pro, Source Code Pro }
-        [ \prop_use:N \c_source_pros_help_tl ]
+        [ \c_source_pro_help_tl ]
 }
 
 \NewDocumentCommand \DeclareLatinModern { }
@@ -2385,8 +2375,7 @@
 {
     \setsansfont {Latin Modern Sans}
     \setmonofont {Latin Modern Mono} [ \c_lmmono_help_tl ]
-    \setmainfont {Latin Modern Roman}
-        [ SmallCapsFont = Latin Modern Roman Caps ]
+    \setmainfont {Latin Modern Roman} [ SmallCapsFont = Latin Modern Roman Caps ]
     \setmathfont {Latin Modern Math}
 }
 
@@ -2402,7 +2391,7 @@
     \setmathfont {STIX Two Math}
     % probably the closest we'll get to STIX:
     \setsansfont {Source Sans Pro}  [ \c_source_pro_help_tl ]
-    \setmonofont {Source Code Pro}   [ \c_source_pro_help_tl ]
+    \setmonofont {Source Code Pro}  [ \c_source_pro_help_tl ]
 }
 
 \NewDocumentCommand \UseSourcePro { }

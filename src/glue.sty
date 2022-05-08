@@ -1,0 +1,213 @@
+% Copyright 2022 Douglas Myers-glue
+% This work may be distributed and/or modified under the conditions of the LaTeX Project Public
+% License, either version 1.3 of this license or (at your option) any later version. The latest
+% version of this license is in http://www.latex-project.org/lppl.txt and version 1.3 or later is
+% part of all distributions of LaTeX version 2005/12/01 or later.
+%==================================================================================================
+
+
+% WARNING:
+% PLEASE NOTE THAT THIS IS A WORK IN PROGRESS.
+
+% Special thanks to Phelype Oleinik on StackExchange Tex
+% https://tex.stackexchange.com/questions/642629/how-do-i-get-the-rubber-components-of-an-l3skip
+
+
+
+%=======                                                   =======
+%=======                       Glue                        =======
+%=======                                                   =======
+
+\NeedsTeXFormat {LaTeX2e} [2020-10-01]
+\ExplSyntaxOn
+\ProvidesExplPackage {glue} {2022-04-25} {0.1.0}
+    { Glue:~stretch~&~shrink~-preserving~calculations~for~skips~and~muskips }
+
+
+
+%=======                                                   =======
+%=======              Get component                        =======
+%=======                                                   =======
+
+\str_const:Nn \c__plus_str {~plus~}
+\str_const:Nn \c__minus_str {~minus~}
+\str_const:Nn \c__pmzero_str {~plus~minus~0.0pt~plus~}
+\str_const:Nn \c__mpzero_str {~minus~plus~0.0pt~plus~}
+
+\scan_new:N \s__glue_stop
+
+\use:e
+{
+    \cs_new:Npn \exp_not:N \glue_stretch:w
+        #1 \c__plus_str #2 \c__minus_str #3 \s__glue_stop
+        {#2}
+    
+    \cs_new:Npn \exp_not:N \glue_shrink:w
+        #1 \c__minus_str #2 \c__plus_str #3 \s__glue_stop
+        {#2}
+    
+    \cs_new:Npn \exp_not:N \glue_shelf:w
+        #1 ~ #2 \s__glue_stop
+        {#1}
+}
+
+
+\cs_new:Npn \glue_skip_space:N #1
+{
+    \exp_after:wN \glue_skip_space:w \dim_use:N #1 ~ \s__glue_stop
+}
+
+\cs_new:Npx \glue_stretch:N #1
+{
+    \exp_not:n { \exp_after:wN \glue_stretch:w \dim_use:N }
+    #1 \c__mpzero_str \s__glue_stop
+}
+
+\cs_new:Npx \glue_skip_shrink:N #1
+{
+    \exp_not:n { \exp_after:wN \glue_shrink:w \dim_use:N }
+    #1 \c__pmzero_str \s__glue_stop
+}
+
+\cs_new:Npn \glue_rubber:N #1
+{
+    \dim_eval:n { ( \glue_stretch:N #1 ) + ( \glue_shrink:N #1 ) }
+}
+
+\cs_new:Npn \glue_floor:N #1
+{
+    \dim_eval:n { ( \glue_shelf:N #1 ) - ( \glue_shrink:N #1 ) }
+}
+
+\cs_new:Npn \glue_roof:N #1
+{
+    \dim_eval:n { ( \glue_shelf:N #1 ) + ( \glue_stretch:N #1 ) }
+}
+
+
+\cs_new_protected:Npn \glue_shelf:NN #1#2
+{
+    \dim_set:Nn #2 { \glue_shelf:N #1 }
+}
+
+\cs_new_protected:Npn \glue_stretch:NN #1#2
+{
+    \dim_set:Nn #2 { \glue_stretch:N #1 }
+}
+
+\cs_new_protected:Npn \glue_shrink:NN #1#2
+{
+    \dim_set:Nn #2 { \glue_shrink:N #1 }
+}
+
+\cs_new_protected:Npn \glue_rubber:NN #1#2
+{
+    \dim_set:Nn #2 { \glue_rubber:N #1 }
+}
+
+\cs_new_protected:Npn \glue_floor:NN #1#2
+{
+    \dim_set:Nn #2 { \glue_floor:N #1 }
+}
+
+\cs_new_protected:Npn \glue_roof:NN #1#2
+{
+    \dim_set:Nn #2 { \glue_roof:N #1 }
+}
+
+
+
+%=======                                                   =======
+%=======              Scale component                      =======
+%=======                                                   =======
+
+\cs_new_eq:NN \glue_multiply:w \tex_multiply:D
+
+\cs_new_protected:Npn \glue_rescale:nN #1 #2
+{
+    \glue_multiply:w #2 by \fp_eval:n {#1} \scan_stop:
+}
+\cs_generate_variant:Nn \glue_rescale:nN { VN }
+
+
+\cs_new_protected:Npn \glue_rescale_shelf:nN #1 #2
+{
+    \skip_set:Nn #2
+    {
+              \skip_eval:n { ( \glue_shelf:N #2 ) * #1 }
+        plus  \skip_eval:n { ( \glue_stretch:N #2 ) }
+        minus \skip_eval:n { ( \glue_shrink:N #2 ) }
+    }
+}
+\cs_generate_variant:Nn \glue_rescale_shelf:nN { VN }
+
+\cs_new_protected:Npn \glue_rescale_stretch:nN #1 #2
+{
+    \skip_set:Nn #2
+    {
+              \skip_eval:n { ( \glue_shelf:N #2 ) }
+        plus  \skip_eval:n { ( \glue_stretch:N #2 * #1) }
+        minus \skip_eval:n { ( \glue_shrink:N #2 ) }
+    }
+}
+\cs_generate_variant:Nn \glue_rescale_stretch:nN { VN }
+
+\cs_new_protected:Npn \glue_rescale_shrink:nN #1 #2
+{
+    \skip_set:Nn #2
+    {
+              \skip_eval:n { ( \glue_shelf:N #2 ) }
+        plus  \skip_eval:n { ( \glue_stretch:N #2 ) }
+        minus \skip_eval:n { ( \glue_shrink:N #2 ) * #1 }
+    }
+}
+\cs_generate_variant:Nn \glue_rescale_shrink:nN { VN }
+
+\cs_new_protected:Npn \glue_rescale_rubber:nN #1 #2
+{
+    \skip_set:Nn #2
+    {
+              \skip_eval:n { ( \glue_shelf:N #2 ) }
+        plus  \skip_eval:n { ( \glue_stretch:N #2 ) * #1 }
+        minus \skip_eval:n { ( \glue_shrink:N #2 ) * #1 }
+    }
+}
+\cs_generate_variant:Nn \glue_rescale_rubber:nN { VN }
+
+
+\NewDocumentCommand \GlueDebugOn {}
+{
+    \showoutput
+}
+
+
+%=======                                                   =======
+%=======              Merge two glues                      =======
+%=======                                                   =======
+
+
+\cs_new_protected:Npn \glue_collapse:NNN #1#2#3
+{
+    \dim_set:Nn \l_shelf_dim { \dim_max:nn { \glue_shelf:N #1 } { \glue_shelf:N #2 } }
+    \dim_set:Nn \l_roof_dim  { \dim_max:nn { \glue_roof:N #1  } { \glue_roof:N #2  } }
+    \dim_set:Nn \l_floor_dim { \dim_max:nn { \glue_floor:N #1 } { \glue_floor:N #2 } }
+    \skip_set:Nn #3
+    {
+              \l_shelf_dim
+        plus  \skip_eval:n { \l_roof_dim - \l_shelf_dim   }
+        minus \skip_eval:n { \l_shelf_dim - \l_floor_dim  }
+    }
+}
+
+
+\cs_new:Npn \glue_collapse_vuse:NN #1#2
+{
+    \glue_collapse:NNN #1 #2 \l_tmpa_skip
+    \skip_vertical:N \l_tmpa_skip
+}
+
+\cs_new:Npn \glue_collapse_vadd:NN #1#2
+{
+    \glue_collapse:NNN #1 #2 \l_tmpa_skip
+    \addvspace {\skip_use:N \l_tmpa_skip}
+}

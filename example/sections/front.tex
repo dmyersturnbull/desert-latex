@@ -1,5 +1,5 @@
 
-\part{Sample thesis}
+\Part{Sample thesis}
 
 \ShowTitle
 % OR: \includepdf[pages=1]{university-titlepage.pdf}
@@ -17,10 +17,11 @@ I would like to thank people.
 % - FrontChapter, a regular-looking chapter (e.g. contributions)
 % - SpecialChapter, normally centered (e.g. epigraph)
 
-% You can pass options entry, title, label, & numberless:
+% To FrontChapter, you can pass options entry, title, label, & numberless:
 %\begin{FrontChapter}[ options here ... ]
 % contents...
 %\end{FrontChapter}
+% Contributions, Acknowledgments, and Abstract are built-in 
 
 % SpecialChapter has all these options:
 % label, entry, title, numbered, width (of all content),
@@ -28,7 +29,7 @@ I would like to thank people.
 % above (extra space), below (ditto),
 % hide-links, hide-header-and-footer,
 % textile (name of a textile), style (inline textile)
-% Built-in are epigraph and dedication (technically abstract and title too)
+% Built-in are epigraph and dedication (technically title too)
 
 \begin{SpecialChapter}[title=Special chapter]
 Some special chapter.
@@ -49,8 +50,8 @@ In loving memory of Darwin the goldfish.
 \end{Dedication}
 
 \begin{Abstract}
+\AbstractHeader
 Quantum xenochromodynamics is an important new field.
-The title and author will be printed above.
 \end{Abstract}
 
 \ShowTableOfContents

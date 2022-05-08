@@ -7,24 +7,24 @@
 
 
 %=======                                                   =======
-%=======               Nomenclature groups                 =======
+%=======               Nomenclature utils                  =======
 %=======                                                   =======
 
 % Note: Not compatible with nomencl's nomentbl option.
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {nomgroups} {2022-02-08} {0.1} {Define~nomenclature~groups}
-\RequirePackage[notocbasic]{nomencl}
-\cs_generate_variant:Nn \int_max:nn { VV }
+\ProvidesExplPackage {noms} {2022-04-25} {0.1.0} {Define~nomenclature~groups}
+\RequirePackage [notocbasic] {nomencl}
 
-\prop_new:N \g_nomgroups_prop
-\str_gset:Nn \g_nomgroups_text_str {Z}
-\str_gset:Nn \g_nomgroups_math_str {Z}
-\str_gset:Nn \g_nomgroups_unit_str {U}
+
+\prop_new:N \g_noms_prop
+\str_gset:Nn \g_noms_text_str {Z}
+\str_gset:Nn \g_noms_math_str {Z}
+\str_gset:Nn \g_noms_unit_str {U}
 
 \NewDocumentCommand \SetNomGroups {m}
-    { \prop_gset_from_keyval:Nn \g_nomgroups_prop {#1} }
+    { \prop_gset_from_keyval:Nn \g_noms_prop {#1} }
 
 \NewDocumentCommand \AddDefaultNomGroups {}
     { \SetNomGroups{C=Constants,F=Functions,M=Sets,N=Sequences,U=Units,Z=Other~symbols} }
@@ -33,57 +33,57 @@
 {
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
-        { \prop_put_if_new:Nnn \g_nomgroups_prop {##1} {##2} }
+        { \prop_put_if_new:Nnn \g_noms_prop {##1} {##2} }
 }
 
 \NewDocumentCommand \UpdateNomGroups {m}
 {
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
-        { \prop_put:Nnn \g_nomgroups_prop {##1} {##2} }
+        { \prop_put:Nnn \g_noms_prop {##1} {##2} }
 }
 
-\skip_new:N \nomgroups_header_skip
-\skip_gset:Nn \nomgroups_header_skip { 2ex plus 0.2ex minus 0.1ex }
+\skip_new:N \noms_header_skip
+\skip_gset:Nn \noms_header_skip { 2ex plus 0.2ex minus 0.1ex }
 
-\cs_new:Npn \nomgroups_format_header:n #1
+\cs_new:Npn \noms_format_header:n #1
     { \textbf{#1} }
 
-\cs_new:Npn \nomgroups_make_header:n #1
+\cs_new:Npn \noms_make_header:n #1
 {
-    \skip_vertical:N \nomgroups_header_skip
-    \item [ \hspace*{-\itemindent} \nomgroups_format_header:n{#1} ]
+    \skip_vertical:N \noms_header_skip
+    \item [ \hspace*{-\itemindent} \noms_format_header:n{#1} ]
 }
 
-\keys_define:nn { nomgroups / setup}
+\keys_define:nn { noms / setup}
 {
     groups .code:n = { \SetNomGroups{#1} } ,
     groups .initial:n = {} ,
     add-default-groups .code:n = { \AddDefaultNomGroups } ,
     add-default-groups .default:n = true ,
-    default-text-group .tl_gset:N = \g_nomgroups_text_str ,
-    default-math-group .tl_gset:N = \g_nomgroups_math_str ,
-    default-unit-group .tl_gset:N = \g_nomgroups_unit_str ,
-    header-skip .skip_gset:N = \g_nomgroups_header_skip ,
+    default-text-group .tl_gset:N = \g_noms_text_str ,
+    default-math-group .tl_gset:N = \g_noms_math_str ,
+    default-unit-group .tl_gset:N = \g_noms_unit_str ,
+    header-skip .skip_gset:N = \g_noms_header_skip ,
     header-skip .initial:n = 1ex plus 0.1ex minus 0.025ex ,
-    header-format .code:n = { \cs_gset_eq:Nc \nomgroups_format_header:n {#1} } ,  % in 2022+ use .cs_gset:N
+    header-format .code:n = { \cs_gset_eq:Nc \noms_format_header:n {#1} } ,  % in 2022+ use .cs_gset:N
 }
 
-\cs_new:Npn \nomgroups_setup:n #1
+\cs_new:Npn \noms_setup:n #1
 {
-    \keys_set:nn {nomgroups / setup} {#1}
+    \keys_set:nn {noms / setup} {#1}
 }
-\NewDocumentCommand \NomGroupsSetup {m}
-    { \nomgroups_setup:n{#1} }
+\NewDocumentCommand \NomsSetup {m}
+    { \noms_setup:n{#1} }
 
 \AtBeginDocument
 {
     \renewcommand* {\nomgroup} [1]
     {
-        \prop_map_inline:Nn \g_nomgroups_prop
+        \prop_map_inline:Nn \g_noms_prop
         {
             \str_if_eq:nnT {##1} {#1}
-                { \nomgroups_make_header:n{##2} }
+                { \noms_make_header:n{##2} }
         }
     }
 }
@@ -95,7 +95,7 @@
         { \href{#1}{#2} }
 }
 
-\cs_new:Npn \nomgroups_make:vvnnnnn #1#2#3#4#5#6#7
+\cs_new:Npn \noms_make:vvnnnnn #1#2#3#4#5#6#7
 {
     % careful! nomencl writes to a file
     \tl_if_blank:nTF {#2}
@@ -103,42 +103,9 @@
         { \nomenclature [#1,#2] {#7} {\NomGroupLink{#5}{#4 \hfill #6}} }
 }
 
-%\renewcommand \nomlabelwidth {\dim_use:N \g_desert_nom_symbol_dim}
-
-\keys_define:nn { nomgroups / new }
-{
-    symbol .tl_set:N = \l__symbol_tl ,
-    symbol .initial:n = {} ,
-    text .tl_set:N = \l__text_tl ,
-    text .initial:n = {} ,
-    group .tl_set:N = \l__group_tl ,
-    group .initial:n = {} ,
-    sort .tl_set:N = \l__sort_tl ,
-    sort .initial:n = {} ,
-    url .tl_set:N = \l__url_tl ,
-    url .initial:n = {} ,
-    value .tl_set:N = \l__value_tl ,
-    value .initial:n = {} ,
-}
-
-\NewDocumentCommand \NewNom { m }
-{
-    \group_begin:
-    \keys_set:nn {nomgroups / new} {#1}
-    \nomgroups_make:vvnnnnn
-        {\l__group_tl}
-        {\l__sort_tl}
-        {\l__symbol_tl}
-        {\l__text_tl}
-        {\l__url_tl}
-        {\l__value_tl}
-        {\l__symbol_tl}
-    \group_end:
-}
-
 \NewDocumentCommand \NomText
 {
-    >{\TrimSpaces}D(){\g_nomgroups_text_str} % 1 group
+    >{\TrimSpaces}D(){\g_noms_text_str} % 1 group
     >{\TrimSpaces}O{}                        % 2 optional sort key
     >{\TrimSpaces}m                          % 3 symbol
     >{\TrimSpaces}m                          % 4 description
@@ -146,12 +113,12 @@
     >{\TrimSpaces}O{}                        % 6 optional value on right
 }
 {
-    \nomgroups_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{#3}
+    \noms_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{#3}
 }
 
 \NewDocumentCommand \NomMath
 {
-    >{\TrimSpaces}D(){\g_nomgroups_math_str} % 1 group
+    >{\TrimSpaces}D(){\g_noms_math_str} % 1 group
     >{\TrimSpaces}O{}                        % 2 optional sort key
     >{\TrimSpaces}m                          % 3 symbol
     >{\TrimSpaces}m                          % 4 description
@@ -159,12 +126,12 @@
     >{\TrimSpaces}O{}                        % 6 optional value on right
 }
 {
-    \nomgroups_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{\ensuremath{#3}}
+    \noms_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{\ensuremath{#3}}
 }
 
 \NewDocumentCommand \NomUnit
 {
-    >{\TrimSpaces}D(){\g_nomgroups_unit_str} % 1 group
+    >{\TrimSpaces}D(){\g_noms_unit_str} % 1 group
     >{\TrimSpaces}O{}                        % 2 optional sort key
     >{\TrimSpaces}m                          % 3 symbol
     >{\TrimSpaces}m                          % 4 description
@@ -172,5 +139,5 @@
     >{\TrimSpaces}O{}                        % 6 optional value on right
 }
 {
-    \nomgroups_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{\unit{#3}}
+    \noms_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{\unit{#3}}
 }
