@@ -8,7 +8,7 @@
 
 
 %=======                                                   =======
-%=======                      dez                       =======
+%=======                      Desert                       =======
 %=======                                                   =======
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
@@ -157,8 +157,7 @@
 \let \@add_feat \dez__add_feat:n
 \let \@tl_to \tl_gset_eq:NN
 \let \@str_to \str_gset_eq:NN
-%\let \g_dez_style_prop \g_dez_style_prop
-%\let \g_dez_color_prop \g_dez_color_prop
+
 
 
 %==================================================================================================
@@ -206,13 +205,13 @@ bib / style .tl_gset:N                   = \g_dez_bib_style_str ,
 bib / style .initial:n                   = ieee ,
 
 color / cite .prop_gput:N                = \g_dez_color_prop ,
-color / cite .initial:n                  = 000060 ,
+color / cite .initial:n                  = blue ,
 color / file .prop_gput:N                = \g_dez_color_prop ,
 color / file .initial:n                  = red ,
 color / ref .prop_gput:N                 = \g_dez_color_prop ,
-color / ref .initial:n                   = 000060 ,
+color / ref .initial:n                   = blue ,
 color / url .prop_gput:N                 = \g_dez_color_prop ,
-color / url .initial:n                   = 0000A0 ,
+color / url .initial:n                   = blue ,
 
 cref / abbrev .bool_gset:N               = \g_dez_cref_abbrev_bool ,
 cref / abbrev .default:n                 = true ,
@@ -906,8 +905,13 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 
 % Send our dez options to textiles!
 % The colors are saved to both xcolor and l3color.
-\textiles_declare_colors_from_prop:N \g_dez_color_prop
+%\prop_log:N \g_dez_color_prop
+%\textiles_declare_colors_from_prop:N \g_dez_color_prop
 \textiles_declare_multiple_from_prop:N \g_dez_style_prop
+\prop_map_inline:Nn \g_dez_color_prop
+{
+    \colorlet {#1} {#2}
+}
 
 \tl_gset:Nx  \g_dez_stretch_main_tl      { \fp_use:N \g_dez_stretch_main_fp }
 \tl_gset:Nx  \g_dez_stretch_eqn_tl       { \fp_use:N \g_dez_stretch_eqn_fp }
@@ -3176,10 +3180,10 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 {
     colorlinks ,
     linktoc       = all ,
-%    linkcolor     = ref ,  % TODO
-%    citecolor     = cite ,
-%    urlcolor      = url ,
-%    filecolor     = file ,
+    linkcolor     = ref ,  % TODO
+    citecolor     = cite ,
+    urlcolor      = url ,
+    filecolor     = file ,
     final         = true ,  % ignore global settings
     draft         = false ,
 }
