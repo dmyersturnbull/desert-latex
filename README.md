@@ -24,7 +24,7 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
     mode = thesis,
     langs = USenglish,  % comma-separated
     bib / hide-lang = true,
-    color / url = 0000D2,
+    color / url = xkcd cloudy blue,
     cref / capitalize = true,
     font / size = 11.8pt,
     stretch / main = 1.6,
