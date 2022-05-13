@@ -5,6 +5,7 @@
     pkg / minted ,
 ] {desert}
 
+
 \SetCrefStrings {
     figure = fig./figs. ,
     page = p./pp. ,
@@ -41,7 +42,7 @@
 % Load extra packages:
 \RequirePackage{pdfpages}  % to include a PDF
 
-%\SetEnumitemKey {long} { ... }  % override 'long' enum style
+%\SetEnumitemKey {long} { ... }  % override long enum style
 % Setup interfaces provided by various packages:
 \AcroSetup {
      pages/display = first ,  % show page numbers
@@ -84,8 +85,7 @@
 %}
 
 \begin{document}
-%\LoadFrontDocs{sections/doc, sections/front}
-\LoadFrontDocs{sections/front}
+\LoadFrontDocs{sections/doc, sections/front}
 \LoadMainDocs{sections/chapter1, sections/chapter2}
 \LoadBackDocs{sections/back}
 \end{document}

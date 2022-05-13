@@ -108,7 +108,7 @@
 }
 
 % STORE textiles AND COLORS
-\prop_new:N \g_dez_style_prop
+\prop_new:N \g_dez_unary_prop
 \prop_new:N \g_dez_color_prop
 
 
@@ -193,7 +193,6 @@ pkg / chemformula .code:n                = { \@add_feat {chemformula} } ,
 pkg / chemmacros .code:n                 = { \@add_feat {chemmacros} } ,
 pkg / chemfig .code:n                    = { \@add_feat {chemfig} } ,
 pkg / cryptocode .code:n                 = { \@add_feat {cryptocode} } ,
-pkg / awesomebox .code:n                 = { \@add_feat {awesomebox} } ,
 
 bib / hide-lang .bool_gset:N             = \g_dez_bib_hide_lang_bool ,
 bib / hide-lang .default:n               = true ,
@@ -338,78 +337,78 @@ num / thm-like-in .choices:nn            = { none, chapter, section, subsection,
                                            { \@str_to \g_dez_thm_in_str \l_keys_choice_tl } ,
 num / thm-like-in .initial:n             = chapter ,
 
-sty / abstract-by .prop_gput:N           = \g_dez_style_prop ,
+sty / abstract-by .prop_gput:N           = \g_dez_unary_prop ,
 sty / abstract-by .initial:n             = largerr ,
-sty / abstract-authors .prop_gput:N      = \g_dez_style_prop ,
+sty / abstract-authors .prop_gput:N      = \g_dez_unary_prop ,
 sty / abstract-authors .initial:n        = largerr ,
-sty / abstract-title .prop_gput:N        = \g_dez_style_prop ,
+sty / abstract-title .prop_gput:N        = \g_dez_unary_prop ,
 sty / abstract-title .initial:n          = Large; bold ,
-sty / caption-body .prop_gput:N          = \g_dez_style_prop ,
+sty / caption-body .prop_gput:N          = \g_dez_unary_prop ,
 sty / caption-body .initial:n            = small; sans ,
-sty / caption-label .prop_gput:N         = \g_dez_style_prop ,
+sty / caption-label .prop_gput:N         = \g_dez_unary_prop ,
 sty / caption-label .initial:n           = small; sans; bold ,
-sty / subcaption-body .prop_gput:N       = \g_dez_style_prop ,
+sty / subcaption-body .prop_gput:N       = \g_dez_unary_prop ,
 sty / subcaption-body .initial:n         = small; sans ,
-sty / subcaption-label .prop_gput:N      = \g_dez_style_prop ,
+sty / subcaption-label .prop_gput:N      = \g_dez_unary_prop ,
 sty / subcaption-label .initial:n        = small; sans; bold ,
-sty / subref .prop_gput:N                = \g_dez_style_prop ,
+sty / subref .prop_gput:N                = \g_dez_unary_prop ,
 sty / subref .initial:n                  = bold ,
-sty / table-head-body .prop_gput:N       = \g_dez_style_prop ,
+sty / table-head-body .prop_gput:N       = \g_dez_nullary_prop ,
 sty / table-head-body .initial:n         = small; sans; bold ,
-sty / table-head-label .prop_gput:N      = \g_dez_style_prop ,
+sty / table-head-label .prop_gput:N      = \g_dez_nullary_prop ,
 sty / table-head-label .initial:n        = small; sans; bold ,
-sty / table-footer .prop_gput:N          = \g_dez_style_prop ,
+sty / table-footer .prop_gput:N          = \g_dez_nullary_prop ,
 sty / table-footer .initial:n            = small; sans ,
-sty / box-label .prop_gput:N             = \g_dez_style_prop ,
+sty / box-label .prop_gput:N             = \g_dez_unary_prop ,
 sty / box-label .initial:n               = large; bold; allcaps ,
-sty / box-name .prop_gput:N              = \g_dez_style_prop ,
+sty / box-name .prop_gput:N              = \g_dez_unary_prop ,
 sty / box-name .initial:n                = large; bold ,
-sty / chap-label .prop_gput:N            = \g_dez_style_prop ,
+sty / chap-label .prop_gput:N            = \g_dez_nullary_prop ,
 sty / chap-label .initial:n              = Huge; 606060; smallcaps ,
-sty / chap-name .prop_gput:N             = \g_dez_style_prop ,
+sty / chap-name .prop_gput:N             = \g_dez_nullary_prop ,
 sty / chap-name .initial:n               = huge ,
-sty / front-chap-title .prop_gput:N      = \g_dez_style_prop ,
+sty / front-chap-title .prop_gput:N      = \g_dez_nullary_prop ,
 sty / front-chap-title .initial:n        = huge; smallcaps ,
-sty / part-label .prop_gput:N            = \g_dez_style_prop ,
+sty / part-label .prop_gput:N            = \g_dez_nullary_prop ,
 sty / part-label .initial:n              = Huge; bold ,
-sty / part-name .prop_gput:N             = \g_dez_style_prop ,
+sty / part-name .prop_gput:N             = \g_dez_nullary_prop ,
 sty / part-name .initial:n               = HUGE; bold ,
-sty / chemical-diagram .prop_gput:N      = \g_dez_style_prop ,
+sty / chemical-diagram .prop_gput:N      = \g_dez_nullary_prop ,
 sty / chemical-diagram .initial:n        = sans; small ,
-sty / fnote-body .prop_gput:N            = \g_dez_style_prop ,
+sty / fnote-body .prop_gput:N            = \g_dez_nullary_prop ,
 sty / fnote-body .initial:n              = mini; sans ,
-sty / foreign-words .prop_gput:N         = \g_dez_style_prop ,
+sty / foreign-words .prop_gput:N         = \g_dez_unary_prop ,
 sty / foreign-words .initial:n           = italic ,
-sty / indx-starred .prop_gput:N          = \g_dez_style_prop ,
+sty / indx-starred .prop_gput:N          = \g_dez_unary_prop ,
 sty / indx-starred .initial:n            = italic ,
-sty / nom-group .prop_gput:N             = \g_dez_style_prop ,
+sty / nom-group .prop_gput:N             = \g_dez_unary_prop ,
 sty / nom-group .initial:n               = bold; large ,
-sty / section-title .prop_gput:N         = \g_dez_style_prop ,
+sty / section-title .prop_gput:N         = \g_dez_nullary_prop ,
 sty / section-title .initial:n           = LARGE; bold ,
-sty / source-code .prop_gput:N           = \g_dez_style_prop ,
+sty / source-code .prop_gput:N           = \g_dez_nullary_prop ,
 sty / source-code .initial:n             = small ,
-sty / subsec-title .prop_gput:N          = \g_dez_style_prop ,
+sty / subsec-title .prop_gput:N          = \g_dez_nullary_prop ,
 sty / subsec-title .initial:n            = Large; bold ,
-sty / subsubsec-title .prop_gput:N       = \g_dez_style_prop ,
+sty / subsubsec-title .prop_gput:N       = \g_dez_nullary_prop ,
 sty / subsubsec-title .initial:n         = large; bold ,
-sty / paragraph-title .prop_gput:N       = \g_dez_style_prop ,
+sty / paragraph-title .prop_gput:N       = \g_dez_nullary_prop ,
 sty / paragraph-title .initial:n         = bold ,
-sty / toc-part .prop_gput:N              = \g_dez_style_prop ,
+sty / toc-part .prop_gput:N              = \g_dez_nullary_prop ,
 sty / toc-part .initial:n                = bold; large ,
-sty / toc-chap .prop_gput:N              = \g_dez_style_prop ,
+sty / toc-chap .prop_gput:N              = \g_dez_nullary_prop ,
 sty / toc-chap .initial:n                = bold; midrr ,
-sty / toc-section .prop_gput:N           = \g_dez_style_prop ,
+sty / toc-section .prop_gput:N           = \g_dez_nullary_prop ,
 sty / toc-section .initial:n             = {} ,
-sty / toc-subsec .prop_gput:N            = \g_dez_style_prop ,
+sty / toc-subsec .prop_gput:N            = \g_dez_nullary_prop ,
 sty / toc-subsec .initial:n              = {} ,
-sty / toc-subsubsec .prop_gput:N         = \g_dez_style_prop ,
+sty / toc-subsubsec .prop_gput:N         = \g_dez_nullary_prop ,
 sty / toc-subsubsec .initial:n           = {} ,
-sty / toc-page-num .prop_gput:N          = \g_dez_style_prop ,
+sty / toc-page-num .prop_gput:N          = \g_dez_nullary_prop ,
 sty / toc-page-num .initial:n            = {} ,
 
-toc / refs .bool_gset:N                  = \g_dez_toc_bib_bool ,
-toc / refs .default:n                    = true ,
-toc / refs .initial:n                    = false ,
+toc / bib .bool_gset:N                   = \g_dez_toc_bib_bool ,
+toc / bib .default:n                     = true ,
+toc / bib .initial:n                     = false ,
 toc / index .bool_gset:N                 = \g_dez_toc_index_bool ,
 toc / index .default:n                   = true ,
 toc / index .initial:n                   = false ,
@@ -563,6 +562,21 @@ glue' / toc-subsec .initial:n             = 0pc ,
 glue' / toc-subsubsec .skip_gset:N        = \g_dez_abv_toc_subsubsec_skip ,
 glue' / toc-subsubsec .initial:n          = 0pc ,
 
+art / code-box-border .dim_gset:N        = \g_dez_minted_border_dim ,
+art / code-box-border .initial:n         = 2px ,
+art / code-box-arc .dim_gset:N           = \g_dez_minted_arc_dim ,
+art / code-box-arc .initial:n            = 0px ,
+art / code-box-bg .tl_gset:N             = \g_dez_minted_bg_tl ,
+art / code-box-bg .initial:n             = black!1!white ,
+art / even-row-bg .tl_gset:N             = \g_dez_even_row_bg_tl ,
+art / even-row-bg .initial:n             = black!1!white ,
+
+rule / top .dim_gset:N                   = \g_dez_toprule_dim ,
+rule / top .initial:n                    = 0.08ex ,
+rule / mid .dim_gset:N                   = \g_dez_midrule_dim ,
+rule / mid .initial:n                    = 0.06ex ,
+rule / cmid .dim_gset:N                  = \g_dez_cmidrule_dim ,
+rule / cmid .initial:n                   = 0.04ex ,
 }
 
 \ProcessKeysOptions{dez}  % Process!
@@ -599,12 +613,12 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 \ProvideDocumentCommand \DezChapterPageHook {}
     { \clearpage }
 
+\newlength \tmpdezlength
 \cs_new_protected:Npn \dez__par_addvspace:N #1
 {
-    \skip_vertical:N #1
-    % TODO
-    %\par
-    %\exp_args:Ne \addvspace { \skip_use:N #1 }
+    \setlength \tmpdezlength { \skip_use:N #1 }
+    \par
+    \addvspace \tmpdezlength
 }
 
 
@@ -794,7 +808,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 % xindy and hyperref
 \@LF [xindy] {imakeidx}            % index; before: knowledge
 \@RP {hyperxmp}
-\@RP {hyperref}                    % AFTER xindy
+\@RP {hyperref}                    % AFTER xindy and geometry
 
 % font control and math
 \@PP {babel=true} {microtype}
@@ -824,6 +838,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 \@RP {enumitem}                    % control spacing for lists
 \@RP {footmisc}                    % footnote styling and counters
 \@RP {enotez}                      % fixed endnotes
+\@RP {chngcntr}
 %\@RP {lua-widow-control}
 \bool_if:NT \g_dez_draft_bool
     { \@RP {showframe} }
@@ -841,7 +856,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 \let \@TL \UseTblrLibrary
 \@TL {babel}
 \@TL {amsmath}                     % (amsmath loaded earlier)
-\@TL {counter}                     % get row and col counters
+%\@TL {counter}                     % get row and col counters
 \@TL {booktabs}                    % \toprule, etc. and envs
 \@TL {siunitx}                     % (siunitx loaded earlier)
 \@TL {diagbox}                     % split desc for top-left cell
@@ -862,7 +877,8 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 \@LF {chemformula}
 \@LF {chemfig}
 \@LF {svg}
-\@LF {awesomebox}  % also loads fontawesome5
+\dez_if_feat_enabled:nT {tcolorbox}
+    { \@RP {fontawesome5} }
 
 \dez_if_feat_enabled:nT {tikz}
 {
@@ -907,7 +923,8 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 % The colors are saved to both xcolor and l3color.
 %\prop_log:N \g_dez_color_prop
 %\textiles_declare_colors_from_prop:N \g_dez_color_prop
-\textiles_declare_multiple_from_prop:N \g_dez_style_prop
+\textiles_declare_multiple_from_prop:N \g_dez_unary_prop
+\textiles_declare_nullary_from_prop:N \g_dez_nullary_prop
 \prop_map_inline:Nn \g_dez_color_prop
 {
     \colorlet {#1} {#2}
@@ -1309,6 +1326,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 \fancypagestyle {plain} {}  % make plain be fancy
 \pagestyle {plain}  % use plain
 \assignpagestyle \chapter {plain}
+\assignpagestyle \part {empty}
 
 
 
@@ -1331,6 +1349,8 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
     \dez__number_within:nV {equation} \g_dez_eqn_in_str
 }
 
+%\counterwithout {table} {chapter}
+%\counterwithout {figure} {chapter}
 
 
 %==================================================================================================
@@ -1616,6 +1636,19 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 %                  alignment commands and environments
 %==================================================================================================
 
+\NewDocumentEnvironment {BigPages} { O{vmargin=1ex, hmargin=1em} }
+{
+    %\clearpage 
+    \pagestyle {empty}
+    \assignpagestyle \chapter {empty}
+    \newgeometry{#1}
+}
+{
+    \clearpage
+    %\assignpagestyle \chapter {plain}
+}
+
+
 % like the other ragged2e commands
 \let \Justifying \justifying
 
@@ -1745,7 +1778,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
         { \hbadness=10000 }
     \dez_align:V \l__align_tl
     \tl_if_eq:NnTF \l__at_tl {top}
-        { \skip_vertical:N \l__above_dim }
+        { \dez__par_addvspace:N \l__above_dim }
         { \vspace*{\fill} }
     \begin {minipage} {\l__width_dim}
     \dez__align_begin:V \l__align_tl
@@ -1755,7 +1788,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
     \dez__align_end:V \l__align_tl
     \end {minipage}
     \tl_if_eq:NnTF \l__at_tl {bottom}
-        { \skip_vertical:N \l__below_dim }
+        { \dez__par_addvspace:N \l__below_dim }
         { \vfill }
 }
 
@@ -1838,10 +1871,10 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
         { \setcounter {footnote} {0} }  % otherwise they'll continue from the last chapter
     \dez__run_section_like:NN \chapter \DezChapterPageHook
     \begin {InternalSpecialBox}
+    \bool_if:NT \l__hide_header_and_footer_bool  % TODO
+        { \clearpage \pagestyle{empty} }
 }
 {
-    \bool_if:NT \l__hide_header_and_footer_bool  % TODO
-        { \clearpage \thispagestyle{empty} }
     \end {InternalSpecialBox}
     \ShowEndNotes  % really, these shouldn't be used
     %\bool_if:NT \l__hide_header_and_footer_bool  % TODO
@@ -1859,11 +1892,25 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
         { \end   {FrontChapter} }
 }
 
+\NewDocumentCommand \DeclareFrontChapter { m O{} O{} }
+{
+    \DeclareDocumentEnvironment {#1} { O{#3} G{#1} } 
+        { \begin {FrontChapter} [#2, ##1] {##2} }
+        { \end   {FrontChapter} }
+}
+
 \NewDocumentCommand \NewSpecialChapter { m O{} O{} }
 {
     % any title= will override G{#1}
     % e.g. \NewSpecialChapter{Dedication}[title={}]
     \NewDocumentEnvironment {#1} { O{#3} G{#1} }
+        { \begin {SpecialChapter} [#2, ##1] {##2} }
+        { \end   {SpecialChapter} }
+}
+
+\NewDocumentCommand \DeclareSpecialChapter { m O{} O{} }
+{
+    \DeclareDocumentEnvironment {#1} { O{#3} G{#1} }
         { \begin {SpecialChapter} [#2, ##1] {##2} }
         { \end   {SpecialChapter} }
 }
@@ -2175,7 +2222,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
     }
 }
 
-\NewDocumentCommand \StandardTheoremEnvs { O{} m }
+\NewDocumentCommand \StandardTheoremEnvs { }
 {
     \seq_map_inline:Nn \c_dez_theorem_like_names_in_cref_seq
     {
@@ -2304,7 +2351,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
         name = \l_tmpa_tl ,
         preamble =
             {
-              \skip_vertical:N \g_dez_bel_front_chap_skip
+              \dez__par_addvspace:N \g_dez_bel_front_chap_skip
             } ,
     }
     \bool_if:nTF {#1}
@@ -2810,6 +2857,38 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
     postsep   = \g_dez_bel_table_footer_skip ,
 }
 
+% from booktabs source:
+% \heavyrulewidth=.08em
+% \lightrulewidth=.05em
+% \cmidrulewidth=.03em
+% \belowrulesep=.65ex
+% \belowbottomsep=0pt
+% \aboverulesep=.4ex
+% \abovetopsep=0pt
+% \cmidrulesep=\doublerulesep
+% \cmidrulekern=.5em
+% \defaultaddspace=.5em
+
+\cs_new_protected:Npn \dez__booktabs_widths:VVV #1#2#3
+{
+    \heavyrulewidth  = #1
+    \lightrulewidth  = #2
+    \cmidrulewidth   = #3
+}
+
+\tl_set:Nx \l_dez__top_tl   {\dim_use:N \g_dez_toprule_dim}
+\tl_set:Nx \l_dez__mid_tl   {\dim_use:N \g_dez_midrule_dim}
+\tl_set:Nx \l_dez__cmid_tl  {\dim_use:N \g_dez_cmidrule_dim}
+\dez__booktabs_widths:VVV \l_dez__top_tl \l_dez__mid_tl \l_dez__cmid_tl
+
+%\exp_args:Ne \aboverulesep {\dim_use:N \g_dez_above_rule_dim}
+%\exp_args:Ne \belowrulesep {\dim_use:N \g_dez_below_rule_dim}
+
+\SetTblrInner
+{
+    rowsep    = 0pt ,  % same as booktabs env
+}
+
 % Apply these font styles in all cases
 \SetTblrStyle {caption-sep}  { font=\textiles_run_nullary:n {table-head-label} }
 \SetTblrStyle {caption-tag}  { font=\textiles_run_nullary:n {table-head-label} }
@@ -2825,65 +2904,71 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 
 % Now, simplify the footer ("last foot") template for a single-paragraph footer.
 % This is the most common footer format journals use (that I'm familiar with).
-% For this we'll need to:
-% 1. Declare "note" and "remark" to replace the \par at the end with \space
-%    We'll save these as a template called "shortfoot"
-% 2. Use those in "lastfoot" as template "shortfoot"
-% 3. Save the original as an "longfoot" template.
-% 4. Declare "shortfoot" and "longfoot" themes.
 
-\DefTblrTemplate {note} {shortfoot}
+\NewTblrTheme {longfoot}
 {
-    \MapTblrNotes
+    \DefTblrTemplate {note} {default}
     {
-        \noindent  % fixed
-        \UseTblrTemplate {note-tag}  {default}
-        \UseTblrTemplate {note-sep}  {default}
-        \UseTblrTemplate {note-text} {default}
-        \space  % fixed
+        \MapTblrNotes
+        {
+            \noindent
+            \UseTblrTemplate {note-tag}  {default}
+            \UseTblrTemplate {note-sep}  {default}
+            \UseTblrTemplate {note-text} {default}
+            \par
+        }
     }
-}
+    \DefTblrTemplate {remark} {default}
+    { 
+        \MapTblrRemarks
+        {
+            \noindent
+            \UseTblrTemplate {remark-tag}  {default}
+            \UseTblrTemplate {remark-sep}  {default}
+            \UseTblrTemplate {remark-text} {default}
+            \par
+        }
+    }
 
-\DefTblrTemplate {remark} {shortfoot}
-{ 
-    \MapTblrRemarks
+    \DefTblrTemplate {lastfoot} {default}
     {
-        \noindent  % fixed
-        \UseTblrTemplate {remark-tag}  {default}
-        \UseTblrTemplate {remark-sep}  {default}
-        \UseTblrTemplate {remark-text} {default}
-        \space  % fixed
+        \exp_args:NV \setstretch \g_dez_stretch_caption_tl
+        \UseTblrTemplate {note}   {default}
+        \UseTblrTemplate {remark} {default}
     }
-}
-
-
-\DefTblrTemplate {lastfoot} {default}  % make default
-{
-    \exp_args:NV \setstretch \g_dez_stretch_caption_tl
-    \UseTblrTemplate {remark} {shortfoot}
-    \UseTblrTemplate {note}   {shortfoot}
-    \par
-}
-
-\DefTblrTemplate {lastfoot} {shortfoot}
-{
-    \exp_args:NV \setstretch \g_dez_stretch_caption_tl
-    \UseTblrTemplate {remark} {shortfoot}
-    \UseTblrTemplate {note}   {shortfoot}
-    \par
-}
-
-\DefTblrTemplate {lastfoot} {longfoot}
-{
-    \UseTblrTemplate {remark} {default}
-    \UseTblrTemplate {note}   {default}
 }
 
 \NewTblrTheme {shortfoot}
-    { \UseTblrTemplate {lastfoot} {shortfoot} }
+{
+    \DefTblrTemplate {note} {default}
+    {
+        \MapTblrNotes
+        {
+            \UseTblrTemplate {note-tag}  {default}
+            \UseTblrTemplate {note-sep}  {default}
+            \UseTblrTemplate {note-text} {default}
+            % no \par
+        }
+    }
+    \DefTblrTemplate {remark} {default}
+    { 
+        \MapTblrRemarks
+        {
+            \UseTblrTemplate {remark-tag}  {default}
+            \UseTblrTemplate {remark-sep}  {default}
+            \UseTblrTemplate {remark-text} {default}
+            % no \par
+        }
+    }
 
-\NewTblrTheme {longfoot}
-    { \UseTblrTemplate {lastfoot} {longfoot} }
+    \DefTblrTemplate {lastfoot} {default}
+    {
+        \exp_args:NV \setstretch \g_dez_stretch_caption_tl
+        \noindent
+        \UseTblrTemplate {note}   {default}
+        \UseTblrTemplate {remark} {default}
+    }
+}
 
 
 \NewColumnType {L}  { >{$} l <{$} }
@@ -2893,17 +2978,21 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 \NewRowType    {C}  { >{$} c <{$} }
 \NewRowType    {R}  { >{$} r <{$} }
 
-\NewDocumentEnvironment {Table} { o m }
-    { \begin {tblr} [#1] {#2} }
-    { \end {tblr} }
+
+\NewDocumentEnvironment {Table} { O{} m }
+    { \begin {booktabs} [#1] {#2} }
+    { \end {booktabs} }
     
-\NewDocumentEnvironment {LongTable} { o m }
-    { \begin {longtblr} [#1] {#2} }
-    { \end  }
+\NewDocumentEnvironment {LongTable} { O{} m }
+    { \begin {longtabs} [#1] {#2} }
+    { \end {longtabs} }
     
-\NewDocumentEnvironment {TallTable} { o m }
-    { \begin {talltblr} [#1] {#2} }
-    { \end {talltblr} }
+\NewDocumentEnvironment {TallTable} { O{} m }
+    { \begin {talltabs} [#1] {#2} }
+    { \end {talltabs} }
+
+\exp_args:NnV \colorlet {evenrow} \g_dez_even_row_bg_tl
+
 
 % Process an external table with csvsimple-l3.
 %                    == ARGS ==                                       %
@@ -2913,8 +3002,10 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 % [ #3 ]  N  READER  key-value args to csvreader (e.g. separator=tab)
 % < #4 >  Y  FILE    Path to file (e.g. cows.csv)
 %
-\NewDocumentCommand \LoadTable { r[] m O{} r<> }
+\NewDocumentCommand \LoadTable { O{} m O{} r<> }
 {
+    \group_begin:
+    \exp_args:Ne \SetTblrInner { \dez__simple_table:n{1} }
     \SetTblrOuter {#1}
     \csvreader
     [
@@ -2926,6 +3017,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
         #3
     ]
     {#4}
+    \group_end:
 }
 
 
@@ -2993,18 +3085,14 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
     { \dez__dec_box:nnnN {#1} {#2} {#3} \RenewDocumentEnvironment } 
 
 
-\dim_new:N   \g_dez_minted_border_dim
-\dim_gset:Nn \g_dez_minted_border_dim { 1.2pt }
-\tl_gset:Nn  \g_dez_minted_bg_color_tl { black!1!white }
-
 \dez_if_feat_enabled:nT {tcolorbox}
 {
     \DeclareTColorBox {DezMinted} { O{} }
     {
-        colback    = \g_dez_minted_bg_color_tl ,
+        colback    = \g_dez_minted_bg_tl ,
         coltext    = black ,
         boxrule    = { \dim_use:N \g_dez_minted_border_dim } ,
-        arc        = 0pt ,
+        arc        = { \dim_use:N \g_dez_minted_arc_dim }  ,
         boxsep     = 0pt ,
         #1 ,
     }
@@ -3180,7 +3268,7 @@ glue' / toc-subsubsec .initial:n          = 0pc ,
 {
     colorlinks ,
     linktoc       = all ,
-    linkcolor     = ref ,  % TODO
+    linkcolor     = ref ,
     citecolor     = cite ,
     urlcolor      = url ,
     filecolor     = file ,

@@ -63,10 +63,10 @@ Refer to \cref{mythm}.
 \end{Hint}
 
 % Tables should be typeset with the modern tabularray
-% Use tblr, talltblr, longtblr, etc.
-% In 2022+, use booktabs, talltabs, and longtabs
+% Environments: Table (booktabs), LongTable (longtabs), TallTable (talltabs)
 
-\begin{longtblr} [
+\begin{LongTable} [
+    theme = longfoot,  & also shortfoot
     caption = {Difficulty modifiers},
     entry = {Difficulty modifiers},
     label = {difficulty},
@@ -85,7 +85,7 @@ Type & Trivial & Easy & Normal & Hard & Strenuous\\
 Type 1 (\%) \TblrNote{a} & 300 & 200 & 150 & 100 & 75\\
 Type 2 (\%) & 70 & 60 & 50 & 50 & 40\\
 Type 3 (\%) & 80 & 75 & 70 & 65 & 60\\
-\end{longtblr}
+\end{LongTable}
 
 
 \begin{MintedCode} [

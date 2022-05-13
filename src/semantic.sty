@@ -12,7 +12,7 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {semantic} {2022-02-28} {0.1.1} {Semantic~links~and~other~things}
+\ProvidesExplPackage {semantic} {2022-02-28} {0.1.1} { Semantic~links~and~other~things }
 \RequirePackage {hyperxmp}
 \RequirePackage {academicons}
 
@@ -91,72 +91,84 @@
 %                    links
 %==================================================================================================
 
+
+%\begingroup\lccode`?=`# \lowercase{\endgroup
+%    \newcommand{\myhrefaux}[2]{\href{#1}{#2}}
+%}
+
+%\DeclareRobustCommand*{\myurl}{\hyper@normalise\myurl@}
+
+%\def\@myurl@#1{\hyper@linkurl{#2}{#1}}
+
+\newcommand{\myhref}[2]
+{
+    \href{#1}{#2}
+}
+
+\tl_const:Nx \c_https_tl {https \c_colon_str //}
+
 \cs_new_protected:Npn \semantic_link:nnn #1#2#3
 {
     \tl_if_blank:nTF {#2}
     {
-        #2  % if the url (#3) is empty, don't make a link
+        #3  % if the url (#2) is empty, don't make a link
     }
     {
+        \group_begin:
         \bool_if:nT {#1}
-        {
-            \group_begin:
-            \hypersetup{hidelinks} #1
-        }
-        \tl_if_blank:nTF {#3}
-            { \href{#2}{#2} }   % no text provided -- use the url itself
-            { \href{#2}{#3} }   % text provided
-        \bool_if:nT {#1} {\group_end:}
+            { \hypersetup{urlcolor={}, linkbordercolor={}} }
+        \href {#2} {#3}
+        \group_end:
     }
 }
 
-\NewDocumentCommand \link { s >{\TrimSpaces}m o }
+\NewDocumentCommand \link { s >{\TrimSpaces}m O{} }
 {
     \semantic_link:nnn{#1}{#2}{#3}
 }
 
 
 \NewDocumentCommand \doi { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://doi.org/#1} {\textsc{doi}:#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//doi.org/#2} {\textsc{doi}:#2} }
 \NewDocumentCommand \doix { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://doi.org/#1} {\aiDoi\thinspace#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//doi.org/#2} {\aiDoi\thinspace#2} }
 
 \NewDocumentCommand \arXiv { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://arxiv.org/abs/#1} {arXiv:#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//arxiv.org/abs/#2} {ar\textsc{x}iv:#2} }
 \NewDocumentCommand \arxivx { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://arxiv.org/abs/#1} {\aiarXiv\thinspace#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//arxiv.org/abs/#2} {\aiarXiv\thinspace#2} }
 
 \NewDocumentCommand \bioarxiv { s >{\TrimSpaces}m }
-    {semantics_link:nnn {#1} {https://www.biorxiv.org/content/#1} {bioRxiv:#1} }
+    {semantics_link:nnn {#1} {https\c_colon_str//www.biorxiv.org/content/#2} {bio\textsc{r}xiv:#2} }
 \NewDocumentCommand \bioarxivx { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://www.biorxiv.org/content/#1} {\aibioRxiv\thinspace#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//www.biorxiv.org/content/#2} {\aibioRxiv\thinspace#2} }
 
 \NewDocumentCommand \orcid { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://orcid.org/#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//orcid.org/#2} {https\c_colon_str//orcid.org/#2} }  % they recommend full URL
 \NewDocumentCommand \orcidx { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://orcid.org/#1} {\aiOrcid\thinspace#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//orcid.org/#2} {\aiOrcid\thinspace#2} }
 
 \NewDocumentCommand \dblp { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://dblp.org/pid/#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//dblp.org/pid/#2} {dblp:#2} }  % it's lowercase
 \NewDocumentCommand \dblpx { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://dblp.org/pid/#1} {\aidblp\thinspace#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//dblp.org/pid/#2} {\aidblp\thinspace#2} }
 
 \NewDocumentCommand \rrid { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://scicrunch.org/resolver/#1} {\textsc{rrid}:#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//scicrunch.org/resolver/#2} {\textsc{rrid}:#2} }
 \NewDocumentCommand \rridx { s m }
-    { \semantic_link:nnn {#1} {https://scicrunch.org/resolver/#1} {\textsc{rrid}:#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//scicrunch.org/resolver/#2} {\textsc{rrid}:#2} }
 
 \NewDocumentCommand \semanticscholar { s >{\TrimSpaces}m } % e.g. 1403902308
-    { \semantic_link:nnn {#1} {https://semanticscholar.org/author/#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//semanticscholar.org/author/#2} {Semantic Scholar:#2} }
 \NewDocumentCommand \semanticscholarx { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://semanticscholar.org/author/#1} {\aiSemanticScholar\thinspace#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//semanticscholar.org/author/#2} {\aiSemanticScholar\thinspace#2} }
 
 \NewDocumentCommand \ieeeauthor { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://ieeexplore.ieee.org/author/#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//ieeexplore.ieee.org/author/#2} {\textsc{ieee}:#2} }
 \NewDocumentCommand \ieeeauthorx { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://ieeexplore.ieee.org/author/#1} {\aiIEEE\thinspace#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//ieeexplore.ieee.org/author/#2} {\aiIEEE\thinspace#2} }
 
-\NewDocumentCommand \ctan { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://ctan.org/pkg/#1} }
+\NewDocumentCommand \ctan { s m }
+    { \semantic_link:nnn {#1} {https\c_colon_str//ctan.org/pkg/#2} {#2} }
 \NewDocumentCommand \ctanx { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https://ctan.org/pkg/#1} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//ctan.org/pkg/#2} {\textsc{ctan}:#2} }

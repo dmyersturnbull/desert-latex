@@ -26,22 +26,15 @@
 \NewDocumentCommand \SetNomGroups {m}
     { \prop_gset_from_keyval:Nn \g_noms_prop {#1} }
 
-\NewDocumentCommand \AddDefaultNomGroups {}
-    { \SetNomGroups{C=Constants,F=Functions,M=Sets,N=Sequences,U=Units,Z=Other~symbols} }
-
-\NewDocumentCommand \AddNomGroups {m}
-{
-    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
-    \prop_map_inline:Nn \l_tmpa_prop
-        { \prop_put_if_new:Nnn \g_noms_prop {##1} {##2} }
-}
-
-\NewDocumentCommand \UpdateNomGroups {m}
+\NewDocumentCommand \PutNomGroups {m}
 {
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
         { \prop_put:Nnn \g_noms_prop {##1} {##2} }
 }
+
+\NewDocumentCommand \PutDefaultNomGroups {}
+    { \PutNomGroups{C=Constants,F=Functions,M=Sets,N=Sequences,U=Units,Z=Other~symbols} }
 
 \skip_new:N \noms_header_skip
 \skip_gset:Nn \noms_header_skip { 2ex plus 0.2ex minus 0.1ex }

@@ -1713,7 +1713,7 @@
 % special case: declare and immediately use
 \cs_new_protected:Npn \textiles_use_color:n #1
 {
-    \textiles__declare_color:nnn {#1} {#1} {tmpcolor}
+    \textiles__declare_color:nnn{#1}{#1}{tmpcolor}
     \color_select:V \g__textiles_tmpcolor_str
 }
 \cs_generate_variant:Nn \textiles_use_color:n { V }
@@ -1747,7 +1747,7 @@
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
     { 
-        \textiles_declare_color:nn{##1}{##2}
+        \DeclareColor{##1}{##2}
     }
 }
 \cs_generate_variant:Nn \textiles_declare_colors:n { V }
@@ -1756,7 +1756,7 @@
 {
     \prop_map_inline:Nn #1
     { 
-        \textiles_declare_color:nn {##1} {##2}
+        \DeclareColor{##1}{##2}
     }
 }
 
@@ -2064,6 +2064,13 @@
     \prop_map_inline:Nn #1
     {
         \textiles_declare:nn{##1}{##2}
+    }
+}
+\cs_new_protected:Npn \textiles_declare_nullary_from_prop:N #1
+{
+    \prop_map_inline:Nn #1
+    {
+        \textiles_declare_nullary:nn{##1}{##2}
     }
 }
 
