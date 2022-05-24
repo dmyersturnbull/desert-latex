@@ -1,11 +1,136 @@
 
 \part{Documentation}
 
-%\chapter{Class options and config}
+\chapter{Basic information}
+
+\NewExpandableDocumentCommand \desert {} {desert}
+\NewExpandableDocumentCommand \Desert {} {Desert}
+
+\def \sep {{}\thinspace|\thinspace}
+\def \ltb {\textbf{<}}
+\def \gtb {\textbf{>}}
 
 \begin{BigPages} [hmargin=0.5cm, vmargin=1cm]
 
-\def \sep {{}\thinspace|\thinspace}
+\section{What desert does}
+
+\Desert
+loads only solid modern packages;
+provides key--value options with a uniform interface, irrespective of which packages are needed in backend;
+coordinates language- and locale-aware behavior;
+provides consistent key--value commands and environments like \verb|Quoting|, \verb|Chapter|,
+\verb|Caption|, and \verb|MultiPanelFigure|;
+patches a few things;
+and adds some miscellaneous commands like \verb|\fullref| and \verb|\doix|;
+It supports nomenclature, abbreviations, indices, footnotes, endnotes, float lists,
+theorem-like environments, figures, subfigures, tables.
+Optionally supports chemical diagrams, source code, etc.
+
+\section{Packages}
+
+Bold packages are directly useful for package authors.
+
+\begin{itemize}
+    \item glue: Rubber-preserving length/glue calculations
+    \item \textbf{info}: Store info (like authors),
+          print it with flexible key--value options (like \code{sep=}),
+          and automatically save data to \ac{XMP} PDF metadata.
+    \item \textbf{noms}: Supports \ctan{nomencl} by providing term grouping, etc.
+    \item \textbf{pidgin}: Coordinates different types of language-awareness via \ctan{babel},
+          \ctan{translations}, \ctan{tracklang}, \ctan{iflang}, \ctan{biblatex}, and \ctan{cleveref}.
+          Provides commands to set language-aware strings.
+    \item \textbf{semantic}: Provides semantic elements like \verb|\foreign| and \verb|\doi|.
+          Also provides \verb|\link| as convenient substitute for \verb|\href|.
+    \item tarmac: Loads and seriously patches \ctan{setspace}, and provides a \verb|\Tarmac| macro
+          to configure common document structure. Makes setspace macros behave consistently.
+    \item \textbf{textiles}: Save and use text styles (`textiles') like \verb|bold;sans;uppercase|.
+          More sophisticated than first appearances suggest.
+\end{itemize}
+
+\section{Category codes}
+
+\Desert sets the catcodes of \code{\^} and \code{\_} to 12, making them inactive in text mode.
+
+Note:
+In \code{desert.cls}, \code{pidgin.sty}, etc., \emph{Expl3 syntax} is used.
+In these files, \code{\@}, \code{\_}, and \code{:} have cat code 12, used in macro names.
+Spaces are ignored, and \code{\~} is used for a space.
+Outside of Expl3 mode, \code{\~} is instead used for a non-breaking space.
+This means you cannot copy code from one of these files to a \code{.tex} file
+without changing it or wrapping it in \verb|\ExplSyntaxOn| \ldots \verb|\ExplSyntaxOff|.
+
+\section{Conventions}
+
+\begin{itemize}[long]
+    \item Configuration commands, and those that take key--value syntax, use CamelCase.
+          Acronyms inside the names are treated as regular words. E.g. \verb|StartNsaTracking|.
+    \item Environments, at least those whose use is encouraged, are in CamelCase.
+          Aliases were sometimes made for this purpose; e.g. \verb|\begin{Enumerate}|
+          (\verb|enumerate| is fine too).
+    \item Commands that just show text are normally lowercase. They may have Capitalized or CamelCase
+          variants intended for use at the start of a sentence.
+          Examples: use either \verb|\indx| or \verb|\Indx|; \verb|\getinfo| or \verb|\GetInfo|; or
+          \verb|\infolist| or \verb|\InfoList|.
+          Packages \ctan{datetime2} and \ctan{cryptocode} have slightly different conventions, which are kept.
+          Datetime2 uses \verb|DTM<lowercase>| or \verb|DTM<camelcase>|.
+          Cryptocode uses lowercase for all of its environments; aliases are not provided.
+    \item Names of colors, textiles, etc. are all lowercase. Spaces are omitted except for \textsc{xkcd} color names.
+    \item \term{glue} refers to spacing, usually with \textit{stretch} and \textit{shrink} components.
+          Refer to \link{https://www.overleaf.com/learn/latex/Articles/How\_TeX\_Calculates\_Glue\_Settings\_in\_an\_\%5Chbox}[Overleaf's glue article]. (In \desert's options, \term{glue} includes rigid lengths.)
+\end{itemize}
+
+\section{Limitations}
+
+\begin{itemize}[long]
+    \item \code{draft} and the language (e.g. \code{USenglish}) are not documentclass-level options,
+          so packages that look for them won't find them. The language is provided to Babel
+          and directly to \ctan{cleveref} and optionally to \ctan{varioref}, which is sufficient.
+          Other packages that rely on the documentclass option will need workarounds.
+          \ctan{cryptocode} relies on the global \code{draft} option and will not pick up on
+          \desert's own \code{draft=true}.
+    \item Many \desert \code{sty / } options are \textit{nullary} only. This means you may not pass in commands that
+          modify the text, such as \code{txtuppercase} or \code{uppertosmallcaps}.
+          (The same goes for \code{MakeTextLowercase}, which is discouraged anyway.)
+    \item Widths \code{rule / mid} and \code{rule / top} cannot be used directly in tabularray's inner option.
+          Instead, pass, e.g. \code{hline{Z} = 0.08ex} directly.
+    \item \term{New}, \term{Provide}, \term{Declare}, and \term{Renew} have specific meanings defined by \ctan{xparse}.
+          Also, \term{Put} will replace data to a list or mapping.
+\end{itemize}
+
+\begin{itemize}
+    \item \link{https://www.overleaf.com/learn}[Overleaf's documentation]
+    \item \link{https://www.overleaf.com/learn/latex/Articles}[in-depth LaTeX guides]
+    \item \link{https://tex.stackexchange.com/}[StackExchange TeX]
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/tabularray/tabularray.pdf}[tabularray]
+    \item \link{https://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf}[graphicx]
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/siunitx/siunitx.pdf}[siunitx] to properly and consistently typeset quantities, ranges, etc.
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/acro/acro-manual.pdf} for all abbreviation needs
+    \item \link{https://mirrors.ctan.org/macros/unicodetex/latex/fontspec/fontspec.pdf}[fontspec] for configuring non-mathematical fonts
+    \item \link{https://mirrors.ctan.org/macros/unicodetex/latex/unicode-math/unicode-math.pdf}[unicode-math] for mathematical fonts
+    \item \link{https://mirrors.ctan.org/macros/unicodetex/latex/unicode-math/unimath-symbols.pdf}[list of math symbols]
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/newfloat/newfloat.pdf} to declare environments like figures, tables, etc.
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/caption/caption.pdf}[caption]
+          and \link{https://mirrors.ctan.org/macros/latex/contrib/caption/subcaption.pdf}[subcaption] for captions and subfigures
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/cleveref/cleveref.pdf}[cleveref]
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/enumitem/enumitem.pdf}[enumitem]
+    \item \link{https://mirrors.ctan.org/macros/latex/required/amsmath/amsldoc.pdf}[amsmath] for math environments (ignore fonts)
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/thmtools/doc/thmtools-manual.pdf}[thmtools]
+          and \link{https://mirrors.ctan.org/macros/latex/contrib/mathtools/mathtools.pdf}[mathtools] to understand theorem-like environments
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/cryptocode/cryptocode.pdf} for formal algorithms, etc.
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/minted/minted.pdf}[minted] for syntax highlighting
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/csvsimple/csvsimple-l3.pdf}[csvsimple-l3] to load tables from CSV
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/chemmacros/chemmacros-manual.pdf}[chemmacros],
+          \link{https://mirrors.ctan.org/macros/latex/contrib/chemformula/chemformula-manual.pdf}[chemformula],
+          and \link{https://mirrors.ctan.org/macros/generic/chemfig/chemfig-en.pdf}[chemfig]
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/l3packages/xparse.pdf}[xparse]
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/l3kernel/expl3.pdf}[L3 overview]
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/l3kernel/l3styleguide.pdf}[L3 style guide]
+    \item \link{https://mirrors.ctan.org/macros/latex/contrib/l3kernel/interface3.pdf}[L3 documentation]
+\end{itemize}
+
+\chapter{Class options and config}
+
+
 
 \begin{LongTable} [
     theme                  = longfoot,
@@ -13,13 +138,22 @@
     entry                  = {Package key--value options},
     label                  = {options},
     note{a}                = {
-        \code{level} can be \code{none} \sep \code{part} \sep \code{chapter} \sep
-        \code{section} \sep \code{subsection} \sep \code{subsubsection} \sep
-        \code{paragraph} \sep \code{subparagraph}
+        \codeopts{level,none,part,chapter} \sep
+        \codeopts{section,subsection,subsubsection} \sep
+        \codeopts{paragraph,subparagraph}
     } ,
     note{b}                = {
-        \code{numbering} can be \code{alph} \sep \code{Alph} \sep
-        \code{arabic} \sep \code{roman} \sep \code{Roman}.
+        \code{numbering} can be \codeopts{alph,Alph,arabic,roman,Roman}.
+    } ,
+    note{c}                = {
+        \code{hdr} and \code{ftr}
+        are in key=value form with \code{//} as the delimiter.
+        The key and value are used in \verb|\fancyhead| and \verb|\fancyfoot|.
+        For example, \verb|C = \gettitle, \getauthors // LO,RE = \thepage/\pageref{LastPage}| will be used to call
+        \verb|\fancyfoot|[C]{\gettitle, \getauthors}| and \verb|\fancyfoot[LO,RE]{\thepage/\pageref{LastPage}}|.
+        \code{//} is used as the delimiter so that \code{,} and \code{/} are easily included in the text.
+        Note that \verb|\HideLinks| is automatically prepended to each; prefix with \verb|\ShowLinks| if needed.
+        Refer to \ctan{fancyhdr} for more info.
     } ,
     remark{Categories}     = {
         \code{pkg}: Packages/features;\\
@@ -73,19 +207,23 @@ langs & CSV & {
                 e.g. \code{GBenglish}, passed to \ctan{babel} \\
                 First element is main language
               }  \\
-mode & \code{thesis} \sep \code{article} \sep \code{book} &   \\
+mode & \codeopts{thesis,article,book} &   \\
 preset & {
-           \code{UCSF} \sep \code{Stanford} \sep \code{Cambridge} \sep \\
-           \code{CMU} \sep \code{AFour} \sep \code{LetterPaper}
+           \codeopts{UCSF,Stanford,Cambridge,CMU} \\
+           or \codeopts{AFour,LetterPaper}
          }  &  Only sets basic options \\
 pkg / \ctan{svg} & - & \verb|\includesvg| command  \\
 pkg / \ctan{kantlipsum} & - & \verb|\ikant| command \\
 pkg / \ctan{chemformula} & - &   \\
 pkg / \ctan{chemmacros} & - &    \\
 pkg / \ctan{chemfig} & - & Chemical diagrams  \\
+pkg / \ctan{tikz-cd} & - & Commutative diagrams  \\
 pkg / \ctan{cryptocode} & - &  Lots of things \\
 pkg / \ctan{imakeidx} & - & Make an index  \\
+pkg / \ctan{csvsimple} & - & \link{https://mirrors.ctan.org/macros/latex/contrib/csvsimple/csvsimple-l3.pdf}[csvsimple-l3] \\
 pkg / \ctan{knowledge} & - & Hyperlinks to topics, etc.  \\
+pkg / \ctan{fontawesome5} & - & \link{https://fontawesome.com/}[fontawesome]  \\
+pkg / noms & - & Nomenclature via \ctan{nomencl}  \\
 pkg / \ctan{tikz} & - & Tikz and some libraries \\
 pkg / graphs & - & Tikz graph-drawing \\
 pkg / \ctan{lettrine} & - &  Big first letter via \verb|\lettrine| \\
@@ -102,27 +240,27 @@ color / ref & color &   \\
 color / url & color &   \\
 \ctan{cref} / abbrev & bool & Pass \verb|noabbrev| to cleveref if false  \\
 cref / capitalize & bool & Pass \code{capitalize} to cleveref  \\
+font / faces & \codeopts{LatinModern, STIX+LatinModern, STIX+SourceSans, STIX+NOTO} & preselected font setup (or use \ctan{fontspec} commands)
 font / size & float & E.g. \code{12pt}  \\
 font / leading & float & Space between baselines (e.g. \code{13pt})  \\
-header / left & any & E.g. \verb|p. \thepage|  \\
-header / center & any &   \\
-header / right & any &   \\
-footer / left & any &   \\
-footer / center & any &   \\
-footer / right & any &   \\
+header / front & hdr &   \\
+header / main & hdr &   \\
+header / back & hdr &   \\
+footer / front & ftr &   \\
+footer / main & ftr &   \\
+footer / back & ftr &   \\
 layout / \ctan{geometry} & prop &  Options passed to \verb|\geometry| \\
-layout / nom-symbol-width & h-dim & Between symbol and description  \\
 layout / index-cols & int & Number of columns in index  \\
 layout / index-col-sep & h-dim & Space between columns in index  \\
 layout / fnotes-to-endnotes & bool & Converts footnotes to endnotes  \\
 layout / endnote-backrefs & bool &   \\
 layout / show-toc-like-links & bool &   \\
 layout / show-nom-links & bool &   \\
-layout / fnote-align & \code{left} \sep \code{right} \sep \code{center} &   \\
+layout / fnote-align & \codeopts{left,right,center} &   \\
 layout / fnote-placement & {
-                             \code{default} \sep \code{abovefloats} \sep \\
-                             \code{belowfloats} \sep \code{bottom} \sep \\
-                             \code{bottomfloats} \sep \code{bottomfootnotes}
+                             \codeopts{default,abovefloats} \sep \\
+                             \codeopts{belowfloats,bottom} \sep \\
+                             \codeopts{bottomfloats,bottomfootnotes}
                            } &   \\
 stretch / main & float &   \\
 stretch / caption & float &   \\
@@ -139,19 +277,19 @@ num / main-chaps & numbering &   \\
 num / back-chaps & numbering &   \\
 num / fig-panels & numbering &   \\
 num / eqn-brackets & {
-                       \code{none} \sep \code{round} \sep \\
-                       \code{square} \sep \code{curly} \\
-                       \code{none-bold} \sep \code{round-bold} \sep \\
-                       \code{curly-bold} \sep \code{curly-bold}
+                       \codeopts{none,round} \sep \\
+                       \codeopts{square,curly} \sep \\
+                       \codeopts{none-bold,round-bold} \sep \\
+                       \codeopts{curly-bold,curly-bold}
                      } &   \\
 num / eqn-in & level &   \\
 num / float-in & level &   \\
-num / fnote-in & \code{none} \sep \code{page} \sep \code{chapter} &   \\
+num / fnote-in & \codeopts{none,page,chapter} &   \\
 num / fnotes & {
-                 \code{alph} \sep \code{Alph} \sep \code{arabic} \sep \\
-                 \code{roman} \sep \code{Roman} \sep \code{lamport} \sep \\
-                 \code{lamport*} \sep \code{bringhurst} \sep \\
-                 \code{chicago} \sep \code{wiley}
+                 \codeopts{alph,Alph,arabic} \sep \\
+                 \codeopts{roman,Roman,lamport} \sep \\
+                 \codeopts{lamport*,bringhurst} \sep \\
+                 \codeopts{chicago,wiley}
                } &   \\
 num / front-pages & numbering &   \\
 num / main-pages & numbering &   \\
@@ -198,10 +336,11 @@ toc / fig-panels & bool &  Show figure panels (e.g. \term{1A}) in TOC  \\
 typo / ban-hyphens & bool &  Sets hyphenation penalty to inf \\
 typo / caption-label-sep & any & Text after caption label (e.g. \code{: })  \\
 typo / subref-label-sep & any & Text after \verb|\subref| \\
-typo / subref-format & \code{simple} \sep \code{parens} &   \\
+typo / subref-format & \codeopts{simple,parens} &   \\
 typo / caption-table-note-sep & any &   \\
 typo / caption-table-rem-sep & any &   \\
 glue> / indent & h-dim & Paragraph indent (usually \code{1em})  \\
+glue< / nom-text & h-dim & Pad between symbol and text  \\
 glue< / toc-part & h-dim &  Left-padding for \term{part} in TOC \\
 glue< / toc-chap & h-dim &   \\
 glue< / toc-section & h-dim &   \\
@@ -265,10 +404,13 @@ art / code-box-border & dim & if \code{tcolorbox} is used \\
 art / code-box-arc & dim & angle (curve of box edge) \\
 art / code-box-bg & color & background color of code box \\
 art / even-row-bg & color & named color \code{evenrow} \\
-rule / top & v-dim  & width of \verb|\toprule| and \verb|\bottomrule| \\
-rule / mid & v-dim & width of \verb|\midrule| \\
-rule / cmid & v-dim & width of \verb|\cmidrule| \\
+rule / top & v-dim  & thickness of \verb|\toprule| and \verb|\bottomrule| \\
+rule / mid & v-dim & thickness of \verb|\midrule| \\
+rule / cmid & v-dim & thickness of \verb|\cmidrule| \\
+rule / header & v-dim & line above page header \\
+rule / footer & v-dim & line above page footer \\
 \end{LongTable}
+
 
 
 Packages not to load:
@@ -276,7 +418,8 @@ Packages not to load:
 \begin{itemize}
 \item \textbf{bibtex or natbib} (use \ctan{biblatex} and \ctan{biber})
 \item \textbf{any font package} (use \ctan{fontspec})
-\item \textbf{mathbb, mathscr, or mathcal} (use fontspec and \ctan{unicode-math})
+\item \textbf{amsfonts} (use \ctan{fontspec} and \ctan{unicode-math})
+\item \textbf{ntheorem} (use \ctan{amsthm} and \ctan{thmtools})
 \item \textbf{tabularx, longtable, threepartable, etc.} (use \ctan{tabularray})
 \item polyglossia (use \ctan{babel})
 \item titletoc (use \ctan{titlesec})
@@ -328,7 +471,6 @@ pidgin                      &                      & language                   
 \ctan{fontspec}             &                      & all font loading             \\
 textiles                    & faces                &                              \\
 \ctan{unicode-math}         &                      & math fonts, unicode chars    \\
-\ctan{lualatex-math}        &                      & patches                      \\
 glue                        &                      & rubber-preserving calc       \\
 \ctan{mathcommand}          &                      & prime+subscript-aware        \\
 info                        &                      & save/format data; set XMP    \\
@@ -385,11 +527,31 @@ noms                        &                      & nomencl groups and utils   
 \end{LongTable}
 
 
+
 \begin{LongTable} [
     theme                    = longfoot ,
     caption                  = {List of Desert commands} ,
     entry                    = {List of Desert commands} ,
     label                    = {commands} ,
+    remark{delimiters}       = {
+        Delimiters \code{\{\}}, \code{[]}, \code{<>}, \code{()}, \code{\^\^}, and \code{\$\$} are literal.
+        \code{\{\}} arguments are (almost always) required; \code{[]}, \code{<>}, and \code{()} are optional unless in bold.
+        \code{\^\^}  and \code{\$\$} wrap macros to be called before (\^\cdot\^) and after (\$\cdot\$).
+    } ,
+    remark{tokens}           = \code{*}, \code{!}, and \code{+} are optional literal tokens.
+                               Eg. \code{\{Chapter\}*}.
+    note{a}                  = \code{str=str}: key--value with unrestricted keys. ,
+    note{b}                  = \code{str}: any text excluding macros. ,
+    note{c}                  = \code{K--V}: Key--value with some number of supported keys. ,
+    note{d}                  = \code{url} and \code{doi}: Any \ac{URL} and \ac{DOI} ,
+    note{e}                  = \code{file}: A \code{/}-separated path to a file ,
+    note{f}                  = \code{str=str/str}: Mapping from name to \term{singular}\code{/}\term{plural};
+                               e.g. \code{figurelist = figure / figures} ,
+    note{g}                  = \code{env}: Name of an environment ,
+    note{h}                  = \code{file,\ldots} Comma-separated list of file paths ,
+    note{i}                  = \code{index-key}: A \code{!}-separated index string ,
+    note{j}                  = \code{int} and \code{float}: Positive integer and floating-point value ,
+    note{k}                  = { \code{label-list}: Comma-separated list of labels and label ranges using \code{- {}\thinspace -}; e.g. \textit{A,B--D,Z} } ,
 ]{
     rowhead                  = {1} ,
     row{1}                   = { font=\bfseries } ,
@@ -401,114 +563,147 @@ noms                        &                      & nomencl groups and utils   
     verb ,
 }
 command                     & options                    & description             \\
-SetNomGroups                & \{key=text\}               &                        \\
-PutNomGroups                & \{key=text\}               &                        \\
-PutDefaultNomGroups         &                            &                         \\
-NomText                     & see docs                   &                         \\
-NomMath                     & see docs                   &                         \\
-NomUnit                     & see docs                   &                         \\
-SetInfo                     & \{key=value\}              &                         \\
-PutInfo                     & \{key=value\}              &                         \\
-ProvideInfo                 & \{key=value\}              &                         \\
-NewInfo                     & \{key=value\}              &                         \\
-RenewInfo                   & \{key=value\}              &                         \\
-AddPdfDictData              & -                          & adds non-xmp to pdfinfo \\
-AddPdfHyperxmpData          & -                          & called automatically     \\
-getinfo                     & [KV] \{key\}               &                         \\
-GetInfo                     & [KV] \{key\}               & sentence-case variant   \\
-getinfolist                 & [KV] \{key\}               &                         \\
-GetInfoList                 & [KV] \{key\}               & sentence-case variant   \\
-ShowParSamples              & -                          & show current textiles  \\
-ShowTextSamples             & -                          & shorter version       \\
+SetNomGroups                & \{str=str\}              &                        \\
+PutNomGroups                & \{str=str\}              &                        \\
+PutDefaultNomGroups         & (str) [str] \{str\} \{str\} <str>                  & \\
+NomText                     & (str) [str] \{str\} \{str\} <str>                  &        \\
+NomMath                     & (str) [str] \{str\} \{str\} <str>                   &      \\
+NomUnit                     & (str) [str] \{str\} \{str\} <str>               &           \\
+SetInfo                     & \{str=str\}              &                         \\
+PutInfo                     & \{str=str\}              &                         \\
+ProvideInfo                 & \{str=str\}              &                         \\
+RemoveInfo                  & \{str\}                  &                         \\
+NewInfo                     & \{str=str\}              &                         \\
+RenewInfo                   & \{str=str\}              &                         \\
+AddPdfDictData              &                           & adds non-\ac{XMP} to pdfinfo \\
+AddPdfHyperxmpData          &                           & called automatically     \\
+getinfo                     & \{str\} [K--V]               &                         \\
+GetInfo                     & \{str\} [K--V]               & sentence-case variant   \\
+infolist                    & \{str\} [K--V]               &                         \\
+InfoList                    & \{str\} [K--V]               & sentence-case variant   \\
+InfoInline                  & \{str\} [K--V]             & format inline data  \\
+InfoListInline              & \{str,\ldots\} [K--V]        & format inline list data  \\
+txtuppercase                & \{any\}                    & smart upper-casing with pidgin \\
+txtlowercase                & \{any\}                    & smart lower-casing with pidgin \\
+txtsentencecase             & \{any\}                    & smart sentence-casing with pidgin \\
+txtsentencecasefirst        & \{any\}                    & smart sentence-casing with pidgin, ignoring rest \\
+HideLinks                   &                           & turn link color off \\
+ShowLinks                   &                           & turn link color on \\
+hidinglinks                 & \{any\}                  & hide link color for arg \\
+showinglinks                & \{any\}                  & show link color for arg \\
+ShowParSamples              &                           & show current textiles  \\
+ShowTextSamples             &                           & shorter version       \\
 ...                         & ...                        & lots more in textiles \\
-link                        & * \{url\} [text]           & easier \verb|href|  \\
-doi                         & * \{doi\}                  & \textsc{doi} link \\
+code                        & \{any\}                       & normally monospace \\
+opts                        & {str,\ldots} [K--V]        & e.g. `\code{1\sep2}' (note: not in semantic) \\
+foreign                     & \{any\}                       & normally italic \\
+link                        & * \{url\} [str]           & easier \verb|href|  \\
+ctan                        & * \{pkg\} [str]            & \ac{CTAN} package \\
+doi                         & * \{doi\}                  & \ac{DOI} link \\
 doix                        & * \{doi\}                  & with icon \\
+arxiv                         & * \{doi\}                  & \ac{ArXiV} link \\
+arxivx                        & * \{doi\}                  & with icon \\
 ...                         & ...                        & lots more in semantic \\
-Part                        & * [KV] \{name\}            &                       \\
-Chapter                     & * [KV] \{name\}            &                       \\
-Section                     & * [KV] \{name\}            &                       \\
-Subsection                  & * [KV] \{name\}            &                       \\
-Subsubsection               & * [KV] \{name\}            &                       \\
-Paragraph                   & * [KV] \{name\}            &                       \\
-SetBablelStrings            & \{name=str\}               &                         \\
-SetCrefStrings              & \{name=sing/plural\}       &                         \\
-SetTranslationStrings       & \{name=str\}               &                         \\
-SetBiblatexStrings          & \{name=str\}               &                         \\
-Aligning                    & \{e.g. center\}            &                        \\
-LoadFrontDocs               & \{files\}                  & \\
-LoadMainDocs                & \{files\}                  & \\
-LoadBackDocs                & \{files\}                  & \\
-LoadFrontSubdocs            & \{files\}                  & if using \ctan{subfile} \\
-LoadMainSubdocs             & \{files\}                  & if using \ctan{subfile} \\
-LoadBackSubdocs             & \{files\}                  & if using \ctan{subfile} \\
-StartSubFiles               & -                          & loads \ctan{subfiles} \\
+Part                        & * [K--V] \{str\}            &                       \\
+Chapter                     & * [K--V] \{str\}            &                       \\
+Section                     & * [K--V] \{str\}            &                       \\
+Subsection                  & * [K--V] \{str\}            &                       \\
+Subsubsection               & * [K--V] \{str\}            &                       \\
+Paragraph                   & * [K--V] \{str\}            &                       \\
+SetBabelStrings             & \{str=str\}               &                         \\
+SetCrefStrings              & \{str=str/str\}       &                         \\
+SetTranslationStrings       & \{str=str\}               &                         \\
+ProvideTranslations         & \{str=\str\}              & for packages; probably not needed \\
+SetBiblatexStrings          & \{str=str\}               &                         \\
+Aligning                    & \{str\}                   &                        \\
+LoadFrontDocs               & \{file,\ldots\}                  & \\
+LoadMainDocs                & \{file,\ldots\}                  & \\
+LoadBackDocs                & \{file,\ldots\}                  & \\
+LoadFrontSubdocs            & \{file,\ldots\}                  & if using \ctan{subfile} \\
+LoadMainSubdocs             & \{file,\ldots\}                  & if using \ctan{subfile} \\
+LoadBackSubdocs             & \{file,\ldots\}                  & if using \ctan{subfile} \\
+StartSubFiles               &                           & loads \ctan{subfiles} \\
 LoadBib                     & \{file\}                   & just \verb|\addbibresource| \\
 LoadTex                     & \{file\}                   & just \verb|\input| \\
-NewFrontChapter             & \{name\} [KV] [KV]         & make new environment \\
-DeclareFrontChapter         & \{name\} [KV] [KV]         & make environment \\
-NewSpecialChapter           & \{name\} [KV] [KV]         & make new environment \\
-DeclareSpecialhapter        & \{name\} [KV] [KV]         & make environment \\
-AbstractHeader              & -                          &  \\
-TitleContents               & -                          & title page contents \\
-ShowTitle                   & -                          & renders title page \\
-StartChapter                & [KV] \{name\}              & alternative to env \\
-EndChapter                  & -                          &  \\
-StartFrontMatter            & -                          & normally not needed \\
-StartMainMatter             & -                          & normally not needed \\
-StartBackMatter             & -                          & normally not needed \\
-ShowBackBib                 & -                          & not normally needed \\
-ShowFullBib                 & -                          & not normally needed \\
-ShowSubBib                  & -                          & not normally needed \\
-ShowEndNotes                & -                          & not normally needed \\
-ShowIndex                   & -                          & \\
-NewTheoremEnvs              & [KV] \{env=sing/plural\}   & \\
-StandardTheoremEnvs         & -                          & \\
-ShowTableOfContents         & -                          & \\
+DeclareDezPageStyle         & \{pagestyle\} \{hdr\} \{ftr\}  &   \\
+NewFrontChapter             & \{env\} [K--V]          & make new environment \\
+DeclareFrontChapter         & \{env\} [K--V]          & make environment \\
+NewAppendix                 & \{env\} [K--V]          & make new environment \\
+DeclareAppendix             & \{env\} [K--V]          & make environment \\
+NewSpecialChapter           & \{env\} [K--V]          & make new environment \\
+DeclareSpecialChapter       & \{env\} [K--V]          & make environment \\
+AbstractHeader              &                            &  \\
+TitleContents               &                            & title page contents \\
+ShowTitle                   &                            & renders title page \\
+StartChapter                & [K--V] \{str\}              & alternative to env \\
+EndChapter                  &                            &  \\
+StartFrontMatter            &                            & normally not needed \\
+StartMainMatter             &                            & normally not needed \\
+StartBackMatter             &                            & normally not needed \\
+ShowBackBib                 &                            & not normally needed \\
+ShowFullBib                 &                            & not normally needed \\
+ShowSubBib                  &                            & not normally needed \\
+ShowEndNotes                &                            & not normally needed \\
+ShowIndex                   &                            & \\
+NewTheoremEnvs              & [K--V] \{env=str/str\}   & \\
+StandardTheoremEnvs         &                            & \\
+ShowTableOfContents         &                            & \\
 ShowListOfFigures           & + !                        & \\
 ShowListOfTables            & + !                        & \\
 ShowListOfAbbreviations     & + !                        & \\
 ShowNomenclature            & + !                        & \\
-ShowListOfTheoremLike       & + ! \{KV\}                 & \\
+ShowListOfTheoremLike       & + ! \{K--V\}                 & \\
 ShowListOfSourceCode        & + !                        & \\
 ShowListOfReactionSchemes   & + !                        & \\
 ShowListOfStructuralFormulas& + !                        & \\
-indx                        & * \{text\} [in-index]      & \\
-Indx                        & * \{text\} [in-index]      & sentence-case variant \\
-captioning                  & [KV] \{caption\}           & swap-in for \verb|\caption| \\
-Caption                     & \{KV\}                     & KV-only \verb|\captioning| \\
-AddOnePanelFigure           & * [KV]                     & shorthand \\
-AddPanel                    & [KV]                       & for \code{MutliPanelFigure} \\
-AddPhantomPanel             & [KV]                       & for \code{PhantomPanelFigure} \\
-describepanels              & \{refs\} \{text\}          & \\
-describepanel               & \{ref\} \{text\}           & \\
-LoadTable                   & [KV] \{KV\} \{KV\} <path>  & \\
-NewDezBox                   & [KV] \{env\}               & \\
-DeclareDezBox               & [KV] \{env\}               & \\
-LoadSourceCode              & [KV] <path>                & loads if minted \\
-foreign                     & text                       & normally italic \\
-chaptersource               & \{cite-key\}               & full reference text \\
-reftitle                    & \{cite-key\}               & \\
-refdoi                      & \{cite-key\}               & \\
-refurl                      & \{cite-key\}               & \\
-ikant                       & [n]                        & next \term{n} \ctan{kantlipsum} \\
-rkant                       & [n]                        & \term{n}  random \ctan{kantlipsum} \\
-KnowledgeSetup              & \{KV\}                     & \verb|\knowledgeconfigure| \\
-SiSetup                     & \{KV\}                     & \verb|\sisetup| \\
-HyperSetup                  & \{KV\}                     & \verb|\hypersetup| \\
-AcroSetup                   & \{KV\}                     & \verb|\acsetup| \\
-CaptionSetup                & [what] \{KV\}              & \verb|\captionsetup| \\
-MintedSetup                 & \{KV\}                     & \verb|\setminted| \\
-GeometrySetup               & \{KV\}                     & \verb|\geometry| \\
-ChemSetup                   & \{KV\}                     & \verb|\chemsetup| \\
-CaptionSetup                & [what] \{KV\}              & \verb|\setlist| \\
-ChemfigSetup                & [scale] \{KV\}             & \verb|setchemfig| with opt scaling \\
-NomsSetup                   & \{KV\}                     & \\
-PidginMainLang              &                            & get main lang name (e.g. USenglish) \\
-PidginMainBase              &                            & get main base lang (e.g. english) \\
-PidginMainTag               &                            & get main tag (e.g. en-us) \\
+ShowListOfCircuits          & + !                        & \\
+indx                        & * \{str\} [index-key]      & \\
+Indx                        & * \{str\} [index-key]      & sentence-case variant \\
+captioning                  & [K--V] \{str\}             & swap-in for \verb|\caption| \\
+Caption                     & \{K--V\}                   & K--V-only \verb|\captioning| \\
+AddOnePanelFigure           & * [K--V]                   & shorthand \\
+AddPanel                    & [K--V]                     & for \code{MutliPanelFigure} \\
+AddPhantomPanel             & [K--V]                     & for \code{PhantomPanelFigure} \\
+describepanels              & \{label-list\} \{str\}      & \\
+describepanel               & \{label\} \{str\}           & just \verb|\describepanels| restricted to 1 panel\\
+panels                      & \{label-list\}              & multiple \verb|\subref| \\
+LoadTable                   & [K--V] \{K--V\} (K--V) \ltb file\gtb   & \\
+LoadTallTable               & [K--V] \{K--V\} (K--V) \ltb file\gtb   & \\
+LoadLongTable               & [K--V] \{K--V\} (K--V) \ltb file\gtb   & \\
+NewDezBox                   & (color) [K--V] \{env\}               & \\
+DeclareDezBox               & (color) [K--V] \{env\}               & \\
+DeclareDezFloat             & \{env\} \^macro\^ \$macro\$  & uses \ctan{newfloat} and makes a wrapper env \\
+LoadSourceCode              & [K--V] \ltb file \gtb   & loads if minted \\
+reffull                     & \{cite-key\}               & full reference text \\
+Quote                       & [K--V] \{text\}              & Key--value \ctan{csquotes} \\
+reftitle                    & \{cite-key\}                 & \\
+refdoi                      & \{cite-key\}                 & \\
+refurl                      & \{cite-key\}                 & \\
+ikant                       & [int]                        & next \term{n} \ctan{kantlipsum} \\
+rkant                       & [int]                        & \term{n}  random \ctan{kantlipsum} \\
+SetCounterWithin            & \{counter\} \{counter\}      & \verb|\counterwithin| and \verb|\counterwithout| combo
+KnowledgeSetup              & \{K--V\}                     & \verb|\knowledgeconfigure| \\
+MicrotypeSetup              & \{K--V\}                     & \verb|\microtypesetup| \\
+UnimathSetup                & \{K--V\}                     & \verb|\unimathsetup| \\
+DtmSetup                    & \{K--V\}                     & \verb|\DTMsetup| \\
+SiSetup                     & \{K--V\}                     & \verb|\sisetup| \\
+HyperSetup                  & \{K--V\}                     & \verb|\hypersetup| \\
+AcroSetup                   & \{K--V\}                     & \verb|\acsetup| \\
+CaptionSetup                & [str] \{K--V\}               & \verb|\captionsetup| \\
+TikzSetup                   & \{K--V\}                     & \verb|\tikzset| \\
+CircuitzSetup               & \{K--V\}                     & \verb|\ctikzset| \\
+MintedSetup                 & \{K--V\}                     & \verb|\setminted| \\
+GeometrySetup               & \{K--V\}                     & \verb|\geometry| \\
+ChemformulaSetup            & \{K--V\}                     & \verb|\setchemformula| \\
+CaptionSetup                & [str] \{K--V\}               & \verb|\setlist| \\
+ChemSetup                   & \{K--V\}                     & \verb|\chemsetup| \\
+ChemformulaSetup            & \{K--V\}                     & \verb|\setchemformula| \\
+ChemfigSetup                & [float] \{K--V\}             & \verb|setchemfig| with opt scaling \\
+NomsSetup                   & \{K--V\}                     & \\
+PidginMainLang              &                              & get main lang name (e.g. USenglish) \\
+PidginMainBase              &                              & get main base lang (e.g. english) \\
+PidginMainTag               &                              & get main tag (e.g. en-us) \\
 \end{LongTable}
-
 
 
 \begin{LongTable} [
@@ -527,38 +722,44 @@ PidginMainTag               &                            & get main tag (e.g. en
     verb ,
 }
 environment                 & options                          & description           \\
-FrontChapter                & [KV] \{name\}                    &                       \\
-SpecialChapter              & [KV] \{name\}                    &                       \\
-MainChapter                 & [KV] \{name\}                    &                       \\
-Appendix                    & [KV] \{name\}                    &                       \\
-Appendices                  & [KV] \{name\}                    & does nothing yet      \\
+FrontChapter                & [K--V] \{str\}                    &                       \\
+SpecialChapter              & [K--V] \{str\}                    &                       \\
+MainChapter                 & [K--V] \{str\}                    &                       \\
+Appendix                    & [K--V] \{str\}                    &                       \\
+Appendices                  &                                   & does nothing yet      \\
 Proof                       &                                  & fixed amsmath env      \\
-OnePanelFigure              & * [KV]                           &                        \\
-MultiPanelFigure            & * [KV]                           &                        \\
-PhantomPanelFigure          & * [KV]                           &                        \\
-Table                       & [KV] \{KV\}                      & tblr \\
-LongTable                   & [KV] \{KV\}                      & longtblr \\
-TallTable                   & [KV] \{KV\}                      & talltblr \\
-SourceCode                  & [KV]                             & \code{MintedCode} uses this \\
-MintedCode                  & [KV]                             & verbatim env \\
-StructuralFormula           & [KV]                             & needs chemfig \\
-ReactionScheme              & [KV]                             & needs chemfig \\
-where                       &                                  & table of terms inside eq \\
-BigPages                    & [KV]                             & use full page \\
-Align                       & \{method\}                       & \\
-Preface                     & [KV]                             & a \code{FrontChapter} \\
-Acknowledgments             & [KV]                             & a \code{FrontChapter} \\
-Contributions               & [KV]                             & a \code{FrontChapter} \\
-Abstract                    & [KV]                             & a \code{FrontChapter} \\
-Epigraph                    & [KV]                             & a \code{SpecialChapter} \\
-Dedication                  & [KV]                             & a \code{SpecialChapter} \\
-Copyright                   & [KV]                             & a \code{SpecialChapter} \\
-Title                       & [KV]                             & a \code{SpecialChapter} \\
-
+OnePanelFigure              & * [K--V]                           &                        \\
+MultiPanelFigure            & * [K--V]                           &                        \\
+PhantomPanelFigure          & * [K--V]                           &                        \\
+Table                       & [K--V] \{K--V\}                      & tblr \\
+LongTable                   & [K--V] \{K--V\}                      & longtblr \\
+TallTable                   & [K--V] \{K--V\}                      & talltblr \\
+SourceCode                  & [K--V]                             & \code{MintedCode} uses this \\
+MintedCode                  & [K--V]                             & verbatim env \\
+StructuralFormula           & [K--V]                             & needs \ctan{chemfig} \\
+ReactionScheme              & [K--V]                             & needs \ctan{chemfig} \\
+CommutativeDiagram          & [K--V]                             & needs \ctan{tikz-cd} \\
+Circuit                     & [K--V]                             & needs \ctan{circuitikz} \\
+Where                       &                                    & table of terms inside eq \\
+Quotation                   & [K--V]                             & all \ctan{csquotes} rolled into one \\
+BigPages                    & [K--V]                             & use full page \\
+Align                       & \{str\}                            & \\
+Preface                     & [K--V]                             & a \code{FrontChapter} \\
+Acknowledgments             & [K--V]                             & a \code{FrontChapter} \\
+Contributions               & [K--V]                             & a \code{FrontChapter} \\
+Abstract                    & [K--V]                             & a \code{FrontChapter} \\
+Epigraph                    & [K--V]                             & a \code{SpecialChapter} \\
+Dedication                  & [K--V]                             & a \code{SpecialChapter} \\
+Copyright                   & [K--V]                             & a \code{SpecialChapter} \\
+Title                       & [K--V]                             & a \code{SpecialChapter} \\
+Errata                      & [K--V]                             & an \code{Appendix} \\
+\textit{<DezBox>}
+       (e.g. \texttt{Hint}) & [K--V]              & \\
 \end{LongTable}
 
 
 \subsection{SpecialChapter}
+
 This environment has a square-brackets key--value optional arg, plus an optional curly-brace arg which sets the title and TOC entry, if displayed. The key--value args override the curly-brace arg if both are given.
 
 \begin{LongTable} [
@@ -591,8 +792,8 @@ above                    & v-dim                         & Padding from top     
 below                    & v-dim                         & Padding from bottom         \\
 textile                  & textile                       & Named textile for body         \\
 style                    & style                         & Inline textile commands (e.g. \verb|bold;sans|)         \\
-align                    & \code{left}\sep\code{center}\sep\code{right}\sep\code{justify}  & Of body         \\
-at                       & \code{top}\sep\code{middle}\sep\code{bottom}  & Of body         \\
+align                    & \codeopts{left,center,right,justify}  & Of body         \\
+at                       & \codeopts{top,middle,bottom}  & Of body         \\
 
 \end{LongTable}
 

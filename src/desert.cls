@@ -93,6 +93,16 @@
 \cs_new_protected:Npn \dez__note:nv #1#2
     { \msg_note:nnnn {dez} {generic} {#1} {#2} }
 
+\msg_new:nnn {dez} {cmdneedspkg}
+    { \c_backslash_str #1~requires~option~'pkg/#2' }
+\cs_new_protected:Npn \dez__warn_cmdneedspkg:nn #1#2
+    { \msg_warning:nnn {dez} {cmdneedspkg} {#1} {#2} }
+
+\msg_new:nnn {dez} {envneedspkg}
+    { Environment~#1~requires~option~'pkg/#2' }
+\cs_new_protected:Npn \dez__warn_envneedspkg:nn #1#2
+    { \msg_warning:nnn {dez} {envneedspkg} {#1} {#2} }
+
 
 
 %==================================================================================================
@@ -123,7 +133,7 @@
     { \prg_return_false: }
 }
 
-\NewDocumentCommand \@DezLoadFeat { o m }
+\NewDocumentCommand \@DezLoadFeat { O{} m }
 {
     \seq_if_in:NnT \g_dez_feat_seq {#2}
         { \RequirePackage [#1] {#2} }
@@ -179,8 +189,10 @@ mode .choices:nn                         = { thesis, article, book, }
 mode .initial:n                          = thesis ,
 
 pkg / svg .code:n                        = { \@add_feat {svg} } ,
+pkg / noms .code:n                       = { \@add_feat {noms} } ,
 pkg / kantlipsum .code:n                 = { \@add_feat {kantlipsum} } ,
 pkg / imakeidx .code:n                   = { \@add_feat {imakeidx} } ,
+pkg / tikz-cd .code:n                    = { \@add_feat {tikz-cd} } ,
 pkg / knowledge .code:n                  = { \@add_feat {knowledge} } ,
 pkg / lettrine .code:n                   = { \@add_feat {lettrine} } ,
 pkg / ulem .code:n                       = { \@add_feat {ulem} } ,
@@ -192,6 +204,7 @@ pkg / minted .code:n                     = { \@add_feat {minted} } ,
 pkg / chemformula .code:n                = { \@add_feat {chemformula} } ,
 pkg / chemmacros .code:n                 = { \@add_feat {chemmacros} } ,
 pkg / chemfig .code:n                    = { \@add_feat {chemfig} } ,
+pkg / circuitikz .code:n                 = { \@add_feat {circuitikz} } ,
 pkg / cryptocode .code:n                 = { \@add_feat {cryptocode} } ,
 
 bib / hide-lang .bool_gset:N             = \g_dez_bib_hide_lang_bool ,
@@ -219,6 +232,9 @@ cref / capitalize .bool_gset:N           = \g_dez_cref_capitalize_bool ,
 cref / capitalize .default:n             = true ,
 cref / capitalize .initial:n             = false ,
 
+font / faces .choices:nn                 = { LatinModern, STIX+LatinModern, STIX+SourceSans, STIX+NOTO }
+                                           { \@str_to \g_dez_font_face_str \l_keys_choice_tl } ,
+font / faces .initial:n                  = LatinModern ,
 font / size .tl_gset:N                   = \g_dez_font_size_tl ,
 font / size .initial:n                   = 11pt ,
 font / leading .tl_gset:N                = \g_dez_font_leading_tl ,
@@ -271,19 +287,21 @@ layout / fnote-placement .initial:n       = default ,
 stretch / main .fp_gset:N                 = \g_dez_stretch_main_fp ,
 stretch / main .initial:n                 = 1.5 ,
 stretch / caption .fp_gset:N              = \g_dez_stretch_caption_fp ,
-stretch / caption .initial:n              = 1.1 ,
+stretch / caption .initial:n              = 1.2 ,
 stretch / eqn .fp_gset:N                  = \g_dez_stretch_eqn_fp ,
-stretch / eqn .initial:n                  = 1.1 ,
+stretch / eqn .initial:n                  = 1.25 ,
 stretch / toc .fp_gset:N                  = \g_dez_stretch_toc_fp ,
-stretch / toc .initial:n                  = 1.1 ,
+stretch / toc .initial:n                  = 1.25 ,
 stretch / list-of .fp_gset:N              = \g_dez_stretch_lof_fp ,
-stretch / list-of .initial:n              = 1.2 ,
+stretch / list-of .initial:n              = 1.25 ,
 stretch / abbrevs .fp_gset:N              = \g_dez_stretch_abbrevs_fp ,
-stretch / abbrevs .initial:n              = 1.2 ,
+stretch / abbrevs .initial:n              = 1.25 ,
 stretch / nom .fp_gset:N                  = \g_dez_stretch_nom_fp ,
-stretch / nom .initial:n                  = 1.1 ,
+stretch / nom .initial:n                  = 1.25 ,
+stretch / refs .fp_gset:N                 = \g_dez_stretch_refs_fp ,
+stretch / refs .initial:n                 = 1.25 ,
 stretch / source-code .fp_gset:N          = \g_dez_stretch_code_fp ,
-stretch / source-code .initial:n          = 1.0 ,
+stretch / source-code .initial:n          = 1.25 ,
 
 num / depth .choices:nn                  = {
                                              none, chapter, section, subsection, subsubsection ,
@@ -373,8 +391,8 @@ sty / part-label .prop_gput:N            = \g_dez_nullary_prop ,
 sty / part-label .initial:n              = Huge; bold ,
 sty / part-name .prop_gput:N             = \g_dez_nullary_prop ,
 sty / part-name .initial:n               = HUGE; bold ,
-sty / chemical-diagram .prop_gput:N      = \g_dez_nullary_prop ,
-sty / chemical-diagram .initial:n        = sans; small ,
+sty / tikz .prop_gput:N                  = \g_dez_nullary_prop ,
+sty / tikz .initial:n                    = sans; small ,
 sty / fnote-body .prop_gput:N            = \g_dez_nullary_prop ,
 sty / fnote-body .initial:n              = mini; sans ,
 sty / foreign-words .prop_gput:N         = \g_dez_unary_prop ,
@@ -422,6 +440,8 @@ toc / fig-panels .bool_gset:N            = \g_dez_toc_panels_bool ,
 toc / fig-panels .default:n              = true ,
 toc / fig-panels .initial:n              = false ,
 
+typo / display-quote-lines .int_gset:N   = \g_dez_typo_display_quote_lines_int ,
+typo / display-quote-lines .initial:n    = 3 ,
 typo / ban-hyphens .bool_gset:N          = \g_dez_typo_ban_hyphens_bool ,
 typo / ban-hyphens .default:n            = true ,
 typo / ban-hyphens .initial:n            = false ,
@@ -462,11 +482,13 @@ glue< / rem-title .initial:n             = 0.8em plus 0.02em minus 0.01em ,
 glue: / paragraph .skip_gset:N            = \g_dez_btw_paragraphs_skip ,
 glue: / paragraph .initial:n              = 2ex plus 0.2ex minus 0.2ex ,
 glue: / item .skip_gset:N                 = \g_dez_btw_items_skip ,
-glue: / item .initial:n                   = 0.8ex plus 0.1ex minus 0.1ex , % TODO
+glue: / item .initial:n                   = 0ex plus 0.1ex ,
 glue: / long-item .skip_gset:N            = \g_dez_btw_multipar_items_skip ,
 glue: / long-item .initial:n              = 1ex plus 0.1ex minus 0.025ex ,
 glue: / fnote .skip_gset:N                = \g_dez_btw_fnotes_skip ,
-glue: / fnote .initial:n                  = 0.4ex plus 0.05ex minus 0.0125ex ,
+glue: / fnote .initial:n                  = 0.5ex plus 0.05ex minus 0.0125ex ,
+glue: / nom .skip_gset:N                  = \g_dez_btw_noms_skip ,
+glue: / nom .initial:n                    = 0ex plus 0.1ex ,
 glue: / ref .skip_gset:N                  = \g_dez_btw_refs_skip ,
 glue: / ref .initial:n                    = 0.5ex plus 0.05ex minus 0.0125ex ,
 glue' / fnote-list .skip_gset:N           = \g_dez_abv_fnote_list_skip ,
@@ -511,6 +533,8 @@ glue. / subsubsec .skip_gset:N            = \g_dez_bel_subsubsec_skip ,
 glue. / subsubsec .initial:n              = 2ex plus 0.2ex minus 0.05ex ,
 glue' / nom-group .skip_gset:N            = \g_dez_abv_nomgroup_skip ,
 glue' / nom-group .initial:n              = 2ex plus 0.2ex minus 0.05ex ,
+%glue' / lof-chap-group .skip_gset:N       = \g_dez_lof_chap_skip ,
+%glue' / lof-chap-group .initial:n         = 1ex plus 0.1ex ,
 glue' / paragraph .skip_gset:N            = \g_dez_abv_paragraph_skip ,
 glue' / paragraph .initial:n              = 2ex plus 0.2ex minus 0.2ex ,
 glue' / thm-like .skip_gset:N             = \g_dez_abv_thm_skip ,
@@ -709,7 +733,7 @@ rule / cmid .initial:n                   = 0.04ex ,
 
 % These may eventually be removed
 
-\NewDocumentCommand \Ucsf {}
+\NewDocumentCommand \UCSF {}
 {
     \tl_gset:Nn \g_dez_mode_str {thesis}
     \tl_gput_left:Nn \g_dez_geometry_tl { letterpaper, margin=1in, footskip=0.5in, }
@@ -718,7 +742,7 @@ rule / cmid .initial:n                   = 0.04ex ,
 }
 
 % CMU has requirements for footnotes that I doubt I'm handling correctly
-\NewDocumentCommand \Cmu {}
+\NewDocumentCommand \CMU {}
 {
     \tl_gset:Nn \g_dez_mode_str {thesis}
     \tl_gput_left:Nn \g_dez_geometry_tl { letterpaper, margin=1in, footskip=0.25in, }
@@ -738,7 +762,7 @@ rule / cmid .initial:n                   = 0.04ex ,
         letterpaper, twoside,
         top=1in, bottom=1in, outer=1.5in, inner=1in, footskip=0.5in,
     }
-    \bool_gset:Nn \g_dez_stretch_main_tl {1.5}
+    \fp_gset:Nn \g_dez_stretch_main_tl {1.5}
     \dez_be_american:
 }
 
@@ -827,7 +851,6 @@ rule / cmid .initial:n                   = 0.04ex ,
 \@RP [backend=biber] {biblatex}    % BibLaTeX! after: hyperref
 \@RP {accsupp}                     % before: acro
 \@RP {acro}                        % for all abbreviations
-\@RP {noms}                        % nomenclature groups and utils
 
 % layout & spacing
 \@RP [explicit] {titlesec}         % to format headers; explicit: use #1
@@ -870,6 +893,7 @@ rule / cmid .initial:n                   = 0.04ex ,
 \@RP {siunitx}                     % pretty units
 
 % optional features
+\@LF {noms}                        % nomenclature groups and utils
 \@LF [newfloat] {minted}
 \@LF [xparse] {tcolorbox}
 \@LF {cryptocode}
@@ -877,8 +901,10 @@ rule / cmid .initial:n                   = 0.04ex ,
 \@LF {chemformula}
 \@LF {chemfig}
 \@LF {svg}
-\dez_if_feat_enabled:nT {tcolorbox}
-    { \@RP {fontawesome5} }
+\@LF {tcolorbox}
+\@LF {fontawesome5}
+\@LF [siunitx] {circuitz}
+\@LF {tikz-cd}
 
 \dez_if_feat_enabled:nT {tikz}
 {
@@ -891,8 +917,6 @@ rule / cmid .initial:n                   = 0.04ex ,
     % shapes and arrows
     \@PG     { shapes.geometric, arrows, }
     \@TZ     { decorations.markings, decorations.pathmorphing, decorations.pathreplacing, }
-    % specific
-    \@RP     { tikz-cd }
     %  graphs
     \dez_if_feat_enabled:nT {graphs}
     {
@@ -910,7 +934,27 @@ rule / cmid .initial:n                   = 0.04ex ,
 \@LF {varioref}
 \@LF [ no~patch, electronic ] {knowledge}
 % Load cleveref via pidgin
+
+\SetBabelStrings {
+    reactionscheme        = Reaction ,
+    listreactionscheme    = List~of~Reactions ,
+    structuralformula     = Structural~Formula ,
+    liststructuralformula = List~of~Structural~Formula ,
+    listendnote           = Notes ,
+    listabbreviation      = List~of~Abbreviations ,
+    nomenclature          = Nomenclature ,
+}
+
 \pidgin_close:
+
+\cs_undefine:N \@RP
+\cs_undefine:N \@PP
+\cs_undefine:N \@LF
+\cs_undefine:N \@TL
+\cs_undefine:N \@PG
+\cs_undefine:N \@TZ
+\cs_undefine:N \@GD
+
 
 % it's utterly weird that these can be different
 % report and book use bibname, while article uses refname
@@ -918,6 +962,7 @@ rule / cmid .initial:n                   = 0.04ex ,
 
 % Run our friendly hook:
 \DezPostPackagesHook
+
 
 % Send our dez options to textiles!
 % The colors are saved to both xcolor and l3color.
@@ -938,6 +983,7 @@ rule / cmid .initial:n                   = 0.04ex ,
 \tl_gset:Nx  \g_dez_stretch_nom_tl       { \fp_use:N \g_dez_stretch_nom_fp }
 \tl_gset:Nx  \g_dez_stretch_code_tl      { \fp_use:N \g_dez_stretch_code_fp }
 \tl_gset:Nx  \g_dez_stretch_caption_tl   { \fp_use:N \g_dez_stretch_caption_fp }
+\tl_gset:Nx  \g_dez_stretch_refs_tl      { \fp_use:N \g_dez_stretch_refs_fp }
 
 
 
@@ -1032,19 +1078,22 @@ rule / cmid .initial:n                   = 0.04ex ,
     }
     { \endtabularx }
 
-
-% Set nomenclature spacing
-\cs_new:Npn \dez__nomgroup_header:n #1
+\dez_if_feat_enabled:nT {noms}
 {
-    \textiles_use:nn {nom-group} {#1}
+    % Set nomenclature spacing
+    \cs_new:Npn \dez__nomgroup_header:n #1
+    {
+        \textiles_use:nn {nom-group} {#1}
+    }
+    \NomsSetup
+    {
+        header-skip   = \g_dez_abv_nomgroup_skip ,
+        header-format = dez__nomgroup_header:n ,
+    }
+    \def \nomlabelwidth {\dim_use:N \g_dez_nom_symbol_dim}
+    \skip_set:Nn \l_tmpa_skip {-\parsep + \g_dez_btw_noms_skip}
+    \exp_args:NNe \setlength \nomitemsep { \skip_use:N \l_tmpa_skip }
 }
-\NomsSetup
-{
-    header-skip   = \g_dez_abv_nomgroup_skip ,
-    header-format = dez__nomgroup_header:n ,
-}
-\def \nomlabelwidth {\dim_use:N \g_dez_nom_symbol_dim}
-\setlength \nomitemsep {0ex}
 
 
 
@@ -1335,6 +1384,19 @@ rule / cmid .initial:n                   = 0.04ex ,
 %                           basic numbering
 %==================================================================================================
 
+\cs_new_protected:Npn \dez_counter_within:nV #1#2
+{
+    \str_if_eq:nnTF {#2} {none}
+        { \counterwithout {#1} {#2} }
+        { \counterwithin {#1} {#2} }
+        % there's also \numberwithin
+}
+
+\NewDocumentCommand \SetCounterWithin { m m }
+{
+    \dez_counter_within:nn {#1} {#2}
+}
+
 \cs_new_protected:Npn \dez__number_within:nV #1#2
     { \numberwithin {#1} {#2} }
 
@@ -1408,7 +1470,7 @@ rule / cmid .initial:n                   = 0.04ex ,
 
 \setenotez {reset=true}
 \AtEndPreamble
-    { \setenotez { list-name = \pidgin_string:n{listendnote} } }
+    { \setenotez { list-name = \crtcrefpluralname{note} } }
 
 \bool_if:NT \g_dez_endnote_backrefs_bool  % needs 2022+ !
     { \setenotez {backref=true} }
@@ -1882,43 +1944,71 @@ rule / cmid .initial:n                   = 0.04ex ,
     \acresetall
 }
 
-
-\NewDocumentCommand \NewFrontChapter { m O{} O{} }
+\cs_new_protected:Npn \dez__newfrontchap:nnN #1#2#3
 {
-    % any title= will override G{#1}
-    % e.g. \NewFrontMatter{Abstract}[title=Abstracto]
-    \NewDocumentEnvironment {#1} { O{#3} G{#1} } 
+    #3 {#1} { O{} G{#1} } 
         { \begin {FrontChapter} [#2, ##1] {##2} }
         { \end   {FrontChapter} }
 }
 
-\NewDocumentCommand \DeclareFrontChapter { m O{} O{} }
-{
-    \DeclareDocumentEnvironment {#1} { O{#3} G{#1} } 
-        { \begin {FrontChapter} [#2, ##1] {##2} }
-        { \end   {FrontChapter} }
-}
+\NewDocumentCommand \NewFrontChapter { m O{} }
+    { \dez__newfrontchap:nnN {#1} {#2} \NewDocumentEnvironment }
 
-\NewDocumentCommand \NewSpecialChapter { m O{} O{} }
+\NewDocumentCommand \DeclareFrontChapter { m O{} }
+    { \dez__newfrontchap:nnN {#1} {#2} \DeclareDocumentEnvironment }
+
+\NewDocumentCommand \RenewFrontChapter { m O{} }
+    { \dez__newfrontchap:nnN {#1} {#2} \RenewDocumentEnvironment }
+
+\NewDocumentCommand \ProvideFrontChapter { m O{} }
+    { \dez__newfrontchap:nnN {#1} {#2} \ProvideDocumentEnvironment }
+
+
+\cs_new_protected:Npn \dez__newspecialchap:nnN #1#2#3
 {
-    % any title= will override G{#1}
-    % e.g. \NewSpecialChapter{Dedication}[title={}]
-    \NewDocumentEnvironment {#1} { O{#3} G{#1} }
+    #3 {#1} { O{} G{#1} } 
         { \begin {SpecialChapter} [#2, ##1] {##2} }
         { \end   {SpecialChapter} }
 }
 
-\NewDocumentCommand \DeclareSpecialChapter { m O{} O{} }
+\NewDocumentCommand \NewSpecialChapter { m O{} }
+    { \dez__newspecialchap:nnN {#1} {#2} \NewDocumentEnvironment }
+
+\NewDocumentCommand \DeclareSpecialChapter { m O{} }
+    { \dez__newspecialchap:nnN {#1} {#2} \DeclareDocumentEnvironment }
+
+\NewDocumentCommand \RenewSpecialChapter { m O{} }
+    { \dez__newspecialchap:nnN {#1} {#2} \RenewDocumentEnvironment }
+
+\NewDocumentCommand \ProvideSpecialChapter { m O{} }
+    { \dez__newspecialchap:nnN {#1} {#2} \ProvideDocumentEnvironment }
+
+
+\cs_new_protected:Npn \dez__newappendix:nnN #1#2#3
 {
-    \DeclareDocumentEnvironment {#1} { O{#3} G{#1} }
-        { \begin {SpecialChapter} [#2, ##1] {##2} }
-        { \end   {SpecialChapter} }
+    #3 {#1} { O{} G{#1} } 
+        { \begin {Appendix} [#2, ##1] {##2} }
+        { \end   {Appendix} }
 }
+
+\NewDocumentCommand \NewAppendix { m O{} }
+    { \dez__newfrontchap:nnN {#1} {#2} \NewDocumentEnvironment }
+
+\NewDocumentCommand \DeclareAppendix { m O{} }
+    { \dez__newfrontchap:nnN {#1} {#2} \DeclareDocumentEnvironment }
+
+\NewDocumentCommand \RenewAppendix { m O{} }
+    { \dez__newfrontchap:nnN {#1} {#2} \RenewDocumentEnvironment }
+
+\NewDocumentCommand \ProvideAppendix { m O{} }
+    { \dez__newfrontchap:nnN {#1} {#2} \ProvideDocumentEnvironment }
+
 
 \NewFrontChapter   {Preface}           [ entry=Preface, ]
 \NewFrontChapter   {Acknowledgments}   [ entry=Acknowledgments, ]
 \NewFrontChapter   {Contributions}     [ entry=Contributions, ]
 \NewFrontChapter   {Abstract}          [ entry=Abstract, no-title, numberless, ]
+\NewAppendix       {Errata}            [ entry=Errata, ]
 \NewSpecialChapter {Epigraph}          [ entry=Epigraph, no-title, at=middle, style=sans;large, ]
 \NewSpecialChapter {Dedication}        [ entry=Dedication, no-title, at=middle,
                                          style=sans;large;italic, ]
@@ -2183,10 +2273,6 @@ rule / cmid .initial:n                   = 0.04ex ,
     \dez__par_addvspace:N \g_dez_bel_proof_skip
 }
 
-\NewDocumentEnvironment {Proof} { o }
-    { \begin {proof} [#1] }
-    { \end {proof} }
-
 
 \str_clear:N \l_tmpa_str
 \str_if_eq:VnTF \g_dez_thm_in_str {none}
@@ -2242,8 +2328,18 @@ rule / cmid .initial:n                   = 0.04ex ,
 %                     lists of things
 %==================================================================================================
 
+% replace the 10pt extra space
+% https://tex.stackexchange.com/questions/784/how-to-change-the-line-spacing-in-my-list-of-figures
+%\newcommand* \dezfixchapspace
+%{
+%    \renewcommand* \addvspace [1] {\dez__par_addvspace:N \g_dez_lof_chap_skip}
+%}
+%\addtocontents {lof} { \protect \dezfixchapspace }
+%\addtocontents {lot} { \protect \dezfixchapspace }
+
 \cs_new_protected:Npn \dez__fix_lof:n #1
 {
+    %\addtocontents{lof}{\protect\noaddvspace}
     \renewcommand \listoffigures
     {   % listfigurename already gets set
         \bool_if:nTF {#1}
@@ -2382,7 +2478,7 @@ rule / cmid .initial:n                   = 0.04ex ,
         \let \oldchapter \chapter
         \renewcommand {\chapter}
             { {  % both braces
-                 \oldchapter { \pidgin_string:n {listnomenclature} }
+                 \oldchapter { \pidgin_string:n {nomenclature} }
             } }
     }
     \exp_args:NV \setstretch \g_dez_stretch_nom_tl
@@ -2390,7 +2486,7 @@ rule / cmid .initial:n                   = 0.04ex ,
         { \hypersetup{hidelinks} }
     % also uses \nomitemsep, which we earlier set to baselineskip
     \printnomenclature
-    \dez_maybe_add_toc:nnn {#1} {#2} { \pidgin_string:n {listnomenclature} }
+    \dez_maybe_add_toc:nnn {#1} {#2} { \pidgin_string:n {nomenclature} }
     \group_end:
 }
 
@@ -2432,6 +2528,22 @@ rule / cmid .initial:n                   = 0.04ex ,
     \listofstructuralformulas
     \dez_maybe_add_toc:nnn {#1} {#2} { \pidgin_string:n {liststructuralformula} }
     \end {LofLikeListInternal}
+}
+
+
+\NewDocumentCommand \ShowListOfCircuits { t! t+ }
+{
+    \dez_if_feat_enabled:nTF {circuitikz}
+    {
+        \begin {LofLikeListInternal} {#1}
+        \exp_args:NV \setstretch \g_dez_stretch_lof_tl
+        \listofcircuits
+        \dez_maybe_add_toc:nnn {#1} {#2} { \pidgin_string:n {listcircuit} }
+        \end {LofLikeListInternal}
+    }
+    {
+        \dez__warn_cmdneedspkg:nn {ShowListOfCircuits} {circuitikz}
+    }
 }
 
 
@@ -2550,8 +2662,10 @@ rule / cmid .initial:n                   = 0.04ex ,
 
 \cs_new_protected:Npn \dez__new_float:n #1
 {
-    \tl_set:Nx \l_tmpa_tl { \pidgin_string:n{#1} }
-    \tl_set:Nx \l_tmpb_tl { \pidgin_string:n{list#1} }
+    \tl_set:Nn \l_tmpa_tl {X}
+    \tl_set:Nn \l_tmpb_tl {Y}  % TODO
+    %\tl_set:Nx \l_tmpa_tl { \pidgin_string:n{#1} }
+    %\tl_set:Nx \l_tmpb_tl { \pidgin_string:n{list#1} }
     \dez__new_float_x:nVV {#1} \l_tmpa_tl \l_tmpb_tl
     \captionsetup [#1]
     {
@@ -2817,30 +2931,60 @@ rule / cmid .initial:n                   = 0.04ex ,
 }
 
 
-\NewDocumentCommand \describepanels { m m }
+\NewDocumentCommand \IncludeGraphics { O{} m }
 {
-    % TODO: split by --
-    \textiles_use:nn
-        {subref}
-        {
-            \ProcessList {#1} {\subref}
-            \g_dez_typo_subref_label_sep_tl
-        }
-        #2
+    \dez__include_graphics:nn[#1]{#2}
 }
-\NewDocumentCommand \describepanel { m m }
-    { \describepanels {#1} {#2} }
 
-\NewDocumentCommand \describepanelrange { m m m }
+
+
+%==================================================================================================
+%                            panel captioning
+%==================================================================================================
+
+\regex_const:Nn \c_dez__endash_regex {--}
+
+\NewDocumentCommand \panel { O{} m O{} }
 {
-    \textiles_use:nn
-        {subref}
+    \textiles_use:nn {subref} { #1 \subref{#2} #3 }
+}
+
+\NewDocumentCommand \panels { O{} m O{} }
+{
+    \textiles_use:nn {subref}
+    {
+        #1
+        \clist_map_inline:nn {#2}
         {
-            \subref{#1}--\subref{#2}
-            \g_dez_typo_subref_label_sep_tl
+            \regex_split:NnNTF \c_dez__endash_regex {##1} \l_tmpa_seq
+            {
+                \seq_pop_left:N \l_tmpa_seq \l_tmpa_tl
+                \seq_pop_left:N \l_tmpa_seq \l_tmpb_tl
+                \exp_args:NV \subref \l_tmpa_tl
+                --
+                \exp_args:NV \subref \l_tmpb_tl
+            }
+            {
+                \subref{##1}
+            }
         }
         #3
+    }
 }
+
+\NewDocumentCommand \describepanels { m m }
+{
+    \panels {#1} [\g_dez_typo_subref_label_sep_tl]
+    #2
+}
+
+\NewDocumentCommand \describepanel { m m }
+{
+    \panel {#1} [\g_dez_typo_subref_label_sep_tl]
+    #2
+}
+
+
 
 
 
@@ -2994,31 +3138,38 @@ rule / cmid .initial:n                   = 0.04ex ,
 \exp_args:NnV \colorlet {evenrow} \g_dez_even_row_bg_tl
 
 
+
+%==================================================================================================
+%                            tables from CSV
+%==================================================================================================
+
+
 % Process an external table with csvsimple-l3.
 %                    == ARGS ==                                       %
 %  #      R? arg     description                                      %
-% { #1 }  Y  OUTER   key-value args to tblr outer[] (e.g. caption=)
+% [ #1 ]  Y  OUTER   key-value args to tblr outer[] (e.g. caption=)
 % { #2 }  Y  INNER   key-value args to tblr inner{} (e.g. colspec=)
-% [ #3 ]  N  READER  key-value args to csvreader (e.g. separator=tab)
+% ( #3 )  N  READER  key-value args to csvreader (e.g. separator=tab)
 % < #4 >  Y  FILE    Path to file (e.g. cows.csv)
-%
-\NewDocumentCommand \LoadTable { O{} m O{} r<> }
+
+\NewDocumentCommand \LoadTableInternal { O{} m D(){} r<> }
 {
     \group_begin:
-    \exp_args:Ne \SetTblrInner { \dez__simple_table:n{1} }
     \SetTblrOuter {#1}
-    \csvreader
-    [
-        no~head ,
-        long~tabularray         = {#2} ,
-        table~head              = {\toprule} ,
-        table~foot              = {\midrule} ,
-        late~after~first~line   = {\\\bottomrule} ,
-        #3
-    ]
-    {#4}
+    \exp_args:NV \SetTblrInner { \dez_simple_table_inner:, #2 }
+    \csvreader [ no~head, #3 ] {#4}
     \group_end:
 }
+
+\NewDocumentCommand \LoadTable { O{} m D(){} r<> }
+    { \LoadTable [#1] {#2} (generic~collected~table = booktabs, #3) <#4> }
+
+\NewDocumentCommand \LoadTallTable { O{} m D(){} r<> }
+    { \LoadTable [#1] {#2} (generic~collected~table = talltabs, #3) <#4> }
+
+\NewDocumentCommand \LoadLongTable { O{} m D(){} r<> }
+    { \LoadTable [#1] {#2} (generic~collected~table = longtabs, #3) <#4> }
+
 
 
 
@@ -3121,8 +3272,8 @@ rule / cmid .initial:n                   = 0.04ex ,
     entry .initial:n     = {} ,
     caption .tl_set:N    = \l__caption_tl ,
     caption .initial:n   = {} ,
-    minted .tl_set:N     = \l__minted_tl ,
-    minted .initial:n    = {} ,
+    options .tl_set:N     = \l__minted_tl ,
+    options .initial:n    = {} ,
     no-box .bool_set:N   = \l__no_box_bool ,
     no-box .default:n    = true ,
     no-box .initial:n    = false ,
@@ -3178,13 +3329,13 @@ rule / cmid .initial:n                   = 0.04ex ,
 
 
 
-
 %==================================================================================================
-%                               chemistry
+%                               new user float types
 %==================================================================================================
 
+\tl_new:N \CurrentFloatOptions
 
-\keys_define:nn { dez / chem }
+\keys_define:nn { dez / miscfloat }
 {
     label .tl_set:N       = \l__label_tl ,
     label .initial:n      = {} ,
@@ -3192,22 +3343,55 @@ rule / cmid .initial:n                   = 0.04ex ,
     entry .initial:n      = {} ,
     caption .tl_set:N     = \l__caption_tl ,
     caption .initial:n    = {} ,
-    chemfig .tl_set:N     = \l__chemfig_tl ,
-    chemfig .initial:n    = {} ,
+    options .tl_gset:N    = \CurrentFloatOptions ,
+    options .initial:n    = {} ,
 }
+
+\cs_new:Npn \dez_declare_float_type:ncc #1#2#3
+{
+    \dez__new_float:n {IDez#1}
+    \NewDocumentEnvironment {#1} { O{} }
+    {
+        \keys_set:nn {dez / miscfloat} {##1}
+        \begin {Dez#1}
+        #2
+    }
+    {
+        \dez__capkeyval:
+        #3
+        \end {IDez#1}
+    }
+    \tl_clear:N \CurrentFloatOptions  % becuase it's global
+}
+
+\NewDocumentCommand \DeclareDezFloat { m D\^\^{prg_do_nothing:} D\$\${prg_do_nothing:} }
+{
+    \dez_declare_float_type:nnn {#1} {#2} {#3}
+}
+
+
+
+
+%==================================================================================================
+%                             field-specific floats
+%==================================================================================================
 
 \dez__new_float:n {reactionscheme}
 \dez__new_float:n {structuralformula}
+\dez__new_float:n {circuit}
 
 \NewDocumentEnvironment {ReactionScheme} { O{} }
 {
     \keys_set:nn {dez / chem} {#1}
     \begin{reactionscheme}
-    \textiles_run_nullary:n {dez-chemistry}
-    \dez_if_feat_enabled:nT {chemfig}
+    \textiles_run_nullary:n {tikz}
+    \dez_if_feat_enabled:nTF {chemfig}
     {
-        \setchemfig {\l__chemfig_tl}
+        \setchemfig {\CurrentFloatOptions}
         \schemestart
+    }
+    {
+        \dez__warn_envneedspkg:nn {ReactionScheme} {chemfig}
     }
 }
 {
@@ -3221,27 +3405,134 @@ rule / cmid .initial:n                   = 0.04ex ,
 {
     \keys_set:nn {dez / chem} {#1}
     \begin {structuralformula}
-    \textiles_run_nullary:n {dez-chemistry}
-    \dez_if_feat_enabled:nT {chemfig}
-        { \setchemfig {\l__chemfig_tl} }
+    \textiles_run_nullary:n {tikz}
+    \dez_if_feat_enabled:nTF {chemfig}
+        {
+            \setchemfig {\CurrentFloatOptions}
+        }
+        {
+            \dez__warn_envneedspkg:nn {StructuralFormula} {chemfig}
+        }
 }
 {
     \dez__capkeyval:
     \end {structuralformula}
 }
 
+\NewDocumentEnvironment {Circuit} { O{} }
+{
+    \keys_set:nn {dez / circuit} {#1}
+    \begin {circuit}
+    \textiles_run_nullary:n {tikz}
+    \dez_if_feat_enabled:nTF {circuitikz}
+        {
+            \begin {circuitikz} [\CurrentFloatOptions]
+        }
+        {
+            \dez__warn_envneedspkg:nn {Circuit} {circuitikz}
+        }
+}
+{
+    \dez__capkeyval:
+    \end {circuitikz}
+    \end {circuit}
+}
 
 
+
+
+%==================================================================================================
+%                    quotations
+%==================================================================================================
+
+\exp_args:Ne \SetBlockThreshold { \int_use:N \g_dez_typo_display_quote_lines_int }
+
+% not supporting hyphenation; use otherlanguage* instead
+\keys_define:nn { dez / quote }
+{
+    style .choices:nn       = { block, text, display }
+                              { \@str_to \l_style_str \l_keys_choice_tl } ,
+    style .initial:n        = block ,
+    lang .tl_set:N          = \l_lang_tl ,
+    lang .initial:n         = {} ,
+    pre .tl_set:N           = \l_pre_tl ,
+    pre .initial:n          = {} ,
+    post .tl_set:N          = \l_post_tl ,
+    post .initial:n         = {} ,
+    cite .tl_set:N          = \l_cite_tl ,
+    cite .initial:n         = {} ,
+    punct .tl_set:N         = \l_punct_tl ,
+    punct .initial:n        = {} ,
+}
+
+\cs_new_protected:Npn \dez__blockcquote:VVVVn #1#2#3#4#5
+{
+    \blockcquote [#1] [#2] {#3} [#4] {#5}
+}
+
+\NewDocumentCommand \Quote { O{} m }
+{
+    \group_begin: \group_begin:   % TWICE! Needed for \selectlanguage
+    \keys_set:nn {dez / quote} {#1}
+    \tl_if_blank:VF \l_lang_tl
+        { \selectlanguage {\l_lang_tl} }
+    \tl_if_eq:NnT \l_style_str {text}
+        { \SetBlockThreshold {1000000} }
+    \tl_if_eq:NnT \l_style_str {display}
+        { \SetBlockThreshold {-1} }
+    \tl_if_blank:VTF \l_cite_tl
+        { \dez__blockcquote:VVVVn \l_pre_tl \l_post_tl \l_cite_tl \l_punct_tl {#2} }
+        { \blockquote {#2} }
+    \group_end: \group_end:      % TWICE! Needed for \selectlanguage
+}
+
+\NewDocumentEnvironment {Quotation} { O{} +b }
+    { \Quote [ style=display, #1 ] {#2} }
+    { }
+
+
+% use \textelp, \textelp*, \textins, and \textins*
+% \newcommand{\mktextelp}{[\textellipsis\unkern]}
+% \newcommand{\mktextelpins}[1]{[\textellipsis\unkern]␣[#1]}
+% \newcommand{\mktextinselp}[1]{[#1]␣[\textellipsis\unkern]}
+% \newcommand{\mktextins}[1]{[#1]}
+% \newcommand{\mktextmod}[1]{[#1]}
 
 %==================================================================================================
 %                    typography
 %==================================================================================================
+
+\NewDocumentCommand \codeopts {m}
+{
+    \InfoListInline {#1} [ sep=|, pre={}\thinspace, post=\thinspace, style=mono, ]
+}
 
 \RenewDocumentCommand \foreign { m }
 {
     \textiles_use:nn {foreign-words} {#1}  % e.g. "et al." or "in vivo"
 }
 
+\unimathsetup
+{
+    colon       = literal ,  % NOT default but recommended
+    %mathrm      = sym ,      % NOT default:
+    %mathit      = sym ,
+    %mathsf      = sym ,
+    %mathbf      = sym ,
+    %mathtt      = sym ,
+    math-style  = ISO ,      % NOT default but recommended
+    bold-style  = ISO ,      % NOT default but recommended
+}
+
+% Load the font
+\prop_const_from_keyval:Nn \c_dez_face_to_cmd
+{
+    LatinModern          = UseLatinModern ,
+    STIX+LatinModern     = UseStixAndLatinModern ,
+    STIX+SourcePro       = UseStixAndSourcePro ,
+    STIX+NOTO            = UseStixAndNoto ,
+}
+\use:c { \prop_item:NV \c_dez_face_to_cmd \g_dez_font_face_str }
 
 % Really none of these should be changed, EXCEPT
 % group-digits group-minimum-digits, and maybe group-separator.
@@ -3257,24 +3548,21 @@ rule / cmid .initial:n                   = 0.04ex ,
     reset-text-shape          = false ,
     retain-explicit-plus      = true ,       % +1 stays +1, not 1
     retain-zero-uncertainty   = true ,       % \pm 0 still shown
-    group-minimum-digits      = 3 ,          % starting at this number (1,000)
+    group-minimum-digits      = 3 ,          % starting at this number (1 000)
     group-digits              = all ,        % 'all' is acceptable with thinspace
     group-separator           = \thinspace ,
 }
 
+% because we're using Babel and requiring a full dialect,
+% regional is a good choice
+\DTMsetregional
 
-% We pass the author, etc., at the preamble end, after the user set it.
-\hypersetup
-{
-    colorlinks ,
-    linktoc       = all ,
-    linkcolor     = ref ,
-    citecolor     = cite ,
-    urlcolor      = url ,
-    filecolor     = file ,
-    final         = true ,  % ignore global settings
-    draft         = false ,
-}
+
+
+
+%==================================================================================================
+%                    kantlipsum
+%==================================================================================================
 
 
 \dez_if_feat_enabled:nT {kantlipsum}
@@ -3311,11 +3599,22 @@ rule / cmid .initial:n                   = 0.04ex ,
 %                front, main, back matter commands
 %==================================================================================================
 
+\NewDocumentCommand \DezInternalPrintBib {O{}}
+{
+    \group_begin:
+    \exp_args:NV \setstretch \g_dez_stretch_refs_tl
+    \exp_args:NNe \setlength \bibitemsep { \skip_use:N \g_dez_btw_refs_skip }
+    \setlength \bibnamesep {0pc}  % between different authors
+    \setlength \bibinitsep {0pc}  % between authors with different initials (first letter)
+    \printbibliography [#1]
+    \group_end:
+}
+
 % Shows the bibliography at the end of the chapter, if \g_dez_bib_per_chap_bool
 \NewDocumentCommand \ShowSubBib {}
 {
     \bool_if:NT \g_dez_bib_per_chap_bool
-        { \printbibliography [heading=subbibintoc] }
+        { \DezInternalPrintBib [heading=subbibintoc] }
 }
 
 \NewDocumentCommand \ShowEndNotes {}
@@ -3329,7 +3628,7 @@ rule / cmid .initial:n                   = 0.04ex ,
 \NewDocumentCommand \ShowFullBib {}
 {
     \bool_if:NF \g_dez_bib_per_chap_bool
-        { \printbibliography }
+        { \DezInternalPrintBib }
 }
 
 \cs_new_protected:Npn \dez__chap_num:N #1
@@ -3385,11 +3684,19 @@ rule / cmid .initial:n                   = 0.04ex ,
 %                     setup commands
 %==================================================================================================
 
+
+%==================================================================================================
+%                     setup commands
+%==================================================================================================
+
 % We're just aliasing to make them consistent.
 % Setup commands should end with 'Setup' and be camel-case.
 
-\NewDocumentCommand \KnowledgeSetup {m}
-    { \knowledgeconfigure {#1} }
+\NewDocumentCommand \UnimathSetup {m}
+    { \unimathsetup {#1} }
+
+\NewDocumentCommand \MicrotypeSetup {m}
+    { \microtypesetup {#1} }
 
 \NewDocumentCommand \SiSetup {m}
     { \sisetup {#1} }
@@ -3400,20 +3707,59 @@ rule / cmid .initial:n                   = 0.04ex ,
 \NewDocumentCommand \AcroSetup {m}
     { \acsetup {#1} }
 
+\NewDocumentCommand \DtmSetup {m}
+    { \DTMsetup {#1} }
+
 \NewDocumentCommand \CaptionSetup { o m }
     { \captionsetup [#1] {#2} }
-
-\NewDocumentCommand \MintedSetup {m}
-    { \setminted {#1} }
 
 \NewDocumentCommand \GeometrySetup {m}
     { \geometry {#1} }
 
-\NewDocumentCommand \ChemSetup {m}
-    { \chemsetup {#1} }
-
 \NewDocumentCommand \ListSetup { o m }
     { \setlist [#1] {#2} }  % enumitem
+
+\NewDocumentCommand \KnowledgeSetup {m}
+{
+    \dez_if_feat_enabled:nTF {chemmacros}
+        { \knowledgeconfigure {#1} }
+        { } % TODO: warning
+}
+
+\NewDocumentCommand \MintedSetup {m}
+{
+    \dez_if_feat_enabled:nTF {chemmacros}
+        { \setminted {#1} }
+        { } % TODO: warning
+}
+
+\NewDocumentCommand \TikzSetup {m}
+{
+    \dez_if_feat_enabled:nTF {tikz}
+        { \tikzset {#1} }
+        { } % TODO: warning
+}
+
+\NewDocumentCommand \CircuitzSetup {m}
+{
+    \dez_if_feat_enabled:nTF {circuitikz}
+        { \ctikzset {#1} }
+        { } % TODO: warning
+}
+
+\NewDocumentCommand \ChemformulaSetup {m}
+{
+    \dez_if_feat_enabled:nTF {chemformula}
+        { \setchemformula {#1} }
+        { } % TODO: warning
+}
+
+\NewDocumentCommand \ChemSetup {m}
+{
+    \dez_if_feat_enabled:nTF {chemmacros}
+        { \chemsetup {#1} }
+        { } % TODO: warning
+}
 
 
 \cs_new_protected:Npn \dez__chemfig_aux:n #1
@@ -3443,13 +3789,90 @@ rule / cmid .initial:n                   = 0.04ex ,
 
 \NewDocumentCommand \ChemfigSetup { >{\TrimSpaces}O{1} m}
 {
-    \setchemfig{#2}
-    % it's inconvenient to just say, "my diagrams are too big"
-    % arg [#1] is a coefficient to rescale all lengths
-    \fp_set:Nn \l_tmpa_fp {#1}  % make sure it's valid
-    \tl_if_eq:nn {#1} {1}  % cheat a bit for performance
-        { \dez__chemfig_aux:n {#1} }
+    \dez_if_feat_enabled:nTF {chemfig}
+    {
+        \setchemfig{#2}
+        % it's inconvenient to just say, "my diagrams are too big"
+        % arg [#1] is a coefficient to rescale all lengths
+        \fp_set:Nn \l_tmpa_fp {#1}  % make sure it's valid
+        \tl_if_eq:nn {#1} {1}  % cheat a bit for performance
+            { \dez__chemfig_aux:n {#1} }
+    }
+    {
+        % TODO: warning
+    }
 }
+
+
+
+%==================================================================================================
+%                     more aliases for consistency
+%==================================================================================================
+
+
+% camel-case aliases of "document-wide" commands
+% datetime2 uses capitalized variants, so leave those alone
+
+% packages
+% UseTikzLibrary and \UseGdLibrary were defined intelligently at the top
+\let \UsePackage          \usepackage
+% fonts
+\let \FontSpec            \fontspec
+\let \SetMainFont         \setmainfont
+\let \SetSansFont         \setsansfont
+\let \SetMonoFont         \setmonofont
+\let \SetMathFont         \setmathfont
+% counters
+\let \NewCounter          \newcounter
+\let \DefCounter          \defcounter
+\let \SetCounter          \setcounter
+\let \AddToCounter        \addtocounter
+\let \StepCounter         \stepcounter
+\let \RefStepCounter      \refstepcounter
+% and SetCounterWithin
+% babel
+\let \SelectLanguage      \selectlanguage
+\let \ForeignLanguage     \foreignlanguage
+\let \BabelFont           \babelfont
+\let \BabelTags           \babeltags
+% pages
+\let \PageStyle           \pagestyle
+\let \AssignPageStyle     \assignpagestyle
+\let \NewPage             \newpage
+\let \ClearPage           \clearpage
+\let \ClearDoublePage     \cleardoublepage
+% misc
+\let \SetQuoteStyle       \setquotestyle
+\let \ReverseMarginPar    \reversemarginpar
+\let \NormalMarginPar     \normalmarginpar
+\let \DeclareTheoremStyle \declaretheoremstyle
+\let \DeclareTheorem      \declaretheorem
+% leave \marginpar
+
+
+\NewDocumentEnvironment {TikzPicture} { }
+    { \begin {tikzpicture} }
+    { \end {tikzpicture} }
+
+\NewDocumentEnvironment {Proof} { o }
+    { \begin {proof} [#1] }
+    { \end {proof} }
+
+\NewDocumentEnvironment {Figure} { o }
+    { \begin {figure} [#1] }
+    { \end {figure} }
+
+\NewDocumentEnvironment {OtherLanguage} { s m }
+    {
+    \bool_if:nTF {#1}
+        { \begin{otherlanguage*}{#2} }
+        { \begin{otherlanguage}{#2} }
+    }
+    { \end{otherlanguage} }
+
+\NewDocumentEnvironment {OtherLanguage*} { m }
+    { \begin{otherlanguage*}{#1} }
+    { \end{otherlanguage*} }
 
 
 
@@ -3513,15 +3936,8 @@ rule / cmid .initial:n                   = 0.04ex ,
     { \input {#1} }
 
 
-% Defaults, which should be changed.
-% These are all passed to \hypersetup at the end.
 \SetInfo
 {
-    title       = A Title ,
-    author      = An Author ,
-    subject     = A Subject ,
-    keywords    = {Several, Keywords} ,
-    degree      = some degree ,
     lang        = \g_dez_lang_str ,
 }
 
@@ -3533,20 +3949,22 @@ rule / cmid .initial:n                   = 0.04ex ,
 %==================================================================================================
 
 % Nomenclature!
-\makenomenclature
+\dez_if_feat_enabled:nT {noms}
+    { \makenomenclature }
 
 % Run \makeindex
 \dez_if_feat_enabled:nT {imakeidx}
 {
-    \tl_set_eq:NN \l_tmpa_tl \g_dez_lay_index_cols_int
-    \tl_set:Nx \l_tmpb_tl { \dim_use:N \g_dez_lay_index_col_sep_dim }
     \bool_if:NTF \g_dez_toc_index_bool
-        {
-            \makeindex [ intoc, columns = {\l_tmpa_tl},  columnsep = {\l_tmpb_tl} ]
-        }
-        { 
-            \makeindex [        columns = {\l_tmpa_tl},  columnsep = {\l_tmpb_tl} ]
-        }
+        { \tl_set:Nn \l_tmpa_tl {intoc} }
+        { \tl_set:Nn \l_tmpa_tl {}      }
+    \exp_last_unbraced:Ne
+        \makeindex
+        { [
+            \l_tmpa_tl ,
+            columns    = { \int_use:N \g_dez_lay_index_cols_int } ,
+            columnsep  = { \dim_use:N \g_dez_lay_index_col_sep_dim } ,
+        ] }
 }
 
 

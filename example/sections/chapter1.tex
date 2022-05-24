@@ -23,9 +23,21 @@ It is usually computed in the cloud. With \ac{CRISPR}.
 
 \textsc{This had better be in smallcaps.}
 
-\blockcquote{johnson2022}{Life is good.}
+Quotations can use \ctan{csquotes}, or key--value commands that Desert added:
+As Johnson herself once said, \Quote[cite=johnson2022]{life is good}.
+She also said that in Spanish, \Quote[style=display, lang=spanish, punct=.]{la vida es buena}.
+You can also use \verb|\DisplayQuote| and \verb|\TextQuoteQuote|, along with the environment:
+
+%\begin{Quotation}[]  % default style for env is display (choices are text, display, and block (default))
+
+%\end{Quotation}
+
+
 
 We recovered \qty{5}{\tera\joule} from the craft.
+
+Do not use mathcal, etc. Instead, refer to: \link{https://mirror.math.princeton.edu/pub/CTAN/macros/unicodetex/latex/unicode-math/unimath-symbols.pdf}.
+%$\mbfJ \mbfscrH \mbfscrl \mbffrakF \mathhyphen \BbbZ \mscrH \trprime$
 
 \begin{itemize}
     \item These are short bullet points. These are short bullet points. These are short bullet points. See? See? It's ok if it goes over multiple lines.
@@ -43,7 +55,7 @@ We recovered \qty{5}{\tera\joule} from the craft.
     
     See? This continued to a second paragraph, and it needs a little more space between items for that reason. Otherwise it's not clear where a paragraph ends and where a bullet point ends.
     
-    \item Again this is happening. We want to be nice to LaTex.
+    \item Again this is happening. We want to be nice to LaTeX.
     
     See? This continued to a second paragraph, and it needs a little more space between items for that reason. Otherwise it's not clear where a paragraph ends and where a bullet point ends.
 \end{itemize}

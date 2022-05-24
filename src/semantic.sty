@@ -45,11 +45,13 @@
 \NewExpandableDocumentCommand \parttitle { m }
     { ``#1" }
 
-\NewExpandableDocumentCommand \quoteaddition { m }
-    { [#1] }
+% use \textelp, \textelp*, \textins, and \textins* from csquotes instead
 
-\NewExpandableDocumentCommand \quoteomission { }
-    { [\ldots] }
+%\NewExpandableDocumentCommand \quoteaddition { m }
+%    { [#1] }
+
+%\NewExpandableDocumentCommand \quoteomission { }
+%    { [\ldots] }
 
 
 \NewDocumentCommand \brokensequence { m }
@@ -100,11 +102,6 @@
 
 %\def\@myurl@#1{\hyper@linkurl{#2}{#1}}
 
-\newcommand{\myhref}[2]
-{
-    \href{#1}{#2}
-}
-
 \tl_const:Nx \c_https_tl {https \c_colon_str //}
 
 \cs_new_protected:Npn \semantic_link:nnn #1#2#3
@@ -116,8 +113,10 @@
     {
         \group_begin:
         \bool_if:nT {#1}
-            { \hypersetup{urlcolor={}, linkbordercolor={}} }
-        \href {#2} {#3}
+            { \hypersetup{hidelinks=true} }
+        \tl_if_blank:nTF {#3}
+            { \href {#2} {#2} }
+            { \href {#2} {#3} }
         \group_end:
     }
 }

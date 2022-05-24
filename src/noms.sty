@@ -23,6 +23,27 @@
 \str_gset:Nn \g_noms_math_str {Z}
 \str_gset:Nn \g_noms_unit_str {U}
 
+\prop_const_from_keyval:Nn \c_noms_default_groups_prop
+{
+    C = Constants ,
+    F = Functions ,
+    M = Sets , 
+    N = Sequences ,
+    O = Operators ,
+    U = Units ,
+    Z = Other~symbols ,
+}
+
+\prop_const_from_keyval:Nn \c_noms_syntactic_groups_prop
+{
+    A = Latin~symbols ,
+    G = Greek~symbols ,
+    X = Superscripts , 
+    Y = Subscripts , 
+    Z = Other~symbols ,
+}
+
+
 \NewDocumentCommand \SetNomGroups {m}
     { \prop_gset_from_keyval:Nn \g_noms_prop {#1} }
 
@@ -34,7 +55,10 @@
 }
 
 \NewDocumentCommand \PutDefaultNomGroups {}
-    { \PutNomGroups{C=Constants,F=Functions,M=Sets,N=Sequences,U=Units,Z=Other~symbols} }
+{
+    \prop_map_inline:Nn \c_noms_default_groups_prop
+        { \prop_put:Nnn \g_noms_prop {##1} {##2} }
+}
 
 \skip_new:N \noms_header_skip
 \skip_gset:Nn \noms_header_skip { 2ex plus 0.2ex minus 0.1ex }
@@ -52,7 +76,7 @@
 {
     groups .code:n = { \SetNomGroups{#1} } ,
     groups .initial:n = {} ,
-    add-default-groups .code:n = { \AddDefaultNomGroups } ,
+    add-default-groups .code:n = { \PutDefaultNomGroups } ,
     add-default-groups .default:n = true ,
     default-text-group .tl_gset:N = \g_noms_text_str ,
     default-math-group .tl_gset:N = \g_noms_math_str ,
@@ -96,41 +120,31 @@
         { \nomenclature [#1,#2] {#7} {\NomGroupLink{#5}{#4 \hfill #6}} }
 }
 
-\NewDocumentCommand \NomText
+\cs_new_protected:Npn \noms_new_cmd:nnnN #1#2#3#4
 {
-    >{\TrimSpaces}D(){\g_noms_text_str} % 1 group
-    >{\TrimSpaces}O{}                        % 2 optional sort key
-    >{\TrimSpaces}m                          % 3 symbol
-    >{\TrimSpaces}m                          % 4 description
-    >{\TrimSpaces}D<>{}                      % 5 optional URL
-    >{\TrimSpaces}O{}                        % 6 optional value on right
-}
-{
-    \noms_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{#3}
-}
-
-\NewDocumentCommand \NomMath
-{
-    >{\TrimSpaces}D(){\g_noms_math_str} % 1 group
-    >{\TrimSpaces}O{}                        % 2 optional sort key
-    >{\TrimSpaces}m                          % 3 symbol
-    >{\TrimSpaces}m                          % 4 description
-    >{\TrimSpaces}D<>{}                      % 5 optional URL
-    >{\TrimSpaces}O{}                        % 6 optional value on right
-}
-{
-    \noms_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{\ensuremath{#3}}
+    #4 {#1}
+    {
+        >{\TrimSpaces}D(){#2}     % 1 group
+        >{\TrimSpaces}O{}         % 2 optional sort key
+        >{\TrimSpaces}m           % 3 symbol
+        >{\TrimSpaces}m           % 4 description
+        >{\TrimSpaces}D<>{}       % 5 optional URL
+        >{\TrimSpaces}O{}         % 6 optional value on right
+    }
+    {
+        \noms_make:vvnnnnn {##1} {##2} {##3} {##4} {##5} {##6} {#3{##3}}
+    }
 }
 
-\NewDocumentCommand \NomUnit
-{
-    >{\TrimSpaces}D(){\g_noms_unit_str} % 1 group
-    >{\TrimSpaces}O{}                        % 2 optional sort key
-    >{\TrimSpaces}m                          % 3 symbol
-    >{\TrimSpaces}m                          % 4 description
-    >{\TrimSpaces}D<>{}                      % 5 optional URL
-    >{\TrimSpaces}O{}                        % 6 optional value on right
-}
-{
-    \noms_make:vvnnnnn{#1}{#2}{#3}{#4}{#5}{#6}{\unit{#3}}
-}
+\NewDocumentCommand \NewNomCmd { m D(){\g_noms_text_str} m }
+    { \noms_new_cmd:nnnN {#1} {#2} {#3} \NewDocumentCommand }
+\NewDocumentCommand \RenewNomCmd { m D(){\g_noms_text_str} m }
+    { \noms_new_cmd:nnnN {#1} {#2} {#3} \RenewDocumentCommand }
+\NewDocumentCommand \DeclareNomCmd { m D(){\g_noms_text_str} m }
+    { \noms_new_cmd:nnnN {#1} {#2} {#3} \DeclareDocumentCommand }
+\NewDocumentCommand \ProvideNomCmd { m D(){\g_noms_text_str} m }
+    { \noms_new_cmd:nnnN {#1} {#2} {#3} \ProvideDocumentCommand }
+
+\NewNomCmd {\NomText} (\g_noms_text_str) {}
+\NewNomCmd {\NomMath} (\g_noms_math_str) {\ensuremath}
+\NewNomCmd {\NomUnit} (\g_noms_unit_str) {\unit}

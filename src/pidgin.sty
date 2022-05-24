@@ -82,6 +82,12 @@
 \cs_new_protected:Npn \pidgin__info:nV #1#2
     { \msg_info:nnnn {pidgin} {generic} {#1} {#2} }
 
+\msg_new:nnn {pidgin} {nosuchbabelcaption}
+    { No~Babel~caption~'#1';~using~'#1' }
+\cs_new_protected:Npn \pidgin__warn_nosuchbabelcaption:n #1
+    { \msg_warning:nnn {pidgin} {nosuchbabelcaption} {#1}}
+\cs_generate_variant:Nn \pidgin__warn_nosuchbabelcaption:n { V }
+
 \str_new:N   \g_pidgin_main_str
 \clist_new:N \g_pidgin_lang_clist
 \clist_new:N \g_pidgin_base_clist
@@ -89,24 +95,12 @@
 \str_new:N   \g_pidgin_tag_str
 \prop_new:N  \g_pidgin_strings_prop
 
-\str_const:Nn \c_pidgin__defaults_en_us_tl
-    {   % for USenglish default, we'll use "title-case"
-        listabbreviation    = List~of~Abbreviations ,
-        nomenclature        = Nomenclature ,
-        listnomenclature    = Nomenclature  ,
-        seeequation         = see~equation ,
-        seepage             = page ,
-        part                = Part ,
-    }
-
-\str_const:Nn \c_pidgin__defaults_en_gb_tl
+\str_const:Nn \c_pidgin__defaults_en_tl
     {
-        listabbreviation    = List~of~abbreviations ,
-        nomenclature        = Nomenclature ,
-        listnomenclature    = Nomenclature  ,
-        seeequation         = see~equation ,
-        seepage             = page ,
-        part                = Part ,
+        listabbreviation      = List~of~Abbreviations ,
+        nomenclature          = Nomenclature ,
+        seeequation           = see~equation ,
+        seepage               = page ,
     }
 
 \cs_new_protected:Npn \pidgin_set_langs:e #1
@@ -144,7 +138,7 @@
 
     \PassOptionsToPackage {\g_pidgin_base_clist, nospace} {varioref}
     
-    \exp_args:NV \SetBabelStrings \c_pidgin__defaults_en_us_tl
+    \exp_args:NV \SetBabelStrings \c_pidgin__defaults_en_tl
 }
 
 \NewDocumentCommand \OpenPidgin {m}
@@ -244,41 +238,215 @@
         { \prop_gput:Nnn \g_pidgin_strings_prop {##1} {##2} }
 }
 
-\cs_new_protected:Nn \pidgin__nomenclature_internal:
+\NewDocumentCommand \ProvideTranslations { m m }
 {
-    \prop_get:NnNT \g_pidgin_strings_prop {seeequation} \l__tmpa_tl
-    {
-        \def \eqdeclaration ##1 {,~\l__tmpa_tl \nobreakspace ##1}
-    }
-    \prop_get:NnNT \g_pidgin_strings_prop {seepage} \l__tmpa_tl
-    {
-        \def \pagedeclaration ##1 {,~\l__tmpa_tl \nobreakspace ##1}
-    }
-    \prop_get:NnNT \g_pidgin_strings_prop {nomenclature} \l__tmpa_tl
-    {
-        \def \nomname {\l__tmpa_tl}
-    }
-    % ignore nomAname, nomGname, etc.
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#2}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \ProvideTranslation {#1} {##1} {##2} }
 }
 
-\cs_new_protected:Nn \pidgin__nomenclature:
+\NewDocumentCommand \DeclareTranslations { m m }
 {
-    \cs_if_exist:cT {nomname}
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#2}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \DeclareTranslation {#1} {##1} {##2} }
+}
+
+\NewDocumentCommand \NewTranslations { m m }
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#2}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \NewTranslation {#1} {##1} {##2} }
+}
+
+\NewDocumentCommand \ProvideTranslationFallbacks { m }
+{
+    \clist_set:Nn \l_tmpa_clist {#1}
+    \clist_map_inline:Nn \l_tmpa_clist
     {
-        % If it's not "Nomenclature", the user probably loaded it with a language option
-        \tl_if_eq:VnT \nomname {Nomenclature}
-        {
-            \AtEndPreamble { \pidgin__nomenclature_internal: }
-        }
+        \ProvideTranslationFallback           {##1} {##1}
+        \ProvideTranslation         {english} {##1} {##1}
     }
 }
+
+
+
+\cs_new_protected:Nn \pidgin__load_trans:
+{
+    \ProvideTranslationFallbacks
+    {
+        Nomenclature ,
+        List~of~Abbreviations ,
+    }
+    \ProvideTranslations
+        { spanish }
+        {
+            Nomenclature            = Nomenclatura ,
+            List~of~Abbreviations   = Lista~de~Abreviaturas ,
+        }
+    \ProvideTranslations
+        { catalan }
+        {
+            Nomenclature            = Nomenclatura ,
+            List~of~Abbreviations   = Llista~d~abreviatures ,
+        }
+    \ProvideTranslations
+        { croatian }
+        {
+            Nomenclature            = Nomenklatura ,
+            List~of~Abbreviations   = Popis~kraćenica ,
+        }
+    \ProvideTranslations
+        { danish }
+        {
+            Nomenclature            = Nomenklatur ,
+            List~of~Abbreviations   = Liste~over~forkortelser ,
+        }
+    \ProvideTranslations
+        { dutch }
+        {
+            Nomenclature            = Nomenclatuur ,
+            List~of~Abbreviations   = Lijst~van~Afkortingen ,
+        }
+    \ProvideTranslations
+        { italian }
+        {
+            Nomenclature            = Nomenclatura ,
+            List~of~Abbreviations   = Elenco~di~Abbreviazioni ,
+        }
+    \ProvideTranslations
+        { norwegian }
+        {
+            Nomenclature            = Nomenklatur ,
+            List~of~Abbreviations   = Liste~over~forkortelser ,
+        }
+    \ProvideTranslations
+        { swedish }
+        {
+            Nomenclature            = Nomenklatur ,
+            List~of~Abbreviations   = Lista~över~förkortningar ,
+        }
+    \ProvideTranslations
+        { finnish }
+        {
+            Nomenclature            = Nimikkeistö ,
+            List~of~Abbreviations   = Lyhenteiden~luettelo ,
+        }
+    \ProvideTranslations
+        { hungarian }
+        {
+            Nomenclature            = Elnevezéstan ,
+            List~of~Abbreviations   = Rövidítések listája ,
+        }
+    \ProvideTranslations
+        { slovenian }
+        {
+            Nomenclature            = Nomenklatura ,
+            List~of~Abbreviations   = Seznam~okrajšav ,
+        }
+    \ProvideTranslations
+        { slovak }
+        {
+            Nomenclature            = Nomenklatúra ,
+            List~of~Abbreviations   = Zoznam ~ skratiek ,
+        }
+    \ProvideTranslations
+        { polish }
+        {
+            Nomenclature            = Nomenklatura ,
+            List~of~Abbreviations   = Lista~z~Skrótów ,
+        }
+    \ProvideTranslations
+        { portuguese }
+        {
+            Nomenclature            = Nomenclatura ,
+            List~of~Abbreviations   = Lista~de~Abreviaturas ,
+        }
+    \ProvideTranslations
+        { french }
+        {
+            Nomenclature            = Nomenclature ,
+            List~of~Abbreviations   = Liste~des~Abréviations ,
+        }
+    \ProvideTranslations
+        { german }
+        {
+            Nomenclature            = Nomenklatur ,
+            List~of~Abbreviations   = Liste~der~Abkürzungen ,
+        }
+    \ProvideTranslations
+        { russian }
+        {
+            Nomenclature            = Номенклатура ,
+            List~of~Abbreviations   = Список~сокращений ,
+        }
+    \ProvideTranslations
+        { bulgarian }
+        {
+            Nomenclature            = Номенклатура ,
+            List~of~Abbreviations   = Списък на съкращенията ,
+        }
+    \ProvideTranslations
+        { afrikaans }
+        {
+            Nomenclature            = Nomenklatuur ,
+            List~of~Abbreviations   = Lys~van~Afkortings ,
+        }
+    \ProvideTranslations
+        { malay }
+        {
+            Nomenclature            = Nomenklatur ,
+            List~of~Abbreviations   = Senarai~singkatan ,
+        }
+    \ProvideTranslations
+        { turkish }
+        {
+            Nomenclature            = Isimlendirme ,  % lowercase?
+            List~of~Abbreviations   = Kısaltmalar Listesi ,
+        }
+    \ProvideTranslations
+        { greek }
+        {
+            Nomenclature            = Ονοματολογία ,
+            List~of~Abbreviations   = Κατάλογος~συντομογραφιών ,
+        }
+}
+
+\cs_new_protected:Npn \pidgin__get_caption:nN #1#2
+{
+    \tl_clear:N #2
+    \getlocaleproperty* \pidgin@tmpcap {\g_pidgin_main_str} {captions.licr/#1}
+    \tl_set:Nx #2 {\pidgin@tmpcap}
+    \tl_if_empty:VT 
+    {
+        \getlocaleproperty* \pidgin@tmpcap {\g_pidgin_main_str} {captions/#1}
+        \tl_set:Nx #2 {\pidgin@tmpcap}
+    }
+    \tl_if_empty:VTF #2
+        { \pidgin__warn_nosuchbabelcaption:n {#1} }
+        { \tl_set:Nn #2 {#1} }
+}
+
+\cs_new_protected:Nn \pidgin__nomenclature_internal:
+{
+    \pidgin__get_caption:nN {see} \l_tmpa_tl
+    \tl_set:No \l_tmpb_tl {\crtcrefname {page}}
+    \def \pagedeclaration ##1 {,~\l_tmpa_tl~\l_tmpb_tl~##1}
+    \tl_set:No \l_tmpb_tl {\crtcrefname{equation}}
+    \def \eqdeclaration ##1 {,~\l_tmpa_tl~\l_tmpb_tl~##1}
+    \prop_get:NnNT \g_pidgin_strings_prop {nomenclature} \l__tmpa_tl
+        { \def \nomname {\l__tmpa_tl} }
+}
+
 
 
 % Call after loading all your packages
 \cs_new_protected:Nn \pidgin_close:
 {
     \RequirePackage [\g_pidgin_base_clist] {cleveref}
-    \pidgin__nomenclature:
+    \RequirePackage {crossreftools}
+    \cs_if_exist:cT {nomname}
+        { \AtEndPreamble { \pidgin__nomenclature_internal: } }
 }
 
 \NewDocumentCommand \ClosePidgin {}

@@ -1,6 +1,8 @@
 %=======                    D E S E R T                    =======
 
 \documentclass [
+    pkg / noms ,
+    pkg / imakeidx ,
     pkg / tcolorbox ,
     pkg / minted ,
 ] {desert}
@@ -23,11 +25,6 @@
 %    bibliography = References ,
 %}
 
-% like \DeclareTColorBox, but with defaults
-% set nice colors with () and/or pass any tcolorbox options with []
-\DeclareDezBox [] {Note}
-\DeclareDezBox (green!50!black) {Hint}
-
 \NewTheoremEnvs [style=plain] {
     Theorem     = thm./thms. ,
     Proposition = prop./props. ,
@@ -39,6 +36,12 @@
     Criterion  = criterion/criteria ,
     Property   = property/properties ,
 }
+
+% like \DeclareTColorBox, but with defaults
+% set nice colors with () and/or pass any tcolorbox options with []
+\DeclareDezBox [] {Note}
+\DeclareDezBox (green!50!black) {Hint}
+
 % Load extra packages:
 \RequirePackage{pdfpages}  % to include a PDF
 
@@ -85,7 +88,8 @@
 %}
 
 \begin{document}
-\LoadFrontDocs{sections/doc, sections/front}
+%\LoadFrontDocs{sections/doc}  % uncomment to compile Desert's documentation
+\LoadFrontDocs{sections/front}
 \LoadMainDocs{sections/chapter1, sections/chapter2}
 \LoadBackDocs{sections/back}
 \end{document}
