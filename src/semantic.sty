@@ -113,7 +113,7 @@
     {
         \group_begin:
         \bool_if:nT {#1}
-            { \hypersetup{hidelinks=true} }
+            { \hypersetup{colorlinks=false} }
         \tl_if_blank:nTF {#3}
             { \href {#2} {#2} }
             { \href {#2} {#3} }
@@ -171,3 +171,9 @@
     { \semantic_link:nnn {#1} {https\c_colon_str//ctan.org/pkg/#2} {#2} }
 \NewDocumentCommand \ctanx { s >{\TrimSpaces}m }
     { \semantic_link:nnn {#1} {https\c_colon_str//ctan.org/pkg/#2} {\textsc{ctan}:#2} }
+
+\NewExpandableDocumentCommand \nistconsturl { m }
+    { https\c_colon_str//physics.nist.gov/cgi-bin/cuu/Value?#1 }
+
+\NewDocumentCommand \nistconst { s m m }
+    { \semantic_link:nnn {#1} {https\c_colon_str//physics.nist.gov/cgi-bin/cuu/Value?#2} {#3} }

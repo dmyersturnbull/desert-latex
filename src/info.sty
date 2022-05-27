@@ -240,7 +240,7 @@
     { \info_set:n{#1} }
 
 \cs_new_protected:Npn \info_put:n #1
-    { \prop_put_from_keyval:Nn \g_info_prop {#1}  }
+    { \prop_gput_from_keyval:Nn \g_info_prop {#1}  }
 \cs_generate_variant:Nn \info_put:n { V }
 \NewDocumentCommand \PutInfo {m}
     { \info_put:n{#1} }
@@ -625,3 +625,4 @@
 
 \NewDocumentCommand \GetKeywords { O{} }
     { \InfoList{keywords}[#1] }
+

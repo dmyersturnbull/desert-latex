@@ -89,10 +89,12 @@
 \cs_generate_variant:Nn \pidgin__warn_nosuchbabelcaption:n { V }
 
 \str_new:N   \g_pidgin_main_str
+\str_new:N   \g_pidgin_base_str
+
+
 \clist_new:N \g_pidgin_lang_clist
 \clist_new:N \g_pidgin_base_clist
-\str_new:N   \g_pidgin_base_str
-\str_new:N   \g_pidgin_tag_str
+
 \prop_new:N  \g_pidgin_strings_prop
 
 \str_const:Nn \c_pidgin__defaults_en_tl
@@ -103,32 +105,38 @@
         seepage               = page ,
     }
 
-\cs_new_protected:Npn \pidgin_set_langs:e #1
+\cs_new_protected:Npn \pidgin_set_main_lang:n #1
+{
+    \str_gset:Nn \g_pidgin_main_str {#1}
+}
+\cs_generate_variant:Nn \pidgin_set_main_lang:n  { V }
+
+\cs_new_protected:Npn \pidgin_set_langs:n #1
 {
     \clist_gset:Nn \g_pidgin_lang_clist {#1}
-    \clist_get:NN \g_pidgin_lang_clist \l_tmpa_tl
-    \str_gset:Nx \g_pidgin_main_str {\l_tmpa_tl}
 }
+\cs_generate_variant:Nn \pidgin_set_langs:n  { V }
+
+\cs_new_protected:Npn \pidgin__load_lang:nn #1#2
+{
+    \babelprovide [#1] {#2}
+}
+\cs_generate_variant:Nn \pidgin__load_lang:nn { nV }
+
 % Call after setting language(s), but before loading language-dependent packages
 \cs_new_protected:Nn \pidgin_start:
 {
     \RequirePackage [
-        \g_pidgin_lang_clist ,
-        safe = none ,
-        bidi = basic ,
+        safe          = none ,
+        bidi          = basic ,
+        shorthands    = off ,
+        \g_pidgin_main_str , % TODO: load with babelprovide
     ] {babel}
-    
-    \RequirePackage {tracklang}
-    \SetCurrentTrackedDialect {\languagename}
+    %\pidgin__load_lang:nV {import,main} \g_pidgin_main_str
+    \clist_map_inline:Nn \g_pidgin_lang_clist
+        { \pidgin__load_lang:nn {import} {##1} }
+    \selectlanguage {\g_pidgin_main_str}
     \RequirePackage {translations}
-    \str_gset:Nn \g_pidgin_tag_str {en-us} % fallback
-    \str_gset:Nx \g_pidgin_tag_str
-        { \str_lowercase:f { \CurrentTrackedLanguageTag } }
-    \exp_args:Nne \pidgin__info:nV {Language} \CurrentTrackedLanguage
-    \exp_args:Nne \pidgin__info:nV {Dialect} \CurrentTrackedDialect
-    \exp_args:Nne \pidgin__info:nV {Language~ISO~code} \CurrentTrackedIsoCode
-    \exp_args:Nne \pidgin__info:nV {Language~tag}  \CurrentTrackedLanguageTag
-    \exp_args:Nne \pidgin__info:nV {Region} \CurrentTrackedRegion
     
     \str_gset:Nx \g_pidgin_base_str
         { \baselanguage {\g_pidgin_main_str} }
@@ -136,7 +144,7 @@
     \clist_gset:Nx \g_pidgin_base_clist
         { \clist_map_function:NN \g_pidgin_lang_clist \baselanguage }
 
-    \PassOptionsToPackage {\g_pidgin_base_clist, nospace} {varioref}
+    \PassOptionsToPackage {\g_pidgin_base_str, nospace} {varioref}
     
     \exp_args:NV \SetBabelStrings \c_pidgin__defaults_en_tl
 }
@@ -148,24 +156,22 @@
 }
 
 \cs_new:Npn \pidgin_uppercase:n #1
-    { \text_uppercase:Vn \CurrentTrackedLanguageTag {#1} }
+    { \text_uppercase:Vn \g_pidgin_main_str {#1} }
 
 \cs_new:Npn \pidgin_lowercase:n #1
-    { \text_lowercase:Vn \CurrentTrackedLanguageTag {#1} }
+    { \text_lowercase:Vn \g_pidgin_main_str {#1} }
 
 \cs_new:Npn \pidgin_sentencecase:n #1
-    { \text_titlecase:Vn  \CurrentTrackedLanguageTag {#1} }
+    { \text_titlecase:Vn  \g_pidgin_main_str {#1} }
 
 \cs_new:Npn \pidgin_sentencecase_first:n #1
-    { \text_titlecase_first:Vn \CurrentTrackedLanguageTag {#1} }
+    { \text_titlecase_first:Vn \g_pidgin_main_str {#1} }
 
 
 \NewExpandableDocumentCommand \PidginMainLang {}
     { \g_pidgin_main_str }
 \NewExpandableDocumentCommand \PidginMainBase {}
     { \g_pidgin_base_str }
-\NewExpandableDocumentCommand \PidginMainTag {}
-    { \g_pidgin_tag_str }
 
 
 \cs_new_protected:Npn \pidgin__addto:Vn #1#2

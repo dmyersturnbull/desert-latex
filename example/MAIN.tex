@@ -1,10 +1,16 @@
 %=======                    D E S E R T                    =======
 
 \documentclass [
+    lang / extras = {spanish} ,
     pkg / noms ,
     pkg / imakeidx ,
     pkg / tcolorbox ,
     pkg / minted ,
+    pkg / chemformula ,
+    pkg / chemmacros ,
+    pkg / chemfig ,
+    pkg / circuitikz = american ,  % can pass options
+    pkg / cryptocode = {landau,probability,sets},
 ] {desert}
 
 
@@ -16,9 +22,8 @@
 \SetBabelStrings {
     contents           = Table of Contents ,
     listfigure         = List of Figures ,
-    reactionscheme     = Reaction ,
-    listreactionscheme = List of Reactions ,
-    listendnote        = Notes ,
+    listabbreviation   = List of Abbreviations ,
+    nomenclature       = List of Symbols ,
 }
 
 %\SetBiblatexStrings {
@@ -44,6 +49,7 @@
 
 % Load extra packages:
 \RequirePackage{pdfpages}  % to include a PDF
+\RequirePackage{physconst}
 
 %\SetEnumitemKey {long} { ... }  % override long enum style
 % Setup interfaces provided by various packages:
@@ -71,9 +77,29 @@
     keywords = {xenodynamics},
     degree = Doctor of Philosophy,         % arbitrary extra data
     university = University of Washington,
-    plaindate = 2022-03-22,
+    plaindate = 2022-03-22, % don't set 'date'! It's ISO and set automatically
     author = Karen Johnson, 
+    creator = LuaLaTeX,
 }
+
+\ChemfigSetup {
+    atom sep = 1.5em ,
+    compound sep = 2.5em ,
+    cram width = 0.75ex ,
+    arrow offset = 3pt ,
+    + sep left = 0.4em ,
+    + sep right = 0.4em ,
+    %show cntcycle = true ,
+}
+
+\ChemSetup {
+    formula = {chemformula} ,
+    %math-scripts = true ,
+}
+
+%\ChemSetup [chemformula] {
+%    format = \sffamily ,
+%}
 
 %\RenewDocumentCommand \TitleContents {} {
 %	``\info{title}"\\
@@ -82,7 +108,7 @@
 %	Authors: \infolist{author}[sep={, }, sep-two={ and }, sep-last={ and }]
 %}
 
-% More likely:
+% More likely: 
 %\RenewDocumentCommand \ShowTitle {} {
 %	\includepdf[pages=1]{university-titlepage.pdf}
 %}

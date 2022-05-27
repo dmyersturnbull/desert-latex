@@ -1,12 +1,29 @@
 
 % ---- math operators
-\DeclareMathOperator{\indicator} {\mathbf{1}}
+%\DeclareMathOperator{\indicator} {\Bbbone}
+\DeclareMathOperator{\indicator} {1}
 \DeclareMathOperator{\mean} {mean}
 \DeclareMathOperator{\std} {std}
-\DeclareMathOperator{\sgn} {sgn}
-\NewDocumentCommand \Z {} { \ensuremath{\mathbb{Z}} }
-\NewDocumentCommand \R {} { \ensuremath{\mathbb{R}} }
-\NewDocumentCommand \C {} { \ensuremath{\mathbb{R}} }
+
+% some unicode-math commands:
+% \DeclareSymbolFont
+% \DeclareMathAlphabet
+% \DeclareMathSymbol
+% \DeclareMathDelimiter{⟨symbol⟩}{⟨type⟩}{⟨sym. font⟩}{⟨slot⟩}{⟨sym. font⟩}{⟨slot⟩}
+% \DeclareMathRadical{⟨symbol⟩}{⟨type⟩}{⟨sym. font⟩}{⟨slot⟩}{⟨sym. font⟩}{⟨slot⟩}
+% https://mirror.mwt.me/ctan/macros/unicodetex/latex/unicode-math/unicode-math.pdf
+
+% and one amsmath command:
+\DeclareMathOperator{\sgn}{sgn}
+
+%\NewDocumentCommand \Z {} { \ensuremath{\BbbZ} }
+%\NewDocumentCommand \R {} { \ensuremath{\BbbR} }
+%\NewDocumentCommand \C {} { \ensuremath{\BbbC} }
+
+\NewDocumentCommand \Z {} { \ensuremath{Z} }
+\NewDocumentCommand \R {} { \ensuremath{R} }
+\NewDocumentCommand \C {} { \ensuremath{C} }
+
 
 % ---- units
 % From SIUnitX
@@ -65,7 +82,7 @@
 
 % Constants ("C")
 \NomMath (C) {G} {Gravitational constant}
-    <https://physics.nist.gov/cgi-bin/cuu/Value?bg>
+    <\nistconsturl{bg}>
     [\qty{6.67430e-11}{\meter\cubed\per\kilogram\per\second\squared}]
 
 % other symbols ("Z")
@@ -139,4 +156,35 @@
     short-acc=sqrt(<S.X>) ,
     pdfstring=sqrt(<S.X>) ,
     long=something-something ,
+}
+
+
+\DeclareAcronym {CTAN} {
+    long=Comprehensive TeX Archive Network ,
+}
+
+\DeclareAcronym {DOI} {
+    long=Document Object Identifier ,
+}
+
+\DeclareAcronym {URL} {
+    long=Uniform Resource Locator ,
+}
+
+\DeclareAcronym {IEEE} {
+    long=Institute of Electrical and Electronics Engineers ,
+}
+
+\DeclareAcronym {XMP} {
+    long=Extensible Metadata Platform ,
+    extra=standard ,
+}
+\DeclareAcronym {ArXiV} {
+    long=arXiv ,
+    extra=e-Print archive ,
+}
+
+\DeclareAcronym {BioRxiv} {
+    long=BioRxiv ,
+    extra=e-Print archive ,
 }

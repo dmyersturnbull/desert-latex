@@ -15,23 +15,36 @@
 \paragraph*{I am a paragraph}  % * to suppress numbering
 \indx{keyword} is shorthand for keyword\index{keyword}.
 \Indx{Quantum xenochromodynamics} is characterized by a module defined $M[F]$ over a finite field $F$ alongside a set $D$ of \ac{D1} ligands \cite{yolov6}.
+This is \qtyproduct{61 x 61 x 114}{\centi\meter}.
 Add a \code{*} when \emph{introducing} terms, for emphasis: \indx*{starred}.
 The style is set with \code{style / indx-starred} option. \footnote{This is a great idea.} See? \ac{CRISPR}. \ac{CRISPR}.
+Using \ctan{chemformula}, \ch{KCr(SO4)2 * 12 H2O}. \ch{CH+CH}.
+
+Also see \ctan{chemmacros} and \ctan{chemfig}.
+\chemfig{*5(-=--=)}
+
 
 (This too: \indx{space aliens}[aliens!space]).
 It is usually computed in the cloud. With \ac{CRISPR}.
 
+Using \ctan{circuitikz}:
+
+\begin{circuitikz}
+\draw (0,0) to[R=2<\ohm>, i=?, v=84<\volt>] (2,0) --
+(2,2) to[V<=84<\volt>] (0,2)
+-- (0,0);
+\end{circuitikz}
+
+
 \textsc{This had better be in smallcaps.}
 
 Quotations can use \ctan{csquotes}, or key--value commands that Desert added:
-As Johnson herself once said, \Quote[cite=johnson2022]{life is good}.
-She also said that in Spanish, \Quote[style=display, lang=spanish, punct=.]{la vida es buena}.
-You can also use \verb|\DisplayQuote| and \verb|\TextQuoteQuote|, along with the environment:
+As Johnson herself once said, \Quote[cite={johnson2022}, punct=.]{life is good}
+She also said that in Spanish, \Quote[style=display, lang=spanish]{la vida es buena}.
+Finally, we have the \code{Quotation} environment, which defaults to \code{style=display}.
 
-%\begin{Quotation}[]  % default style for env is display (choices are text, display, and block (default))
 
-%\end{Quotation}
-
+See? Is this ok?
 
 
 We recovered \qty{5}{\tera\joule} from the craft.

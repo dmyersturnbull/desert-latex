@@ -13,6 +13,7 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
 - Uses modern packages and options, like Biber and LaTeX 3.
 - New, consistently behaving, key–valued environments and commands.
   E.g. `entry=` for the TOC entry.
+- Clearer separation between contents and style
 - Slowly opt-in to new features and fancy LaTeX 3 packages; your existing commands work fine.
 
 ```latex
@@ -23,7 +24,7 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
     pkg / noms,
     pkg / chemfig,
     mode = thesis,
-    langs = {USenglish},  % comma-separated
+    lang / extras = {spanish},  % comma-separated
     bib / hide-lang = true,
     color / url = xkcd cloudy blue,
     cref / capitalize = true,
@@ -33,19 +34,26 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
     num / eqn = arabic,
     num / eqn-brackets = square-bold,
     num / thm-like-in = chapter,
+	footer / R = \thepage of \pageref{LastPage},
+	header / back / C = \gettitle,
     sty / foreign-words = swash,
     sty / indx-starred = HTML:550000;sans;allcaps,
     sty / nom-group = LARGE;uppertosc,
-    typo / subref-sep = {~},
-    glue> / indent = 0em,  % >: right, <: left, ': above, .: below
+    typo / subref-sep = {:\ },
+	typo / ban-hyphens = true ,
+    glue< / indent = 0em,  % >: right, <: left, ': above, .: below
     glue' / table-footer = 1ex plus 2pt, % rubber length
     glue. / section = 2ex plus 1 ex minus 1ex,
     toc / depth = section,
+	toc / fig-panels = true ,
     ...  % 172 total keys
 ]{desert}
 ```
 
-*There is a full list of the options at the bottom.*
+#### Requirements
+
+- LuaTeX
+- Updated packages (e.g. Tex Live 2022)
 
 #### Flexible section/chapter/etc. commands
 ```latex
@@ -258,7 +266,6 @@ or `DeclareTColorBox` to start one from scratch.
 \begin{Example}[name=Optional title, label=Optional]
 This is an example.
 \end{Example}
-
 ```
 
 

@@ -296,10 +296,10 @@
 
 
 \NewDocumentCommand \HideLinks {}
-    { \hypersetup {hidelinks=true} }
+    { \hypersetup {hidelinks} }
 
-\NewDocumentCommand \ShowLinks {}
-    { \hypersetup {hidelinks=false} }
+%\NewDocumentCommand \ShowLinks {}
+%    { \hypersetup {colorlinks=true} }
 
 
 %===================================================================
@@ -1645,7 +1645,11 @@
 \cs_generate_variant:Nn \textiles_def_color:nnn { nVV, VVV }
 
 \prop_map_inline:Nn \c_textiles_std_colors_prop
-    { \textiles_def_color:nnn {#1} {HTML} {#2} }
+{
+    \str_set:Nn \l_tmpa_str {#1}
+    \textiles__def_color_x:Vnn     \l_tmpa_str {HTML} {#2}
+    \textiles__def_color_three:Vnn \l_tmpa_str {HTML} {#2}
+}
 
 \prg_new_conditional:Npnn \textiles_color_if_exist:n #1 { T, F, TF }
 {
@@ -2333,20 +2337,25 @@
 \NewDocumentCommand \DeclareTxtFontFamilies { D<>{} D<>{} m O{} }
     { \textiles_declare_families:nnnn {#1} {#2} {#3} {#4} }
 
-\tl_const:Nn \c_source_pro_help_tl {
+\tl_const:Nn \c_textiles_source_pro_help_tl {
     FontFace = {el}{n}{*-ExtraLight} ,
     FontFace = {lt}{n}{*-Light} ,
     FontFace = {sb}{n}{*-Semi-Bold} ,
     FontFace = {eb}{n}{*-Black} ,
 }
 
-\tl_const:Nn \c_lmmono_help_tl {
+\tl_const:Nn \c_textiles_lmroman_help_tl {
+     SmallCapsFont = Latin Modern Roman Caps ,
+}
+
+
+\tl_const:Nn \c_textiles_lmmono_help_tl {
     ItalicFont     = lmmono10-italic.otf ,  % TODO: optical sizes?
     BoldFont       = lmmonolt10-bold.otf ,
     BoldItalicFont = lmmonolt10-boldoblique.otf ,
 }
 
-\tl_const:Nn \c_noto_help_tl {
+\tl_const:Nn \c_textiles_noto_help_tl {
     % no thin or extra-bold
     FontFace = {el}{n}{*-ExtraLight} ,  % 200
     FontFace = {lt}{n}{*-Light} ,       % 300
@@ -2354,16 +2363,11 @@
     FontFace = {bl}{n}{*-Black} ,       % 900
 }
 
-\NewDocumentCommand \DeclareStix { }
-{
-    \newfontfamily \stix {STIX Two Text}
-}
-
 \NewDocumentCommand \DeclareSourcePro { }
 {
     \DeclareTxtFontFamilies
         { Source Serif Pro, Source Sans Pro, Source Code Pro }
-        [ \c_source_pro_help_tl ]
+        [ \c_textiles_source_pro_help_tl ]
 }
 
 \NewDocumentCommand \DeclareLatinModern { }
@@ -2376,44 +2380,6 @@
         {Latin Modern Sans}
     \DeclareTxtFontFamilies  % doesn't support smallcaps, italic, or bold
         {Latin Modern Math}
-}
-
-\NewDocumentCommand \UseLatinModern { }
-{
-    \setsansfont {Latin Modern Sans}
-    \setmonofont {Latin Modern Mono} [ \c_lmmono_help_tl ]
-    \setmainfont {Latin Modern Roman} [ SmallCapsFont = Latin Modern Roman Caps ]
-    \setmathfont {Latin Modern Math}
-}
-
-\NewDocumentCommand \UseStix { }
-{
-    \setmainfont {STIX Two Text}
-    \setmathfont {STIX Two Math}
-}
-
-\NewDocumentCommand \UseStixAndSourcePro { }
-{
-    \setmainfont {STIX Two Text}
-    \setmathfont {STIX Two Math}
-    % probably the closest we'll get to STIX:
-    \setsansfont {Source Sans Pro}  [ \c_source_pro_help_tl ]
-    \setmonofont {Source Code Pro}  [ \c_source_pro_help_tl ]
-}
-
-\NewDocumentCommand \UseSourcePro { }
-{
-    \setmainfont {Source Serif Pro} [ \c_source_pro_help_tl ]
-    \setsansfont {Source Sans Pro}  [ \c_source_pro_help_tl ]
-    \setmonofont {Source Code Pro}  [ \c_source_pro_help_tl ]
-}
-
-\NewDocumentCommand \UseNoto { }
-{
-    \setmainfont {NotoSerif} [\c_noto_help_tl]
-    \setsansfont {NotoSans} [\c_noto_help_tl]
-    \setmonofont {NotoSansSerif} [\c_noto_help_tl]
-    \setmathfont {NotoSansMath}  [\c_noto_help_tl]
 }
 
 
