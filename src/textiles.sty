@@ -28,7 +28,7 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {textiles} {2022-04-28} {0.1.1} {Text~styles}
+\ProvidesExplPackage {textiles} {2022-05-30} {0.1.0} { Text~styles }
 \RequirePackage {l3keys2e}
 
 \keys_define:nn {textiles} {
@@ -74,7 +74,11 @@
     \RequirePackage {fontspec}
     \RequirePackage {unicode-math}
     \RequirePackage {microtype}
-    \RequirePackage {realscripts}
+    %\RequirePackage {realscripts}
+    %\RenewDocumentCommand \textsuperscript {}
+    %    { \fakesuperscript }
+    %\RenewDocumentCommand \textsubscript {}
+    %    { \fakesubscript }
     \NewDocumentCommand \thseries {}     % thin
         { \fontseries{th} \selectfont }
     \NewDocumentCommand \elseries {}     % extra-light
@@ -196,17 +200,17 @@
         { \group_begin: \ebseries #1 \group_end: }
 }
 
-\NewExpandableDocumentCommand \txtsub {+m} { \textsubscript{#1} }
 \NewExpandableDocumentCommand \txtsup {+m} { \textsuperscript{#1} }
+\NewExpandableDocumentCommand \txtsub {+m} { \textsubscript{#1} }
 
 % Expandable versions:
-\NewExpandableDocumentCommand \faketextsuperscript {m}
+\NewExpandableDocumentCommand \raisedscript {m}
 {
-    \raisebox {10.25ex} {\scriptsize #1}
+    \raisebox {0.5ex} {\scriptsize #1}
 }
-\NewExpandableDocumentCommand \faketextsubscript {m}
+\NewExpandableDocumentCommand \loweredscript {m}
 {
-    \raisebox {-0.25ex} {\scriptsize #1}
+    \raisebox {-0.5ex} {\scriptsize #1}
 }
 
 
@@ -1418,6 +1422,12 @@
 \prop_clear:N \g_tmpa_prop
 \prop_gset_from_keyval:Nn \g_tmpa_prop
 {
+    math=ensuremath ,
+    text=text ,
+    mathroman=mathrm ,
+    mathbold=mathbf,
+    mathsans=mathsf ,
+    mathitalic=mathit,
     emphasize=emph ,
     normal=normalfont ,           % reset
     rm=rmfamily ,                 % families
@@ -1567,6 +1577,8 @@
 \seq_new:N \g_textiles_unary_seq
 \seq_gset_from_clist:Nn \g_textiles_unary_seq
 {
+    ensuremath ,
+    text ,
     txtuppercase ,
     txtlowercase ,
     txtuppertosc ,

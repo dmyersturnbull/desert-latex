@@ -1,7 +1,7 @@
 
 % ---- math operators
-%\DeclareMathOperator{\indicator} {\Bbbone}
-\DeclareMathOperator{\indicator} {1}
+\DeclareMathOperator{\indicator} {\Bbbone}
+%\DeclareMathOperator{\indicator} {\mbfsansone}
 \DeclareMathOperator{\mean} {mean}
 \DeclareMathOperator{\std} {std}
 
@@ -20,26 +20,23 @@
 %\NewDocumentCommand \R {} { \ensuremath{\BbbR} }
 %\NewDocumentCommand \C {} { \ensuremath{\BbbC} }
 
-\NewDocumentCommand \Z {} { \ensuremath{Z} }
-\NewDocumentCommand \R {} { \ensuremath{R} }
-\NewDocumentCommand \C {} { \ensuremath{C} }
+\NewDocumentCommand \Z {} { \ensuremath{\BbbZ} }
+\NewDocumentCommand \R {} { \ensuremath{\BbbR} }
+\NewDocumentCommand \C {} { \ensuremath{\BbbC} }
 
 
 % ---- units
 % From SIUnitX
-\DeclareSIQualifier\rxprod{catalyst}  % known subscript
-\DeclareSIQualifier\rxprod{product}
-\DeclareSIUnit\hour{hr}
-\DeclareSIUnit\minute{min}
-\DeclareSIUnit\molar{M}
-\DeclareSIUnit\angstrom{\AA}
-
+\DeclareSIQualifier \rxprod {catalyst}  % known subscript
+\DeclareSIQualifier \rxprod {product}
 % ---- nomenclature
 
 % We'll use nomencl and nomgroups
 % https://mirrors.mit.edu/CTAN/macros/latex/contrib/nomencl/nomencl.pdf
 
-\SetNomGroups
+\NomsSetup { put-conceptual-groups, put-syntactic-groups }
+
+\PutNomGroups
 {
     C=Constants,
     M=Sets,
@@ -63,7 +60,7 @@
 \NomUnit {M} {Molar} [\unit{\mol\per\liter}]
 \NomUnit {W} {Watt} [\unit{\kilogram \meter \squared \per \second \cubed}]
 \NomUnit {V} {Volt} [\unit{\kilogram \meter \squared \per \ampere \per \second \cubed}]
-\NomUnit {\AA} {Angstrom} [\qty{1E-10}{\meter}]
+\NomText (U) {Å} {Angstrom} [\qty{1E-10}{\meter}]
 
 % sets ("S")
 \NomMath (M) [a1] {\Z} {Integers}

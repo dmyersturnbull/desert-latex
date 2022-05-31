@@ -14,7 +14,7 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {noms} {2022-04-25} {0.1.0} {Define~nomenclature~groups}
+\ProvidesExplPackage {noms} {2022-04-25} {0.1.0} { Define~nomenclature~groups }
 \RequirePackage [notocbasic] {nomencl}
 
 
@@ -23,7 +23,7 @@
 \str_gset:Nn \g_noms_math_str {Z}
 \str_gset:Nn \g_noms_unit_str {U}
 
-\prop_const_from_keyval:Nn \c_noms_default_groups_prop
+\prop_const_from_keyval:Nn \c_noms_conceptual_groups_prop
 {
     C = Constants ,
     F = Functions ,
@@ -38,6 +38,7 @@
 {
     A = Latin~symbols ,
     G = Greek~symbols ,
+    U = Units ,          % default unit choice
     X = Superscripts , 
     Y = Subscripts , 
     Z = Other~symbols ,
@@ -54,9 +55,15 @@
         { \prop_put:Nnn \g_noms_prop {##1} {##2} }
 }
 
-\NewDocumentCommand \PutDefaultNomGroups {}
+\NewDocumentCommand \PutConceptualNomGroups {}
 {
-    \prop_map_inline:Nn \c_noms_default_groups_prop
+    \prop_map_inline:Nn \c_noms_conceptual_groups_prop
+        { \prop_put:Nnn \g_noms_prop {##1} {##2} }
+}
+
+\NewDocumentCommand \PutSyntacticNomGroups {}
+{
+    \prop_map_inline:Nn \c_noms_syntactic_groups_prop
         { \prop_put:Nnn \g_noms_prop {##1} {##2} }
 }
 
@@ -74,16 +81,18 @@
 
 \keys_define:nn { noms / setup}
 {
-    groups .code:n = { \SetNomGroups{#1} } ,
-    groups .initial:n = {} ,
-    add-default-groups .code:n = { \PutDefaultNomGroups } ,
-    add-default-groups .default:n = true ,
-    default-text-group .tl_gset:N = \g_noms_text_str ,
-    default-math-group .tl_gset:N = \g_noms_math_str ,
-    default-unit-group .tl_gset:N = \g_noms_unit_str ,
-    header-skip .skip_gset:N = \g_noms_header_skip ,
-    header-skip .initial:n = 1ex plus 0.1ex minus 0.025ex ,
-    header-format .code:n = { \cs_gset_eq:Nc \noms_format_header:n {#1} } ,  % in 2022+ use .cs_gset:N
+    groups .code:n                    = { \SetNomGroups{#1} } ,
+    groups .initial:n                 = {} ,
+    put-conceptual-groups .code:n     = { \PutConceptualNomGroups } ,
+    put-conceptual-groups .default:n  = true ,
+    put-syntactic-groups .code:n      = { \PutSyntacticNomGroups } ,
+    put-syntactic-groups .default:n   = true ,
+    default-text-group .tl_gset:N     = \g_noms_text_str ,
+    default-math-group .tl_gset:N     = \g_noms_math_str ,
+    default-unit-group .tl_gset:N     = \g_noms_unit_str ,
+    header-skip .skip_gset:N          = \g_noms_header_skip ,
+    header-skip .initial:n            = 2ex plus 0.2ex minus 0.1ex ,
+    header-format .code:n             = { \cs_gset_eq:Nc \noms_format_header:n {#1} } ,
 }
 
 \cs_new:Npn \noms_setup:n #1
@@ -119,6 +128,7 @@
         { \nomenclature [#1,#3] {#7} {\NomGroupLink{#5}{#4 \hfill #6}} }
         { \nomenclature [#1,#2] {#7} {\NomGroupLink{#5}{#4 \hfill #6}} }
 }
+%\cs_generate_variant:Nn \noms_make:nnnnnnn { vvnnnnn, VVVVVVV }
 
 \cs_new_protected:Npn \noms_new_cmd:nnnN #1#2#3#4
 {
@@ -138,10 +148,13 @@
 
 \NewDocumentCommand \NewNomCmd { m D(){\g_noms_text_str} m }
     { \noms_new_cmd:nnnN {#1} {#2} {#3} \NewDocumentCommand }
+    
 \NewDocumentCommand \RenewNomCmd { m D(){\g_noms_text_str} m }
     { \noms_new_cmd:nnnN {#1} {#2} {#3} \RenewDocumentCommand }
+    
 \NewDocumentCommand \DeclareNomCmd { m D(){\g_noms_text_str} m }
     { \noms_new_cmd:nnnN {#1} {#2} {#3} \DeclareDocumentCommand }
+    
 \NewDocumentCommand \ProvideNomCmd { m D(){\g_noms_text_str} m }
     { \noms_new_cmd:nnnN {#1} {#2} {#3} \ProvideDocumentCommand }
 

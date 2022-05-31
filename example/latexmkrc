@@ -1,0 +1,74 @@
+# Settings
+
+# Workaround to allow pstricks transparency
+$dvipdf = "dvipdf -dNOSAFER -dALLOWPSTRANSPARENCY %O %S %D";
+
+$lualatex = 'lualatex --shell-escape --halt-on-error %O %S';
+$pdflatex = 'lualatex --shell-escape --halt-on-error %O %S';
+$pdf_mode = 1;
+
+###############################
+# Post processing of pdf file #
+###############################
+
+$compiling_cmd = "internal overleaf_pre_process %T %D";
+$success_cmd = "internal overleaf_post_process %T %D";
+$failure_cmd = $success_cmd;
+
+my $ORIG_PDF_AGE;
+
+sub overleaf_pre_process {
+    my $source_file = $_[0];
+    my $output_file = $_[1];
+
+    # get age of existing pdf if present
+    $ORIG_PDF_AGE = -M $output_file
+}
+
+sub overleaf_post_process {
+    my $source_file = $_[0];
+    my $output_file = $_[1];
+    my $source_without_ext = $source_file =~ s/\.tex$//r;
+    my $output_without_ext = $output_file =~ s/\.pdf$//r;
+
+    # Return early if pdf file doesn't exist or wasn't updated
+    my $NEW_PDF_AGE = -M $output_file;
+    return if !defined($NEW_PDF_AGE);
+    return if defined($ORIG_PDF_AGE) && $NEW_PDF_AGE == $ORIG_PDF_AGE;
+
+    # Figure out where qpdf is
+    $qpdf //= "/usr/bin/qpdf";
+    $qpdf = $ENV{QPDF} if defined($ENV{QPDF}) && -x $ENV{QPDF};
+    return if ! -x $qpdf;
+    $qpdf_opts //= "--linearize --newline-before-endstream";
+    $qpdf_opts = $ENV{QPDF_OPTS} if defined($ENV{QPDF_OPTS});
+
+    # Run qpdf
+    my $optimised_file = "${output_file}.opt";
+    system($qpdf, split(' ', $qpdf_opts), $output_file, $optimised_file);
+    $qpdf_exit_code = ($? >> 8);
+    print "qpdf exit code=$qpdf_exit_code\n";
+
+    # Replace the output file if qpdf was successful
+    # qpdf returns 0 for success, 3 for warnings (output pdf still created)
+    return if !($qpdf_exit_code == 0 || $qpdf_exit_code == 3);
+    print "Renaming optimised file to $output_file\n";
+    rename($optimised_file, $output_file);
+}
+
+##############
+# Glossaries #
+##############
+add_cus_dep( 'glo', 'gls', 0, 'glo2gls' );
+add_cus_dep( 'acn', 'acr', 0, 'glo2gls');  # from Overleaf v1
+sub glo2gls {
+    system("makeglossaries $_[0]");
+}
+
+################
+# nomenclature #
+################
+add_cus_dep("nlo", "nls", 0, "nlo2nls");
+sub nlo2nls {
+        system("makeindex $_[0].nlo -s nomencl.ist -o $_[0].nls -t $_[0].nlg");
+}

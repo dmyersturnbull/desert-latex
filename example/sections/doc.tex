@@ -398,9 +398,6 @@ glue' / toc-chapter & v-glue &   \\
 glue' / toc-section & v-glue &   \\
 glue' / toc-subsec & v-glue &   \\
 glue' / toc-subsubsec & v-glue &   \\
-art / code-box-border & dim & if \code{tcolorbox} is used \\
-art / code-box-arc & dim & angle (curve of box edge) \\
-art / code-box-bg & color & background color of code box \\
 art / even-row-bg & color & named color \code{evenrow} \\
 rule / top & v-dim  & thickness of \macro{toprule} and \macro{bottomrule} \\
 rule / mid & v-dim & thickness of \macro{midrule} \\
@@ -820,7 +817,7 @@ entry                    & str                           & TOC entry            
 title                    & str                           & Title displayed as \macro{chapter}        \\
 no-title                 & bool                          & Force-hide title                         \\
 no-entry                 & bool                          & Forcibly hide TOC entry                   \\
-numberless               & bool                          & Use \macro{chapter*\ instead of \macro{chapter} (default: true)   \\
+numberless               & bool                          & Use \macro{chapter*} instead of \macro{chapter} (default: true)   \\
 numbered                 & bool                          & Force \code{numberless=false}        \\
 hide-links               & bool                          & Disable link color in body        \\
 empty-page-style         & bool                          & \code{pagestyle} to \code{empty}, disabling footer and header \\

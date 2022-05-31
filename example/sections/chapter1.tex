@@ -8,6 +8,8 @@
 
 \section{I am a section}
 
+For 5.302 J kW some reason \qty{5.302}{\joule\per\kilo\watt} looks ok?
+
 \subsection{I am a subsection}
 
 \subsubsection{I am a subsubsection}
@@ -20,12 +22,70 @@ Add a \code{*} when \emph{introducing} terms, for emphasis: \indx*{starred}.
 The style is set with \code{style / indx-starred} option. \footnote{This is a great idea.} See? \ac{CRISPR}. \ac{CRISPR}.
 Using \ctan{chemformula}, \ch{KCr(SO4)2 * 12 H2O}. \ch{CH+CH}.
 
-Also see \ctan{chemmacros} and \ctan{chemfig}.
+Also see \ctan{chemmacros} and \ctan{chemfig}; check it out:
+
 \chemfig{*5(-=--=)}
 
+\chemfig{[:120]NH_2*6(---=O)}
+
+Or:
+\StructuralFormulaFigure(a compound){[:120]NH_2*6(---=O)}
+
+Or:
+\StructuralFormulaFigure[caption=Another compound]{[:120]NH_2*6(---=O)}
+
+% Alternatively, use the chemmacros 'scheme' module:
+% \begin{scheme}
+% \chemname{\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}}{methanol}
+% \end{scheme}
+\begin{figure}
+\schemestart
+\chemname{\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}}{methanol}
+\schemestop
+\end{figure}
+
+% If you want to make your own numbered flaot type,
+% see newfloat: https://mirror.math.princeton.edu/pub/CTAN/macros/latex/contrib/newfloat/newfloat.pdf
+% \DeclareFloatingEnvironment {StructFormula} [within=chapter, name=structural formula, listname=...] {figure}
+
+\begin{Figure}[caption=methanol-ish]
+\schemestart
+\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}
+\schemestop
+\end{Figure}
+
+\begin{Figure}[caption=Isoborneol Oxidation Reaction To Camphor]
+\schemestart
+\chemnameinit{*6(-(-)-(<OH)----)}
+\chemname{\chemfig{*6(-(-)-(<OH)----)}}{Isoborneol}
+\+
+\chemname{\chemfig{NaOCl}}{Sodium\\Hypochlorite}
+\arrow{->[HOAc][]}
+\chemname{\chemfig{*6(-(-)-(=O)----)}}{Camphor}
+\+
+\chemname{\chemfig{NaCl}}{Sodium\\Chloride}
+\+
+\chemname{\chemfig{H_2O}}{Water}
+\chemnameinit{}  % reset
+\schemestop
+\end{Figure}
 
 (This too: \indx{space aliens}[aliens!space]).
 It is usually computed in the cloud. With \ac{CRISPR}.
+
+\begin{equation}
+\begin{tikzcd}
+T
+\arrow[drr, bend left, "x"]
+\arrow[ddr, bend right, "y"]
+\arrow[dr, dotted, "{(x,y)}" description] & & \\
+& X \times_Z Y \arrow[r, "p"] \arrow[d, "q"]
+& X \arrow[d, "f"] \\
+& Y \arrow[r, "g"]
+& Z
+\end{tikzcd}
+\end{equation}
+
 
 Using \ctan{circuitikz}:
 
@@ -40,14 +100,15 @@ Using \ctan{circuitikz}:
 
 Quotations can use \ctan{csquotes}, or key--value commands that Desert added:
 As Johnson herself once said, \Quote[cite={johnson2022}, punct=.]{life is good}
-She also said that in Spanish, \Quote[style=display, lang=spanish]{la vida es buena}.
+She also said that in Spanish, \Quote[style=display, lang=spanish, punct=.]{la vida es buena}
 Finally, we have the \code{Quotation} environment, which defaults to \code{style=display}.
 
 
 See? Is this ok?
 
-
+\unit{\kilogram \meter \squared \per \ampere \per \second \cubed}
 We recovered \qty{5}{\tera\joule} from the craft.
+\unit{\kilogram \meter \squared \per \ampere \per \second \cubed}
 
 Do not use mathcal, etc. Instead, refer to: \link{https://mirror.math.princeton.edu/pub/CTAN/macros/unicodetex/latex/unicode-math/unimath-symbols.pdf}.
 %$\mbfJ \mbfscrH \mbfscrl \mbffrakF \mathhyphen \BbbZ \mscrH \trprime$
@@ -78,40 +139,118 @@ Do not use mathcal, etc. Instead, refer to: \link{https://mirror.math.princeton.
 \end{Theorem}
 
 \begin{proof}
-x = x \forall x\\
-\therefore 5 = 5
+$x = x \forall x$. $\therefore 5 = 5$
 \end{proof}
 
-\begin{Hint}[name = An optional title., label=fives]
+
+\begin{align}
+    & \tau(a, b) = \frac{ N_{+1}(a,b) - N_{-1}(a,b)}{\textstyle \binom{n}{2}}
+    \label{eqn:kappa}\punc{,}\\
+    \shortintertext{where}
+    & N_z(a,b) = \sum_{i,j;i<j}\indicator \left[ \, \sgn(a_i - a_j) = z \sgn(b_i - b_j) \neq 0 \, \right]
+    \punc{.}
+\end{align}
+
+Briefly, $\tau$ was calculated on a $\binom{n}{2}$-length vector of the strict lower triangular elements of each mechanistic and phenotypic affinity matrix, which excluded self-comparisons (diagonal elements).
+Minkowski distances were multiplied by $-1$ to provide similarity measures. Mechanistic affinity matrices, 1 per variable $v$, were calculated using a Jaccard index -like function generalized to sets with weighted labels.
+Let $P_d(a)$ return the predicate--object pairs for compound $a$ via data source $d$ (where $d$ is one of potentially many sources contributing to $v$). Also let $w_d(a, p)$ return the \emph{weight} of the pair $p$ for $a$. Weights reflect magnitude (e.g. \code{PCHEMBL}).
+Values were averaged over unique data sources for final values ${J}(a, b)$ of compounds $a$ and $b$:
+
+\begin{align}
+    &
+    {J} \left( a, b \right) =
+    \underset{
+        d ; \: P_d(a) \neq \emptyset
+        \text{ and } P_d(b) \neq \emptyset
+    }{\text{mean}}
+    \ \, {J}_d (a, b)  \punc{;} \\
+    &
+    {J}_d \left(a, b \right) =
+    \underset{p \: \in \: P_d(a) \, \cup P_d(b)}{\mean}
+    \left(
+    \frac{
+         w_d(a) \wedge w_d(b)
+    }{
+        w_d(a) \vee w_d(b)
+    }
+    \right)\\
+    \shortintertext{where}
+    &
+    u \wedge v = \sqrt{ \log_2(u) \times \log_2(v) } \text{ and}   \\
+    &
+    u \vee v = \log_2(u) + \log_2(v) - (u \wedge v)
+    \punc{,}
+\end{align}
+
+
+\begin{Hint}[name = An optional title., label=myhint]
 Some ``hint". \ac{D1}
 Refer to \cref{mythm}.
 \end{Hint}
 
+\begin{Important}[name=Watch out]
+Something important.
+\end{Important}
+
 % Tables should be typeset with the modern tabularray
+% Use one of these:
+%   - Table            (no footer)
+%   - TallTable        (can have footer, etc.)
+%   - LongTable        (can cross pages)
+%   - SimpleTable      ('Simple' variants set style assuming 1 header row at top)
+%   - SimpleTallTable
+%   - SimpleLongTable 
 % Environments: Table (booktabs), LongTable (longtabs), TallTable (talltabs)
 
-\begin{LongTable} [
-    theme = longfoot,  & also shortfoot
+% longfoot: separate line per note
+% shortfoot: make the footer into 1 par
+%
+\begin{SimpleTallTable} [
+    theme = shortfoot,
     caption = {Difficulty modifiers},
-    entry = {Difficulty modifiers},
+    entry = {Difficulty modifiers },
     label = {difficulty},
-    note{a} = {Rescue funds are something really important.},
-    remark{x} = {Some random remark.},
+    note{\dagger} = {A note about some cells, rows, etc.},
+    remark{x} = {Some remark about the table.},
 ] {
-    colspec=lrrrrr, % TODO
-    rowhead={1},
-    hline{1,Z} = 1pt,
-    hline{2} = 0.5pt,
-    cells={font=\sffamily},
-    row{1} = {font={\sffamily\bfseries}},
-    cell{2-999}{2-6} = {cmd=\ensuremath}  % TODO: in 2022 vr, mode=math and 2-Z
+    colspec=lrrrrr,
+    cell{2-999}{2-6} = {cmd=\ensuremath}  % in 2022 use cell{2-Z}{2-6} = {mode=math}
 }
-Type & Trivial & Easy & Normal & Hard & Strenuous\\
-Type 1 (\%) \TblrNote{a} & 300 & 200 & 150 & 100 & 75\\
-Type 2 (\%) & 70 & 60 & 50 & 50 & 40\\
-Type 3 (\%) & 80 & 75 & 70 & 65 & 60\\
+Type & Trivial (\%) & Easy (\%) & Normal (\%) & Hard (\%) & Strenuous (\%)\\
+Type 1 \TblrNote{\dagger} & 300 & 200 & 150 & 100 & 75\\
+Type 2 & 70 & 60 & 50 & 50 & 40\\
+Type 3 & 80 & 75 & 70 & 65 & 60\\
+\end{SimpleTallTable}
+
+We can construct a similar table while setting style options by hand
+While we're at it, we'll make it longer.
+Note that long tables get centered.
+
+\begin{LongTable} [
+    theme = longfoot,
+    caption = {Difficulty modifiers 2},
+    entry = {Difficulty modifiers 2},
+    label = {difficulty2},
+    note{\dagger} = {A note about some cells, rows, etc.},
+    remark{x} = {Some remark about the table.},
+] {
+    colspec=lrrrrr, 
+    rowhead={1},
+    hline{1,Z} = 0.2ex ,
+    hline{2} = 0.1ex,
+    cells = {font=\sffamily\small},
+    row{1} = {font={\sffamily\small\bfseries}},
+    cell{2-999}{2-6} = {cmd=\ensuremath},
+    row{even} = { bg = evenrow },
+}
+Type & Trivial (\%) & Easy (\%) & Normal (\%) & Hard (\%) & Strenuous (\%)\\
+Type 1 \TblrNote{\dagger} & 300 & 200 & 150 & 100 & 75\\
+Type 2 & 70 & 60 & 50 & 50 & 40\\
+Type 3 & 80 & 75 & 70 & 65 & 60\\
 \end{LongTable}
 
+
+\dezrule  % rule of same width of table, boxes, etc.
 
 \begin{MintedCode} [
     lang=c++,

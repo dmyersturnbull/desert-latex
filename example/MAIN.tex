@@ -1,7 +1,12 @@
 %=======                    D E S E R T                    =======
 
+% because these options contain an = sign, we can't pass them in \documentclass
+% instead, use \PassOptionsToPackage
+\PassOptionsToPackage {somekey=somevalue, somethingelse} {somepackage}
+
 \documentclass [
-    lang / extras = {spanish} ,
+    lang / main = american ,
+    lang / extras = {arabic,filipino,spanish} ,
     pkg / noms ,
     pkg / imakeidx ,
     pkg / tcolorbox ,
@@ -9,10 +14,18 @@
     pkg / chemformula ,
     pkg / chemmacros ,
     pkg / chemfig ,
+    pkg / fontawesome5 ,
+    pkg / tikz-cd ,
+    pkg / tikz ,
+    pkg / graphs ,
     pkg / circuitikz = american ,  % can pass options
-    pkg / cryptocode = {landau,probability,sets},
+    pkg / cryptocode = {landau,probability,sets} ,
+    preset = UCSF ,
+    mode = book ,
 ] {desert}
 
+% language names correspond to "valueless import" via \babelprovide
+% see the table circa page 24 of https://mirrors.mit.edu/CTAN/macros/latex/required/babel/base/babel.pdf
 
 \SetCrefStrings {
     figure = fig./figs. ,
@@ -44,12 +57,15 @@
 
 % like \DeclareTColorBox, but with defaults
 % set nice colors with () and/or pass any tcolorbox options with []
-\DeclareDezBox [] {Note}
-\DeclareDezBox (green!50!black) {Hint}
+%\DeclareDezBox [arc=2pt] {Note}
+%\NewDezBox (shade=green!50!black) [arc=8px] {Hint}
+\NewExampleAdmonitionEnvs
+\NewAdmonitionEnv (header=\faExclamation, shade=red!50!black) {Important}
 
 % Load extra packages:
 \RequirePackage{pdfpages}  % to include a PDF
 \RequirePackage{physconst}
+%\RequirePackage{asymptote} % cool but big alternative to tikz
 
 %\SetEnumitemKey {long} { ... }  % override long enum style
 % Setup interfaces provided by various packages:
@@ -78,17 +94,19 @@
     degree = Doctor of Philosophy,         % arbitrary extra data
     university = University of Washington,
     plaindate = 2022-03-22, % don't set 'date'! It's ISO and set automatically
+    lang = en-US,
     author = Karen Johnson, 
-    creator = LuaLaTeX,
 }
 
+% chemfig's defaults are too big, and double bonds aren't distinct enough
 \ChemfigSetup {
-    atom sep = 1.5em ,
-    compound sep = 2.5em ,
-    cram width = 0.75ex ,
+    atom sep = 1.75em ,
+    compound sep = 4em ,
+    cram width = 1ex ,
     arrow offset = 3pt ,
     + sep left = 0.4em ,
     + sep right = 0.4em ,
+    double bond sep = 2.5pt ,
     %show cntcycle = true ,
 }
 
@@ -101,6 +119,17 @@
 %    format = \sffamily ,
 %}
 
+\MintedSetup {
+    linenos = true ,
+    style = borland ,
+}
+\NewMintedEnv {Python} {  % enable \begin{py} ... \end{py}
+    linenos = true ,
+    mathescape = true ,
+}
+
+\SetCrefStrings { theorem = Thm./Thms. }
+
 %\RenewDocumentCommand \TitleContents {} {
 %	``\info{title}"\\
 %	\Info{degree} \info{subject}[pre={in ``}, post={"}]\\
@@ -112,6 +141,8 @@
 %\RenewDocumentCommand \ShowTitle {} {
 %	\includepdf[pages=1]{university-titlepage.pdf}
 %}
+
+%\setmathfont{STIX Two Math} 
 
 \begin{document}
 %\LoadFrontDocs{sections/doc}  % uncomment to compile Desert's documentation

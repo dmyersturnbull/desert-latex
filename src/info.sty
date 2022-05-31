@@ -13,7 +13,7 @@
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
 \ProvidesExplPackage {info} {2022-04-28} {0.1.0}
-    { Title~pages~from~templates~and~key/value~pairs. }
+    { Title~pages~from~templates~and~key/value~pairs }
 
 \cs_generate_variant:Nn \seq_use:Nnnn { NVVV }
 \cs_generate_variant:Nn \text_titlecase_first:n { V }
@@ -181,6 +181,12 @@
     bytes,   % download time estimation [default: last compile size]
     source,  % [default: .tex source name]
 }
+
+% NOTE:
+% "hyperxmp implicitly writes a wealth of additional metadata into the xmp packet
+% such as the document date, creation date, creator tool, file format, pdf version,
+% and unique document and instance IDs"
+% So, the user shouldn't set them
 
 \cs_new_protected:Npn \info_split_hyperxmp_data:NN #1#2
 {
