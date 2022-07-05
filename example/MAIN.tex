@@ -2,11 +2,12 @@
 
 % because these options contain an = sign, we can't pass them in \documentclass
 % instead, use \PassOptionsToPackage
-\PassOptionsToPackage {somekey=somevalue, somethingelse} {somepackage}
+%\PassOptionsToPackage {somekey=somevalue, somethingelse} {somepackage}
 
 \documentclass [
     lang / main = american ,
     lang / extras = {arabic,filipino,spanish} ,
+    color / even-row ,
     pkg / noms ,
     pkg / imakeidx ,
     pkg / tcolorbox ,
@@ -16,45 +17,47 @@
     pkg / chemfig ,
     pkg / fontawesome5 ,
     pkg / tikz-cd ,
-    pkg / tikz ,
-    pkg / graphs ,
+    %pkg / tikz ,
+    %pkg / graphs ,
     pkg / circuitikz = american ,  % can pass options
-    pkg / cryptocode = {landau,probability,sets} ,
-    preset = UCSF ,
-    mode = book ,
+    %pkg / cryptocode = {landau,probability,sets} ,
+    %preset = UCSF ,
+    %mode = book ,
+    %layout / geometry = twocolumn ,
 ] {desert}
+
 
 % language names correspond to "valueless import" via \babelprovide
 % see the table circa page 24 of https://mirrors.mit.edu/CTAN/macros/latex/required/babel/base/babel.pdf
 
-\SetCrefStrings {
-    figure = fig./figs. ,
-    page = p./pp. ,
-}
+% These commands are currently limited to the main document language:
 
 \SetBabelStrings {
     contents           = Table of Contents ,
     listfigure         = List of Figures ,
     listabbreviation   = List of Abbreviations ,
+    listlistings       = List of Source Codes ,
     nomenclature       = List of Symbols ,
 }
+
+% for packages that use translations:
+\SetTranslationStrings { }
+
+%\SetCrefStrings {
+%    figure = fig./figs. ,
+%    page = p./pp. ,
+%}
 
 %\SetBiblatexStrings {
 %    bibliography = References ,
 %}
 
-\NewTheoremEnvs [style=plain] {
-    Theorem     = thm./thms. ,
-    Proposition = prop./props. ,
-}
+% Create theorem-like environments
+\NewDefaultTheoremEnvs
+\NewTheoremEnv {Fabrication} [style=definition]
+\SetCrefStrings { Fabrication = Fabrication/Fabrications }
 
-\NewTheoremEnvs {  % guesses the style
-    Definition = defn./defns. ,
-    Remark     = rem./rems. ,
-    Criterion  = criterion/criteria ,
-    Property   = property/properties ,
-}
-
+% Admonitions:
 % like \DeclareTColorBox, but with defaults
 % set nice colors with () and/or pass any tcolorbox options with []
 %\DeclareDezBox [arc=2pt] {Note}
@@ -66,19 +69,6 @@
 \RequirePackage{pdfpages}  % to include a PDF
 \RequirePackage{physconst}
 %\RequirePackage{asymptote} % cool but big alternative to tikz
-
-%\SetEnumitemKey {long} { ... }  % override long enum style
-% Setup interfaces provided by various packages:
-\AcroSetup {
-     pages/display = first ,  % show page numbers
-}
-\SiSetup {
-    group-minimum-digits = 4 ,   
-    group-digits = all ,        
-    group-separator = \thinspace ,
-}
-% \GeometrySetup, \AcroSetup  \ChemSetup, \ChemfigSetup, \HyperSetup, \MintedSetup
-% Note: These are just consistently named aliases; e.g. \AcroSetup is \acsetup
 
 % Load bibliography and maybe some other things:
 \LoadBib{REFS.bib}
@@ -96,6 +86,26 @@
     plaindate = 2022-03-22, % don't set 'date'! It's ISO and set automatically
     lang = en-US,
     author = Karen Johnson, 
+}
+
+% Extra (completely unnecessary) styling
+%\SetEnumitemKey {long} { ... }  % override long enum style
+% Setup interfaces provided by various packages:
+\AcroSetup {
+     pages/display = first ,  % show page numbers
+}
+\SiSetup {
+    group-minimum-digits = 4 ,   
+    group-digits = all ,        
+    group-separator = \thinspace ,
+}
+% \GeometrySetup, \AcroSetup  \ChemSetup, \ChemfigSetup, \HyperSetup, \MintedSetup
+% Note: These are just consistently named aliases; e.g. \AcroSetup is \acsetup
+
+\SemanticSetup {
+    foreign = italic ,
+    code = mono ,
+    explicit-space = ␣ ,
 }
 
 % chemfig's defaults are too big, and double bonds aren't distinct enough
@@ -128,7 +138,10 @@
     mathescape = true ,
 }
 
-\SetCrefStrings { theorem = Thm./Thms. }
+% If you really like to tweak:
+\SetTexParams {
+    binoppenalty = 900 ,
+}
 
 %\RenewDocumentCommand \TitleContents {} {
 %	``\info{title}"\\
@@ -142,11 +155,10 @@
 %	\includepdf[pages=1]{university-titlepage.pdf}
 %}
 
-%\setmathfont{STIX Two Math} 
-
 \begin{document}
-%\LoadFrontDocs{sections/doc}  % uncomment to compile Desert's documentation
+
+% If you're using subfile, \LoadFrontSubdocs, etc. will use that
 \LoadFrontDocs{sections/front}
-\LoadMainDocs{sections/chapter1, sections/chapter2}
+\LoadMainDocs{sections/chapter1}
 \LoadBackDocs{sections/back}
 \end{document}

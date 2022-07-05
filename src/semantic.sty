@@ -12,9 +12,57 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {semantic} {2022-05-30} {0.1.0} { Semantic~links~and~other~things }
+\ProvidesExplPackage {semantic} {2022-07-04} {0.1.0} { Semantic~links~and~other~things }
 \RequirePackage {hyperxmp}
 \RequirePackage {academicons}
+\RequirePackage {csquotes}
+
+\cs_generate_variant:Nn \seq_set_split:Nnn    { NnV }
+\cs_generate_variant:Nn \tl_replace_all:Nnn   { NnV }
+
+\tl_const:Nn \c_semantic_option_sep_fancy_tl
+{
+    \color_group_start:
+    \color_select:nn {HTML} {505050}
+    \thinspace \strong{|} \thinspace
+    \color_group_end:
+}
+
+\tl_new:N \g_semantic_code_tl
+\tl_new:N \g_semantic_foreign_tl
+\tl_new:N \g_semantic_option_sep_tl
+
+
+\keys_define:nn { semantic / setup}
+{
+    %emphasis .code:n                = { \tl_if_blank:nF {#1} { \cs_gset_eq:NN \em #1 } },
+    %strong .code:n                  = { \cs_gset_eq:NN \strong #1 },
+    %strong .initial:n               = \bfseries ,
+    foreign .prop_put:N              = \l_semantic_textiles_prop ,
+    foreign .initial:n               = italic ,
+    term .prop_put:N                 = \l_semantic_textiles_prop ,
+    term .initial:n                  = italic ,
+    mentioned .prop_put:N            = \l_semantic_textiles_prop ,
+    mentioned .initial:n             = italic ,
+    code .prop_put:N                 = \l_semantic_textiles_prop ,
+    code .initial:n                  = mono ,
+    explicit-space .tl_gset:N        = \g_semantic_explicit_space_tl ,
+    explicit-space .initial:n        =  ␣ ,
+    explicit-space .value_required:n = true ,
+    interpunct .tl_gset:N            = \g_semantic_interpunct_tl ,
+    interpunct .initial:n            = · ,
+    interpunct .value_required:n     = true ,
+    option-sep .tl_gset:N            = \g_semantic_option_sep_tl ,
+    option-sep .initial:n            = \thinspace | \thinspace ,
+    option-sep .value_required:n     = true ,
+}
+
+\NewDocumentCommand \SemanticSetup {m}
+{
+    \keys_set:nn {semantic / setup} {#1}
+    \textiles_declare_multiple_from_prop:N \l_semantic_textiles_prop
+}
+\SemanticSetup {}  % defaults
 
 
 
@@ -22,46 +70,104 @@
 %                        text
 %==================================================================================================
 
+\let \charspace        \space
+\let \charat           \c_atsign_str
+\let \chardollar       \c_dollar_str
+\let \charhash         \c_hash_str
+\let \chartilde        \c_tilde_str
+\let \charcaret        \c_circumflex_str
+\let \charuscore       \c_underscore_str
+\let \charbkslash      \c_backslash_str
+\let \charlbrace       \c_left_brace_str
+\let \charrbrace       \c_right_brace_str
+\let \charinterpunct   ·
+\let \charhyphpoint    ‧
+
+% 'TeX ligatures' via -- and --- don't always work
+% These are the same as HTML
+\def \horbar           { ― }
+\def \ndash            { – }
+\def \mdash            { — }
+\def \figdash          { ‒ }
+\def \swungdash        { ⁓ }
+\def \interpunct       { ‧ }
+\def \ldquo            { “ }
+\def \rdquo            { ” }
+\def \lsquo            { ‘ }
+\def \rsquo            { ’ }
+
+%\def \bull             { • }
+%\def \hbull            { ⁃ }
+%\def \tbull            { ‣ }
+
 % mostly stolen from package "semantic-markup"
 % I would load it, but it contains too many extra features and dependencies
 
 % These are all standard; \foreign is the only debatable one.
 
-\NewExpandableDocumentCommand \foreign { m }
-    { \textit{#1} }  % e.g. "et al." or "in vivo"
+\NewDocumentCommand \foreign { +m }
+    { \textiles_use:nn {foreign} {#1} }  % e.g. "et al." or "in vivo"
 
-\NewExpandableDocumentCommand \code { m }
-    { \texttt{#1} }
+\NewDocumentCommand \code { +m }
+    { \textiles_use:nn {code} {#1} }
 
-\NewExpandableDocumentCommand \term { m }
-    { \textit{#1} }
+\NewDocumentCommand \term { +m }
+    { \textiles_use:nn {term} {#1} }
 
-\NewExpandableDocumentCommand \mentioned { m }
-    { \textit{#1} }
+\NewDocumentCommand \mentioned { +m }
+    { \textiles_use:nn {mentioned} {#1} }
 
-\NewExpandableDocumentCommand \worktitle { m }
-    { \textit{#1} }
+\NewDocumentCommand \worktitle { +m }
+    { \group_begin: \itshape #1 \group_end: }
 
-\NewExpandableDocumentCommand \parttitle { m }
-    { ``#1" }
+\NewDocumentCommand \parttitle { +m }
+    { \enquote{#1} }
 
-% use \textelp, \textelp*, \textins, and \textins* from csquotes instead
+% use \textelp, \textelp*, \textins, and \textins* from csquotes
 
-%\NewExpandableDocumentCommand \quoteaddition { m }
-%    { [#1] }
+\NewDocumentCommand \quoteaddition { +m }
+    { \textins{#1} }
 
-%\NewExpandableDocumentCommand \quoteomission { }
-%    { [\ldots] }
+\NewDocumentCommand \quoteomission { }
+    { \textelp{} }
 
-
-\NewDocumentCommand \brokensequence { m }
+\NewDocumentCommand \codeoptions {m}
 {
-    \group_begin:
-    \ttfamily
-    \seq_set_split:Nnn \l_tmpa_seq {\space} { #1 }
-    \seq_use:Nn \l_tmpa_seq { \linebreak[0] }
-    \group_end:
+    \clist_set:Nn \l_tmpa_clist {#1}
+    \exp_args:Ne \code { \clist_use:NV \l_tmpa_seq \g_semantic_option_sep_tl }
 }
+
+\NewDocumentCommand \texenv {m}
+    { \code {#1} }
+
+\NewDocumentCommand \texmacro {m}
+    { \exp_args:Ne \code { \c_backslash_str #1 } }
+
+
+\NewDocumentCommand \longsequence { +m }
+{
+    \seq_set_split:Nnn \l_tmpa_seq {~} {#1}
+    \exp_args:Ne
+        \code
+        { \seq_use:Nnnn \l_tmpa_seq {\linebreak} {\linebreak} {\linebreak} }
+}
+
+\NewDocumentCommand \explicitcode { +m }
+{
+    \tl_set:Nn \l_tmpa_tl {#1}
+    \exp_args:Ne
+        \code
+        { \tl_replace_all:NnV \l_tmpa_tl {~} \g_semantic_explicit_space_tl }
+}
+
+\NewDocumentCommand \explicitspacing { +m }
+{
+    \tl_set:Nn \l_tmpa_tl {#1}
+    \exp_args:Ne
+        \term
+        \tl_replace_all:NnV \l_tmpa_tl {~} \g_semantic_interpunct_tl
+}
+
 
 
 %==================================================================================================
@@ -69,23 +175,23 @@
 %==================================================================================================
 
 % punctuation at the end of an equation, normally either a comma or period
-\NewExpandableDocumentCommand \punc { m }
+\NewDocumentCommand \punc { m }
     { \,\text{#1} }
 
 % Math commands with proper amsmath format
-\NewExpandableDocumentCommand \angled { m }
+\NewDocumentCommand \angled { m }
     { \left\langle #1 \right\rangle }
 
-\NewExpandableDocumentCommand \abs { m }
+\NewDocumentCommand \abs { m }
     { \left\lvert #1 \right\rvert }
 
-\NewExpandableDocumentCommand \norm { m }
+\NewDocumentCommand \norm { m }
     { \left\lVert #1 \right\rVert }
 
-\NewExpandableDocumentCommand \floor { m }
+\NewDocumentCommand \floor { m }
     { \left\lfloor #1 \right\rfloor }
 
-\NewExpandableDocumentCommand \ceil { m }
+\NewDocumentCommand \ceil { m }
     { \left\lceil #1 \right\rceil }
 
 
@@ -93,14 +199,6 @@
 %                    links
 %==================================================================================================
 
-
-%\begingroup\lccode`?=`# \lowercase{\endgroup
-%    \newcommand{\myhrefaux}[2]{\href{#1}{#2}}
-%}
-
-%\DeclareRobustCommand*{\myurl}{\hyper@normalise\myurl@}
-
-%\def\@myurl@#1{\hyper@linkurl{#2}{#1}}
 
 \tl_const:Nx \c_https_tl {https \c_colon_str //}
 
@@ -113,7 +211,7 @@
     {
         \group_begin:
         \bool_if:nT {#1}
-            { \hypersetup{colorlinks=false} }
+            { \hypersetup{hidelinks} }
         \tl_if_blank:nTF {#3}
             { \href {#2} {#2} }
             { \href {#2} {#3} }
@@ -126,6 +224,12 @@
     \semantic_link:nnn{#1}{#2}{#3}
 }
 
+\tl_const:Nn \c_semantic_https_tl { https\c_colon_str }
+
+\tl_const:Nn \c_semantic_rxiv_tl { ar\textsc{x}iv }
+
+\tl_const:Nn \c_semantic_biorxiv_tl { bio\textsc{r}xiv }
+
 
 \NewDocumentCommand \doi { s >{\TrimSpaces}m }
     { \semantic_link:nnn {#1} {https\c_colon_str//doi.org/#2} {\textsc{doi}:#2} }
@@ -133,12 +237,12 @@
     { \semantic_link:nnn {#1} {https\c_colon_str//doi.org/#2} {\aiDoi\thinspace#2} }
 
 \NewDocumentCommand \arXiv { s >{\TrimSpaces}m }
-    { \semantic_link:nnn {#1} {https\c_colon_str//arxiv.org/abs/#2} {ar\textsc{x}iv:#2} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//arxiv.org/abs/#2} {\c_semantic_arxiv_tl:#2} }
 \NewDocumentCommand \arxivx { s >{\TrimSpaces}m }
     { \semantic_link:nnn {#1} {https\c_colon_str//arxiv.org/abs/#2} {\aiarXiv\thinspace#2} }
 
 \NewDocumentCommand \bioarxiv { s >{\TrimSpaces}m }
-    {semantics_link:nnn {#1} {https\c_colon_str//www.biorxiv.org/content/#2} {bio\textsc{r}xiv:#2} }
+    {semantics_link:nnn {#1} {https\c_colon_str//www.biorxiv.org/content/#2} {\c_semantic_biorxiv_tl:#2} }
 \NewDocumentCommand \bioarxivx { s >{\TrimSpaces}m }
     { \semantic_link:nnn {#1} {https\c_colon_str//www.biorxiv.org/content/#2} {\aibioRxiv\thinspace#2} }
 
@@ -158,7 +262,7 @@
     { \semantic_link:nnn {#1} {https\c_colon_str//scicrunch.org/resolver/#2} {\textsc{rrid}:#2} }
 
 \NewDocumentCommand \semanticscholar { s >{\TrimSpaces}m } % e.g. 1403902308
-    { \semantic_link:nnn {#1} {https\c_colon_str//semanticscholar.org/author/#2} {Semantic Scholar:#2} }
+    { \semantic_link:nnn {#1} {https\c_colon_str//semanticscholar.org/author/#2} {Semantic~Scholar:#2} }
 \NewDocumentCommand \semanticscholarx { s >{\TrimSpaces}m }
     { \semantic_link:nnn {#1} {https\c_colon_str//semanticscholar.org/author/#2} {\aiSemanticScholar\thinspace#2} }
 

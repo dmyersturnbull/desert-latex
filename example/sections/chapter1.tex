@@ -8,18 +8,18 @@
 
 \section{I am a section}
 
-For 5.302 J kW some reason \qty{5.302}{\joule\per\kilo\watt} looks ok?
+Turns out \qty{5.302}{\joule\per\kilo\watt} looks ok.
 
 \subsection{I am a subsection}
 
 \subsubsection{I am a subsubsection}
 
 \paragraph*{I am a paragraph}  % * to suppress numbering
-\indx{keyword} is shorthand for keyword\index{keyword}.
-\Indx{Quantum xenochromodynamics} is characterized by a module defined $M[F]$ over a finite field $F$ alongside a set $D$ of \ac{D1} ligands \cite{yolov6}.
+\indexed{keyword} is shorthand for keyword\index{keyword}.
+\Indexed{Quantum xenochromodynamics} is characterized by a module defined $M[F]$ over a finite field $F$ alongside a set $D$ of \ac{D1} ligands \cite{yolov6}.
 This is \qtyproduct{61 x 61 x 114}{\centi\meter}.
-Add a \code{*} when \emph{introducing} terms, for emphasis: \indx*{starred}.
-The style is set with \code{style / indx-starred} option. \footnote{This is a great idea.} See? \ac{CRISPR}. \ac{CRISPR}.
+Add a \code{*} when \emph{introducing} terms, for emphasis: \indexed*{starred}.
+The style is set with \code{style / indexed-starred} option \footnote{This is a great idea}. See? \ac{CRISPR}. \ac{CRISPR}. Always put footnotes before the punctuation; \ctan{fnpct} can then kern correctly.
 Using \ctan{chemformula}, \ch{KCr(SO4)2 * 12 H2O}. \ch{CH+CH}.
 
 Also see \ctan{chemmacros} and \ctan{chemfig}; check it out:
@@ -28,49 +28,38 @@ Also see \ctan{chemmacros} and \ctan{chemfig}; check it out:
 
 \chemfig{[:120]NH_2*6(---=O)}
 
-Or:
-\StructuralFormulaFigure(a compound){[:120]NH_2*6(---=O)}
-
-Or:
-\StructuralFormulaFigure[caption=Another compound]{[:120]NH_2*6(---=O)}
-
-% Alternatively, use the chemmacros 'scheme' module:
+%  the chemmacros 'scheme' module:
 % \begin{scheme}
 % \chemname{\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}}{methanol}
 % \end{scheme}
-\begin{figure}
-\schemestart
-\chemname{\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}}{methanol}
-\schemestop
-\end{figure}
+%\begin{figure}
+%\schemestart
+%\chemname{\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}}{methanol}
+%\schemestop
+%\end{figure}
 
 % If you want to make your own numbered flaot type,
 % see newfloat: https://mirror.math.princeton.edu/pub/CTAN/macros/latex/contrib/newfloat/newfloat.pdf
 % \DeclareFloatingEnvironment {StructFormula} [within=chapter, name=structural formula, listname=...] {figure}
 
-\begin{Figure}[caption=methanol-ish]
-\schemestart
-\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}
-\schemestop
-\end{Figure}
+%\begin{ChemFigure}[caption=methanol-ish]
+%\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}
+%\end{ChemFigure}
 
-\begin{Figure}[caption=Isoborneol Oxidation Reaction To Camphor]
-\schemestart
-\chemnameinit{*6(-(-)-(<OH)----)}
-\chemname{\chemfig{*6(-(-)-(<OH)----)}}{Isoborneol}
-\+
-\chemname{\chemfig{NaOCl}}{Sodium\\Hypochlorite}
-\arrow{->[HOAc][]}
-\chemname{\chemfig{*6(-(-)-(=O)----)}}{Camphor}
-\+
-\chemname{\chemfig{NaCl}}{Sodium\\Chloride}
-\+
-\chemname{\chemfig{H_2O}}{Water}
-\chemnameinit{}  % reset
-\schemestop
-\end{Figure}
+%\begin{ChemFigure}[caption=Isoborneol Oxidation Reaction To Camphor]
+%\chemnameinit{*6(-(-)-(<OH)----)}
+%\chemname{\chemfig{*6(-(-)-(<OH)----)}}{Isoborneol}
+%\+
+%\chemname{\chemfig{NaOCl}}{Sodium\\Hypochlorite}
+%\arrow{->[HOAc][]}
+%\chemname{\chemfig{*6(-(-)-(=O)----)}}{Camphor}
+%\+
+%\chemname{\chemfig{NaCl}}{Sodium\\Chloride}
+%\+
+%\chemname{\chemfig{H_2O}}{Water}
+%\end{ChemFigure}
 
-(This too: \indx{space aliens}[aliens!space]).
+(This too: \indexed{space aliens}[aliens!space]).
 It is usually computed in the cloud. With \ac{CRISPR}.
 
 \begin{equation}
@@ -96,21 +85,14 @@ Using \ctan{circuitikz}:
 \end{circuitikz}
 
 
-\textsc{This had better be in smallcaps.}
-
 Quotations can use \ctan{csquotes}, or key--value commands that Desert added:
 As Johnson herself once said, \Quote[cite={johnson2022}, punct=.]{life is good}
 She also said that in Spanish, \Quote[style=display, lang=spanish, punct=.]{la vida es buena}
 Finally, we have the \code{Quotation} environment, which defaults to \code{style=display}.
 
+We recovered \qty{5}{\tera\joule} from the craft. That's \unit{\kilogram \meter \squared \per \ampere \per \second \cubed}.
 
-See? Is this ok?
-
-\unit{\kilogram \meter \squared \per \ampere \per \second \cubed}
-We recovered \qty{5}{\tera\joule} from the craft.
-\unit{\kilogram \meter \squared \per \ampere \per \second \cubed}
-
-Do not use mathcal, etc. Instead, refer to: \link{https://mirror.math.princeton.edu/pub/CTAN/macros/unicodetex/latex/unicode-math/unimath-symbols.pdf}.
+Do not use mathcal, etc. Instead, refer to: \link{https://mirror.math.princeton.edu/pub/CTAN/macros/unicodetex/latex/unicode-math/unimath-symbols.pdf}[unimath-symbols].
 %$\mbfJ \mbfscrH \mbfscrl \mbffrakF \mathhyphen \BbbZ \mscrH \trprime$
 
 \begin{itemize}
@@ -122,7 +104,7 @@ Do not use mathcal, etc. Instead, refer to: \link{https://mirror.math.princeton.
 \newpage
 \section{And then...}
 
-\begin{itemize}[long]
+\begin{itemize}[long]  % long means multiple paragraphs; it has more space
     \item
     This is a bullet point that can contain multiple paragraphs. Please use responsibly.
     This is a bullet point that can contain multiple paragraphs. Please use responsibly.
@@ -138,9 +120,9 @@ Do not use mathcal, etc. Instead, refer to: \link{https://mirror.math.princeton.
 5 = 5
 \end{Theorem}
 
-\begin{proof}
+\begin{Proof}  % same as proof
 $x = x \forall x$. $\therefore 5 = 5$
-\end{proof}
+\end{Proof}
 
 
 \begin{align}
@@ -148,7 +130,7 @@ $x = x \forall x$. $\therefore 5 = 5$
     \label{eqn:kappa}\punc{,}\\
     \shortintertext{where}
     & N_z(a,b) = \sum_{i,j;i<j}\indicator \left[ \, \sgn(a_i - a_j) = z \sgn(b_i - b_j) \neq 0 \, \right]
-    \punc{.}
+    \punc{.}  % use \punct{.}, \punct{,}, etc., to end equations
 \end{align}
 
 Briefly, $\tau$ was calculated on a $\binom{n}{2}$-length vector of the strict lower triangular elements of each mechanistic and phenotypic affinity matrix, which excluded self-comparisons (diagonal elements).
@@ -182,33 +164,37 @@ Values were averaged over unique data sources for final values ${J}(a, b)$ of co
     \punc{,}
 \end{align}
 
-
+% Hint is an admonition defined by \NewExampleAdmonitions
 \begin{Hint}[name = An optional title., label=myhint]
 Some ``hint". \ac{D1}
 Refer to \cref{mythm}.
 \end{Hint}
 
+% This is the admonition we defined ourselves:
 \begin{Important}[name=Watch out]
 Something important.
 \end{Important}
 
 % Tables should be typeset with the modern tabularray
-% Use one of these:
-%   - Table            (no footer)
-%   - TallTable        (can have footer, etc.)
-%   - LongTable        (can cross pages)
-%   - SimpleTable      ('Simple' variants set style assuming 1 header row at top)
-%   - SimpleTallTable
-%   - SimpleLongTable 
-% Environments: Table (booktabs), LongTable (longtabs), TallTable (talltabs)
+% https://ctan.org/pkg/tabularray
+% Use one either these:
+%   - Table            | floats (TeX can position intelligently, and respects at= )
+%   - LongTable        | can cross pages (uses longtblr; ignores at= )
 
 % longfoot: separate line per note
 % shortfoot: make the footer into 1 par
 %
-\begin{SimpleTallTable} [
+We can construct a similar table while setting style options by hand
+While we're at it, we'll make it longer.
+\begin{Table} [
+    %at = ht ,  % optional position (like in \begin{figure}[ht] -- here, top)
+    2col,   % span both columns (if 2-column doc)
+    simple,  % automatically pretty
     theme = shortfoot,
-    caption = {Difficulty modifiers},
-    entry = {Difficulty modifiers },
+    entry = {Difficulty modifiers},
+    %caption = {Difficulty modifiers},  % OR:
+    caption+ = {. Concatenate entry and this text for the caption.} ,
+    % You can alternatively set entry=* to set it the same as caption
     label = {difficulty},
     note{\dagger} = {A note about some cells, rows, etc.},
     remark{x} = {Some remark about the table.},
@@ -220,21 +206,25 @@ Type & Trivial (\%) & Easy (\%) & Normal (\%) & Hard (\%) & Strenuous (\%)\\
 Type 1 \TblrNote{\dagger} & 300 & 200 & 150 & 100 & 75\\
 Type 2 & 70 & 60 & 50 & 50 & 40\\
 Type 3 & 80 & 75 & 70 & 65 & 60\\
-\end{SimpleTallTable}
+\end{Table}
 
-We can construct a similar table while setting style options by hand
+We can construct a similar table while setting style options by hand.
 While we're at it, we'll make it longer.
-Note that long tables get centered.
 
 \begin{LongTable} [
-    theme = longfoot,
+    at = {} ,  % will be ignored because the table can't float
+    simple,
+    % plain,  % like simple, but no header row
+    %theme = longfoot,
     caption = {Difficulty modifiers 2},
-    entry = {Difficulty modifiers 2},
+    entry,  % AKA 'entry = *': copy the caption
     label = {difficulty2},
     note{\dagger} = {A note about some cells, rows, etc.},
     remark{x} = {Some remark about the table.},
 ] {
-    colspec=lrrrrr, 
+    %colspec=lrrrrr,
+    % Better in most cases to use flexible X specifiers with relative widths:
+    colspec = { X[2,l] X[1,r] X[1,r] X[1,r] X[1,r] X[1,r] } ,
     rowhead={1},
     hline{1,Z} = 0.2ex ,
     hline{2} = 0.1ex,
@@ -250,7 +240,8 @@ Type 3 & 80 & 75 & 70 & 65 & 60\\
 \end{LongTable}
 
 
-\dezrule  % rule of same width of table, boxes, etc.
+
+\DezRule  % rule of same width of table, boxes, etc.
 
 \begin{MintedCode} [
     lang=c++,
@@ -261,15 +252,13 @@ Type 3 & 80 & 75 & 70 & 65 & 60\\
 int i = 5;
 \end{MintedCode}
 
-\begin{OnePanelFigure} [
+\begin{Figure} [
     entry    = A figure,
     caption  = A figure,
     label    = figgy,
-    graphicx = {width=4cm},
-    file     = sections/person.png,
 ]
-%\includegraphics[width=0.1\textwidth]{sections/person.png}
-\end{OnePanelFigure}
+\includegraphics[width=0.1\textwidth]{sections/person.png}
+\end{Figure}
 
 
 \end{MainChapter}

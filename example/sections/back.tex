@@ -3,16 +3,39 @@
 
 \begin{Appendices}
 
-\begin{Appendix}{Supplemental figures}
+\begin {Appendix} {Final notes}
+
+\Section {Packages to avoid}
+\begin{itemize}
+\item \textbf{bibtex or natbib} (use \ctan{biblatex} and \ctan{biber})
+\item \textbf{any font package} (use \ctan{fontspec})
+\item \textbf{amsfonts} (use \ctan{fontspec} and \ctan{unicode-math})
+\item \textbf{ntheorem} (use \ctan{amsthm} and \ctan{thmtools})
+\item \textbf{tabularx, longtable, threepartable, etc.} (use \ctan{tabularray})
+\item polyglossia (use \ctan{babel})
+\item titletoc (use \ctan{titlesec})
+\item subref, subfigure, or subfig (use \ctan{subcaption})
+\item makeindex or other index packages (use \ctan{imakeidx} via \code{pkg / imakeidx})
+\item appendix (use Desert's environment instead)
+\item authblk (use Info's \code{getinfo}, \code{getinfolist}, etc. instead)
+\item datetime (use \ctan{datetime2})
+\item glossary, acronym, or glossaries (use \ctan{acro})
+\item wrapfig (use \ctan{wrapfig2})
+\end{itemize}
+
+\end {Appendix}
+
+\begin{Appendix}{Supplemental tables}
+\LoadTex {sections/supplemental-tables.tex}
 \end{Appendix}
 
 % In \ShowListOf-type commands, ! means numbered and in TOC (inverse of *)
-\ShowListOfTheoremLike! {
-    %ignoreall ,
-    %onlynamed=true ,
-    show=Theorem ,
-}
-\ShowListOfSourceCode!
+%\ShowListOfTheoremLike! [
+%    ignoreall ,
+%    onlynamed=true ,
+%    show=Theorem ,
+%]
+\ShowListOfCode!
 \end{Appendices}
 
 \ShowIndex

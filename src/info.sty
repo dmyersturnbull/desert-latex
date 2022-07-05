@@ -12,7 +12,7 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {info} {2022-04-28} {0.1.0}
+\ProvidesExplPackage {info} {2022-05-30} {0.1.0}
     { Title~pages~from~templates~and~key/value~pairs }
 
 \cs_generate_variant:Nn \seq_use:Nnnn { NVVV }
@@ -331,16 +331,21 @@
 
 \keys_define:nn { info / single }
 {
-    pre .tl_set:N          = \l_pre_tl ,
-    pre .initial:n         = {} ,
-    post .tl_set:N         = \l_post_tl ,
-    post .initial:n        = {} ,
-    textile .tl_set:N      = \l_textile_tl ,
-    textile .initial:n     = {} ,
-    style .tl_set:N        = \l_style_tl ,
-    style .initial:n       = {} ,
-    if-blank .tl_set:N     = \l_if_blank_tl ,
-    if-blank .initial:n    = {} ,
+    pre .tl_set:N                = \l_pre_tl ,
+    pre .initial:n               = {} ,
+    pre .value_required:n        = true ,
+    post .tl_set:N               = \l_post_tl ,
+    post .initial:n              = {} ,
+    post .value_required:n       = true ,
+    textile .tl_set:N            = \l_textile_tl ,
+    textile .initial:n           = {} ,
+    textile .value_required:n    = true ,
+    style .tl_set:N              = \l_style_tl ,
+    style .initial:n             = {} ,
+    style .value_required:n      = true ,
+    if-blank .tl_set:N           = \l_if_blank_tl ,
+    if-blank .initial:n          = {} ,
+    if-blank .value_required:n   = true ,
 }
 
 \cs_new_protected:Npn \info__format_single:n #1
@@ -403,33 +408,45 @@
 
 \keys_define:nn { info / list }
 {
-    pre-item .tl_set:N         = \l_pre_tl ,
-    pre-item .initial:n        = {} ,
-    post-item .tl_set:N        = \l_post_tl ,
-    post-item .initial:n       = {} ,
-    item-textile .tl_set:N     = \l_textile_tl ,
-    item-textile .initial:n    = {} ,
-    item-style .tl_set:N       = \l_style_tl ,
-    item-style .initial:n      = {} ,
-    textile .tl_set:N          = \l_list_textile_tl ,
-    textile .initial:n         = {} ,
-    style .tl_set:N            = \l_list_style_tl ,
-    style .initial:n           = {} ,
-    sep .tl_set:N              = \l_list_sep_tl ,
-    sep .initial:n             = {,~} ,
-    sep-two .tl_set:N          = \l_list_sep_two_tl ,
-    sep-two .initial:n         = {~and~} ,
-    sep-last .tl_set:N         = \l_list_sep_last_tl ,
-    sep-last .initial:n        = {,~and~} ,
-    pre .tl_set:N              = \l_list_pre_tl ,
-    pre .initial:n             = {} ,
-    post .tl_set:N             = \l_list_post_tl ,
-    post .initial:n            = {} ,
-    if-blank .tl_set:N         = \l_list_if_blank_tl ,
-    if-blank .initial:n        = {} ,
-    affils-first .bool_set:N   = \l_affils_first_bool ,
-    affils-first .default:n    = true ,
-    affils-first .initial:n    = false ,
+    pre-item .tl_set:N               = \l_pre_tl ,
+    pre-item .initial:n              = {} ,
+    pre-item .value_required:n       = true ,
+    post-item .tl_set:N              = \l_post_tl ,
+    post-item .initial:n             = {} ,
+    post-item .value_required:n      = true ,
+    item-textile .tl_set:N           = \l_textile_tl ,
+    item-textile .initial:n          = {} ,
+    item-textile .value_required:n   = true ,
+    item-style .tl_set:N             = \l_style_tl ,
+    item-style .initial:n            = {} ,
+    item-style .value_required:n     = true ,
+    textile .tl_set:N                = \l_list_textile_tl ,
+    textile .initial:n               = {} ,
+    textile .value_required:n        = true ,
+    style .tl_set:N                  = \l_list_style_tl ,
+    style .initial:n                 = {} ,
+    style .value_required:n         = true ,
+    sep .tl_set:N                    = \l_list_sep_tl ,
+    sep .initial:n                   = {,~} ,
+    sep .value_required:n            = true ,
+    sep-two .tl_set:N                = \l_list_sep_two_tl ,
+    sep-two .default:n               = {~and~} ,
+    sep-two .initial:n               = {,~} ,
+    sep-last .tl_set:N               = \l_list_sep_last_tl ,
+    sep-last .default:n              = {,~and~} ,
+    sep-last .initial:n              = {,~} ,
+    pre .tl_set:N                    = \l_list_pre_tl ,
+    pre .initial:n                   = {} ,
+    pre .value_required:n            = true ,
+    post .tl_set:N                   = \l_list_post_tl ,
+    post .initial:n                  = {} ,
+    post .value_required:n           = true ,
+    if-blank .tl_set:N               = \l_list_if_blank_tl ,
+    if-blank .initial:n              = {} ,
+    if-blank .value_required:n       = true ,
+    affils-first .bool_set:N         = \l_affils_first_bool ,
+    affils-first .default:n          = true ,
+    affils-first .initial:n          = false ,
 }
 
 
@@ -562,12 +579,15 @@
 
 \keys_define:nn { info / set-author-data }
 {
-    authors .tl_set:N    = \l_authors_tl,
-    authors .initial:n   = {},
-    affils .tl_set:N     = \l_affils_tl,
-    affils .initial:n    = {},
-    notes .tl_set:N      = \l_notes_tl,
-    notes .initial:n     = {},
+    authors .tl_set:N          = \l_authors_tl,
+    authors .initial:n         = {},
+    authors .value_required:n  = true ,
+    affils .tl_set:N           = \l_affils_tl,
+    affils .initial:n          = {},
+    affils .value_required:n   = true ,
+    notes .tl_set:N            = \l_notes_tl,
+    notes .initial:n           = {},
+    notes .value_required:n    = true ,
 }
 
 \NewDocumentCommand \AuthorList { O{} }

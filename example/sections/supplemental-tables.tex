@@ -1,0 +1,599 @@
+
+\begin{LongTable} [
+    simple                 = true ,
+    theme                  = longfoot,
+    caption                = {Desert key–value options},
+    entry                  = {Package key–value options},
+    label                  = {options},
+] {
+    colspec                = { X[2,l] X[1,l] X[2,l] } ,
+    column{1}              = { font=\ttfamily } ,
+    column{2}              = { font=\ttfamily } ,
+    %cell{2-Z}{1}         = {font=\ttfamily} ,
+}
+name & value-type & description  \\
+bib / hide-lang & bool & Hide e.g. \textit{en.} in references  \\
+bib / per-chap & bool & Show bibliography per chapter  \\
+bib / style & BibLaTeX style & e.g. \code{numeric}, \code{authoryear}, \code{MLA}  \\
+color / off &  & Disable link and background colors \\
+color / cite & color & Passed to hyperref  \\
+color / even-row & color & named color \code{evenrow} background color \\
+color / file & color &   \\
+color / ref & color &   \\
+color / url & color &   \\
+ref / abbrev & bool & Pass \code{noabbrev} to \ctan{cref} if false  \\
+ref / capitalize & bool & Pass \code{capitalize} to cleveref  \\
+draft & bool & Disable some things, like \ctan{microtype} \\
+font / leading & float & Space between baselines (e.g. \code{13pt})  \\
+font / math &  &  \\
+font / mono &  & \\
+font / sans &  &  \\
+font / serif &  &  \\
+font / size & float & E.g. \code{12pt}  \\
+footer [/\ldots] & any &   \\
+footer / back [/\ldots]  & any &   \\
+footer / front [/\ldots]  & any &   \\
+footer / main [/\ldots]  & any &   \\
+glue' / abstract & v-skip &   \\
+glue' / abs-body & v-skip &   \\
+glue' / alg-like & v-skip &   \\
+glue' / caption & v-skip &   \\
+glue' / chap & v-skip & Unimportant if \texmacro{chapter} starts a page \\
+glue' / def-like & v-skip &   \\
+glue' / eqn & v-skip & \texmacro{abovedisplayskip}  \\
+glue' / eqn-short & v-skip & \texmacro{abovedisplayshortskip} \\
+glue' / fnote-list & v-skip & Glue above the footnote list  \\
+glue' / front-chap & v-skip & Unimportant if \texmacro{chapter} starts a page  \\
+glue' / list & v-skip & For default lists  \\
+glue' / lof-chap-group & v-skip & Skip after new chapter in list of figures, etc. \\
+glue' / long-list & v-skip & \code{long} lists  \\
+glue' / nom-group & v-skip & \\
+glue' / paragraph & v-skip & Above \texmacro{paragraph}  \\
+glue' / proof & v-skip &   \\
+glue' / rem-like & v-skip &   \\
+glue' / section & v-skip &   \\
+glue' / subcaption & v-skip &   \\
+glue' / subsec & v-skip &   \\
+glue' / subsubsec & v-skip &   \\
+glue' / table-footer & v-skip &   \\
+glue' / table-title & v-skip & Space above table caption  \\
+glue' / thm-like & v-skip &   \\
+glue' / toc-chapter & v-skip &   \\
+glue' / toc-part & v-skip &   \\
+glue' / toc-section & v-skip &   \\
+glue' / toc-subsec & v-skip &   \\
+glue' / toc-subsubsec & v-skip &   \\
+glue. / abstract-title & v-skip &   \\
+glue. / alg-like & v-skip &   \\
+glue. / chap & v-skip &   \\
+glue. / chap-label & v-skip &  V-space between label and name \\
+glue. / def-like & v-skip &   \\
+glue. / eqn & v-skip & \texmacro{belowdisplayskip}  \\
+glue. / eqn-short & v-skip & \texmacro{belowdisplayshortskip}  \\
+glue. / fnote-list & v-skip & Only if floats are below  \\
+glue. / front-chap & v-skip &   \\
+glue. / part-label & v-skip & For \texmacro{part}  \\
+glue. / proof & v-skip &   \\
+glue. / rem-like & v-skip &   \\
+glue. / section & v-skip &   \\
+glue. / subsec & v-skip &   \\
+glue. / subsubsec & v-skip &   \\
+glue. / table-footer & v-skip &   \\
+glue. / table-title & v-skip &   \\
+glue. / thm-like & v-skip &   \\
+glue: / float-float & skip & Space between neighboring floats \\
+glue: / float-text & skip & Space between neighboring float and text \\
+glue: / fnote & v-skip & Vertical glue between footnotes  \\
+glue: / item & v-skip & Vertical glue between \texmacro{item}  \\
+glue: / long-item & v-skip & Applies to style \code{long}  \\
+glue: / paragraph & v-skip & Vertical glue between paragraphs  \\
+glue: / refs & v-skip &   \\
+glue< / indent & h-dim & Paragraph indent (usually \code{1em})  \\
+glue< / fnote-indent & h-dim & Paragraph indent in footnotes \\
+glue< / nom-text & h-dim & Pad between symbol and text  \\
+glue< / thm-like-title & h-dim &   \\
+glue< / toc-chap & h-dim &   \\
+glue< / toc-part & h-dim &  Left-padding for \term{part} in TOC \\
+glue< / toc-section & h-dim &   \\
+glue< / toc-subsec & h-dim &   \\
+glue< / toc-subsubsec & h-dim &   \\
+header [/\ldots] & any &   \\
+header / back [/\ldots]  & any &   \\
+header / front [/\ldots]  & any &   \\
+header / main [/\ldots]  & any &   \\
+lang / extras & Babel INI & ...  \\
+lang / main & Babel INI &, main  \\
+layout / \ctan{geometry} & prop &  Options passed to \texmacro{geometry} \\
+layout / endnote-backrefs & bool &   \\
+layout / fnote-align & left, right, center, justify &   \\
+layout / fnote-place &  &  Passed to \ctan{footmisc} \\
+layout / fnotes-to-endnotes & bool & Converts footnotes to endnotes  \\
+layout / index-col-sep & h-dim & Space between columns in index  \\
+layout / index-cols & int & Number of columns in index  \\
+layout / show-nom-links & bool &   \\
+layout / show-toc-like-links & bool &   \\
+layout / subsec-runin  & bool  & \\
+layout / subsubsec-runin  & bool  & \\
+num / back-chaps & numbering &   \\
+num / back-pages & numbering  &   \\
+num / depth & level &   \\
+num / eqn-brackets & &   \\
+num / eqn-in & level &   \\
+num / panels & numbering &   \\
+num / float-in & level &   \\
+num / fnote-in &  &   \\
+num / fnotes &  &   \\
+num / front-chaps & numbering &   \\
+num / front-pages & numbering &   \\
+num / main-chaps & numbering &   \\
+num / main-pages & numbering &   \\
+num / thm-like-in & level &  \ctan{thmtools} numbering within \\
+pkg / \ctan{chemfig} & opts & Chemical diagrams  \\
+pkg / \ctan{chemformula} & opts &   \\
+pkg / \ctan{chemmacros} & opts &    \\
+pkg / \ctan{cryptocode} & opts &  Lots of things \\
+pkg / \ctan{fontawesome5} & opts & \link{https://fontawesome.com}[fontawesome]  \\
+pkg / \ctan{imakeidx} & opts & Make an index  \\
+pkg / \ctan{kantlipsum} & opts & \texmacro{ikant} command \\
+pkg / \ctan{knowledge} & opts & Hyperlinks to topics, etc.  \\
+pkg / \ctan{lettrine} & opts &  Big first letter via \texmacro{lettrine} \\
+pkg / \ctan{minted} & opts &  Source code highlighting \\
+pkg / \ctan{svg} & opts & \texmacro{includesvg} command  \\
+pkg / \ctan{tcolorbox} & opts & Styled boxes and \ctan{fontawesome5} \\
+pkg / \ctan{tikz-cd} & opts & Commutative diagrams  \\
+pkg / \ctan{tikz} & opts & Tikz and some libraries \\
+pkg / \ctan{ulem} & opts & Underline, strikethrough, etc.  \\
+pkg / \ctan{varioref} & opts & e.g. ``on the previous page"  \\
+pkg / graphs &  & Tikz graph-drawing \\
+pkg / noms &  & Nomenclature via \ctan{nomencl}  \\
+preset &  &  Only sets basic options \\
+rule / cmid & v-dim & thickness of \texmacro{cmidrule} \\
+rule / footer & v-dim & line above page footer \\
+rule / header & v-dim & line above page header \\
+rule / mid & v-dim & thickness of \texmacro{midrule} \\
+rule / top & v-dim  & thickness of \texmacro{toprule} and \texmacro{bottomrule} \\
+rule / fnote & v-dim & thickness of footnote rule \\
+stretch / double & & leading = $1.0\times$ text (stretch=1.6667); one-half for captions and code \\
+stretch / one-half & & leading = $0.5\times$ text (stretch=1.25); single for captions and code \\
+stretch / single & & leading = $0.2\times$ text (stretch=1.0) everywhere \\
+stretch / cap & float &   \\
+stretch / eqn & float &   \\
+stretch / lof-like & float &   \\
+stretch / main & float &   \\
+stretch / nom & float &   \\
+stretch / refs & float & \\
+stretch / code & float &   \\
+stretch / table & float & \\
+stretch / toc & float &   \\
+sty / abs-authors & unary &   \\
+sty / abs-by & unary &   \\
+sty / abs-title & unary &   \\
+sty / admonition-label & nullary & \code{DezBox} env name, like “note”  \\
+sty / admonition-name & nullary & Optional title (e.g. after “note”)  \\
+sty / cap-body & unary &   \\
+sty / cap-label & unary &   \\
+sty / chap-label & nullary &   \\
+sty / chap-name & nullary &   \\
+sty / chem-name & nullary & \\
+sty / chemfig & macro & \\
+sty / fnote-body & nullary &   \\
+sty / foreign-words & unary &   \\
+sty / front-chap-title & nullary &   \\
+sty / indx-starred & unary &   \\
+sty / nom-group & unary &   \\
+sty / par-title & nullary &   \\
+sty / part-label & nullary &   \\
+sty / part-name & nullary &   \\
+sty / section-title & nullary &   \\
+sty / code & nullary &   \\
+sty / subcap-body & unary &   \\
+sty / subcap-label & unary &   \\
+sty / subref & unary &   \\
+sty / subsec-title & nullary &   \\
+sty / subsubsec-title & nullary &   \\
+sty / table-footer & nullary &   \\
+sty / table-head-body & nullary &   \\
+sty / table-head-label & nullary &   \\
+sty / tikz & nullary & \\
+sty / toc-chap & nullary &   \\
+sty / toc-page-number & nullary &  \\
+sty / toc-part & nullary &   \\
+sty / toc-section & nullary &   \\
+sty / toc-subsec & nullary &   \\
+sty / toc-subsubsec & nullary &   \\
+toc / bib & bool & Show bibliographies in TOC  \\
+toc / depth & level &  \\
+toc / endnotes & bool & Show endnote lists in TOC   \\
+toc / panels & bool &  Show figure panels (e.g. \term{1A}) in TOC  \\
+typo / ban-hyphens & bool &  Sets hyphenation penalty to $+\infty$ \\
+typo / label-sep & any & Text after caption label (e.g. \code{:})  \\
+typo / table-note-sep & any &   \\
+typo / table-rem-sep & any &   \\
+typo / max-quote-lines & int & Threshold to switch to display \\
+typo / siunitx-group &  & Passed straight to \ctan{siunitx} \\
+typo / siunitx-match-mode & bool & Passes \code{mode=match} and other options\\
+typo / subref-format & &   \\
+typo / subref-label-sep & any & Text after \texmacro{subref} \\
+\end{LongTable}
+
+
+
+\begin{LongTable} [
+    simple                 = true ,
+    theme                  = longfoot ,
+    entry                  = {Packages loaded by Desert} ,
+    caption+               = {} ,
+    label                  = {packages} ,
+]{
+    colspec                = { X[2,l] X[1,l] X[2,l] } ,
+    column{1}              = { font=\ttfamily } ,
+    column{2}              = { font=\ttfamily } ,
+}
+name                        & options              & purpose                      \\
+\ctan{accsupp}              &                      & before: acro                 \\
+\ctan{acro}                 &                      & for all abbreviations        \\
+\ctan{adjustbox}            &                      & resize boxes                 \\
+\ctan{amsthm}               &                      & theorem envs                 \\
+\ctan{babel}                & <langs>              & language                     \\
+\ctan{biblatex}             & backend=biber        & (after: hyperref)            \\
+\ctan{caption}              & hypcap=true          & caption setup                \\
+\ctan{chemfig}              &                      & chemical diagrams            \\
+\ctan{chemformula}          &                      &                              \\
+\ctan{chemmacros}           &                      &                              \\
+\ctan{cleveref}             &                      & \texmacro{cref}                 \\
+\ctan{crossreftools}        &                      &                              \\
+\ctan{cryptocode}           &                      & lots of CS envs              \\
+\ctan{csquotes}             &                      & quotation envs               \\
+\ctan{csvsimple-l3}         &                      & tables from CSV files        \\
+\ctan{datetime2}            &                      & format dates                 \\
+\ctan{ellipsis}             &                      & fix \texmacro{ldots}            \\
+\ctan{enotez}               &                      & fixed endnotes               \\
+\ctan{enumitem}             &                      & control spacing for lists    \\
+\ctan{fancyhdr}             &                      & footer and header            \\
+\ctan{fancyvrb}             &                      & better \texmacro{verb}          \\
+\ctan{fnpct}                &                      & fnote marks position         \\
+\ctan{fontawesome5}         &                      &                              \\
+\ctan{fontsize}             &                      &                              \\
+\ctan{fontspec}             &                      & all font loading             \\
+\ctan{footmisc}             &                      & fnote style and counters     \\
+\ctan{fvextra}              &                      & improves fancyvrb            \\
+\ctan{geometry}             &                      & \texmacro{geometry}             \\
+\ctan{glue}                 &                      & rubber-preserving calc       \\
+\ctan{graphicx}             &                      & \texmacro{includegraphics}      \\
+\ctan{hyperref}             &                      & (after xindy+geometry)       \\
+\ctan{hyperxmp}             &                      & XMP metadata                 \\
+\ctan{imakeidx}             & xindy                & index (before knowledge)     \\
+\ctan{info}                 &                      & save/format data; set XMP    \\
+\ctan{knowledge}            &                      &                              \\
+\ctan{lscape}               &                      & \code{landscape} env         \\
+\ctan{lua-widow-control}    &                      & needs Tex Live 2022          \\
+\ctan{lualatex-math}        &                      & math-related patches         \\
+\ctan{mathcommand}          &                      & prime+subscript-aware        \\
+\ctan{mathtools}            &                      & declare theorem envs         \\
+\ctan{microtype}            & babel=true           &                              \\
+\ctan{minted}               & newfloat             & color source code            \\
+\ctan{newfloat}             &                      & declare float envs           \\
+\ctan{nomencl}              &                      & nomenclature                 \\
+\ctan{noms}                 &                      & nomencl groups and utils     \\
+\ctan{pdflscape}            &                      & makes \ctan{lscape} rotate in PDF \\
+\ctan{perpage}              &                      & reset counter per page       \\
+\ctan{pidgin}               &                      & language                     \\
+\ctan{ragged2e}             & newcommands          & full ragged envs             \\
+\ctan{semantic}             &                      & academic links, etc.         \\
+\ctan{setspace}             &                      &                              \\
+\ctan{showframe}            &                      & if draft                     \\
+\ctan{siunitx}              &                      & typeset quantities           \\
+\ctan{subcaption}           & hypcap=true          & subcaptions                  \\
+\ctan{svg}                  &                      & \texmacro{includesvg}           \\
+\ctan{tabularx}             &                      & for special envs only        \\
+\ctan{tarmac}               &                      & internal utils               \\
+\ctan{tcolorbox}            & xparse               & frame content                \\
+\ctan{textiles}             & faces                &                              \\
+\ctan{thmtools}             &                      & \texmacro{declaretheorem}       \\
+\ctan{tikz}                 &                      & diagrams                     \\
+\ctan{titlesec}             & explicit             & section formatting           \\
+\ctan{titletoc}             &                      & TOC formatting               \\
+\ctan{tocloft}              & titles               & do not use                   \\
+\ctan{tracklang}            &                      &                              \\
+\ctan{translations}         &                      &                              \\
+\ctan{unicode-math}         &                      & math fonts, unicode chars    \\
+\ctan{uspace}               &                      & Unicode space chars          \\
+\ctan{varioref}             &                      & \texmacro{vref}                 \\
+\ctan{xcolor}               &                      &                              \\
+\end{LongTable}
+
+
+\begin{LongTable} [
+    simple                 = true ,
+    theme                  = longfoot ,
+    entry                  = {List of Desert commands} ,
+    caption+               = {} ,
+    label                  = {commands} ,
+]{
+    colspec                = { X[2,l] X[2,l] X[2,l] } ,
+    column{1}              = { font=\ttfamily } ,
+    column{2}              = { font=\ttfamily } ,
+}
+command                     & options                    & description             \\
+SetNomGroups                & \{str=str\}              &                        \\
+PutConceptualNomGroups      &                          &                        \\
+PutSyntacticNomGroups      &                          &                        \\
+NomText                     & (str) [str] \{str\} \{str\} <str>                  &        \\
+NomMath                     & (str) [str] \{str\} \{str\} <str>                   &      \\
+NomUnit                     & (str) [str] \{str\} \{str\} <str>               &           \\
+SetInfo                     & \{str=str\}              &                         \\
+PutInfo                     & \{str=str\}              &                         \\
+ProvideInfo                 & \{str=str\}              &                         \\
+RemoveInfo                  & \{str\}                  &                         \\
+NewInfo                     & \{str=str\}              &                         \\
+RenewInfo                   & \{str=str\}              &                         \\
+AddPdfDictData              &                           & adds non-\ac{XMP} to pdfinfo \\
+AddPdfHyperxmpData          &                           & called automatically     \\
+getinfo                     & \{str\} [K–V]               &                         \\
+GetInfo                     & \{str\} [K–V]               & sentence-case variant   \\
+infolist                    & \{str\} [K–V]               &                         \\
+InfoList                    & \{str\} [K–V]               & sentence-case variant   \\
+InfoInline                  & \{str\} [K–V]             & format inline data  \\
+InfoListInline              & \{str,\ldots\} [K–V]        & format inline list data  \\
+InfoListInline              & \{str,\ldots\} [K–V]        & format inline list data  \\
+TarmacSetup                 & [K–V]                      & not normally needed \\
+SetTexParams                & \{macro=fp\}               & Set basic Tex params like penalties \\
+SetTexPenalties             & \{str=fp\}                 & \texmacro{SetTexParams} but appends \code{penalty} to each \\
+SemanticSetup               & [K–V]                     & semantic.sty \\
+PidginMainLang              &                             & Get the main ``language" (dialect) \\
+PidginMainBase              &                             & Base of the main language (e.g. \term{english} \\
+Part                        & * [K–V] \{str\}            &                       \\
+Chapter                     & * [K–V] \{str\}            &                       \\
+Section                     & * [K–V] \{str\}            &                       \\
+Subsection                  & * [K–V] \{str\}            &                       \\
+Subsubsection               & * [K–V] \{str\}            &                       \\
+Paragraph                   & * [K–V] \{str\}            &                       \\
+Subparagraph                & * [K–V] \{str\}            &                       \\
+SetBabelStrings             & \{str=str\}               &                         \\
+SetCrefStrings              & \{str=str/str\}       &                         \\
+SetTranslationStrings       & \{str=str\}               &                         \\
+ProvideTranslations         & \{str=str\}              & for packages; probably not needed \\
+SetBiblatexStrings          & \{str=str\}               &                         \\
+Aligning                    & \{str\}                   &                        \\
+LoadFrontDocs               & \{file,\ldots\}                  & \\
+LoadMainDocs                & \{file,\ldots\}                  & \\
+LoadBackDocs                & \{file,\ldots\}                  & \\
+LoadFrontSubdocs            & \{file,\ldots\}                  & if using \ctan{subfile} \\
+LoadMainSubdocs             & \{file,\ldots\}                  & if using \ctan{subfile} \\
+LoadBackSubdocs             & \{file,\ldots\}                  & if using \ctan{subfile} \\
+StartSubFiles               &                           & loads \ctan{subfiles} \\
+LoadBib                     & \{file\}                   & just \texmacro{addbibresource} \\
+LoadTex                     & \{file\}                   & just \texmacro{input} \\
+DeclareDezPageStyle         & \{pagestyle\} \{hdr\} \{ftr\}  &   \\
+NewFrontChapter             & \{env\} [K–V]          & make new environment \\
+DeclareFrontChapter         & \{env\} [K–V]          & make environment \\
+NewAppendix                 & \{env\} [K–V]          & make new environment \\
+DeclareAppendix             & \{env\} [K–V]          & make environment \\
+NewSpecialChapter           & \{env\} [K–V]          & make new environment \\
+DeclareSpecialChapter       & \{env\} [K–V]          & make environment \\
+AbstractHeader              &                            &  \\
+TitleContents               &                            & title page contents \\
+ShowTitle                   &                            & renders title page \\
+StartChapter                & [K–V] \{str\}              & alternative to env \\
+EndChapter                  &                            &  \\
+StartFrontMatter            &                            & normally not needed \\
+StartMainMatter             &                            & normally not needed \\
+StartBackMatter             &                            & normally not needed \\
+ShowBackBib                 &                            & not normally needed \\
+ShowFullBib                 &                            & not normally needed \\
+ShowSubBib                  &                            & not normally needed \\
+ShowEndNotes                &                            & not normally needed \\
+ShowIndex                   &                            & \\
+NewTheoremEnv               & \{env\} [K–V]             & Calls \ctan{thmtools} \texmacro{declaretheorem} \\
+DeclareTheoremStyle         & \{str\} [K–V]             & \texmacro{declaretheoremstyle} with defaults \\
+NewDefaultTheoremEnvs       &                            & \\
+ShowTableOfContents         &                            & \\
+ShowListOfFigures           & + !                        & \\
+ShowListOfTables            & + !                        & \\
+ShowListOfAbbreviations     & + !                        & \\
+ShowNomenclature            & + !                        & \\
+ShowListOfTheoremLike       & + ! \{K–V\}               & \\
+ShowListOfResults           & + ! \{K–V\}               & \ctan{thmtools} lemma, etc. (no conjecture) \\
+ShowListOfAlgorithms        & + ! \{K–V\}               & thmtools ``algorithm" only \\
+ShowListOfExamples          & + ! \{K–V\}               & thmtools ``example" only \\
+ShowListOfDefinitions       & + ! \{K–V\}               & thmtools ``definition" only \\
+ShowListOfCode              & + !                        & \\
+NewListOfNewfloatCmd        & \{cmd\} \{str\}            & New listing command for float of name \code{str} \\
+NewListOfCmd                & \{cmd\} \{macro\}          & Calls \code{macro} with args when \code{cmd} is called \\
+indexed                     & * \{str\} [index-key]      & \\
+Indexed                     & * \{str\} [index-key]      & sentence-case variant \\
+captioning                  & [K–V] \{str\}             & swap-in for \texmacro{caption} \\
+Caption                     & \{K–V\}                   & K–V-only \texmacro{captioning} \\
+AddPanel                    & [K–V]                     & for \code{MutliPanelFigure} \\
+AddPhantomPanel             & (str) \{chemfig\}          & for \code{MutliPanelFigure} \\
+Chem                        & [K–V]                     & simple structural formula (no figure) \\
+describepanels              & \{label-list\} \{str\}      & \\
+panels                      & \{label-list\}              & multiple \texmacro{subref} \\
+NewAdmonitionEnv            & [K–V] \{env\}               & \\
+DeclareAdmonitionEnv        & [K–V] \{env\}               & \\
+DeclareDezFloat             & \{env\} \^macro\^ \$macro\$  & uses \ctan{newfloat} and makes a wrapper env \\
+LoadSourceCode              & [K–V] file                 & loads if minted \\
+reffull                     & \{cite-key\}               & full reference text \\
+Quote                       & [K–V] \{text\}              & Key–value \ctan{csquotes} \\
+reftitle                    & \{cite-key\}                 & \\
+refdoi                      & \{cite-key\}                 & \\
+refurl                      & \{cite-key\}                 & \\
+NextKant                    & [int]                        & next \term{n} \ctan{kantlipsum} \\
+RandKant                    & [int]                        & \term{n} random \ctan{kantlipsum} \\
+SetCounterWithin            & \{cntr\} \{cntr\}      & better \texmacro{counterwithin}  \\
+KnowledgeSetup              & \{K–V\}                     & \texmacro{knowledgeconfigure} \\
+MicrotypeSetup              & \{K–V\}                     & \texmacro{microtypesetup} \\
+UnimathSetup                & \{K–V\}                     & \texmacro{unimathsetup} \\
+DtmSetup                    & \{K–V\}                     & \texmacro{DTMsetup} \\
+SiSetup                     & \{K–V\}                     & \texmacro{sisetup} \\
+HyperSetup                  & \{K–V\}                     & \texmacro{hypersetup} \\
+AcroSetup                   & \{K–V\}                     & \texmacro{acsetup} \\
+CaptionSetup                & [str] \{K–V\}               & \texmacro{captionsetup} \\
+TikzSetup                   & \{K–V\}                     & \texmacro{tikzset} \\
+CircuitzSetup               & \{K–V\}                     & \texmacro{ctikzset} \\
+MintedSetup                 & \{K–V\}                     & \texmacro{setminted} \\
+GeometrySetup               & \{K–V\}                     & \texmacro{geometry} \\
+ChemformulaSetup            & \{K–V\}                     & \texmacro{setchemformula} \\
+ListSetup                   & [str] \{K–V\}               & \texmacro{setlist} \\
+FnpctSetup                  & \{K–V\}                     & \ctan{fnpct} \\
+LwcSetup                    & \{K–V\}                     & \ctan{lua-widow-control} \\
+ChemSetup                   & \{K–V\}                     & \texmacro{chemsetup} \\
+ChemfigSetup                & [float] \{K–V\}             & \code{setchemfig} with opt scaling \\
+NomsSetup                   & \{K–V\}                     & \\
+DeclareCharFallback         & \{char\} \{code\}            & replace \code{char} with \code{code} if \code{char} is unmapped \\
+\end{LongTable}
+
+
+\begin{LongTable} [
+    simple                 = true ,
+    theme                  = longfoot ,
+    entry                  = {List of Desert environments} ,
+    caption+               = {} ,
+    label                  = {environments} ,
+]{
+    colspec                = { X[2,l] X[1,l] X[2,l] } ,
+    column{1}              = { font=\ttfamily } ,
+    column{2}              = { font=\ttfamily } ,
+}
+environment                 & options                          & description           \\
+FrontChapter                & [K–V] \{str\}                    &                       \\
+SpecialChapter              & [K–V] \{str\}                    &                       \\
+MainChapter                 & [K–V] \{str\}                    &                       \\
+Appendix                    & [K–V] \{str\}                    &                       \\
+Appendices                  &                                   & does nothing yet      \\
+Equation                    & * [K–V]                          & wrapper to \code{equation} \\
+Proof                       &                                  & alias for \code{proof} (renewed amsmath env)      \\
+OnePanelFigure              & * [K–V]                           &                        \\
+MultiPanelFigure            & * [K–V]                           &                        \\
+PhantomPanelFigure          & * [K–V]                           &                        \\
+Table                       & [K–V] \{K–V\}                    & \code{talltblr} inside \code{table} \\
+LongTable                   & [K–V] \{K–V\}                    & \code{longtblr} \\
+SourceCode                  & [K–V]                             & \code{MintedCode} uses this \\
+MintedCode                  & [K–V]                             & verbatim env \\
+ChemFigure                  & [K–V]                             & needs \ctan{chemfig} \\
+Where                       &                                    & table of terms inside eq \\
+Quotation                   & [K–V]                             & all \ctan{csquotes} rolled into one \\
+FullPage                    & [K–V]                             & use full page \\
+Align                       & \{str\}                            & \\
+Preface                     & [K–V]                             & a \code{FrontChapter} \\
+Acknowledgments             & [K–V]                             & a \code{FrontChapter} \\
+Contributions               & [K–V]                             & a \code{FrontChapter} \\
+Abstract                    & [K–V]                             & a \code{FrontChapter} \\
+Epigraph                    & [K–V]                             & a \code{SpecialChapter} \\
+Dedication                  & [K–V]                             & a \code{SpecialChapter} \\
+Copyright                   & [K–V]                             & a \code{SpecialChapter} \\
+Title                       & [K–V]                             & a \code{SpecialChapter} \\
+Errata                      & [K–V]                             & an \code{Appendix} \\
+\textit{<admonition>}
+       (e.g. \texttt{Hint}) & [K–V]              & \\
+\end{LongTable}
+
+
+\begin{LongTable} [
+    simple                 = true ,
+    theme                  = shortfoot ,
+    entry                  = {List of Desert hooks} ,
+    caption+               = {} ,
+    label                  = {hooks} ,
+]{
+    colspec                = { X[3,l] X[1,l] } ,
+    column{1}              = { font=\ttfamily } ,
+}
+hook name                     & description \\
+dez / before                    &  \\
+dez / after                     &  \\
+dez / packages / before        &  \\
+dez / packages / after        &  \\
+dez / front-matter / early        &  \\
+dez / front-matter / late        &  \\
+dez / main-matter / early        &  \\
+dez / main-matter / late        &  \\
+dez / back-matter / early        &  \\
+dez / back-matter / late        &  \\
+dez / lof-like / before       &  \\
+dez / lof-like / pre       &  \\
+dez / lof-like / post       &  \\
+dez / lof-like / after       &  \\
+dez / show-bib / before       &  \\
+dez / show-bib / pre       &  \\
+dez / show-bib / post       &  \\
+dez / show-bib / after       &  \\
+dez / show-endnotes / before       &  \\
+dez / show-endnotes / pre       &  \\
+dez / show-endnotes / post       &  \\
+dez / show-endnotes / after       &  \\
+\end{LongTable}
+
+
+\begin{LongTable} [
+    plain                  = true ,
+    theme                  = shortfoot ,
+    entry                  = {Reading material} ,
+    caption+               = {} ,
+    label                  = {reading} ,
+]{
+    colspec                = { X[1,l] } ,
+    stretch                = 1.0 ,
+}
+\link{https://www.overleaf.com/learn}[Overleaf's documentation] \\
+\link{https://www.overleaf.com/learn/latex/Articles}[in-depth LaTeX guides] \\
+\link{https://tex.stackexchange.com/}[StackExchange TeX] \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/tabularray/tabularray.pdf}[tabularray] \\
+\link{https://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf}[graphicx] \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/siunitx/siunitx.pdf}[siunitx] to properly and consistently typeset quantities, ranges, etc. \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/acro/acro-manual.pdf}[acro] for all abbreviation needs \\
+\link{https://mirrors.ctan.org/macros/unicodetex/latex/fontspec/fontspec.pdf}[fontspec] for configuring non-mathematical fonts \\
+\link{https://mirrors.ctan.org/macros/unicodetex/latex/unicode-math/unicode-math.pdf}[unicode-math] for mathematical fonts \\
+\link{https://mirrors.ctan.org/macros/unicodetex/latex/unicode-math/unimath-symbols.pdf}[list of math symbols] \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/newfloat/newfloat.pdf}[newfloat] to declare environments like figures, tables, etc. \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/caption/caption.pdf}[caption] \\
+      and \link{https://mirrors.ctan.org/macros/latex/contrib/caption/subcaption.pdf}[subcaption] for captions and subfigures \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/cleveref/cleveref.pdf}[cleveref] \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/enumitem/enumitem.pdf}[enumitem] \\
+\link{https://mirrors.ctan.org/macros/latex/required/amsmath/amsldoc.pdf}[amsmath] for math environments (ignore fonts) \\
+\link{http://mirrors.ctan.org/macros/latex/contrib/mathtools/mathtools.pdf}[mathtools] \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/thmtools/doc/thmtools-manual.pdf}[thmtools]
+      and \link{https://mirrors.ctan.org/macros/latex/contrib/mathtools/mathtools.pdf}[mathtools] to understand theorem-like environments \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/cryptocode/cryptocode.pdf}[cryptocode] for formal algorithms, etc. \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/minted/minted.pdf}[minted] for syntax highlighting \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/csvsimple/csvsimple-l3.pdf}[csvsimple-l3] to load tables from CSV \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/chemmacros/chemmacros-manual.pdf}[chemmacros], \\
+      \link{https://mirrors.ctan.org/macros/latex/contrib/chemformula/chemformula-manual.pdf}[chemformula], \\
+      and \link{https://mirrors.ctan.org/macros/generic/chemfig/chemfig-en.pdf}[chemfig] \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/l3packages/xparse.pdf}[xparse] \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/l3kernel/expl3.pdf}[L3 overview] \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/l3kernel/l3styleguide.pdf}[L3 style guide] \\
+\link{https://mirrors.ctan.org/macros/latex/contrib/l3kernel/interface3.pdf}[L3 documentation] \\
+\end {LongTable}
+
+
+
+\begin{LongTable} [
+    simple ,
+    theme                    = longfoot ,
+    entry                    = {Keys to SpecialChapter} ,
+    caption+                 = {} ,
+    label                    = {specialchapter} ,
+]{
+    colspec                = { X[1,l] X[1,l] X[1,l] } ,
+    column{1}              = { font=\ttfamily } ,
+    column{2}              = { font=\ttfamily } ,
+}
+key                      & type                          & description                             \\
+label                    & str                           & \texmacro{label}                            \\
+entry                    & str                           & TOC entry                                \\
+title                    & str                           & Title displayed as \texmacro{chapter}        \\
+no-title                 & bool                          & Force-hide title                         \\
+no-entry                 & bool                          & Forcibly hide TOC entry                   \\
+numberless               & bool                          & Use \texmacro{chapter*} instead of \texmacro{chapter} (initial: true)   \\
+numbered                 & bool                          & Force \code{numberless=false}        \\
+hide-links               & bool                          & Disable link color in body        \\
+empty-page-style         & bool                          & \code{pagestyle} to \code{empty}, disabling footer and header \\
+width                    & h-dim                         & Width of the environment text        \\
+above                    & v-dim                         & Padding from top         \\
+below                    & v-dim                         & Padding from bottom         \\
+textile                  & textile                       & Named textile for body         \\
+style                    & style                         & Inline textile commands (e.g. \code{bold;sans})         \\
+align                    & {left,center,right,justify}  & Of body         \\
+at                       & {top,middle,bottom}  & Of body         \\
+\end{LongTable}

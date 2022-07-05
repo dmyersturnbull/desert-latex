@@ -13,7 +13,65 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplClass {desert} {2022-05-30} {0.1.0} { Desert~dissertation~template }
+\ProvidesExplClass {desert} {2022-07-04} {0.1.0} { Desert~dissertation~template }
+
+
+
+%======================================================================================================================
+%                    hooks for fancy users
+%======================================================================================================================
+
+\hook_new:n { dez / before }
+\hook_new:n { dez / after }
+
+\hook_new:n { dez / front-matter / early }
+\hook_new:n { dez / front-matter / late }
+
+\hook_new:n { dez / main-matter / early }
+\hook_new:n { dez / main-matter / late }
+
+\hook_new:n { dez / back-matter / early }
+\hook_new:n { dez / back-matter / late }
+
+\hook_new:n { dez / packages / before }
+\hook_new:n { dez / packages / after }
+
+\hook_new:n { dez / lof-like / before }
+\hook_new:n { dez / lof-like / after }
+\hook_new:n { dez / lof-like / pre }
+\hook_new:n { dez / lof-like / post }
+
+\hook_new:n { dez / show-bib / before }
+\hook_new:n { dez / show-bib / after }
+\hook_new:n { dez / show-bib / pre }
+\hook_new:n { dez / show-bib / post }
+
+\hook_new:n { dez / show-endnotes / before }
+\hook_new:n { dez / show-endnotes / after }
+\hook_new:n { dez / show-endnotes / pre }
+\hook_new:n { dez / show-endnotes / post }
+
+
+% internal
+\ProvideDocumentCommand \DezPartPageCmd {}
+    { \cleardoublepage }
+    
+\ProvideDocumentCommand \DezMainChapterPageCmd {}
+    { \cleardoublepage }
+    
+\ProvideDocumentCommand \DezChapterPageCmd {}
+    { \clearpage }
+
+\cs_new_protected:Nn \dez__one_col:
+{
+    %\newgeometry{onecolumn}  % TODO: should we?
+}
+\cs_new_protected:Nn \dez__restore_col:
+{
+    %\restoregeometry
+}
+
+\hook_use:n { dez / before }
 
 
 % Make _ and ^ inactive in text mode
@@ -23,7 +81,10 @@
 %\def _ { \relax \ifmmode \sp \else \^ \fi }
 
 % https://tex.stackexchange.com/questions/245880/repeated-labels-may-have-changed-when-using-catcode-12-underscore-hack-wi
-%\AtBeginDocument{
+%\hook_gput_code:nnn
+%{begindocument/end}
+%{dez/fix-cat-codes}
+%{
 %    \catcode`_=12
 %    \begingroup\lccode`~=`_
 %    \lowercase{\endgroup\let~}\sb
@@ -32,9 +93,9 @@
 %}
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    meta utils
-%==================================================================================================
+%======================================================================================================================
 
 
 \RequirePackage {etoolbox}
@@ -77,6 +138,40 @@
 \exp_args_generate:n { cen, ceo, ceV, cev, cee, cef, cex }
 \exp_args_generate:n { Nnee }
 
+\cs_new_protected:Npn \begin_:n #1
+    { \begin {#1} }
+\cs_generate_variant:Nn \begin_:n { V }
+
+\cs_new_protected:Npn \begin_r:nn #1#2
+    { \begin {#1} {#2} }
+\cs_generate_variant:Nn \begin_r:nn { nV, Vn, VV }
+
+\cs_new_protected:Npn \begin_o:nn #1#2
+    { \begin {#1} [#2] }
+\cs_generate_variant:Nn \begin_o:nn { nV, Vn, VV }
+
+\cs_new_protected:Npn \begin_rr:nnn #1#2#3
+    { \begin {#1} {#2} {#3} }
+\cs_generate_variant:Nn \begin_rr:nnn { nnV, nVn, Vnn, nVV, VnV, VVn, VVV }
+
+\cs_new_protected:Npn \begin_ro:nnn #1#2#3
+    { \begin {#1} {#2} [#3] }
+\cs_generate_variant:Nn \begin_ro:nnn { nnV, nVn, Vnn, nVV, VnV, VVn, VVV }
+
+\cs_new_protected:Npn \begin_or:nnn #1#2#3
+    { \begin {#1} [#2] {#3} }
+\cs_generate_variant:Nn \begin_or:nnn { nnV, nVn, Vnn, nVV, VnV, VVn, VVV }
+
+\cs_new_protected:Npn \begin_oo:nnn #1#2#3
+    { \begin {#1} [#2] [#3] }
+\cs_generate_variant:Nn \begin_oo:nnn { nnV, nVn, Vnn, nVV, VnV, VVn, VVV }
+
+\cs_new_protected:Npn \end_:n #1
+    { \end {#1} }
+\cs_generate_variant:Nn \end_:n { V }
+
+
+
 %\prg_new_conditional:Npnn \pkg_if_loaded:n #1 { T, F, TF }
 %{
 %    \@ifpackageloaded {#1}
@@ -86,9 +181,9 @@
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                      errors, warnings, messages, etc.
-%==================================================================================================
+%======================================================================================================================
 
 \msg_new:nnn {dez} {nosuchpreset}
     { Preset~'#1'~not~available:~no~command~of~that~name. }
@@ -99,27 +194,27 @@
 \msg_new:nnn {dez} {generic}
     { #1 }
 \cs_new_protected:Npn \dez__info:n #1
-    { \msg_info:nnnn {dez} {generic} {#1} }
+    { \msg_info:nnn {dez} {generic} {#1} }
 \cs_new_protected:Npn \dez__note:n #1
-    { \msg_note:nnnn {dez} {generic} {#1} }
+    { \msg_note:nnn {dez} {generic} {#1} }
 \cs_new_protected:Npn \dez__warning:n #1
-    { \msg_warning:nnnn {dez} {generic} {#1} }
+    { \msg_warning:nnn {dez} {generic} {#1} }
 
 \msg_new:nnn {dez} {cmdneedspkg}
     { \c_backslash_str #1~requires~option~'pkg/#2' }
 \cs_new_protected:Npn \dez__warn_cmdneedspkg:nn #1#2
-    { \msg_warning:nnn {dez} {cmdneedspkg} {#1} {#2} }
+    { \msg_warning:nnnn {dez} {cmdneedspkg} {#1} {#2} }
 
 \msg_new:nnn {dez} {envneedspkg}
     { Environment~#1~requires~option~'pkg/#2' }
 \cs_new_protected:Npn \dez__warn_envneedspkg:nn #1#2
-    { \msg_warning:nnn {dez} {envneedspkg} {#1} {#2} }
+    { \msg_warning:nnnn {dez} {envneedspkg} {#1} {#2} }
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    Load report class!
-%==================================================================================================
+%======================================================================================================================
 
 % Load report BEFORE DECLARING OPTIONS!!
 % Otherwise em and ex units are zero.
@@ -127,9 +222,9 @@
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    internal aliases and containers
-%==================================================================================================
+%======================================================================================================================
 
 % containers to store package options
 \tl_new:N \g_dez__end_tl
@@ -189,9 +284,9 @@
 \let \@prop_to   \prop_gset_from_keyval:NV
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    package options and setup
-%==================================================================================================
+%======================================================================================================================
 
 \keys_define:nn {dez}
 {
@@ -201,14 +296,18 @@ draft .default:n                         = true ,
 draft .initial:n                         = false ,
 preset .tl_gset:N                        = \g_dez_preset_str ,
 preset .initial:n                        = AFour ,
+preset .value_required:n                 = true ,
 mode .choices:nn                         = { thesis, article, book, }
                                            { \@str_to \g_dez_mode_str \l_keys_choice_tl } ,
 mode .initial:n                          = thesis ,
+mode .value_required:n                   = true ,
 
 lang / main .tl_gset:N                   = \g_dez_lang_str ,
 lang / main .initial:n                   = american ,
+lang / main .value_required:n            = true ,
 lang / extras .tl_gset:N                 = \g_dez_langs_str ,
 lang / extras .initial:n                 = {} ,
+lang / extras .value_required:n          = true ,
 
 pkg / svg .code:n                        = { \@add_feat {svg} {#1} } ,
 pkg / noms .code:n                       = { \@add_feat {noms} {#1} } ,
@@ -238,183 +337,214 @@ bib / per-chap .default:n                = true ,
 bib / per-chap .initial:n                = false ,
 bib / style .tl_gset:N                   = \g_dez_bib_style_str ,
 bib / style .initial:n                   = ieee ,
+bib / style .value_required:n            = true ,
 
+color / off .meta:n                      = {
+                                            color/even-row=white, color/cite={}, color/file={},
+                                            color/run={}, color/ref={}, color/url={},
+                                           } ,
+color / off .bool_gset:N                 = \g_dez_color_no_bool ,
+color / off .value_forbidden:n           = true ,
+color / even-row .tl_gset:N              = \g_dez_even_row_bg_tl ,
+color / even-row .default:n              = black!2!white ,
+color / even-row .initial:n              = white ,
 color / cite .prop_gput:N                = \g_dez_color_prop ,
+color / cite .default:n                  = blue ,
 color / cite .initial:n                  = blue ,
 color / file .prop_gput:N                = \g_dez_color_prop ,
+color / file .default:n                  = red ,
 color / file .initial:n                  = red ,
 color / run .prop_gput:N                 = \g_dez_color_prop ,
+color / run .default:n                   = red ,
 color / run .initial:n                   = red ,
 color / ref .prop_gput:N                 = \g_dez_color_prop ,
+color / ref .default:n                   = blue ,
 color / ref .initial:n                   = blue ,
 color / url .prop_gput:N                 = \g_dez_color_prop ,
+color / url .default:n                   = blue ,
 color / url .initial:n                   = blue ,
-color / as-border .bool_gset:N           = \g_dez_color_as_border_bool ,
-color / as-border .default:n             = true ,
-color / as-border .initial:n             = false ,
 
-cref / abbrev .bool_gset:N               = \g_dez_cref_abbrev_bool ,
-cref / abbrev .default:n                 = true ,
-cref / abbrev .initial:n                 = false ,
-cref / capitalize .bool_gset:N           = \g_dez_cref_capitalize_bool ,
-cref / capitalize .default:n             = true ,
-cref / capitalize .initial:n             = false ,
-
-font / math .choices:nn                  = { NOTO, LatinModern, STIX, Bonum, Pagella, Schola, Termes, DejaVu, }
+font / math .choices:nn                  = { Noto, LatinModern, STIX, Bonum, Pagella, Schola, Termes, DejaVu, }
                                            { \@str_to \g_dez_font_math_str \l_keys_choice_tl } ,
 font / math .initial:n                   = STIX ,
-font / serif .choices:nn                 = { NOTO, LatinModern, STIX, SourcePro, Plex, }
+font / math .value_required:n            = true ,
+font / serif .choices:nn                 = { Noto, LatinModern, STIX, SourcePro, Plex, }
                                            { \@str_to \g_dez_font_serif_str \l_keys_choice_tl } ,
-font / serif .initial:n                  = NOTO ,
-font / sans .choices:nn                  = { NOTO, LatinModern, SourcePro, Plex, }
+font / serif .initial:n                  = Noto ,
+font / serif .value_required:n           = true ,
+font / sans .choices:nn                  = { Noto, LatinModern, SourcePro, Plex, }
                                            { \@str_to \g_dez_font_sans_str \l_keys_choice_tl } ,
-font / sans .initial:n                   = NOTO ,
-font / mono .choices:nn                  = { NOTO, NOTO/serif, NOTO/serif, LatinModern, SourcePro, Plex, Cascadia, }
+font / sans .initial:n                   = Noto ,
+font / sans .value_required:n            = true ,
+font / mono .choices:nn                  = { Noto, Noto/serif, Noto/serif, LatinModern, SourcePro, Plex, Cascadia, }
                                            { \@str_to \g_dez_font_mono_str \l_keys_choice_tl } ,
-font / mono .initial:n                   = NOTO ,
+font / mono .initial:n                   = Noto ,
+font / mono .value_required:n            = true ,
 font / size .tl_gset:N                   = \g_dez_font_size_tl ,
 font / size .initial:n                   = 11pt ,
+font / size .value_required:n            = true ,
 font / leading .tl_gset:N                = \g_dez_font_leading_tl ,
 font / leading .initial:n                = {} ,  % empty ==> +20%
+font / leading .value_required:n         = true ,
 
-header / L .code:n                       = { \prop_gput_if_new:NnV \g_dez_header_front_prop {L} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_main_prop {L} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_back_prop {L} {#1}
-                                           },
-header / LE .code:n                      = { \prop_gput_if_new:NnV \g_dez_header_front_prop {LE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_main_prop {LE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_back_prop {LE} {#1}
-                                           },
-header / LO .code:n                      = { \prop_gput_if_new:NnV \g_dez_header_front_prop {LO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_main_prop {LO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_back_prop {LO} {#1}
-                                           },
-header / R .code:n                       = { \prop_gput_if_new:NnV \g_dez_header_front_prop {R} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_main_prop {R} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_back_prop {R} {#1}
-                                           },
-header / RE .code:n                      = { \prop_gput_if_new:NnV \g_dez_header_front_prop {RE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_main_prop {RE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_back_prop {RE} {#1}
-                                           },
-header / RO .code:n                      = { \prop_gput_if_new:NnV \g_dez_header_front_prop {RO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_main_prop {RO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_back_prop {RO} {#1}
-                                           },
-header / C .code:n                       = { \prop_gput_if_new:NnV \g_dez_header_front_prop {C} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_main_prop {C} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_back_prop {C} {#1}
-                                           },
-header / CE .code:n                      = { \prop_gput_if_new:NnV \g_dez_header_front_prop {CE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_main_prop {CE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_back_prop {CE} {#1}
-                                           },
-header / CO .code:n                      = { \prop_gput_if_new:NnV \g_dez_header_front_prop {CO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_main_prop {CO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_header_back_prop {CO} {#1}
-                                           },
+header / L .meta:n                       = { header/front/L={#1},  header/main/L={#1},  header/back/L={#1}  } ,
+header / L .value_required:n             = true ,
+header / LE .meta:n                      = { header/front/LE={#1}, header/main/LE={#1}, header/back/LE={#1} } ,
+header / LE .value_required:n            = true ,
+header / LO .meta:n                      = { header/front/LO={#1}, header/main/LO={#1}, header/back/LO={#1} } ,
+header / LO .value_required:n            = true ,
+header / R .meta:n                       = { header/front/R={#1},  header/main/R={#1},  header/back/R={#1}  } ,
+header / R .value_required:n             = true ,
+header / RE .meta:n                      = { header/front/RE={#1}, header/main/RE={#1}, header/back/RE={#1} } ,
+header / RE .value_required:n            = true ,
+header / RO .meta:n                      = { header/front/RO={#1}, header/main/RO={#1}, header/back/RO={#1} } ,
+header / RO .value_required:n            = true ,
+header / C .meta:n                       = { header/front/E={#1},  header/main/C={#1},  header/back/C={#1}  } ,
+header / C .value_required:n             = true ,
+header / CE .meta:n                      = { header/front/CE={#1}, header/main/CE={#1}, header/back/CE={#1} } ,
+header / CE .value_required:n            = true ,
+header / CO .meta:n                      = { header/front/CO={#1}, header/main/CO={#1}, header/back/CO={#1} } ,
+header / CO .value_required:n            = true ,
 header / front / L .prop_gput:N          = \g_dez_header_front_prop ,
+header / front / L .value_required:n     = true ,
 header / front / LE .prop_gput:N         = \g_dez_header_front_prop ,
+header / front / LE .value_required:n    = true ,
 header / front / LO .prop_gput:N         = \g_dez_header_front_prop ,
+header / front / LO .value_required:n    = true ,
 header / front / R .prop_gput:N          = \g_dez_header_front_prop ,
+header / front / R .value_required:n     = true ,
 header / front / RE .prop_gput:N         = \g_dez_header_front_prop ,
+header / front / RE .value_required:n    = true ,
 header / front / RO .prop_gput:N         = \g_dez_header_front_prop ,
+header / front / RO .value_required:n    = true ,
 header / front / C .prop_gput:N          = \g_dez_header_front_prop ,
+header / front / C .value_required:n     = true ,
 header / front / CE .prop_gput:N         = \g_dez_header_front_prop ,
+header / front / CE .value_required:n    = true ,
 header / front / CO .prop_gput:N         = \g_dez_header_front_prop ,
+header / front / CO .value_required:n    = true ,
 header / main / L .prop_gput:N           = \g_dez_header_main_prop ,
+header / main / L .value_required:n      = true ,
 header / main / LE .prop_gput:N          = \g_dez_header_main_prop ,
+header / main / LE .value_required:n     = true ,
 header / main / LO .prop_gput:N          = \g_dez_header_main_prop ,
+header / main / LO .value_required:n     = true ,
 header / main / R .prop_gput:N           = \g_dez_header_main_prop ,
+header / main / R .value_required:n      = true ,
 header / main / RE .prop_gput:N          = \g_dez_header_main_prop ,
+header / main / RE .value_required:n     = true ,
 header / main / RO .prop_gput:N          = \g_dez_header_main_prop ,
+header / main / RO .value_required:n     = true ,
 header / main / C .prop_gput:N           = \g_dez_header_main_prop ,
+header / main / C .value_required:n      = true ,
 header / main / CE .prop_gput:N          = \g_dez_header_main_prop ,
+header / main / CE .value_required:n     = true ,
 header / main / CO .prop_gput:N          = \g_dez_header_main_prop ,
+header / back / CO .value_required:n     = true ,
 header / back / L .prop_gput:N           = \g_dez_header_back_prop ,
+header / back / L .value_required:n      = true ,
 header / back / LE .prop_gput:N          = \g_dez_header_back_prop ,
+header / back / LE .value_required:n     = true ,
 header / back / LO .prop_gput:N          = \g_dez_header_back_prop ,
+header / back / LO .value_required:n     = true ,
 header / back / R .prop_gput:N           = \g_dez_header_back_prop ,
+header / back / R .value_required:n      = true ,
 header / back / RE .prop_gput:N          = \g_dez_header_back_prop ,
+header / back / RE .value_required:n     = true ,
 header / back / RO .prop_gput:N          = \g_dez_header_back_prop ,
+header / back / RO .value_required:n     = true ,
 header / back / C .prop_gput:N           = \g_dez_header_back_prop ,
+header / back / C .value_required:n      = true ,
 header / back / CE .prop_gput:N          = \g_dez_header_back_prop ,
+header / back / CE .value_required:n     = true ,
 header / back / CO .prop_gput:N          = \g_dez_header_back_prop ,
+header / back / CO .value_required:n     = true ,
 
-footer / L .code:n                       = { \prop_gput_if_new:NnV \g_dez_footer_front_prop {L} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_main_prop {L} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_back_prop {L} {#1}
-                                           },
-footer / LE .code:n                      = { \prop_gput_if_new:NnV \g_dez_footer_front_prop {LE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_main_prop {LE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_back_prop {LE} {#1}
-                                           },
-footer / LO .code:n                      = { \prop_gput_if_new:NnV \g_dez_footer_front_prop {LO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_main_prop {LO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_back_prop {LO} {#1}
-                                           },
-footer / R .code:n                       = { \prop_gput_if_new:NnV \g_dez_footer_front_prop {R} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_main_prop {R} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_back_prop {R} {#1}
-                                           },
-footer / R .default:n                    = { \thepage } ,
-footer / RE .code:n                      = { \prop_gput_if_new:NnV \g_dez_footer_front_prop {RE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_main_prop {RE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_back_prop {RE} {#1}
-                                           },
-footer / RO .code:n                      = { \prop_gput_if_new:NnV \g_dez_footer_front_prop {RO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_main_prop {RO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_back_prop {RO} {#1}
-                                           },
-footer / C .code:n                       = { \prop_gput_if_new:NnV \g_dez_footer_front_prop {C} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_main_prop {C} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_back_prop {C} {#1}
-                                           },
-footer / CE .code:n                      = { \prop_gput_if_new:NnV \g_dez_footer_front_prop {CE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_main_prop {CE} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_back_prop {CE} {#1}
-                                           },
-footer / CO .code:n                      = { \prop_gput_if_new:NnV \g_dez_footer_front_prop {CO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_main_prop {CO} {#1}
-                                             \prop_gput_if_new:NnV \g_dez_footer_back_prop {CO} {#1}
-                                           },
+footer / L .meta:n                       = { footer/front/L={#1},  footer/main/L={#1},  footer/back/L={#1}  } ,
+footer / L .value_required:n             = true ,
+footer / LE .meta:n                      = { footer/front/LE={#1}, footer/main/LE={#1}, footer/back/LE={#1} } ,
+footer / LE .value_required:n            = true ,
+footer / LO .meta:n                      = { footer/front/LO={#1}, footer/main/LO={#1}, footer/back/LO={#1} } ,
+footer / LO .value_required:n            = true ,
+footer / R .meta:n                       = { footer/front/R={#1},  footer/main/R={#1},  footer/back/R={#1}  } ,
+footer / R .value_required:n             = true ,
+footer / RE .meta:n                      = { footer/front/RE={#1}, footer/main/RE={#1}, footer/back/RE={#1} } ,
+footer / RE .value_required:n            = true ,
+footer / RO .meta:n                      = { footer/front/RO={#1}, footer/main/RO={#1}, footer/back/RO={#1} } ,
+footer / RO .value_required:n            = true ,
+footer / C .meta:n                       = { footer/front/E={#1},  footer/main/C={#1},  footer/back/C={#1}  } ,
+footer / C .value_required:n             = true ,
+footer / CE .meta:n                      = { footer/front/CE={#1}, footer/main/CE={#1}, footer/back/CE={#1} } ,
+footer / CE .value_required:n            = true ,
+footer / CO .meta:n                      = { footer/front/CO={#1}, footer/main/CO={#1}, footer/back/CO={#1} } ,
+footer / CO .value_required:n            = true ,
 footer / front / L .prop_gput:N          = \g_dez_footer_front_prop ,
+footer / front / L .value_required:n     = true ,
 footer / front / LE .prop_gput:N         = \g_dez_footer_front_prop ,
+footer / front / LE .value_required:n    = true ,
 footer / front / LO .prop_gput:N         = \g_dez_footer_front_prop ,
+footer / front / LO .value_required:n    = true ,
 footer / front / R .prop_gput:N          = \g_dez_footer_front_prop ,
+footer / front / R .value_required:n     = true ,
 footer / front / RE .prop_gput:N         = \g_dez_footer_front_prop ,
+footer / front / RE .value_required:n    = true ,
 footer / front / RO .prop_gput:N         = \g_dez_footer_front_prop ,
+footer / front / RO .value_required:n    = true ,
 footer / front / C .prop_gput:N          = \g_dez_footer_front_prop ,
+footer / front / C .value_required:n     = true ,
 footer / front / CE .prop_gput:N         = \g_dez_footer_front_prop ,
+footer / front / CE .value_required:n    = true ,
 footer / front / CO .prop_gput:N         = \g_dez_footer_front_prop ,
+footer / front / CO .value_required:n    = true ,
 footer / main / L .prop_gput:N           = \g_dez_footer_main_prop ,
+footer / main / L .value_required:n      = true ,
 footer / main / LE .prop_gput:N          = \g_dez_footer_main_prop ,
+footer / main / LE .value_required:n     = true ,
 footer / main / LO .prop_gput:N          = \g_dez_footer_main_prop ,
+footer / main / LO .value_required:n     = true ,
 footer / main / R .prop_gput:N           = \g_dez_footer_main_prop ,
+footer / main / R .value_required:n      = true ,
 footer / main / RE .prop_gput:N          = \g_dez_footer_main_prop ,
+footer / main / RE .value_required:n     = true ,
 footer / main / RO .prop_gput:N          = \g_dez_footer_main_prop ,
+footer / main / RO .value_required:n     = true ,
 footer / main / C .prop_gput:N           = \g_dez_footer_main_prop ,
+footer / main / C .value_required:n      = true ,
 footer / main / CE .prop_gput:N          = \g_dez_footer_main_prop ,
+footer / main / CE .value_required:n     = true ,
 footer / main / CO .prop_gput:N          = \g_dez_footer_main_prop ,
+footer / back / CO .value_required:n     = true ,
 footer / back / L .prop_gput:N           = \g_dez_footer_back_prop ,
+footer / back / L .value_required:n      = true ,
 footer / back / LE .prop_gput:N          = \g_dez_footer_back_prop ,
+footer / back / LE .value_required:n     = true ,
 footer / back / LO .prop_gput:N          = \g_dez_footer_back_prop ,
+footer / back / LO .value_required:n     = true ,
 footer / back / R .prop_gput:N           = \g_dez_footer_back_prop ,
+footer / back / R .value_required:n      = true ,
 footer / back / RE .prop_gput:N          = \g_dez_footer_back_prop ,
+footer / back / RE .value_required:n     = true ,
 footer / back / RO .prop_gput:N          = \g_dez_footer_back_prop ,
+footer / back / RO .value_required:n     = true ,
 footer / back / C .prop_gput:N           = \g_dez_footer_back_prop ,
+footer / back / C .value_required:n      = true ,
 footer / back / CE .prop_gput:N          = \g_dez_footer_back_prop ,
+footer / back / CE .value_required:n     = true ,
 footer / back / CO .prop_gput:N          = \g_dez_footer_back_prop ,
-
+footer / back / CO .value_required:n     = true ,
 
 layout / geometry .tl_gset:N             = \g_dez_geometry_tl ,
 layout / geometry .initial:n             = {} ,
-layout / nom-symbol-width .dim_gset:N    = \g_dez_nom_symbol_dim ,
-layout / nom-symbol-width .initial:n     = 4em ,
+layout / geometry .value_required:n      = true ,
+layout / nom-sym-width .dim_gset:N       = \g_dez_nom_symbol_dim ,
+layout / nom-sym-width .initial:n        = 4em ,
+layout / nom-sym-width .value_required:n = true ,
 layout / index-cols .int_gset:N          = \g_dez_lay_index_cols_int ,
 layout / index-cols .initial:n           = 2 ,
+layout / index-cols .value_required:n    = true ,
 layout / index-col-sep .dim_gset:N       = \g_dez_lay_index_col_sep_dim ,
 layout / index-col-sep .initial:n        = 3em ,
+layout / index-col-sep .value_required:n = true ,
 
 layout / subsec-runin .bool_gset:N       = \g_dez_subsec_runin_bool ,
 layout / subsec-runin .default:n         = true ,
@@ -431,107 +561,151 @@ layout / endnote-backrefs .initial:n     = false ,
 layout / show-toc-links .bool_gset:N     = \g_dez_show_toc_links_bool,
 layout / show-toc-links .default:n       = true ,
 layout / show-toc-links .initial:n       = false ,
-layout / show-nom-links .bool_gset:N     = \g_dez_show_nom_links_bool,
-layout / show-nom-links .default:n       = true ,
-layout / show-nom-links .initial:n       = false ,
 layout / fnote-align .choices:nn         = { justify, left, right, center }
                                            { \@str_to \g_dez_fnote_align_str \l_keys_choice_tl } ,
-layout / fnote-align .initial:n          = justify ,
-layout / fnote-placement .choices:nn     = {
+layout / fnote-align .initial:n          = left ,
+layout / fnote-align .value_required:n   = true ,
+layout / fnote-place .choices:nn         = {
                                              default, abovefloats, belowfloats,
                                              bottom, bottomfloats, bottomfootnotes,
                                            }
                                            { \@str_to \g_dez_fnote_place_str \l_keys_choice_tl } ,
-layout / fnote-placement .initial:n      = default ,
+layout / fnote-place .initial:n           = default ,
+layout / fnote-place .value_required:n    = true ,
 
+stretch / single .meta:n                  = { stretch/main=1.0, stretch/cap=1.0, stretch/eqn=1.0 ,
+                                              stretch/toc=1.0, stretch/list-of=1.0, stretch/nom=1.0,
+                                              stretch/table=1.0, stretch/refs=1.0, stretch/code=1.0 ,
+                                              font / leading = {} ,
+                                            } ,
+stretch / single .value_forbidden:n       = true ,
+stretch / one-half .meta:n                = { stretch/main=1.25, stretch/cap=1.25, stretch/eqn=1.25 ,
+                                              stretch/toc=1.25, stretch/list-of=1.25, stretch/nom=1.25,
+                                              stretch/table=1.0, stretch/refs=1.0, stretch/code=1.0 ,
+                                              font / leading = {} ,
+stretch / one-half .value_forbidden:n     = true ,
+                                            } ,
+stretch / double .meta:n                  = { stretch/main=1.66667, stretch/cap=1.0, stretch/eqn=1.66667 ,
+                                              stretch/toc=1.66667, stretch/list-of=1.66667, stretch/nom=1.66667,
+                                              stretch/table=1.0, stretch/refs=1.0, stretch/code=1.0 ,
+                                              font / leading = {} ,
+                                            } ,
+stretch / double .value_forbidden:n      = true ,
 stretch / main .fp_gset:N                = \g_dez_stretch_main_fp ,
 stretch / main .initial:n                = 1.5 ,
-stretch / caption .fp_gset:N             = \g_dez_stretch_caption_fp ,
-stretch / caption .initial:n             = 1.2 ,
+stretch / main .value_required:n         = true ,
+stretch / cap .fp_gset:N                 = \g_dez_stretch_caption_fp ,
+stretch / cap .initial:n                 = 1.25 ,
+stretch / cap .value_required:n          = true ,
 stretch / eqn .fp_gset:N                 = \g_dez_stretch_eqn_fp ,
 stretch / eqn .initial:n                 = 1.25 ,
+stretch / eqn .value_required:n          = true ,
 stretch / toc .fp_gset:N                 = \g_dez_stretch_toc_fp ,
 stretch / toc .initial:n                 = 1.25 ,
+stretch / toc .value_required:n          = true ,
 stretch / list-of .fp_gset:N             = \g_dez_stretch_lof_fp ,
 stretch / list-of .initial:n             = 1.25 ,
-stretch / abbrevs .fp_gset:N             = \g_dez_stretch_abbrevs_fp ,
-stretch / abbrevs .initial:n             = 1.25 ,
+stretch / list-of .value_required:n      = true ,
 stretch / nom .fp_gset:N                 = \g_dez_stretch_nom_fp ,
 stretch / nom .initial:n                 = 1.25 ,
+stretch / nom .value_required:n          = true ,
 stretch / table .fp_gset:N               = \g_dez_stretch_table_fp ,
 stretch / table .initial:n               = 1.25 ,
+stretch / table .value_required:n        = true ,
 stretch / refs .fp_gset:N                = \g_dez_stretch_refs_fp ,
 stretch / refs .initial:n                = 1.25 ,
-stretch / source-code .fp_gset:N         = \g_dez_stretch_code_fp ,
-stretch / source-code .initial:n         = 1.25 ,
+stretch / refs .value_required:n         = true ,
+stretch / code .fp_gset:N                = \g_dez_stretch_code_fp ,
+stretch / code .initial:n                = 1.25 ,
+stretch / code .value_required:n         = true ,
 
 num / depth .choices:nn                  = {
-                                             none, chapter, section, subsection, subsubsection ,
-                                             paragraph, subparagraph,
+                                             none, chapter, section, subsection, subsec, subsubsection,
+                                             subsubsec, paragraph, par, subparagraph, subpar,
                                            }
                                            { \@str_to \g_dez_n_depth_str \l_keys_choice_tl } ,
 num / depth .initial:n                   = subparagraph ,
+num / depth .value_required:n            = true ,
 num / back-pages .choices:nn             = { arabic, roman, Roman, alph, Alph, }
                                            { \@str_to \g_dez_n_back_str \l_keys_choice_tl } ,
 num / back-pages .initial:n              = arabic ,
+num / back-pages .value_required:n       = true ,
 num / front-chaps .choices:nn            = { arabic, roman, Roman, alph, Alph, }
                                            { \@str_to \g_dez_n_front_chp_str \l_keys_choice_tl } ,
 num / front-chaps .initial:n             = Roman ,
+num / front-chaps .value_required:n      = true ,
 num / main-chaps .choices:nn             = { arabic, roman, Roman, alph, Alph, }
                                            { \@str_to \g_dez_n_main_chps_str \l_keys_choice_tl } ,
 num / main-chaps .initial:n              = arabic ,
+num / main-chaps .value_required:n       = true ,
 num / back-chaps .choices:nn             = { arabic, roman, Roman, alph, Alph, }
-                                          { \@str_to \g_dez_n_back_chp_str \l_keys_choice_tl } ,
+                                           { \@str_to \g_dez_n_back_chp_str \l_keys_choice_tl } ,
 num / back-chaps .initial:n              = Alph ,
-num / fig-panels .choices:nn             = { arabic, roman, Roman, alph, Alph, }
+num / back-chaps .value_required:n       = true ,
+num / panels .choices:nn                 = { arabic, roman, Roman, alph, Alph, }
                                            { \@str_to \g_dez_n_panels_str \l_keys_choice_tl } ,
-num / fig-panels .initial:n              = alph ,
+num / panels .initial:n                  = alph ,
+num / panels .value_required:n           = true ,
 num / eqn-brackets .choices:nn           = {
                                              none, round, square, curly, none-bold,
                                              round-bold, square-bold, curly-bold,
                                            }
                                            { \@str_to \g_dez_n_brackets_str \l_keys_choice_tl } ,
 num / eqn-brackets .initial:n            = round ,
-num / eqn-in .choices:nn                 = { none, chapter, section, subsection, subsubsection, }
+num / eqn-brackets .value_required:n     = true ,
+num / eqn-in .choices:nn                 = { none, chapter, section, subsection, subsec, subsubsection, subsubsec, }
                                            { \@str_to \g_dez_eqn_in_str \l_keys_choice_tl } ,
 num / eqn-in .initial:n                  = chapter ,
-num / float-in .choices:nn               = { none, chapter, section, subsection, subsubsection, }
+num / eqn-in .value_required:n           = true ,
+num / float-in .choices:nn               = { none, chapter, section, subsection, subsec, subsubsection, subsubsec, }
                                            { \@str_to \g_dez_float_in_str \l_keys_choice_tl } ,
 num / float-in .initial:n                = chapter ,
+num / float-in .value_required:n         = true ,
 num / fnote-in .choices:nn               = { none, page, chapter, }
                                            { \@str_to \g_dez_fnote_in_str \l_keys_choice_tl } ,
 num / fnote-in .initial:n                = page ,
+num / fnote-in .value_required:n         = true ,
 num / fnotes .choices:nn                 = {
-                                             arabic, roman, Roman, alph, Alph, lamport,
-                                             lamport*, bringhurst, chicago, wiley,
-                                             dez ,
+                                             arabic, roman, Roman, alph, Alph, lamport, lamport*,
+                                             bringhurst, chicago, wiley, dez-fancy ,
                                            }
                                            { \@str_to \g_dez_n_fnotes_str \l_keys_choice_tl } ,
 num / fnotes .initial:n                  = lamport* ,
+num / fnotes .value_required:n           = true ,
 num / front-pages .choices:nn            = { arabic, roman, Roman, alph, Alph, }
                                            { \@str_to \g_dez_n_front_str \l_keys_choice_tl } ,
 num / front-pages .initial:n             = roman ,
+num / front-pages .value_required:n      = true ,
 num / main-pages .choices:nn             = { arabic, roman, Roman, alph, Alph, }
                                            { \@str_to \g_dez_n_main_str \l_keys_choice_tl } ,
 num / main-pages .initial:n              = arabic ,
-num / thm-like-in .choices:nn            = { none, chapter, section, subsection, subsubsection, }
+num / main-pages .value_required:n       = true ,
+num / thm-like-in .choices:nn            = { none, chapter, section, subsection, subsec, subsubsection, subsubsec, }
                                            { \@str_to \g_dez_thm_in_str \l_keys_choice_tl } ,
 num / thm-like-in .initial:n             = chapter ,
+num / thm-like-in .value_required:n      = true ,
 
-sty / abstract-by .prop_gput:N           = \g_dez_unary_prop ,
-sty / abstract-by .initial:n             = largerr ,
-sty / abstract-authors .prop_gput:N      = \g_dez_unary_prop ,
-sty / abstract-authors .initial:n        = largerr ,
-sty / abstract-title .prop_gput:N        = \g_dez_unary_prop ,
-sty / abstract-title .initial:n          = Large; bold ,
+ref / abbrev .bool_gset:N                = \g_dez_cref_abbrev_bool ,
+ref / abbrev .default:n                  = true ,
+ref / abbrev .initial:n                  = false ,
+ref / capitalize .bool_gset:N            = \g_dez_cref_capitalize_bool ,
+ref / capitalize .default:n              = true ,
+ref / capitalize .initial:n              = false ,
+
+sty / abs-by .prop_gput:N                = \g_dez_unary_prop ,
+sty / abs-by .initial:n                  = largerr ,
+sty / abs-authors .prop_gput:N           = \g_dez_unary_prop ,
+sty / abs-authors .initial:n             = largerr ,
+sty / abs-title .prop_gput:N             = \g_dez_unary_prop ,
+sty / abs-title .initial:n               = Large; bold ,
 sty / caption-body .prop_gput:N          = \g_dez_unary_prop ,
 sty / caption-body .initial:n            = small; sans ,
 sty / caption-label .prop_gput:N         = \g_dez_unary_prop ,
 sty / caption-label .initial:n           = small; sans; bold ,
-sty / subcaption-body .prop_gput:N       = \g_dez_unary_prop ,
-sty / subcaption-body .initial:n         = small; sans ,
-sty / subcaption-label .prop_gput:N      = \g_dez_unary_prop ,
-sty / subcaption-label .initial:n        = small; sans; bold ,
+sty / subcap-body .prop_gput:N           = \g_dez_unary_prop ,
+sty / subcap-body .initial:n             = small; sans ,
+sty / subcap-label .prop_gput:N          = \g_dez_unary_prop ,
+sty / subcap-label .initial:n            = small; sans; bold ,
 sty / subref .prop_gput:N                = \g_dez_unary_prop ,
 sty / subref .initial:n                  = bold ,
 sty / table-head-body .prop_gput:N       = \g_dez_nullary_prop ,
@@ -540,10 +714,10 @@ sty / table-head-label .prop_gput:N      = \g_dez_nullary_prop ,
 sty / table-head-label .initial:n        = small; sans; bold ,
 sty / table-footer .prop_gput:N          = \g_dez_nullary_prop ,
 sty / table-footer .initial:n            = small; sans ,
-sty / box-label .prop_gput:N             = \g_dez_unary_prop ,
-sty / box-label .initial:n               = large; bold; allcaps ,
-sty / box-name .prop_gput:N              = \g_dez_unary_prop ,
-sty / box-name .initial:n                = large; bold ,
+sty / admonition-label .prop_gput:N      = \g_dez_unary_prop ,
+sty / admonition-label .initial:n        = large; bold; allcaps ,
+sty / admonition-name .prop_gput:N       = \g_dez_unary_prop ,
+sty / admonition-name .initial:n         = large; bold ,
 sty / chap-label .prop_gput:N            = \g_dez_nullary_prop ,
 sty / chap-label .initial:n              = Huge; 606060; smallcaps ,
 sty / chap-name .prop_gput:N             = \g_dez_nullary_prop ,
@@ -556,16 +730,16 @@ sty / part-name .prop_gput:N             = \g_dez_nullary_prop ,
 sty / part-name .initial:n               = HUGE; bold ,
 sty / fnote-body .prop_gput:N            = \g_dez_nullary_prop ,
 sty / fnote-body .initial:n              = mini; sans ,
-sty / foreign-words .prop_gput:N         = \g_dez_unary_prop ,
-sty / foreign-words .initial:n           = italic ,
-sty / indx-starred .prop_gput:N          = \g_dez_unary_prop ,
-sty / indx-starred .initial:n            = italic ,
+sty / indexed-starred .prop_gput:N       = \g_dez_unary_prop ,
+sty / indexed-starred .initial:n         = italic ,
 sty / nom-group .prop_gput:N             = \g_dez_unary_prop ,
 sty / nom-group .initial:n               = bold; large ,
 sty / section-title .prop_gput:N         = \g_dez_nullary_prop ,
 sty / section-title .initial:n           = LARGE; bold ,
-sty / source-code .prop_gput:N           = \g_dez_nullary_prop ,
-sty / source-code .initial:n             = small ,  % tt is implied
+sty / code .prop_gput:N                  = \g_dez_nullary_prop ,
+sty / code .initial:n                    = small; mono ,  %  mono is implied
+sty / code-line-num .prop_gput:N         = \g_dez_nullary_prop ,
+sty / code-line-num .initial:n           = small; mono ,  % mono is not implied
 sty / subsec-title .prop_gput:N          = \g_dez_nullary_prop ,
 sty / subsec-title .initial:n            = Large; bold ,
 sty / subsubsec-title .prop_gput:N       = \g_dez_nullary_prop ,
@@ -588,9 +762,8 @@ sty / tikz .prop_gput:N                  = \g_dez_nullary_prop ,
 sty / tikz .initial:n                    = {} ,
 sty / chem-name .prop_gput:N             = \g_dez_unary_prop ,
 sty / chem-name .initial:n               = small; sans ,
-
-sty-cmd / chemfig .tl_gset:N             = \g_dez_sty_chemfig_tl,
-sty-cmd / chemfig .initial:n             = mathrm ,
+sty / chemfig .tl_gset:N                 = \g_dez_sty_chemfig_tl,  % TODO
+sty / chemfig .initial:n                 = mathrm ,
 
 toc / bib .bool_gset:N                   = \g_dez_toc_bib_bool ,
 toc / bib .default:n                     = true ,
@@ -598,9 +771,10 @@ toc / bib .initial:n                     = false ,
 toc / index .bool_gset:N                 = \g_dez_toc_index_bool ,
 toc / index .default:n                   = true ,
 toc / index .initial:n                   = false ,
-toc / depth .choices:nn                  = { none, chapter, section, subsection, subsubsection, }
+toc / depth .choices:nn                  = { none, chapter, section, subsection, subsec, subsubsection, subsubsec, }
                                            { \@str_to \g_dez_toc_depth_str \l_keys_choice_tl } ,
 toc / depth .initial:n                   = subsection ,
+toc / depth .value_required:n            = true ,
 toc / endnotes .bool_gset:N              = \g_dez_toc_endnotes_bool ,
 toc / endnotes .default:n                = true ,
 toc / endnotes .initial:n                = false ,
@@ -609,214 +783,262 @@ toc / fig-panels .default:n              = true ,
 toc / fig-panels .initial:n              = false ,
 
 typo / siunitx-match-mode .bool_gset:N   = \g_dez_typo_siunitx_match_bool ,
+typo / siunitx-match-mode .default:n     = true ,
 typo / siunitx-match-mode .initial:n     = false ,
 typo / siunitx-group .choices:nn         = { none, all, decimal, integer, }
                                            { \@str_to \g_dez_typo_siunitx_group_str \l_keys_choice_tl } ,
 typo / siunitx-group .initial:n          = all ,
-typo / display-quote-lines .int_gset:N   = \g_dez_typo_display_quote_lines_int ,
-typo / display-quote-lines .initial:n    = 3 ,
+typo / siunitx-group .value_required:n   = true ,
+typo / max-quote-lines .int_gset:N       = \g_dez_typo_display_quote_lines_int ,
+typo / max-quote-lines .initial:n        = 3 ,
+typo / max-quote-lines .value_required:n = true ,
 typo / ban-hyphens .bool_gset:N          = \g_dez_typo_ban_hyphens_bool ,
 typo / ban-hyphens .default:n            = true ,
 typo / ban-hyphens .initial:n            = false ,
-typo / caption-label-sep .tl_gset:N      = \g_dez_typo_caption_label_sep_tl ,
-typo / caption-label-sep .initial:n      = \quad ,
+typo / cap-label-sep .tl_gset:N          = \g_dez_typo_caption_label_sep_tl ,
+typo / cap-label-sep .initial:n          = \quad ,
+typo / cap-label-sep .value_required:n   = true ,
 typo / subref-label-sep .tl_gset:N       = \g_dez_typo_subref_label_sep_tl ,
 typo / subref-label-sep .initial:n       = {:~} ,
+typo / subref-label-sep .value_required:n = true ,
 typo / subref-format .tl_gset:N          = \g_dez_typo_subref_format_tl ,
 typo / subref-format .initial:n          = parens ,
+typo / subref-format .value_required:n   = true ,
 typo / table-note-sep .tl_gset:N         = \g_dez_typo_table_note_sep_tl ,
-typo / table-note-sep .initial:n         = \thinspace ,
+typo / table-note-sep .initial:n         = {}\thinspace ,
+typo / table-note-sep .value_required:n  = true ,
 typo / table-rem-sep .tl_gset:N          = \g_dez_typo_table_remark_sep_tl ,
 typo / table-rem-sep .initial:n          = {:~} ,
+typo / table-rem-sep .value_required:n   = true ,
 
-glue+ / float-float .skip_gset:N         = \g_dez_float_float_skip ,
-glue+ / float-float .initial:n           = 9pt plus 6pt minus 2pt,
-glue+ / float-text .skip_gset:N          = \g_dez_float_text_skip ,
-glue+ / float-text .initial:n            = 12pt plus 9pt minus 3pt ,
-glue< / indent .skip_gset:N              = \g_dez_indent_dim ,
+glue< / indent .dim_gset:N               = \g_dez_indent_dim ,
 glue< / indent .default:n                = 1em ,
 glue< / indent .initial:n                = 0pt ,
+glue< / fnote-indent .dim_gset:N         = \g_dez_fnote_indent_dim ,
+glue< / fnote-indent .default:n          = 1em ,
+glue< / fnote-indent .initial:n          = 0pt ,
+glue< / fnote-text .dim_gset:N           = \g_dez_fnote_left_dim ,
+glue< / fnote-text .initial:n            = 0.5em ,
+glue< / fnote-text .value_required:n     = true ,
 glue< / runin-title .skip_gset:N         = \g_dez_runin_dim ,
 glue< / runin-title .initial:n           = 1em ,
+glue< / runin-title .value_required:n    = true ,
 glue< / toc-part .dim_gset:N             = \g_dez_toc_part_dim ,
 glue< / toc-part .initial:n              = 0pc ,
+glue< / toc-part .value_required:n       = true ,
 glue< / toc-chap .dim_gset:N             = \g_dez_toc_chap_dim ,
 glue< / toc-chap .initial:n              = 3pc ,
+glue< / toc-chap .value_required:n       = true ,
 glue< / toc-section .dim_gset:N          = \g_dez_toc_section_dim ,
 glue< / toc-section .initial:n           = 3pc ,
+glue< / toc-section .value_required:n    = true ,
 glue< / toc-subsec .dim_gset:N           = \g_dez_toc_subsec_dim ,
 glue< / toc-subsec .initial:n            = 3pc ,
+glue< / toc-subsec .value_required:n     = true ,
 glue< / toc-subsubsec .dim_gset:N        = \g_dez_toc_subsubsec_dim ,
 glue< / toc-subsubsec .initial:n         = 3pc ,
-glue< / alg-title .skip_gset:N           = \g_dez_glue_before_alg_title_skip ,
-glue< / alg-title .initial:n             = 1em ,
-glue< / thm-title .skip_gset:N           = \g_dez_glue_before_thm_title_skip ,
-glue< / thm-title .initial:n             = 1em ,
-glue< / def-title .skip_gset:N           = \g_dez_glue_before_def_title_skip ,
-glue< / def-title .initial:n             = 1em ,
-glue< / rem-title .skip_gset:N           = \g_dez_glue_before_rem_title_skip ,
-glue< / rem-title .initial:n             = 1em ,
+glue< / toc-subsubsec .value_required:n  = true ,
+glue< / thm-like-title .skip_gset:N      = \g_dez_glue_before_thm_title_skip ,
+glue< / thm-like-title .initial:n        = 1em ,
+glue< / thm-like-title .value_required:n = true ,
 
+glue: / code-rule .dim_gset:N            = \g_dez_rule_pad_dim ,
+glue: / code-rule .initial:n             = 1ex ,
+glue: / code-rule .value_required:n      = true ,
+glue: / float-float .skip_gset:N         = \g_dez_float_float_skip ,
+glue: / float-float .initial:n           = 9pt plus 6pt minus 2pt,
+glue: / float-float .value_required:n    = true ,
+glue: / float-text .skip_gset:N          = \g_dez_float_text_skip ,
+glue: / float-text .initial:n            = 12pt plus 9pt minus 3pt ,
+glue: / float-text .value_required:n     = true ,
 glue: / paragraph .skip_gset:N           = \g_dez_btw_paragraphs_skip ,
 glue: / paragraph .initial:n             = 2ex plus 0.2ex minus 0.2ex ,
+glue: / paragraph .value_required:n      = true ,
 glue: / item .skip_gset:N                = \g_dez_btw_items_skip ,
 glue: / item .initial:n                  = 0ex plus 0.1ex ,
+glue: / item .value_required:n           = true ,
 glue: / long-item .skip_gset:N           = \g_dez_btw_multipar_items_skip ,
 glue: / long-item .initial:n             = 1ex plus 0.1ex,
+glue: / long-item .value_required:n      = true ,
 glue: / fnote .skip_gset:N               = \g_dez_btw_fnotes_skip ,
-glue: / fnote .initial:n                 = 0.5ex plus 0.05ex minus 0.0125ex ,
-glue: / nom .skip_gset:N                 = \g_dez_btw_noms_skip ,
-glue: / nom .initial:n                   = 0ex plus 0.1ex ,
+glue: / fnote .initial:n                 = 1ex plus 0.1ex minus 0.025ex ,
+glue: / fnote .value_required:n          = true ,
+glue: / fnote-pars .skip_gset:N          = \g_dez_btw_fnote_paragraphs_skip ,
+glue: / fnote-pars .initial:n            = 0.8ex plus 0.08ex minus 0.02ex ,
+glue: / fnote-pars .value_required:n     = true ,
+glue: / lof-like .skip_gset:N            = \g_dez_btw_lof_items_skip ,
+glue: / lof-like .initial:n              = 0ex ,
+glue: / lof-like .value_required:n       = true ,
 glue: / ref .skip_gset:N                 = \g_dez_btw_refs_skip ,
 glue: / ref .initial:n                   = 0.5ex plus 0.05ex minus 0.0125ex ,
+glue: / ref .value_required:n            = true ,
 glue' / fnote-list .skip_gset:N          = \g_dez_abv_fnote_list_skip ,
-glue' / fnote-list .initial:n            = 4pt plus 4pt ,
+glue' / fnote-list .initial:n            = 16pt plus 16pt ,
+glue: / fnote-list .value_required:n     = true ,
 glue. / fnote-list .skip_gset:N          = \g_dez_bel_fnote_list_skip ,
-glue. / fnote-list .initial:n            = 4pt plus 12pt , % only if floats are below
-glue' / caption .skip_gset:N             = \g_dez_abv_caption_skip ,
-glue' / caption .initial:n               = 2ex plus 0.2ex minus 0.05ex ,
-glue' / subcaption .skip_gset:N          = \g_dez_abv_subcaption_skip ,
-glue' / subcaption .initial:n            = 2ex plus 0.2ex minus 0.05ex ,
+glue. / fnote-list .initial:n            = 12pt plus 12pt , % only if floats are below
+glue: / fnote-lit .value_required:n      = true ,
+glue' / cap .skip_gset:N                 = \g_dez_abv_caption_skip ,
+glue' / cap .initial:n                   = 2ex plus 0.2ex minus 0.05ex ,
+glue' / cap .value_required:n            = true ,
+glue' / subcap .skip_gset:N              = \g_dez_abv_subcaption_skip ,
+glue' / subcap .initial:n                = 2ex plus 0.2ex minus 0.05ex ,
+glue' / subcap .value_required:n         = true ,
 glue' / table-title .skip_gset:N         = \g_dez_abv_table_title_skip ,
 glue' / table-title .initial:n           = 2ex plus 4ex minus 0.25ex ,
+glue' / table-title .value_required:n    = true ,
 glue. / table-title .skip_gset:N         = \g_dez_bel_table_title_skip ,
 glue. / table-title .initial:n           = 2ex plus 1ex minus 0.25ex ,
+glue. / table-title .value_required:n    = true ,
 glue' / table-foot .skip_gset:N          = \g_dez_abv_table_footer_skip ,
 glue' / table-foot .initial:n            = 1ex plus 0.5ex minus 0.125ex ,
+glue' / table-foot .value_required:n     = true ,
 glue. / table-foot .skip_gset:N          = \g_dez_bel_table_footer_skip ,
 glue. / table-foot .initial:n            = 2ex plus 4ex minus 0.25ex ,
+glue. / table-title .value_required:n    = true ,
 glue' / front-chap .skip_gset:N          = \g_dez_abv_front_chap_skip ,
 glue' / front-chap .initial:n            = 0ex ,  % TODO -- why?
+glue' / front-chap .value_required:n     = true ,
 glue. / front-chap .skip_gset:N          = \g_dez_bel_front_chap_skip ,
 glue. / front-chap .initial:n            = 4ex plus 0.4ex minus 0.1ex ,
+glue. / front-chap .value_required:n     = true ,
 glue' / chap .skip_gset:N                = \g_dez_abv_chap_skip ,
 glue' / chap .initial:n                  = 0ex ,
+glue' / chap .value_required:n           = true ,
 glue. / chap .skip_gset:N                = \g_dez_bel_chap_skip ,
 glue. / chap .initial:n                  = 6ex plus 1.5ex minus 0.375ex ,
+glue. / chap .value_required:n           = true ,
 glue. / chap-label .skip_gset:N          = \g_dez_bel_chap_label_skip ,
 glue. / chap-label .initial:n            = 2ex plus 0.2ex minus 0.05ex ,
+glue. / chap-label .value_required:n     = true ,
 glue. / part-label .skip_gset:N          = \g_dez_bel_part_label_skip ,
 glue. / part-label .initial:n            = 10ex,
+glue. / part-label .value_required:n     = true ,
 glue' / section .skip_gset:N             = \g_dez_abv_section_skip ,
 glue' / section .initial:n               = 8ex plus 2ex minus 0.5ex ,
+glue' / section .value_required:n        = true ,
 glue. / section .skip_gset:N             = \g_dez_bel_section_skip ,
 glue. / section .initial:n               = 4ex plus 1ex minus 0.25ex ,
+glue. / section .value_required:n        = true ,
 glue' / subsec .skip_gset:N              = \g_dez_abv_subsec_skip ,
 glue' / subsec .initial:n                = 6ex plus 3ex minus 0.75ex ,
+glue' / subsec .value_required:n         = true ,
 glue. / subsec .skip_gset:N              = \g_dez_bel_subsec_skip ,
 glue. / subsec .initial:n                = 3ex plus 0.75ex minus 0.375ex ,
+glue. / subsec .value_required:n         = true ,
 glue' / subsubsec .skip_gset:N           = \g_dez_abv_subsubsec_skip ,
 glue. / subsubsec .initial:n             = 2ex plus 0.2ex minus 0.05ex ,
+glue' / subsubsec .value_required:n      = true ,
 glue. / subsubsec .skip_gset:N           = \g_dez_bel_subsubsec_skip ,
 glue. / subsubsec .initial:n             = 2ex plus 0.2ex minus 0.05ex ,
+glue. / subsubsec .value_required:n      = true ,
 glue' / nom-group .skip_gset:N           = \g_dez_abv_nomgroup_skip ,
 glue' / nom-group .initial:n             = 2ex plus 0.2ex minus 0.05ex ,
-%glue' / lof-chap-group .skip_gset:N      = \g_dez_lof_chap_skip ,
-%glue' / lof-chap-group .initial:n        = 1ex plus 0.1ex ,
-glue' / paragraph .skip_gset:N           = \g_dez_abv_paragraph_skip ,
-glue' / paragraph .initial:n             = 2ex plus 0.2ex minus 0.2ex ,
+glue' / nom-group .value_required:n      = true ,
+glue' / lof-chap-group .skip_gset:N      = \g_dez_lof_chap_skip ,
+glue' / lof-chap-group .default:n        = 2ex plus 0.2ex minus 0.05ex ,  % built-in was 10pt
+glue' / lof-chap-group .initial:n        = 0ex ,
+glue' / par-title .skip_gset:N           = \g_dez_abv_paragraph_skip ,
+glue' / par-title .initial:n             = 2ex plus 0.2ex minus 0.2ex ,
+glue' / par-title .value_required:n      = true ,
 glue' / thm-like .skip_gset:N            = \g_dez_abv_thm_skip ,
 glue' / thm-like .initial:n              = 3ex plus 0.375ex minus 0.1875ex ,
+glue' / thm-like .value_required:n       = true ,
 glue. / thm-like .skip_gset:N            = \g_dez_bel_thm_skip ,
 glue. / thm-like .initial:n              = 3ex plus 0.375ex minus 0.1875ex ,
+glue. / thm-like .value_required:n       = true ,
 glue' / alg-like .skip_gset:N            = \g_dez_abv_alg_skip ,
 glue' / alg-like .initial:n              = 3ex plus 0.375ex minus 0.1875ex ,
+glue' / alg-like .value_required:n       = true ,
 glue. / alg-like .skip_gset:N            = \g_dez_bel_alg_skip ,
-glue. / alg-like .initial:n              = 3ex plus 0.375ex minus 0.1875ex ,
+glue. / alg-like .initial:n              = 4ex plus 1ex minus 0.25ex ,
+glue. / alg-like .value_required:n       = true ,
 glue' / def-like .skip_gset:N            = \g_dez_abv_def_skip ,
 glue' / def-like .initial:n              = 3ex plus 0.375ex minus 0.1875ex ,
+glue' / def-like .value_required:n       = true ,
 glue. / def-like .skip_gset:N            = \g_dez_bel_def_skip ,
 glue. / def-like .initial:n              = 3ex plus 0.375ex minus 0.1875ex ,
+glue. / def-like .value_required:n       = true ,
 glue' / rem-like .skip_gset:N            = \g_dez_abv_remark_skip ,
 glue' / rem-like .initial:n              = 2ex plus 0.5ex minus 0.125ex ,
+glue' / rem-like .value_required:n       = true ,
 glue. / rem-like .skip_gset:N            = \g_dez_bel_remark_skip ,
 glue. / rem-like .initial:n              = 2ex plus 0.5ex minus 0.125ex ,
+glue. / rem-like .value_required:n       = true ,
 glue' / proof .skip_gset:N               = \g_dez_abv_proof_skip ,
 glue' / proof .initial:n                 = 2ex plus 0.5ex minus 0.125ex ,
+glue' / proof .value_required:n          = true ,
 glue. / proof .skip_gset:N               = \g_dez_bel_proof_skip ,
 glue. / proof .initial:n                 = 2ex plus 0.5ex minus 0.125ex ,
+glue. / proof .value_required:n          = true ,
 glue' / eqn .skip_gset:N                 = \g_dez_abv_eqn_skip ,
 glue' / eqn .initial:n                   = 2ex plus 0.5ex minus 0.125ex ,
+glue' / eqn .value_required:n            = true ,
 glue. / eqn .skip_gset:N                 = \g_dez_bel_eqn_skip ,
 glue. / eqn .initial:n                   = 2ex plus 0.5ex minus 0.125ex ,
+glue. / eqn .value_required:n            = true ,
 glue' / eqn-short .skip_gset:N           = \g_dez_abv_eqn_short_skip ,
 glue' / eqn-short .initial:n             = 1ex plus 0.1ex minus 0.025ex ,
+glue' / eqn-short .value_required:n      = true ,
 glue. / eqn-short .skip_gset:N           = \g_dez_bel_eqn_short_skip ,
 glue. / eqn-short .initial:n             = 1ex plus 0.1ex minus 0.025ex ,
+glue. / eqn-short .value_required:n      = true ,
 glue' / list .skip_gset:N                = \g_dez_abv_list_skip ,
 glue' / list .initial:n                  = 1ex plus 0.2ex minus 0.05ex ,
+glue' / list .value_required:n           = true ,
 glue' / long-list .skip_gset:N           = \g_dez_abv_long_list_skip ,
 glue' / long-list .initial:n             = 1ex plus 0.2ex minus 0.05ex ,
-glue. / abstract-title .skip_gset:N      = \g_dez_bel_abstract_title_skip ,
-glue. / abstract-title .initial:n        = 2ex ,
-glue' / abstract-authors .skip_gset:N    = \g_dez_abv_abstract_author_skip ,
-glue' / abstract-authors .initial:n      = 2ex ,
-glue' / abstract-body .skip_gset:N       = \g_dez_abv_abstract_body_skip ,
-glue' / abstract-body .initial:n         = 7ex ,
+glue' / long-list .value_required:n      = true ,
+glue. / abs-title .skip_gset:N           = \g_dez_bel_abstract_title_skip ,
+glue' / abs-title .initial:n             = 2ex ,
+glue' / abs-title .value_required:n      = true ,
+glue' / abs-authors .skip_gset:N         = \g_dez_abv_abstract_author_skip ,
+glue' / abs-author .initial:n            = 2ex ,
+glue' / abs-author .value_required:n     = true ,
+glue' / abs-body .skip_gset:N            = \g_dez_abv_abstract_body_skip ,
+glue' / abs-body .initial:n              = 7ex ,
+glue' / abs-body .value_required:n       = true ,
 glue' / toc-part .skip_gset:N            = \g_dez_abv_toc_part_skip ,
-glue' / toc-part .initial:n              = 0.6pc plus 0.06pc minus 0.015pc ,
+glue' / toc-part .default:n              = 2.5pc plus 0.25pc minus 0.0625pc ,
+glue' / toc-part .initial:n              = 0pc ,
 glue' / toc-chapter .skip_gset:N         = \g_dez_abv_toc_chap_skip ,
-glue' / toc-chapter .initial:n           = 0.3pc plus 0.03pc minus 0.0075pc ,
+glue' / toc-chapter .default:n           = 0.5pc plus 0.05pc minus 0.0125 ,
+glue' / toc-chapter .initial:n           = 0pc ,
 glue' / toc-section .skip_gset:N         = \g_dez_abv_toc_section_skip ,
+glue' / toc-section .default:n           = 0.1pc plus 0.01pc minus 0.0025pc ,
 glue' / toc-section .initial:n           = 0pc ,
 glue' / toc-subsec .skip_gset:N          = \g_dez_abv_toc_subsec_skip ,
+glue' / toc-subsec .default:n            = 0.02pc ,
 glue' / toc-subsec .initial:n            = 0pc ,
 glue' / toc-subsubsec .skip_gset:N       = \g_dez_abv_toc_subsubsec_skip ,
+glue' / toc-subsubsec .default:n         = 0pc ,
 glue' / toc-subsubsec .initial:n         = 0pc ,
-
-art / even-row-bg .tl_gset:N             = \g_dez_even_row_bg_tl ,
-art / even-row-bg .initial:n             = black!2!white ,
+glue. / fnote-rule .skip_gset:N          = \g_dez_bel_fnote_rule_skip ,
+glue. / fnote-rule .initial:n            = 3pt ,
+glue' / fnote-rule .value_required:n     = true ,
 
 rule / top .dim_gset:N                   = \g_dez_toprule_dim ,
 rule / top .initial:n                    = 0.2ex ,
+rule / top .value_required:n             = true ,
 rule / mid .dim_gset:N                   = \g_dez_midrule_dim ,
 rule / mid .initial:n                    = 0.1ex ,
+rule / mid .value_required:n             = true ,
 rule / cmid .dim_gset:N                  = \g_dez_cmidrule_dim ,
 rule / cmid .initial:n                   = 0.05ex ,
+rule / cmid .value_required:n             = true ,
 rule / header .dim_gset:N                = \g_dez_header_dim ,
+rule / header .default:n                 = 0.2ex ,
 rule / header .initial:n                 = 0ex ,
 rule / footer .dim_gset:N                = \g_dez_footer_dim ,
+rule / footer .default:n                 = 0.2ex ,
 rule / footer .initial:n                 = 0ex ,
+rule / fnote .dim_gset:N                 = \g_dez_fnote_rule_dim ,
+rule / fnote .initial:n                  = 0.4pt ,
+rule / fnote .value_required:n           = true ,
 }
 
-\ProcessKeysOptions{dez}  % Process!
+\ProcessKeysOptions {dez}  % Process!
 
-
-%==================================================================================================
-%                    hooks for fancy users
-%==================================================================================================
-
-\ProvideDocumentCommand \DezPrePackagesHook {}
-    {  }
-
-\ProvideDocumentCommand \DezPostPackagesHook {}
-    {  }
-
-\ProvideDocumentCommand \DezPreTocLikeHook {}
-    { }
-
-\ProvideDocumentCommand \DezPreMainChapterHook {}
-    { }
-
-\ProvideDocumentCommand \DezPostMainChapterHook {}
-    { }
-
-\ProvideDocumentCommand \DezPreAppendixHook {}
-    { }
-
-\ProvideDocumentCommand \DezPostAppendixHook {}
-    { }
-
-\ProvideDocumentCommand \DezEndHook {}
-    { }
-
-% internal
-\ProvideDocumentCommand \DezPartPageHook {}
-    { \clearpage }
-\ProvideDocumentCommand \DezMainChapterPageHook {}
-    { \clearpage }
-\ProvideDocumentCommand \DezChapterPageHook {}
-    { \clearpage }
 
 \newlength \tmpdezlength
 \cs_new_protected:Npn \dez__par_addvspace:N #1
@@ -827,9 +1049,9 @@ rule / footer .initial:n                 = 0ex ,
 }
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    mode and preset support
-%==================================================================================================
+%======================================================================================================================
 
 
 \cs_new_protected:Nn \dez_disable_number_within:
@@ -844,7 +1066,6 @@ rule / footer .initial:n                 = 0ex ,
     \fp_gset:Nn \g_dez_stretch_main_fp {2.0}
     \fp_gset:Nn \g_dez_stretch_toc_fp {2.0}
     \fp_gset:Nn \g_dez_stretch_lof_fp {2.0}
-    \fp_gset:Nn \g_dez_stretch_abbrevs_fp {2.0}
     \fp_gset:Nn \g_dez_stretch_nom_tl {2.0}
     \fp_gset:Nn \g_dez_stretch_caption_fp {1.2}
     %\skip_gset:Nn \g_dez_btw_fnotes_skip {\baselineskip}  % TODO: broken
@@ -856,11 +1077,13 @@ rule / footer .initial:n                 = 0ex ,
 
 \cs_new_protected:Nn \dez_article_like:
 {
-    \RenewDocumentCommand \DezChapterPageHook {}
+    \RenewDocumentCommand \DezChapterPageCmd {}
     \dez_disable_number_within:
     \str_gset:Nn \g_dez_n_front_str {arabic}
     % put left so it's easy to override
     \tl_gput_left:Nn \g_dez_geometry_tl {twocolumn,}
+    \ProvideDocumentCommand \DezChapterPageCmd {}
+        { \newpage }
     % we'll also convert \Chapter into \Section (later)
 }
 
@@ -880,7 +1103,6 @@ rule / footer .initial:n                 = 0ex ,
 
 \cs_new_protected:Nn \dez_book_like:
 {
-    \RenewDocumentCommand \DezMainChapterPageHook {\cleardoublepage}
     \tl_gput_left:Nn \g_dez_geometry_tl {twoside, openright,}
     \dez__book_like_fancy:N \g_dez_header_front_prop
     \dez__book_like_fancy:N \g_dez_header_main_prop
@@ -919,9 +1141,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    presets
-%==================================================================================================
+%======================================================================================================================
 
 % A4 paper size with 2cm left/right margin and 3cm top/bottom
 \NewDocumentCommand \AFour {}
@@ -995,7 +1217,6 @@ rule / footer .initial:n                 = 0ex ,
 }
 
 
-
 \cs_undefine:N \LetterPaper
 \cs_undefine:N \AFour
 \cs_undefine:N \UCSF
@@ -1004,9 +1225,9 @@ rule / footer .initial:n                 = 0ex ,
 \cs_undefine:N \Cambridge
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    some options
-%==================================================================================================
+%======================================================================================================================
 
 \bool_if:NT \g_dez_draft_bool                   { \@PP {draft=true}             {microtype}  }
 \bool_if:NT \g_dez_toc_panels_bool              { \@PP {list}                   {subcaption} }
@@ -1019,12 +1240,12 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    load packages
-%==================================================================================================
+%======================================================================================================================
 
 % Run our friendly hook:
-\DezPrePackagesHook
+\hook_use_once:n { dez / packages / before }
 
 % language via pidgin
 % pidgin uses babel, tracklang, and translations
@@ -1039,7 +1260,7 @@ rule / footer .initial:n                 = 0ex ,
 \@RP [newcommands] {ragged2e}      % full ragged environments; before: footmisc
 \@RP {newfloat}                    % declare new float environments
 \@RP {geometry}                    % \geometry
-\@RP {adjustbox}                   % resize boxes
+\@RP [Export] {adjustbox}          % resize boxes
 \@RP {perpage}                     % reset a counter every page
 \@RP {datetime2}                   % format dates and times (after: babel)
 
@@ -1056,7 +1277,8 @@ rule / footer .initial:n                 = 0ex ,
 \@RP {info}                        % requires textiles
 \@RP {amsthm}                      % theorem-like environments
 \@RP {thmtools}                    % \declaretheorem
-\@RP {mathtools}                   % better theorem-like environments
+\@RP {thm-restate}
+\@RP {mathtools}                   % misc. math macros
 \@RP {lualatex-math}               % math-related patches
 \@RP {uspace}                      % give correct meanings to Unicode space chars
 \@RP {fnpct}                       % move footnote marks
@@ -1073,12 +1295,13 @@ rule / footer .initial:n                 = 0ex ,
 \@RP {tarmac}
 \@RP {fancyhdr}                    % footer and header
 \@RP {enumitem}                    % control spacing for lists
-\@RP {footmisc}                    % footnote styling and counters
+\@RP [hang] {footmisc}             % footnote styling and counters
 \@RP {enotez}                      % fixed endnotes
 \@RP {chngcntr}
 %\@RP {lua-widow-control}
 \@RP {lscape}                      % {landscape} env
 \@RP {pdflscape}                   % gives {landscape} env PDF attr '\Rotate'
+\@RP {multicol}
 \bool_if:NT \g_dez_draft_bool
     { \@RP {showframe} }
 
@@ -1089,17 +1312,16 @@ rule / footer .initial:n                 = 0ex ,
 \@RP {graphicx}                    % for, well, everything
 
 % tables
-\@RP {csvsimple-l3}                % load CSV data
-\@RP {tabularx}                    % For specialized environments only
+%\@RP {csvsimple-l3}                % load CSV data
 \@RP {tabularray}                  % LaTeX3 tabular and table replacement
 \let \@TL \UseTblrLibrary
 \@TL {babel}
 \@TL {amsmath}                     % (amsmath loaded earlier)
-\@TL {counter}                     % get row and col counters
 \@TL {booktabs}                    % \toprule, etc. and envs
+%\@TL {counter}                     % get row and col counters
 \@TL {siunitx}                     % (siunitx loaded earlier)
-\@TL {diagbox}                     % split desc for top-left cell
-\@TL {varwidth}                    % can measure table dims if cells have pars
+%\@TL {counter}                     % get row and col counters
+%\@TL {diagbox}                     % split desc for top-left cellS
 
 % typography
 \@RP {fvextra}                     % only needed to avoid warning in csquotes
@@ -1115,6 +1337,7 @@ rule / footer .initial:n                 = 0ex ,
 
 % optional features
 \@LF {noms}                        % nomenclature groups and utils
+\@LF {multicol}
 \@LF [newfloat] {minted}
 \@LF [xparse] {tcolorbox}
 \dez_if_feat_enabled:nT {cryptocode}
@@ -1154,18 +1377,12 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                          finalize things
-%==================================================================================================
+%======================================================================================================================
 
 \@LF {varioref}
 \@LF [ no~patch, electronic ] {knowledge}
-% Load cleveref via pidgin
-
-\SetBabelStrings {
-    listabbreviation      = List~of~Abbreviations ,
-    nomenclature          = Nomenclature ,
-}
 
 \pidgin_close:
 
@@ -1183,7 +1400,7 @@ rule / footer .initial:n                 = 0ex ,
 \let \bibname \refname
 
 % Run our friendly hook:
-\DezPostPackagesHook
+\hook_use_once:n { dez / packages / after }
 
 
 % Send our dez options to textiles!
@@ -1201,7 +1418,6 @@ rule / footer .initial:n                 = 0ex ,
 \tl_gset:Nx  \g_dez_stretch_eqn_tl       { \fp_use:N \g_dez_stretch_eqn_fp }
 \tl_gset:Nx  \g_dez_stretch_toc_tl       { \fp_use:N \g_dez_stretch_toc_fp }
 \tl_gset:Nx  \g_dez_stretch_lof_tl       { \fp_use:N \g_dez_stretch_lof_fp }
-\tl_gset:Nx  \g_dez_stretch_abbrevs_tl   { \fp_use:N \g_dez_stretch_abbrevs_fp }
 \tl_gset:Nx  \g_dez_stretch_nom_tl       { \fp_use:N \g_dez_stretch_nom_fp }
 \tl_gset:Nx  \g_dez_stretch_code_tl      { \fp_use:N \g_dez_stretch_code_fp }
 \tl_gset:Nx  \g_dez_stretch_caption_tl   { \fp_use:N \g_dez_stretch_caption_fp }
@@ -1239,9 +1455,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                         tarmac
-%==================================================================================================
+%======================================================================================================================
 
 
 % Set the depth of the Table of Contents and section numbering.
@@ -1254,6 +1470,7 @@ rule / footer .initial:n                 = 0ex ,
 \bool_if:NT \g_dez_typo_ban_hyphens_bool
     { \BanHyphens }
 
+\tl_replace_all:Nnn \g_dez_geometry_tl {;} {,}
 \exp_args:Ne \geometry {\g_dez_geometry_tl}
 
 \tarmac_set:e
@@ -1278,31 +1495,34 @@ rule / footer .initial:n                 = 0ex ,
 
 % Our everyday lists and enums, where items are ==1 paragraph at most
 \exp_args:Ne
-\setlist
-{
-    itemsep     = {\skip_use:N \g_dez_btw_items_skip} ,
-    topsep      = \g_dez_abv_list_skip ,
-    partopsep   = 0ex ,
-    parsep      = {\skip_use:N \g_dez_btw_paragraphs_skip} ,
-}
+    \setlist
+    {
+        itemsep     = {\skip_use:N \g_dez_btw_items_skip} ,
+        topsep      = \g_dez_abv_list_skip ,
+        partopsep   = 0ex ,
+        parsep      = {\skip_use:N \g_dez_btw_paragraphs_skip} ,
+    }
 
 % Enums where individual items may span multiple paragraphs.
 \exp_args:Nne
-\SetEnumitemKey {long}
-{
-    itemsep     = {\skip_use:N \g_dez_btw_multipar_items_skip} ,
-    topsep      = {\skip_use:N \g_dez_abv_long_list_skip} ,
-    partopsep   = 0ex ,
-    parsep      = {\skip_use:N \g_dez_btw_paragraphs_skip} ,
-}
+    \SetEnumitemKey {long}
+    {
+        itemsep     = {\skip_use:N \g_dez_btw_multipar_items_skip} ,
+        topsep      = {\skip_use:N \g_dez_abv_long_list_skip} ,
+        partopsep   = 0ex ,
+        parsep      = {\skip_use:N \g_dez_btw_paragraphs_skip} ,
+    }
 
 % https://tex.stackexchange.com/questions/95838/how-to-write-a-perfect-equation-parameters-description
 \NewDocumentEnvironment {where} { m }
     {
-      \tabularx { \textwidth } [t]
-          { >{$}l<{$} @{${}={}$} X@{} }
+        \begin {tabularray}
+            {
+            width      = \linewidth ,
+            colspec    = { >{$}l<{$} @{${}={}$} X@{} }
+            }
     }
-    { \endtabularx }
+    { \end {tabularray} }
 
 \dez_if_feat_enabled:nT {noms}
 {
@@ -1317,15 +1537,19 @@ rule / footer .initial:n                 = 0ex ,
         header-format = dez__nomgroup_header:n ,
     }
     \def \nomlabelwidth {\dim_use:N \g_dez_nom_symbol_dim}
-    \skip_set:Nn \l_tmpa_skip {-\parsep + \g_dez_btw_noms_skip}
+    \skip_set:Nn \l_tmpa_skip {-\parsep + \g_dez_btw_lof_items_skip}
     \exp_args:NNe \setlength \nomitemsep { \skip_use:N \l_tmpa_skip }
 }
 
+\renewcommand \cftfigafterpnum
+    { \dez__par_addvspace:N \g_dez_btw_lof_items_skip \par }
+\renewcommand \cfttabafterpnum
+    { \dez__par_addvspace:N \g_dez_btw_lof_items_skip \par }
 
 
-%==================================================================================================
+%======================================================================================================================
 %                           section titles
-%==================================================================================================
+%======================================================================================================================
 
 % \titleformat {command} [shape]
 %    {format}       1
@@ -1444,9 +1668,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                           section spacing
-%==================================================================================================
+%======================================================================================================================
 
 %\titlespacing {command}
 %    {left}       1
@@ -1539,9 +1763,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                           TOC formatting
-%==================================================================================================
+%======================================================================================================================
 
 \titlecontents {part}
     [ \g_dez_toc_part_dim ]                     % margin from left side
@@ -1677,9 +1901,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %               header & footer
-%==================================================================================================
+%======================================================================================================================
 
 \renewcommand* \headrulewidth { \dim_use:N \g_dez_header_dim }
 \renewcommand* \footrulewidth { \dim_use:N \g_dez_footer_dim }
@@ -1775,9 +1999,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                           basic numbering
-%==================================================================================================
+%======================================================================================================================
 
 \cs_new_protected:Npn \dez_counter_within:nV #1#2
 {
@@ -1810,43 +2034,51 @@ rule / footer .initial:n                 = 0ex ,
 %\counterwithout {figure} {chapter}
 
 
-%==================================================================================================
+%======================================================================================================================
 %                       footnote numbering and format
-%==================================================================================================
+%======================================================================================================================
 
-\DefineFNsymbols* {dez}
+
+% NotoSansSymbol is defined if dez-fancy is used (or in other cases, defined wayy below)
+\cs_new_protected:Npn \dez__sym:n #1
+    { { \NotoSansSymbol \text{#1} } }
+
+\str_if_eq:VnT \g_dez_n_fnotes_str {dez-fancy}
+    { \setfontfamily \NotoSansSymbol {Noto Sans Symbols 2} }
+
+\DefineFNsymbols* {dez-fancy}
 {
-    { \text{ *} }
-    { \text{ †} }
-    { \text{ ‡} }
-    { \text{ §} }
-    { \text{ ❘ } }
-    { \text{ ∥} }
-    { \text{ ¶} }
-    { \text{ ⟡ } }
-    { \text{ ✩} }
-    { \text{ ♯} }
-    { \text{ =} }
-    { \text{ ≡} }
-    { \text{ ≣} }
-    { \text{ ≀} }
-    { \text{ ⋮} }
-    { \text{ ★ } }
-    { \text{ ✹} }
-    { \text{ ⯅ } }
-    { \text{ ♦} }
-    { \text{ ♠ } }
-    { \text{ ♣ } }
-    { \text{ ☘} }
-    { \text{ ⚑} }
-    { \text{ ⫝} }
-    { \text{ ⥾} }
-    { \text{ ⚳} }
-    { \text{ ⩆} }
-    { \text{ ⚵} }
-    { \text{ ⚶ } }
-    { \text{ ⚷} }
-    { \text{ ⚸} }
+    { \dez__sym:n{ *} }
+    { \dez__sym:n{ †} }
+    { \dez__sym:n{ ‡} }
+    { \dez__sym:n{ §} }
+    { \dez__sym:n{ ❘ } }
+    { \dez__sym:n{ ∥} }
+    { \dez__sym:n{ ¶} }
+    { \dez__sym:n{ ⟡ } }
+    { \dez__sym:n{ ✩} }
+    { \dez__sym:n{ ♯} }
+    { \dez__sym:n{ =} }
+    { \dez__sym:n{ ≡} }
+    { \dez__sym:n{ ≣} }
+    { \dez__sym:n{ ≀} }
+    { \dez__sym:n{ ⋮} }
+    { \dez__sym:n{ ★ } }
+    { \dez__sym:n{ ✹} }
+    { \dez__sym:n{ ⯅ } }
+    { \dez__sym:n{ ♦} }
+    { \dez__sym:n{ ♠ } }
+    { \dez__sym:n{ ♣ } }
+    { \dez__sym:n{ ☘} }
+    { \dez__sym:n{ ⚑} }
+    { \dez__sym:n{ ⫝} }
+    { \dez__sym:n{ ⥾} }
+    { \dez__sym:n{ ⚳} }
+    { \dez__sym:n{ ⩆} }
+    { \dez__sym:n{ ⚵} }
+    { \dez__sym:n{ ⚶ } }
+    { \dez__sym:n{ ⚷} }
+    { \dez__sym:n{ ⚸} }
 }
 
 \str_if_eq:VnT \g_dez_fnote_in_str {page}
@@ -1862,7 +2094,7 @@ rule / footer .initial:n                 = 0ex ,
 
 
 \seq_const_from_clist:Nn \g__dez_footsymbols_seq
-    {lamport, lamport*, bringhurst, chicago, wiley }  % i.e. not arabic, roman, etc.
+    { lamport, lamport*, bringhurst, chicago, wiley, dez-fancy }  % i.e. not arabic, roman, etc.
 
 \cs_new_protected:Npn \dez__fnote_num:N #1
 {
@@ -1886,21 +2118,46 @@ rule / footer .initial:n                 = 0ex ,
 \setlength {\skip\footins} {\skip_use:N \g_dez_abv_fnote_list_skip}
 % there's also \footskip, which should be \baselineskip
 
-\setlength \footnotesep {\skip_use:N \g_dez_btw_fnotes_skip}
+\exp_args:NNe \setlength \footnotesep    {\skip_use:N \g_dez_btw_fnotes_skip}
+\exp_args:NNe \setlength \footnotemargin {\dim_use:N \g_dez_fnote_left_dim}
+
+\exp_args:NNe \renewcommand \hangfootparindent {\dim_use:N \g_dez_fnote_indent_dim}
+\exp_args:NNe \renewcommand \hangfootparskip   {\skip_use:N \g_dez_btw_fnote_paragraphs_skip}
 
 % apply the footnote body format
 \renewcommand* \footnotelayout
     { \textiles_run_nullary:n {fnote-body} }
 
+\cs_new_protected:Npn \dez__set_fnote_rule_aux:eee #1#2#3
+{
+    \renewcommand \footnoterule
+    {
+        \kern #1
+        \hrule width \textwidth height #2
+        \kern #3
+    }
+}
+
+\cs_new_protected:Npn \dez__set_fnote_rule:NN #1#2
+{
+    \dez__set_fnote_rule_aux:eee
+        { \skip_eval:n {-1#2-#1} }  % kern back
+        { \dim_use:N #1 }           % thickness
+        { \skip_eval:n {1#2} }      % kern forward
+}
+\dez__set_fnote_rule:NN \g_dez_fnote_rule_dim \g_dez_bel_fnote_rule_skip
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                 endnotes
-%==================================================================================================
+%======================================================================================================================
 
 \setenotez {reset=true}
-\AtEndPreamble
+
+\hook_gput_code:nnn
+    {begindocument/before}
+    {dez/fix-enotez}
     { \setenotez { list-name = \crtcrefpluralname{note} } }
 
 \bool_if:NT \g_dez_endnote_backrefs_bool  % needs 2022+ !
@@ -1934,18 +2191,20 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %             equation labels
-%==================================================================================================
+%======================================================================================================================
 
 \newtagform {none}                   {}    {}
 \newtagform {round}                  {(}   {)}
 \newtagform {square}                 {[}   {]}
 \newtagform {curly}                  {\{}  {\}}
+\newtagform {bar}                    {|}   {|}
 \newtagform {none-bold}   [\textbf]  {}    {}
 \newtagform {round-bold}  [\textbf]  {(}   {)}
 \newtagform {square-bold} [\textbf]  {[}   {]}
 \newtagform {curly-bold}  [\textbf]  {\{}  {\}}
+\newtagform {bar-bold}    [\textbf]  {|}   {|}
 
 \exp_args:NV
     \usetagform \g_dez_n_brackets_str
@@ -1953,9 +2212,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                        bibliography
-%==================================================================================================
+%======================================================================================================================
 
 % don't show the language for every reference
 \bool_if:NT \g_dez_bib_hide_lang_bool
@@ -1963,13 +2222,13 @@ rule / footer .initial:n                 = 0ex ,
 
 % Reference the title, date, journal, and authors
 % Could alternatively use \DeclareCiteCommand
-\NewDocumentCommand \chaptersource {m}
+\NewDocumentCommand \reffull {m}
 {
     \AtNextCite { \defcounter {maxnames} {60} }
     \fullcite{#1}
 }
 
-\NewDocumentCommand \reftitle {m}
+\NewDocumentCommand \rrefttitle {m}
     { `` \citefield {#1} {title} " }
     
 \NewDocumentCommand \refdoi {m}
@@ -1982,31 +2241,35 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                     sections with labels
-%==================================================================================================
+%======================================================================================================================
 
 \keys_define:nn { dez / section-like }
 {
-    title .tl_set:N          = \l__title_tl ,
-    title .initial:n         = {} ,
-    no-title .bool_set:N     = \l__no_title_bool,  % overrides any title
-    no-title .default:n      = true ,
-    no-title .initial:n      = false ,
-    entry .tl_set:N          = \l__entry_tl ,
-    entry .initial:n         = * ,
-    no-entry .bool_set:N     = \l__no_entry_bool,  % overrides any entry
-    no-entry .default:n      = true ,
-    no-entry .initial:n      = false ,
-    label .tl_set:N          = \l__label_tl ,
-    label .initial:n         = * ,
-    numberless .bool_set:N   = \l__numberless_bool ,
-    numberless .default:n    = true ,
-    numberless .initial:n    = false ,
-    numbered .code:n         = { \bool_set_false:N \l__numberless_bool } ,
-    hide-links .bool_set:N   = \l__hide_links_bool ,
-    hide-links .default:n    = true ,
-    hide-links .initial:n    = false ,
+    title .tl_set:N                = \l__title_tl ,
+    title .initial:n               = {} ,
+    title .value_required:n        = true ,
+    no-title .bool_set:N           = \l__no_title_bool,  % overrides any title
+    no-title .default:n            = true ,
+    no-title .initial:n            = false ,
+    entry .tl_set:N                = \l__entry_tl ,
+    entry .default:n               = * ,
+    entry .initial:n               = {} ,
+    no-entry .bool_set:N           = \l__no_entry_bool,  % overrides any entry
+    no-entry .default:n            = true ,
+    no-entry .initial:n            = false ,
+    label .tl_set:N                = \l__label_tl ,
+    label .default:n               = * ,
+    label .initial:n               = {} ,
+    label .value_required:n        = true ,
+    numberless .bool_set:N         = \l__numberless_bool ,
+    numberless .default:n          = true ,
+    numberless .initial:n          = false ,
+    numbered .meta:n               = { numberless=false } ,
+    hide-links .bool_set:N         = \l__hide_links_bool ,
+    hide-links .default:n          = true ,
+    hide-links .initial:n          = false ,
 }
 
 \cs_new:Npn \dez__run_star:NV #1#2
@@ -2081,7 +2344,7 @@ rule / footer .initial:n                 = 0ex ,
 \NewDocumentCommand \Part { s O{} G{} }
 {
     \dez__section_like:nnnnNN
-        {part} {#1} {#2} {#3} \part \DezPartPageHook
+        {part} {#1} {#2} {#3} \part \DezPartPageCmd
 }
 
 \NewDocumentCommand \Chapter { s O{} G{} }
@@ -2089,7 +2352,7 @@ rule / footer .initial:n                 = 0ex ,
     \str_if_eq:VnT \g_dez_fnote_in_str {chapter}
         { \setcounter {footnote} {0} }
     \dez__section_like:nnnnNN
-        {chapter} {#1} {#2} {#3} \chapter \DezChapterPageHook
+        {chapter} {#1} {#2} {#3} \chapter \DezChapterPageCmd
 }
 
 \NewDocumentCommand \Section { s O{} G{} }
@@ -2125,19 +2388,18 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                  alignment commands and environments
-%==================================================================================================
+%======================================================================================================================
 
 \NewDocumentEnvironment {BigPages} { O{vmargin=1ex, hmargin=1em} }
 {
-    %\clearpage 
     \pagestyle {empty}
     \assignpagestyle \chapter {empty}
     \newgeometry{#1}
 }
 {
-    \clearpage
+    \restoregeometry
     %\assignpagestyle \chapter {plain}
 }
 
@@ -2147,7 +2409,7 @@ rule / footer .initial:n                 = 0ex ,
 
 \NewDocumentEnvironment {Justify} {}
     { \begin {justify} }
-    { \end {justify} }
+    { \end   {justify} }
 
 \prop_const_from_keyval:Nn \c_dez__align_to_cmd_prop
 {
@@ -2205,61 +2467,68 @@ rule / footer .initial:n                 = 0ex ,
     Justified     = justify ,
 }
 
-\cs_new:Npn \dez_align:n #1
+\cs_new_protected:Npn \dez_align:n #1
 {
     \prop_get:NnN \c_dez__align_to_cmd_prop {#1} \l_tmpa_tl
     \cs_if_exist_use:N \l_tmpb_str
 }
 \cs_generate_variant:Nn \dez_align:n { V }
 
-\cs_new:Npn \dez__align_begin:n #1
+\cs_new_protected:Npn \dez__align_begin:n #1
 {
     \prop_get:NnN \c_dez__align_to_env_prop {#1} \l_tmpa_tl
-    \exp_args:NV \begin \l_tmpa_tl
+    \begin_:V \l_tmpa_tl
 }
 \cs_generate_variant:Nn \dez__align_begin:n { V }
 
 \cs_new:Npn \dez__align_end:n #1
 {
     \prop_get:NnN \c_dez__align_to_env_prop {#1} \l_tmpa_tl
-    \exp_args:NV \end \l_tmpa_tl
+    \end_:V \l_tmpa_tl
 }
 \cs_generate_variant:Nn \dez__align_end:n { V }
 
-\NewDocumentCommand \Aligning { m }
-    { \dez_align:n {#1} }
+%\NewDocumentCommand \Aligning { m }
+%    { \dez_align:n {#1} }
 
 \NewDocumentEnvironment {Align} { m }
     { \dez__align_begin:n {#1} }
-    { \dez__align_end:n {#1} }
+    { \dez__align_end:n   {#1} }
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                         SpecialBox
-%==================================================================================================
+%======================================================================================================================
 
 \keys_define:nn { dez / special-box }
 {
-    width .dim_set:N         = \l__width_dim ,
-    width .initial:n         = {\textwidth} ,
-    above .dim_set:N         = \l__above_dim ,
-    above .initial:n         = 0pc ,
-    below .dim_set:N         = \l__below_dim ,
-    below .initial:n         = 0pc ,
-    hide-links .bool_set:N   = \l__hide_links_bool ,
-    hide-links .default:n    = true ,
-    hide-links .initial:n    = false ,
-    textile .tl_set:N        = \l__textile_tl ,
-    textile .default:n       = {} ,
-    style .tl_set:N          = \l__style_tl ,
-    style .initial:n         = {} ,
-    align .choices:nn        = { left, center, right, justify }
-                               { \tl_set_eq:NN \l__align_tl \l_keys_choice_tl } ,
-    align .initial:n         = center ,
-    at .choices:nn           = { top, bottom, middle }
-                               { \tl_set_eq:NN \l__at_tl \l_keys_choice_tl } ,
-    at .initial:n            = middle ,
+    width .dim_set:N              = \l__width_dim ,
+    width .initial:n              = {\textwidth} ,
+    width .value_required:n       = true ,
+    above .dim_set:N              = \l__above_dim ,
+    above .initial:n              = 0pc ,
+    above .value_required:n       = true ,
+    below .dim_set:N              = \l__below_dim ,
+    below .initial:n              = 0pc ,
+    below .value_required:n       = true ,
+    hide-links .bool_set:N        = \l__hide_links_bool ,
+    hide-links .default:n         = true ,
+    hide-links .initial:n         = false ,
+    textile .tl_set:N             = \l__textile_tl ,
+    textile .default:n            = {} ,
+    textile .value_required:n     = true ,
+    style .tl_set:N               = \l__style_tl ,
+    style .initial:n              = {} ,
+    style .value_required:n       = true ,
+    align .choices:nn             = { left, center, right, justify }
+                                    { \tl_set_eq:NN \l__align_tl \l_keys_choice_tl } ,
+    align .default:n              = left ,
+    align .initial:n              = center ,
+    at .choices:nn                = { top, bottom, middle }
+                                    { \tl_set_eq:NN \l__at_tl \l_keys_choice_tl } ,
+    at .initial:n                 = middle ,
+    at .value_required:n          = true ,
 }
 
 
@@ -2273,7 +2542,7 @@ rule / footer .initial:n                 = 0ex ,
     \tl_if_eq:NnTF \l__at_tl {top}
         { \dez__par_addvspace:N \l__above_dim }
         { \vspace*{\fill} }
-    \begin {minipage} {\l__width_dim}
+    \begin_r:nV {minipage} \l__width_dim
     \dez__align_begin:V \l__align_tl
     \textiles_use_or_inline:VVn \l__textile_tl \l__style_tl {#1\par}
 }
@@ -2295,18 +2564,19 @@ rule / footer .initial:n                 = 0ex ,
 }
 
 
-%==================================================================================================
+%======================================================================================================================
 %                        front-matter chapters
-%==================================================================================================
+%======================================================================================================================
 
 \NewDocumentEnvironment {FrontChapter} { O{} G{} }
 {
-    \DezMainChapterPageHook
-    \bool_if:NT \g_dez_bib_per_chap_bool { \begin {refsection} }
+    \DezMainChapterPageCmd
+    \bool_if:NT \g_dez_bib_per_chap_bool
+        { \begin {refsection} }
     \Chapter* [numberless, #1] {#2}  % add numbered in #1
 }
 {
-    \ShowEndNotes
+    \ShowEndnotes
     \bool_if:NT \g_dez_bib_per_chap_bool
         { \ShowSubBib \end{refsection} }
     \acresetall
@@ -2314,44 +2584,54 @@ rule / footer .initial:n                 = 0ex ,
 
 \keys_define:nn { dez / special-chapter }
 {
-    label .tl_set:N                = \l__label_tl ,
-    label .initial:n               = * ,
-    entry .tl_set:N                = \l__entry_tl ,
-    entry .initial:n               = * ,
-    title .tl_set:N                = \l__title_tl ,
-    title .initial:n               = {} ,
-    no-title .bool_set:N           = \l__no_title_bool,
-    no-title .default:n            = true ,
-    no-title .initial:n            = false ,
-    no-entry .bool_set:N           = \l__no_entry_bool,  % overrides any entry
-    no-entry .default:n            = true ,
-    no-entry .initial:n            = false ,
-    numberless .bool_set:N         = \l__numberless_bool ,
-    numberless .default:n          = true ,
-    numberless .initial:n          = false ,
-    numbered .code:n               = {\bool_set_false:N \l__numberless_bool} ,
-    width .dim_set:N               = \l__width_dim ,
-    width .initial:n               = {\textwidth} ,
-    above .dim_set:N               = \l__above_dim ,
-    above .initial:n               = 0pc ,
-    below .dim_set:N               = \l__below_dim ,
-    below .initial:n               = 0pc ,
-    hide-links .bool_set:N         = \l__hide_links_bool ,
-    hide-links .default:n          = true ,
-    hide-links .initial:n          = false ,
-    empty-page-style .bool_set:N   = \l__hide_header_and_footer_bool ,
-    empty-page-style .default:n    = true ,
-    empty-page-style .initial:n    = false ,
-    textile .tl_set:N              = \l__textile_tl ,
-    textile .default:n             = {} ,
-    style .tl_set:N                = \l__style_tl ,
-    style .initial:n               = {} ,
-    align .choices:nn              = { left, center, right, justify }
-                                     { \tl_set_eq:NN \l__align_tl \l_keys_choice_tl } ,
-    align .initial:n               = center ,
-    at .choices:nn                 = { top, bottom, middle }
-                                     { \tl_set_eq:NN \l__at_tl \l_keys_choice_tl } ,
-    at .initial:n                  = top ,
+    label .tl_set:N                     = \l__label_tl ,
+    label .default:n                    = * ,
+    label .initial:n                    = {} ,
+    entry .tl_set:N                     = \l__entry_tl ,
+    entry .default:n                    = * ,
+    entry .initial:n                    = {} ,
+    title .tl_set:N                     = \l__title_tl ,
+    title .initial:n                    = {} ,
+    title .value_required:n             = true ,
+    no-title .bool_set:N                = \l__no_title_bool,
+    no-title .default:n                 = true ,
+    no-title .initial:n                 = false ,
+    no-entry .bool_set:N                = \l__no_entry_bool,  % overrides any entry
+    no-entry .default:n                 = true ,
+    no-entry .initial:n                 = false ,
+    numberless .bool_set:N              = \l__numberless_bool ,
+    numberless .default:n               = true ,
+    numberless .initial:n               = false ,
+    numbered .meta:n                    = { numberless=false } ,
+    width .dim_set:N                    = \l__width_dim ,
+    width .initial:n                    = {\textwidth} ,
+    width .value_required:n             = true ,
+    above .dim_set:N                    = \l__above_dim ,
+    above .initial:n                    = 0pc ,
+    above .value_required:n             = true ,
+    below .dim_set:N                    = \l__below_dim ,
+    below .initial:n                    = 0pc ,
+    below .value_required:n             = true ,
+    hide-links .bool_set:N              = \l__hide_links_bool ,
+    hide-links .default:n               = true ,
+    hide-links .initial:n               = false ,
+    empty-page-style .bool_set:N        = \l__empty_page_style_bool ,
+    empty-page-style .default:n         = true ,
+    empty-page-style .initial:n         = false ,
+    textile .tl_set:N                   = \l__textile_tl ,
+    textile .default:n                  = {} ,
+    textile .value_required:n           = true ,
+    style .tl_set:N                     = \l__style_tl ,
+    style .initial:n                    = {} ,
+    style .value_required:n             = true ,
+    align .choices:nn                   = { left, center, right, justify }
+                                          { \tl_set_eq:NN \l__align_tl \l_keys_choice_tl } ,
+    align .default:n                    = left ,
+    align .initial:n                    = center ,
+    at .choices:nn                      = { top, bottom, middle }
+                                          { \tl_set_eq:NN \l__at_tl \l_keys_choice_tl } ,
+    at .initial:n                       = top ,
+    at .value_required:n                = true ,
 }
 
 
@@ -2363,15 +2643,15 @@ rule / footer .initial:n                 = 0ex ,
         { \tl_set:Nn \l__title_tl {#2} }
     \str_if_eq:VnT \g_dez_fnote_in_str {chapter}
         { \setcounter {footnote} {0} }  % otherwise they'll continue from the last chapter
-    \dez__run_section_like:NN \chapter \DezChapterPageHook
-    \begin {InternalSpecialBox}
-    \bool_if:NT \l__hide_header_and_footer_bool  % TODO
+    \dez__run_section_like:NN \chapter \DezChapterPageCmd
+    \bool_if:NT \l__empty_page_style_bool  % TODO
         { \clearpage \pagestyle{empty} }
+    \begin {InternalSpecialBox}
 }
 {
     \end {InternalSpecialBox}
-    \ShowEndNotes  % really, these shouldn't be used
-    %\bool_if:NT \l__hide_header_and_footer_bool  % TODO
+    \ShowEndnotes  % really, these shouldn't be used
+    %\bool_if:NT \l__empty_page_style_bool  % TODO
     %    { \clearpage \pagestyle{empty} }
     \acresetall
 }
@@ -2444,24 +2724,24 @@ rule / footer .initial:n                 = 0ex ,
 \NewSpecialChapter {Epigraph}          [ entry=Epigraph, no-title, at=middle, style=sans;large, ]
 \NewSpecialChapter {Dedication}        [ entry=Dedication, no-title, at=middle,
                                          style=sans;large;italic, ]
-\NewSpecialChapter {Copyright}         [ no-entry, no-title, at=middle, hide-links, ]
-\NewSpecialChapter {Title}             [ no-entry, no-title, hide-links, empty-page-style, ]
+\NewSpecialChapter {Copyright}         [ no-entry, no-title, at=middle, ]
+\NewSpecialChapter {Title}             [ no-entry, no-title, hide-links, ]
 
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                        abstract and title
-%==================================================================================================
+%======================================================================================================================
 
 \NewDocumentCommand \AbstractHeader {}
 {
     \begin {center}
-    \GetTitle [ textile = abstract-title ]
+    \GetTitle [ textile = abs-title ]
     \dez__par_addvspace:N \g_dez_bel_abstract_title_skip
-    \StyleTxt {abstract-by} {by}
+    \StyleTxt {abs-by} {by}
     \dez__par_addvspace:N \g_dez_abv_abstract_author_skip
-    \GetAuthors [ textile = abstract-authors ]
+    \GetAuthors [ textile = abs-authors ]
     \dez__par_addvspace:N \g_dez_abv_abstract_body_skip
     \end {center}
 }
@@ -2493,24 +2773,23 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                        main matter
-%==================================================================================================
+%======================================================================================================================
 
 
 \NewDocumentCommand \StartChapter { O{} G{} }
 {
-    \DezPreMainChapterHook
-    \bool_if:NT \g_dez_bib_per_chap_bool { \begin{refsection} }
+    \bool_if:NT \g_dez_bib_per_chap_bool
+        { \begin{refsection} }
     \Chapter [#1] {#2}
 }
 
 \NewDocumentCommand \EndChapter {}
 {
-    \ShowEndNotes
+    \ShowEndnotes
     \bool_if:NT \g_dez_bib_per_chap_bool
         { \ShowSubBib \end{refsection} }
-    \DezPostMainChapterHook
 }
 
 \NewDocumentEnvironment {MainChapter} { O{} G{} }
@@ -2519,9 +2798,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                        back matter
-%==================================================================================================
+%======================================================================================================================
 
 \NewDocumentCommand \ShowBackBib {}
 {
@@ -2531,19 +2810,17 @@ rule / footer .initial:n                 = 0ex ,
 
 \NewDocumentEnvironment {Appendix} { O{} G{} }
 {
-    \DezPreAppendixHook
-    \begin{refsection}
+    \begin {refsection}
     \Chapter [#1] {#2}
 }
 {
     \ShowSubBib
-    \end{refsection}
-    \DezPostAppendixHook
+    \end {refsection}
 }
 
 \NewDocumentEnvironment {Appendices} {}
-    {  }
-    {  }
+    { }
+    { }
 
 \NewDocumentCommand \ShowIndex {}
 {
@@ -2554,46 +2831,58 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                 theorem-like
-%==================================================================================================
+%======================================================================================================================
 
 
 % first, default style associations
 
+% from amsthm PDF:
+% https://ctan.mirrors.hoobly.com/macros/latex/required/amscls/doc/amsthdoc.pdf
+%  
+%  plain        italic text, extra space above and below:
+%               Theorem, Lemma, Corollary, Proposition, Conjecture, Criterion, Assertion
+%  definition   upright text, extra space above and below:
+%               Definition, Condition, Problem, Example, Exercise, Algorithm,
+%               Question, Axiom, Property, Assumption, Hypothesis
+%  remark       upright text, no extra space above or below.
+%               Remark, Note, Notation, Claim, Summary, Acknowledgment, Case, Conclusion
+
+% Changes to these recommendations:
+% - added Postulate (definition style)
+% - added algorithm style to facilitate CS and cryptocode
+%    i)  set Algorithm to algorithm
+%    ii) added Protocol, Procedure, Game, and Reduction
+
 \prop_const_from_keyval:Nn \c_dez_theorem_like_prop 
 {
+    Algorithm       = algorithm ,   % changed to algorithm
     Theorem         = plain ,
     Lemma           = plain ,
     Corollary       = plain,
     Proposition     = plain ,
-    Conjecture      = plain ,
     Criterion       = plain ,
     Assertion       = plain ,
-    Definition      = definition,
-    Condition       = definition ,
-    Example         = definition ,
+    Conjecture      = plain ,
     Question        = definition ,
-    Problem         = definition ,
-    Exercise        = definition ,
+    Example         = definition ,
+    Definition      = definition,
+    Hypothesis      = definition ,
+    Condition       = definition ,
     Axiom           = definition,
+    Postulate       = definition ,  % added
     Property        = definition ,
     Assumption      = definition ,
-    Hypothesis      = definition ,
-    Algorithm       = algorithm ,  % changed to algorithm (in cryptocode)
-    Protocol        = algorithm ,  % added (in cryptocode)
-    Procedure       = algorithm ,  % added (in cryptocode)
-    Game            = algorithm ,  % added (in cryptocode)
-    Reduction       = algorithm ,  % added (in cryptocode)
+    Exercise        = definition ,
     Remark          = remark ,
     Note            = remark ,
-    Notation        = remark ,
     Claim           = remark ,
+    Case            = remark ,
+    Notation        = remark ,
     Summary         = remark ,
     Acknowledgment  = remark ,
-    Case            = remark ,
     Conclusion      = remark ,
-    Result          = remark ,     % added (in cleveref)
 }
 
 % These ones are defined in cleveref, so don't set names for them
@@ -2601,9 +2890,10 @@ rule / footer .initial:n                 = 0ex ,
 {
     Theorem, Lemma, Corollary, Proposition,
     Definition, Example ,
-    Remark, Result ,
+    Remark ,
     Algorithm ,
 }
+
 
 \prop_const_from_keyval:Nn \c_dez_theorem_like_names_prop 
 {
@@ -2615,73 +2905,71 @@ rule / footer .initial:n                 = 0ex ,
     Condition       = Condition/Conditions ,
     % Example defined above
     Question        = Question/Questions ,
-    Problem         = Problem/Problems ,
-    Exercise        = Exercise/Exercises ,
     Axiom           = Axiom/Axioms ,
     Property        = Property/Properties ,
     Assumption      = Assumption/Assumptions ,
     Hypothesis      = Hypothesis/Hypotheses ,
+    Exercise        = Exercise/Exercises ,
     % Algorithm defined above
-    Protocol        = Protocol/Protocols ,
-    Procedure       = Procedure/Procedures ,
-    Game            = Game/Games ,
-    Reduction       = Reduction/Reductions ,
     % Remark defined above
     Note            = Note/Notes ,
-    Notation        = Notation/Notations ,
     Claim           = Claim/Claims ,
-    Summary         = Summary/Summaries ,
-    Acknowledgment  = Acknowledgment/Acknowledgments ,
     Case            = Case/Cases ,
+    Postulate       = Postulate/Postulates ,  % added; not recommended by amsthm
 }
 
 % define the styles suggested in the amsthm documentation
 % • plain : italic text, extra space above and below;
 % • definition : upright text, extra space above and below;
-% • algorithm (NEW): same as definition;
-% • remark : upright text, no extra space above or below.
+% • algorithm (NEW): like definition, but a little more space below;
+% • remark : upright text, no extra space above or below
 
-\declaretheoremstyle
+\NewDocumentCommand \DeclareTheoremStyle { m O{} }
+{
+    \declaretheoremstyle
+        [
+            spaceabove     = \g_dez_abv_thm_skip ,
+            spacebelow     = \g_dez_bel_thm_skip ,
+            postheadspace  = \g_dez_glue_before_thm_title_skip ,
+            headfont       = \bfseries ,
+            notefont       = \bfseries ,
+            bodyfont       = \upshape ,
+            #2
+        ]
+        { #1 }
+}
+
+\DeclareTheoremStyle
+    { plain }
     [
         spaceabove     = \g_dez_abv_thm_skip ,
         spacebelow     = \g_dez_bel_thm_skip ,
-        postheadspace  = \g_dez_glue_before_thm_title_skip ,
-        headfont       = \bfseries ,
         bodyfont       = \itshape ,
     ]
-    { plain }
 
-\declaretheoremstyle
+\DeclareTheoremStyle
+    { algorithm }
     [
         spaceabove     = \g_dez_abv_alg_skip ,
         spacebelow     = \g_dez_bel_alg_skip ,
-        postheadspace  = \g_dez_glue_after_alg_title_skip ,
-        headfont       = \bfseries ,
-        bodyfont       = \upshape ,
     ]
-    { algorithm }
 
-\declaretheoremstyle
+\DeclareTheoremStyle
+    { definition }
     [
         spaceabove     = \g_dez_abv_def_skip ,
         spacebelow     = \g_dez_bel_def_skip ,
-        postheadspace  = \g_dez_glue_before_def_title_skip ,
-        headfont       = \bfseries ,
-        bodyfont       = \upshape ,
     ]
-    { definition }
 
-\declaretheoremstyle
+\DeclareTheoremStyle
+    { remark }
     [
         spaceabove     = \g_dez_abv_remark_skip ,
         spacebelow     = \g_dez_bel_remark_skip ,
-        postheadspace  = \g_dez_glue_before_rem_title_skip ,
-        headfont       = \bfseries ,
-        bodyfont       = \upshape ,
     ]
-    { remark }
 
 % amsthm defines this; renew so we can set the space
+% note: we alias Proof (capitalized) later
 \RenewDocumentEnvironment {proof} { O{\proofname} }
 {
     \par
@@ -2710,65 +2998,63 @@ rule / footer .initial:n                 = 0ex ,
     { \declaretheorem [                           style=plain ] {theoremlike} }
     { \declaretheorem [ parent=\g_dez_thm_in_str, style=plain ] {theoremlike} }
 
-\cs_new_protected:Npn \dez__new_thm_aux:Vn #1#2
+\NewDocumentCommand \NewTheoremEnv { m O{} }
 {
-    \declaretheorem [ style=plain, sibling=theoremlike ] {#2}
+    \declaretheorem [ sibling=theoremlike, #2 ] {#1}
 }
 
-\cs_new_protected:Npn \dez_new_thm:nn #1#2
+\cs_new_protected:Npn \dez__new_thm_aux:Vn #1#2
 {
-    \tl_set:Nn \l_tmpa_tl {#1}
-    \tl_if_blank:nT {#1}
-    {
-        \prop_get:NnNF \c_dez_theorem_like_prop {#2} \l_tmpa_tl
-            { \tl_set:Nn \l_tmpa_tl {plain} }
-    }
-    \dez__new_thm_aux:Vn \l_tmpa_tl {#2}
+    \declaretheorem [ sibling=theoremlike, style=#1 ] {#2}
+}
+
+\cs_new_protected:Npn \dez_new_thm:n #1
+{
+    \prop_get:NnNF \c_dez_theorem_like_prop {#1} \l_tmpa_tl
+        { \tl_set:Nn \l_tmpa_tl {remark} }
+     \dez__new_thm_aux:Vn \l_tmpa_tl {#1}
 }
 \cs_generate_variant:Nn \dez_new_thm:nn { nV }
 
-\NewDocumentCommand \NewTheoremEnvs { O{} m }
-{
-    \prop_set_from_keyval:Nn \l_tmpa_prop {#2}
-    \prop_map_inline:Nn \l_tmpa_prop
-    {   % loop over env -> cref/cref-plural; guess style if not set from style= in [#1]
-        \dez_new_thm:nn {#1} {##1}
-        \pidgin__set_cref:nn {##1} {##2}
-    }
-}
-
-\NewDocumentCommand \NewStandardTheoremEnvs { }
+\NewDocumentCommand \NewDefaultTheoremEnvs { }
 {
     \seq_map_inline:Nn \c_dez_theorem_like_names_in_cref_seq
     {
-        \dez_new_thm:nn {##1} {}
+        \dez_new_thm:n {##1}
         % no cleveref call
     }
     \prop_map_inline:Nn \c_dez_theorem_like_names_prop
     {
-        \dez_new_thm:nn {##1} {}
+        \dez_new_thm:n {##1}
         \pidgin__set_cref:nn {##1} {##2}
     }
 }
 
 
-
-%==================================================================================================
+%======================================================================================================================
 %                     lists of things
-%==================================================================================================
+%======================================================================================================================
 
 % replace the 10pt extra space
 % https://tex.stackexchange.com/questions/784/how-to-change-the-line-spacing-in-my-list-of-figures
-%\newcommand* \dezfixchapspace
-%{
-%    \renewcommand* \addvspace [1] {\dez__par_addvspace:N \g_dez_lof_chap_skip}
-%}
-%\addtocontents {lof} { \protect \dezfixchapspace }
-%\addtocontents {lot} { \protect \dezfixchapspace }
+\patchcmd
+    { \@chapter }
+    { \addtocontents {lof}
+    { \protect \addvspace {10\p@}} }
+    { \dez__par_addvspace:N \g_dez_lof_chap_skip }
+    {}
+    {}
+
+\patchcmd
+    { \@chapter }
+    { \addtocontents {lot}
+    { \protect \addvspace {10\p@}} }
+    { \dez__par_addvspace:N \g_dez_lof_chap_skip }
+    {}
+    {}
 
 \cs_new_protected:Npn \dez__fix_lof:n #1
 {
-    %\addtocontents{lof}{\protect\noaddvspace}
     \renewcommand \listoffigures
     {   % listfigurename already gets set
         \bool_if:nTF {#1}
@@ -2801,12 +3087,13 @@ rule / footer .initial:n                 = 0ex ,
         { \HideLinks }
     \dez__fix_lof:n{#1}
     \setlength {\parskip} {0ex}  % makes things confusing
-    \DezPreTocLikeHook
-} {}
+    \hook_use:n { dez / lof-like / pre }
+}
+{ \hook_use:n { dez / lof-like / post } }
 
 \NewDocumentEnvironment {TocLikeList} { t! }
     { \begin {LofLikeListInternal} {#1} }
-    { \end {LofLikeListInternal} }
+    { \end   {LofLikeListInternal} }
 
 \cs_new:Npn \dez_maybe_add_toc:nnn #1#2#3
 {
@@ -2820,32 +3107,38 @@ rule / footer .initial:n                 = 0ex ,
 % Output table of contents
 \NewDocumentCommand \ShowTableOfContents { }
 {
+    \hook_use:n { dez / lof-like / before }
     % We're just not going to allow ! or + here --
     % It's the table of contents for God's sake.
     \group_begin:
     \bool_if:NF \g_dez_show_toc_links_bool
         { \HideLinks }
     \setlength {\parskip} {0ex}  % makes things confusing
-    \DezPreTocLikeHook
     \exp_args:NV \setstretch \g_dez_stretch_toc_tl
+    \hook_use:n { dez / lof-like / pre }
     \tableofcontents
+    \hook_use:n { dez / lof-like / post }
     \group_end:
+    \hook_use:n { dez / lof-like / after }
 }
 
 % Output list of figures
 \NewDocumentCommand \ShowListOfFigures { t! t+ }
 {
+    \hook_use:n { dez / lof-like / before }
     \begin {LofLikeListInternal} {#1}
     \exp_args:NV \setstretch \g_dez_stretch_lof_tl
     \listoffigures
     \dez_maybe_add_toc:nnn {#1} {#2} {\listfigurename}
     %\addcontentsline{toc}{chapter}{\listfigurename}
     \end {LofLikeListInternal}
+    \hook_use:n { dez / lof-like / after }
 }
 
 % Output list of tables
 \NewDocumentCommand \ShowListOfTables { t! t+ }
 {
+    \hook_use:n { dez / lof-like / before }
     % \listoftables doesn't use \listoffigures
     % so we follow the same logic as in LofLikeListInternal
     \group_begin:
@@ -2854,18 +3147,21 @@ rule / footer .initial:n                 = 0ex ,
     \dez__fix_lot:n{#1}
     \setlength {\parskip} {0ex}  % makes things confusing
     \exp_args:NV \setstretch \g_dez_stretch_lof_tl
-    \DezPreTocLikeHook
+    \hook_use:n { dez / lof-like / pre }
     \listoftables
     %\addcontentsline{toc}{chapter}{\listtablename}
     \dez_maybe_add_toc:nnn {#1} {#2} {\listtablename}
+    \hook_use:n { dez / lof-like / post }
     \group_end:
+    \hook_use:n { dez / lof-like / after }
 }
 
 % Output list of abbreviations (via 'acro' package)
 \NewDocumentCommand \ShowListOfAbbreviations { t! t+ }
 {
+    \hook_use:n { dez / lof-like / before }
     \begin {LofLikeListInternal} {#1}
-    \exp_args:NV \setstretch \g_dez_stretch_abbrevs_tl
+    \exp_args:NV \setstretch \g_dez_stretch_lof_tl
     % template = description|tabular|longtable|supertabular|tabularray|lof|toc
     % acceptable choices are description, toc, lof, and tabularray
     % description is the default
@@ -2879,6 +3175,14 @@ rule / footer .initial:n                 = 0ex ,
               \dez__par_addvspace:N \g_dez_bel_front_chap_skip
             } ,
     }
+    \exp_args:Ne
+        \setlist
+        {
+            itemsep     = {\skip_use:N \g_dez_btw_lof_items_skip} ,
+            topsep      = 0pc ,
+            partopsep   = 0pc ,
+            parsep      = 0pc ,
+        }
     \bool_if:nTF {#1}
         {
           \exp_last_unbraced:Ne
@@ -2892,16 +3196,17 @@ rule / footer .initial:n                 = 0ex ,
         }
     \dez_maybe_add_toc:nnn {#1} {#2} { \pidgin_string:n {listabbreviation} }
     \end {LofLikeListInternal}
+    \hook_use:n { dez / lof-like / after }
 }
 
 % Output nomenclature
 \NewDocumentCommand \ShowNomenclature { t! t+ }
 {
+    \hook_use:n { dez / lof-like / before }
     % nomencl doesn't use \listoffigures
     % so, we'll turn \chapter* into \chapter
     \group_begin:
     \setlength {\parskip} {0ex}
-    \DezPreTocLikeHook
     \bool_if:nT {#1}
     {
         \let \oldchapter \chapter
@@ -2911,41 +3216,139 @@ rule / footer .initial:n                 = 0ex ,
             } }
     }
     \exp_args:NV \setstretch \g_dez_stretch_nom_tl
-    \bool_if:NF \g_dez_show_nom_links_bool
+    \bool_if:NF \g_dez_show_toc_links_bool
         { \HideLinks }
-    % also uses \nomitemsep, which we earlier set to baselineskip
+    % also uses \nomitemsep, which we set earlier
+    \exp_args:Ne
+        \setlist
+        {
+            itemsep     = 0pc ,
+            topsep      = 0pc ,
+            partopsep   = 0pc ,
+            parsep      = 0pc ,
+        }
+    \hook_use:n { dez / lof-like / pre }
     \printnomenclature
     \dez_maybe_add_toc:nnn {#1} {#2} { \pidgin_string:n {nomenclature} }
+    \hook_use:n { dez / lof-like / post }
     \group_end:
+    \hook_use:n { dez / lof-like / after }
 }
 
-\NewDocumentCommand \ShowListOfTheoremLike { t! O{} m }
+
+\keys_define:nn { dez / list-of-theorems }
 {
+    title .tl_set:N     = \l__title_tl ,
+    unknown .code:n     = { \exp_args:NNo \tl_put_right:Nn \l__unknown_tl { \l_keys_key_str={#1}, } } ,
+}
+
+\cs_new_protected:Npn \dez__listoftheorems:V #1
+{
+    \dez_non_expl:n { \listoftheorems [#1] }
+}
+
+\cs_new_protected:Npn \dez__list_of_thm_like:nnn #1#2#3
+{
+    \hook_use:n { dez / lof-like / before }
     \begin {LofLikeListInternal} {#1}
+    \tl_set:Nn \l__unknown_tl {}
+    \tl_set:Nn \l__title_tl { \pidgin_string:n {List~of~Theorems}  }
+    \keys_set:nn {dez / list-of-theorems} {#3}
     \exp_args:NV \setstretch \g_dez_stretch_lof_tl
-    \listoftheorems[#3]
+    \tl_put_right:Nn \l__unknown_tl { , title={\l__title_tl} }
+    \exp_args:NV \dez__listoftheorems:V \l__unknown_tl
     \bool_if:nF {#1}
-    {
-        \tl_if_blank:nF {#2}
-            { \addcontentsline {toc} {chapter} {#2} }
-    }
+        { \exp_args:NnnV \addcontentsline {toc} {chapter} \l__title_tl }
+    \dez_maybe_add_toc:nnn {#1} {#2} { \l__title_tl }
     \end {LofLikeListInternal}
+    \hook_use:n { dez / lof-like / after }
 }
 
-\NewDocumentCommand \ShowListOfSourceCode { t! t+ }
+\NewDocumentCommand \ShowListOfTheoremLike { t! t+ O{} }
 {
+    \dez__list_of_thm_like:nnn {#1} {#2} {#3}
+}
+
+\NewDocumentCommand \ShowListOfResults { t! t+ O{} }
+{
+    \dez__list_of_thm_like:nnn
+        {#1}
+        {#2}
+        {
+          ignoreall,
+          showonly   = { Theorem, Lemma, Corollary, Proposition, Criterion, Assertion } ,  % no Conjecture
+          title      = List~of~results ,
+          #3 ,
+        }
+}
+
+\NewDocumentCommand \ShowListOfAlgorithms { t! t+ O{} }
+{
+    \dez__list_of_thm_like:nn
+        {#1}
+        {#2}
+        { ignoreall, showonly=Algorithm, title=List~of~algorithms, #3 }
+}
+
+\NewDocumentCommand \ShowListOfDefinitions { t! t+ O{} }
+{
+    \dez__list_of_thm_like:nn
+        {#1}
+        {#2}
+        { ignoreall, showonly=Definition, title=List~of~definitions, #3 }
+}
+
+\NewDocumentCommand \ShowListOfExamples { t! t+ O{} }
+{
+    \dez__list_of_thm_like:nn
+        {#1}
+        {#2}
+        { ignoreall, showonly=Example, title=List~of~examples, #3 }
+}
+
+\NewDocumentCommand \ShowListOfCode { t! t+ }
+{
+    \hook_use:n { dez / lof-like / before }
     \begin {LofLikeListInternal} {#1}
     \exp_args:NV \setstretch \g_dez_stretch_lof_tl
     \listoflistings
     \dez_maybe_add_toc:nnn {#1} {#2} { \pidgin_string:n {listlisting} }
     \end {LofLikeListInternal}
+    \hook_use:n { dez / lof-like / after }
+}
+
+\NewDocumentCommand \NewListOfNewfloatCmd { m m }
+{
+    \exp_args:Ncnn \NewDocumentCommand {#1} { t! t+ }
+    {
+        \hook_use:n { dez / lof-like / before }
+        \begin {LofLikeListInternal} {##1}
+        \exp_args:NV \setstretch \g_dez_stretch_lof_tl
+        \cs:w listof #2 \cs_end:
+        \dez_maybe_add_toc:nnn {##1} {##2} { \pidgin_string:n {list#2} }
+        \end {LofLikeListInternal}
+        \hook_use:n { dez / lof-like / after }
+    }
+}
+
+\NewDocumentCommand \NewListOfCmd { m m }
+{
+    \exp_args:Ncnn \NewDocumentCommand {#1} { t! t+ O{} }
+    {
+        \hook_use:n { dez / lof-like / before }
+        \begin {LofLikeListInternal} {##1}
+        \exp_args:NV \setstretch \g_dez_stretch_lof_tl
+        \cs:w #2 \cs_end: \bool_if:nT {##1} {!} \bool_if:nT {##2} {+} ##3
+        \end {LofLikeListInternal}
+        \hook_use:n { dez / lof-like / after }
+    }
 }
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                     abbreviations
-%==================================================================================================
+%======================================================================================================================
 
 \acsetup
 {
@@ -2959,23 +3362,24 @@ rule / footer .initial:n                 = 0ex ,
 }
 
 
-\NewDocumentCommand \indx { s m O{} }
+\NewDocumentCommand \indexed { s m O{} }
 {
     \bool_if:nTF {#1}
-        { \StyleTxt {indx-starred} {#2} }
+        { \textiles_use:nn {indexed-starred} {#2} }
         { #2 }
     \dez_if_feat_enabled:nT {imakeidx}
         { \tl_if_blank:nTF {#3} { \index{#2} } { \index{#3} } }
 }
-\NewDocumentCommand \Indx { s m O{} }
+
+\NewDocumentCommand \Indexed { s m O{} }
 {
     \bool_if:nTF {#1}
         {
-            \StyleTxt
-                { indx-starred }
-                { \txtsentencecase*{#2} }
+            \textiles_use:nn
+                { indexed-starred }
+                { \txtsentencecasefirst{#2} }
         }
-        { \txtsentencecase*{#2} }
+        { \txtsentencecasefirst{#2} }
     \dez_if_feat_enabled:nT {imakeidx}
     {
         \tl_if_blank:nTF {#3} { \index{#2} } { \index{#3} }
@@ -2988,17 +3392,19 @@ rule / footer .initial:n                 = 0ex ,
 }
 
 
-%==================================================================================================
+%======================================================================================================================
 %                      caption and subcaption styling
-%==================================================================================================
+%======================================================================================================================
+
+\tl_new:N \CurrentFloatOptions
 
 \DeclareCaptionSubType [\g_dez_n_panels_str] {figure}
 
 \DeclareCaptionLabelSeparator {dez-sep} {\g_dez_typo_caption_label_sep_tl}
 
 \textiles_declare_cap_style:nnn {dez-caption} {caption-body}    {caption-label}
-\textiles_declare_cap_style:nnn {dez-subcap}  {subcaption-body} {subcaption-label}
-\textiles_declare_cap_style:nnn {dez-table}   {table-head-body} {table-head-label}  % legacy tables
+\textiles_declare_cap_style:nnn {dez-subcap}  {subcap-body}     {subcap-label}
+\textiles_declare_cap_style:nnn {dez-table}   {table-head-body} {table-head-label}
 
 % For all captions:
 \captionsetup
@@ -3021,7 +3427,7 @@ rule / footer .initial:n                 = 0ex ,
     skip   =   \g_dez_abv_subcaption_skip ,
 }
 
-% Captions that go at the TOP of tables (legacy table environment)
+% Captions that go at the TOP of tables
 \captionsetup [table]
 {
     position         = above ,
@@ -3056,10 +3462,8 @@ rule / footer .initial:n                 = 0ex ,
 
 \cs_new_protected:Npn \dez__new_float:n #1
 {
-    %\tl_set:Nn \l_tmpa_tl {X}
-    %\tl_set:Nn \l_tmpb_tl {Y}  % TODO
-    %\tl_set:Nx \l_tmpa_tl { \pidgin_string:n{#1} }
-    %\tl_set:Nx \l_tmpb_tl { \pidgin_string:n{list#1} }
+    \exp_args:NNe \tl_set:Nn \l_tmpa_tl { \pidgin_string:n{#1} }
+    \exp_args:NNe \tl_set:Nn \l_tmpb_tl { \pidgin_string:n{list#1} }
     \dez__new_float_x:nVV {#1} \l_tmpa_tl \l_tmpb_tl
     \captionsetup [#1]
     {
@@ -3076,25 +3480,74 @@ rule / footer .initial:n                 = 0ex ,
 \DeclareCaptionJustification {justify} {\justified}
 % caption also provides \centerfirst and \centerlast
 
+\cs_new_protected:Npn \dez__begin_float:nn #1#2
+{
+    \bool_if:nT {#2} { \bool_set_true:N \l__twocol_bool }
+    \bool_if:NTF \l__twocol_bool
+        { \tl_set:Nn \l_my_env_tl {#1*} }
+        { \tl_set:Nn \l_my_env_tl {#1} }
+    \tl_if_blank:VTF \l__placement_tl  % avoid warning
+        { \begin_:V \l_my_env_tl }
+        { \begin_o:VV \l_my_env_tl \l__placement_tl }
+}
+
+\cs_new_protected:Npn \dez__end_float:n #1
+{
+    \bool_if:NTF \l__twocol_bool
+        { \tl_set:Nn \l_my_env_tl {#1*} }
+        { \tl_set:Nn \l_my_env_tl {#1} }
+    \end_:V \l_my_env_tl
+}
 
 
-%==================================================================================================
+
+%======================================================================================================================
 %                      captioning commands
-%==================================================================================================
+%======================================================================================================================
 
 
 \keys_define:nn { dez / capkeyval }
 {
-    label .tl_set:N      = \l__label_tl ,
-    label .initial:n     = {} ,
-    entry .tl_set:N      = \l__entry_tl ,
-    entry .initial:n     = {} ,
-    caption .tl_set:N    = \l__caption_tl ,
-    caption .initial:n   = {} ,
+    label .tl_set:N            = \l__label_tl ,
+    label .default:n           = * ,
+    label .initial:n           = {} ,
+    entry .tl_set:N            = \l__entry_tl ,
+    entry .default:n           = * ,
+    entry .initial:n           = {} ,
+    caption .tl_set:N          = \l__caption_tl ,
+    caption .initial:n         = {} ,
+    caption .value_required:n  = true ,
+    caption+ .tl_set:N         = \l__caption_plus_tl ,
+    caption+ .default:n        = {} ,
+    caption+ .initial:n        = {!!!!!} ,
+}
+
+\cs_new_protected:Nn \dez__fix_cap_args:
+{
+    \tl_if_eq:NnF \l__caption_plus_tl {!!!!!}
+    {
+        \tl_if_blank:VF \l__caption_tl
+        {
+            \exp_args:NNo
+                \tl_set:Nn
+                \l__caption_tl
+                { \l__entry_tl\l__caption_plus_tl }
+        }
+    }
+    \tl_if_eq:NnT \l__caption_tl {*}
+    {
+        \tl_set_eq:NN \l__caption_tl \l__entry_tl
+    }
+    \tl_if_eq:NnT \l__label_tl {*}
+    {
+        \tl_set_eq:NN \l__label_tl \l__entry_tl
+        \tl_replace_all:Nnn \l__label_tl {~} {-}  % TODO: improve
+    }
 }
 
 \cs_new_protected:Nn \dez__capkeyval:
 {
+    \dez__fix_cap_args:
     \bool_set_false:N \l_tmpa_bool
     \tl_if_blank:VF \l__caption_tl { \bool_set_true:N \l_tmpa_bool }
     \tl_if_blank:VF \l__entry_tl   { \bool_set_true:N \l_tmpa_bool }
@@ -3103,10 +3556,10 @@ rule / footer .initial:n                 = 0ex ,
         \tl_if_blank:VTF \l__entry_tl
             { \caption                {\l__caption_tl} }
             { \caption [\l__entry_tl] {\l__caption_tl} }
+
     }
-    % TODO: label won't work well with no anchor
-    \tl_if_blank:VF \l__label_tl
-        { \label {\l__label_tl} }
+    \tl_if_blank:VTF \l__label_tl
+        { \label {\l__label_tl} }  % TODO: if no anchor?
 }
 
 \NewDocumentCommand \captioning { O{} m }
@@ -3135,10 +3588,55 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
+%======================================================================================================================
+%                 equations
+%======================================================================================================================
 
-%==================================================================================================
+
+\keys_define:nn { dez / equation }
+{
+    numberless .bool_set:N         = \l__numberless_bool ,
+    numberless .default:n          = true ,
+    numberless .initial:n          = false ,
+    name .tl_set:N                 = \l__name_tl ,
+    name .initial:n                = {} ,
+    name .value_required:n         = true ,
+    tag .meta:n                    = { name=#1 } ,
+    tag .value_required:n          = true ,
+    label .tl_set:N                = \l__label_tl ,
+    label .default:n               = * ,
+    label .initial:n               = {} ,
+}
+
+
+\NewDocumentEnvironment {Equation} { s O{} }
+{
+    \keys_set:nn {dez / equation} {#2}
+    \bool_if:NT {#1}
+        { \bool_set_true:N \l__numberless_bool }
+    \bool_if:NTF \l__numberless_bool
+        { \tl_set:Nn \l__myenv_tl {equation*} }
+        { \tl_set:Nn \l__myenv_tl {equation}  }
+    \begin_:V \l__myenv_tl
+    \tl_if_blank:VF \l__name_tl
+        { \exp_args:NV \tag \l__name_tl }
+}
+{
+    \tl_if_blank:VF \l__label_tl
+        { \exp_args:NV \label \l__label_tl }
+    \end_:V \l__myenv_tl
+}
+
+\NewDocumentEnvironment {Equation*} { O{} }
+    { \begin {Equation} [#1,numberless] }
+    { \end {Equation} }
+
+
+
+
+%======================================================================================================================
 %                 figures -- single-panel
-%==================================================================================================
+%======================================================================================================================
 
 \g@addto@macro \@floatboxreset \centering
 % This one no longer works!
@@ -3146,84 +3644,92 @@ rule / footer .initial:n                 = 0ex ,
 % https://tex.stackexchange.com/questions/144853/add-centering-to-all-subfigures-in-subcaption-using-gaddtomacro
 \apptocmd \subcaption@iiminipage {\centering} {} {}
 
-\cs_new_protected:Npn \dez__begin_fig:VV #1#2
+\keys_define:nn { dez / figure }
 {
-    \begin {#1}
-    %\begin {#1} [#2]  % TODO
-}
-
-\keys_define:nn { dez / one-panel-figure }
-{
-    at .tl_set:N              = \l__placement_tl ,
-    at .initial:n             = {} ,
-    file .tl_set:N            = \l__file_tl ,
-    file .initial:n           = {} ,
-    graphicx .tl_set:N        = \l__graphics_options_tl ,
-    graphicx .initial:n       = {} ,
-    label .tl_set:N           = \l__label_tl ,
-    label .initial:n          = {} ,
-    entry .tl_set:N           = \l__entry_tl ,
-    entry .initial:n          = {} ,
-    caption .tl_set:N         = \l__caption_tl ,
-    caption .initial:n        = {} ,
-    full .bool_set:N          = \l__full_page_bool,
-    full .default:n           = true ,
-    full .initial:n           = false,
+    at .tl_set:N                   = \l__placement_tl ,
+    at .initial:n                  = {} ,
+    at .value_required:n           = true ,
+    label .tl_set:N                = \l__label_tl ,
+    label .default:n               = * ,
+    label .initial:n               = {} ,
+    entry .tl_set:N                = \l__entry_tl ,
+    entry .default:n               = * ,
+    entry .initial:n               = {} ,
+    caption .tl_set:N              = \l__caption_tl ,
+    caption .initial:n             = {} ,
+    caption .value_required:n      = true ,
+    caption+ .tl_set:N             = \l__caption_plus_tl ,
+    caption+ .default:n            = {} ,
+    caption+ .initial:n            = {!!!!!} ,
+    2col .bool_set:N               = \l__twocol_bool ,
+    2col .default:n                = true ,
+    2col .initial:n                = false ,
 }
 
 \cs_new:Npn \dez__include_graphics:nn #1#2
 {
+	% passed "Export" to adjustbox, so \includgraphics is \adjincludegraphics
     \includegraphics [#2] {#1}
 }
-\cs_generate_variant:Nn \dez__include_graphics:nn { Ve }
-
-
-\NewDocumentEnvironment {OnePanelFigure} { s O{} }
-{
-    \keys_set:nn {dez / one-panel-figure} {#2}
-    \str_set:Nn \l__my_env_str {figure}
-    \bool_if:nTF {#1}
-        { \str_set:Nn \l__my_env_str {figure*} }
-        {
-            \bool_if:NT \l__full_page_bool
-                { \str_set:Nn \l__my_env_str {figure*} }
-        }
-    \begin {\l__my_env_str}
-    %\dez__begin_fig:VV \l__my_env_str \l__placement_tl
-    \tl_if_blank:VF \l__file_tl
-        { \dez__include_graphics:Ve \l__file_tl {\l__graphics_options_tl} }
-}
-{
-    \dez__capkeyval:
-    \end {\l__my_env_str}
-}
+\cs_generate_variant:Nn \dez__include_graphics:nn { VV }
 
 \NewDocumentEnvironment {Figure} { s O{} }
 {
-    \bool_if:nTF{#1}
-        { \begin {OnePanelFigure}* [#2] }
-        { \begin {OnePanelFigure}  [#2] }
+    \keys_set:nn {dez / figure} {#2}
+    \dez__begin_float:nn {figure} {#1}
 }
 {
-    \end {OnePanelFigure}
+    \dez__capkeyval:
+    \dez__end_float:n {figure}
 }
 
 \NewDocumentEnvironment {Figure*} { O{} }
-    { \begin {OnePanelFigure}* [#1] }
-    { \end {OnePanelFigure} }
+    { \begin {Figure} [ #1, full ] }
+    { \end   {Figure} }
 
-
-\NewDocumentCommand \AddOnePanelFigure { s r[] }
+\keys_define:nn { dez / chem-figure }
 {
-    \bool_if:nTF{#1}
-        { \begin {OnePanelFigure}* [#2] }
-        { \begin {OnePanelFigure}  [#2] }
-    \end {OnePanelFigure}
+    at .tl_set:N                   = \l__placement_tl ,
+    at .initial:n                  = {} ,
+    at .value_required:n           = true ,
+    options .tl_set:N              = \CurrentFloatOptions ,
+    options .initial:n             = {} ,
+    label .value_required:n        = true ,
+    label .tl_set:N                = \l__label_tl ,
+    label .default:n               = * ,
+    label .initial:n               = {} ,
+    entry .tl_set:N                = \l__entry_tl ,
+    entry .default:n               = * ,
+    entry .initial:n               = {} ,
+    caption .tl_set:N              = \l__caption_tl ,
+    caption .initial:n             = {} ,
+    caption .value_required:n      = true ,
+    caption+ .tl_set:N             = \l__caption_plus_tl ,
+    caption+ .default:n            = {} ,
+    caption+ .initial:n            = {!!!!!} ,
+    2col .bool_set:N               = \l__twocol_bool,
+    2col .default:n                = true ,
+    2col .initial:n                = false,
 }
 
-\NewDocumentCommand \StructuralFormula { D(){} m }
+\NewDocumentEnvironment {ChemFigure} { s O{} }
 {
-    \IfNoValueTF {#1}
+    \keys_set:nn {dez / figure} {#2}
+    \dez__begin_float:nn {figure} {#1}
+    \exp_args:NV \setchemfig \CurrentFloatOptions
+    \schemestart
+}
+{
+    \schemestop
+    \chemnameinit{}
+    \dez__capkeyval:
+    \dez__end_float:n {figure}
+}
+
+
+\NewDocumentCommand \Chem { D(){} m }
+{
+    \tl_if_blank:nTF {#1}
         { \chemfig {#2} }
         {
             \chemname
@@ -3232,85 +3738,97 @@ rule / footer .initial:n                 = 0ex ,
         }
 }
 
-\NewDocumentCommand \StructuralFormulaFigure { O{} D(){} m }
-{
-    \begin {Figure} [#1]
-    \schemestart
-    \StructuralFormula (#2) {#3}
-    \schemestop
-    %\chemnameinit{}
-    \end {Figure}
-}
 
 
-
-%==================================================================================================
+%======================================================================================================================
 %                 figures -- multi-panel (with real graphics)
-%==================================================================================================
+%======================================================================================================================
 
 \keys_define:nn { dez / multi-panel-figure }
 {
-    at .tl_set:N              = \l__placement_tl ,
-    at .initial:n             = {} ,
-    label .tl_set:N           = \l__label_tl ,
-    label .initial:n          = {} ,
-    entry .tl_set:N           = \l__entry_tl ,
-    entry .initial:n          = {} ,
-    caption .tl_set:N         = \l__caption_tl ,
-    caption .initial:n        = {} ,
-    full .bool_set:N          = \l__full_page_bool ,
-    full .default:n           = true ,
-    full .initial:n           = false ,
+    at .tl_set:N                   = \l__placement_tl ,
+    at .initial:n                  = {} ,
+    at .value_required:n           = true ,
+    label .tl_set:N                = \l__label_tl ,
+    label .default:n               = * ,
+    label .initial:n               = {} ,
+    entry .tl_set:N                = \l__entry_tl ,
+    entry .default:n               = * ,
+    entry .initial:n               = {} ,
+    caption .tl_set:N              = \l__caption_tl ,
+    caption .initial:n             = {} ,
+    caption .value_required:n      = true ,
+    caption+ .tl_set:N             = \l__caption_plus_tl ,
+    caption+ .default:n            = {} ,
+    caption+ .initial:n            = {!!!!!} ,
+    2col .bool_set:N               = \l__twocol_bool ,
+    2col .default:n                = true ,
+    2col .initial:n                = false ,
 }
+
 
 \NewDocumentEnvironment {MultiPanelFigure} { s O{} }
 {
     \keys_set:nn {dez / multi-panel-figure} {#2}
-    \bool_if:nTF {#1}
-        { \str_set:Nn \l__my_env_str {figure*} }
-        {
-            \bool_if:NT \l__full_page_bool
-                { \str_set:Nn \l__my_env_str {figure*} }
-        }
-    \begin {\l__my_env_str}
-    %\dez__begin_fig:VV \l__my_env_str \l__placement_tl
+    \dez__begin_float:nn {figure} {#1}
 }
 {
     \dez__capkeyval:
-    \end {\l__my_env_str}
+    \dez__end_float:n {figure}
 }
 
 % align (inner-pos) can be 'l', 'c, 'r', or anything declared via \DeclareCaptionJustification
 % we declared some aliases in the captioning section above
 \keys_define:nn { dez / real-panel }
 {
-    file  .tl_set:N           = \l__panel_file_tl ,
-    file .initial:n           = {} ,  % optional, but clearly wanted
-    graphicx .tl_set:N        = \l__panel_graphics_options_tl ,
-    graphicx .initial:n       = {} ,
-    width .dim_set:N          = \l__panel_width_dim ,
-    align .tl_set:N           = \l__panel_innerpos_tl ,
-    align .default:n          = center ,
-    label .tl_set:N           = \l__panel_label_tl ,
-    label .initial:n          = {} ,
-    entry .tl_set:N           = \l__panel_entry_tl ,
-    entry .initial:n          = {} ,
-    caption .tl_set:N         = \l__panel_caption_tl ,
-    caption .initial:n        = {} ,
+    file  .tl_set:N                = \l__panel_file_tl ,
+    file .initial:n                = {} ,  % optional, but clearly wanted
+    file .value_required:n        = true ,
+    options .tl_set:N              = \CurrentFloatOptions ,
+    options .initial:n             = {} ,
+    options .value_required:n      = true ,
+    width .tl_set:N                = \l__panel_width_tl ,
+    width .initial:n               = {} ,
+    width .value_required:n        = true ,
+    align .tl_set:N                = \l__panel_innerpos_tl ,
+    align .default:n               = left ,
+    align .initial:n               = center ,
+    label .tl_set:N                = \l__panel_label_tl ,
+    label .default:n               = * ,
+    label .initial:n               = {} ,
+    entry .tl_set:N                = \l__panel_entry_tl ,
+    entry .default:n               = * ,
+    entry .initial:n               = {} ,
+    caption .tl_set:N              = \l__panel_caption_tl ,
+    caption .initial:n             = {} ,
+    caption .value_required:n      = true ,
+    caption+ .tl_set:N             = \l__panel_caption_plus_tl ,
+    caption+ .default:n            = {} ,
+    caption+ .initial:n            = {!!!!!} ,
 }
 
-\NewDocumentCommand \AddPanel { m }
+\NewDocumentCommand \Panel { m }
 {
     \group_begin:
     \keys_set:nn {dez / real-panel} {#1}
+    \tl_if_blank:VT \l__caption_tl
+    {
+        \tl_if_eq:NnF \l__panel_caption_plus_tl {!!!!!}
+        {
+            \exp_args:NNo
+            \tl_set:Nn
+            \l__caption_tl
+            { \l__panel_entry_tl.~\l__panel_entry_tl }
+        }
+    }
     \subcaptionbox
         [\l__panel_entry_tl]
         {\l__panel_caption_tl}
-        [\l__panel_width_dim]
+        [\l__panel_width_tl]
         [\l__panel_innerpos_tl]
         {
             \tl_if_blank:VF \l__file_tl
-                { \dez__include_graphics:Ve \l__file_tl {\l__graphics_options_tl} }
+                { \dez__include_graphics:VV \l__file_tl \CurrentFloatOptions }
             \tl_if_blank:VF \l__label_tl
                 { \label {\l__label_tl} }
         }
@@ -3320,79 +3838,78 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                 phantom-panel figures -- 1 graphics file 
-%==================================================================================================
+%======================================================================================================================
 
 \keys_define:nn { dez / phantom-panel-figure }
 {
-    at .tl_set:N              = \l__placement_tl ,
-    at .initial:n             = {} ,
-    file .tl_set:N            = \l__file_tl ,
-    file .initial:n           = {} ,                        % "optional, but clearly wanted
-    graphicx .tl_set:N        = \l__graphics_options_tl ,
-    graphicx .initial:n       = {} ,
-    label .tl_set:N           = \l__label_tl ,
-    label .initial:n          = {} ,
-    entry .tl_set:N           = \l__entry_tl ,
-    entry .initial:n          = {} ,
-    caption .tl_set:N         = \l__caption_tl ,
-    caption .initial:n        = {} ,
-    full .bool_set:N          = \l__full_page_bool ,
-    full .default:n           = true ,
-    full .initial:n           = false ,
+    at .tl_set:N                   = \l__placement_tl ,
+    at .initial:n                  = {} ,
+    at .value_required:n           = true ,
+    label .tl_set:N                = \l__label_tl ,
+    label .default:n               = * ,
+    label .initial:n               = {} ,
+    entry .tl_set:N                = \l__entry_tl ,
+    entry .default:n               = * ,
+    entry .initial:n               = {} ,
+    caption .tl_set:N              = \l__caption_tl ,
+    caption .initial:n             = {} ,
+    caption .value_required:n      = true ,
+    caption+ .tl_set:N             = \l__caption_plus_tl ,
+    caption+ .default:n            = {} ,
+    caption+ .initial:n            = {!!!!!} ,
+    2col .bool_set:N               = \l__twocol_bool ,
+    2col .default:n                = true ,
+    2col .initial:n                = false ,
 }
 
 %\prop_new:N \g__dez_panel_prop
 
-\NewDocumentEnvironment {PhantomPanelFigure} { s r[] }
+\NewDocumentEnvironment {PhantomPanelFigure} { s O{} }
 {
     \keys_set:nn {dez / phantom-panel-figure} {#2}
-    \bool_if:nTF {#1}
-        { \str_set:Nn \l__my_env_str {figure*} }
-        {
-            \bool_if:NT \l__full_page_bool
-                { \str_set:Nn \l__my_env_str {figure*} }
-        }
-    \begin {\l__my_env_str}
-    %\dez__begin_fig:VV \l__my_env_str \l__placement_tl
-    \tl_if_blank:VF \l__file_tl
-        { \dez__include_graphics:Ve \l__file_tl {\l__graphics_options_tl} }
+    \dez__begin_float:nn {figure} {#1}
 }
 {
     \dez__capkeyval:
-    \end {\l__my_env_str}
+    \dez__end_float:n {figure}
 }
+
 
 \keys_define:nn { dez / phantom-panel }
 {
-    label .tl_set:N           = \l__panel_label_tl ,
-    label .initial:n          = {} ,
-    entry .tl_set:N           = \l__panel_entry_tl ,
-    entry .initial:n          = {} ,
+    label .tl_set:N                = \l__panel_label_tl ,
+    label .default:n               = * ,
+    label .initial:n               = {} ,
+    entry .tl_set:N                = \l__panel_entry_tl ,
+    entry .default:n               = * ,
+    entry .initial:n               = {} ,
 }
 
-\NewDocumentCommand \AddPhantomPanel { m }
+\NewDocumentCommand \PhantomPanel { m }
 {
     \group_begin:
     \keys_set:nn {dez / phantom-panel} {#1}
      % add a LOF/TOC entry (if applicable), but don't show the text
     \captionlistentry {\l__panel_entry_tl}
-    \tl_if_blank:VF \l__panel_label_tl { \label{\l__panel_label_tl} }
+    \tl_if_blank:VF \l__panel_label_tl
+        { \label{\l__panel_label_tl} }
     \group_end:
 }
 
 
-\NewDocumentCommand \IncludeGraphics { O{} m }
-{
-    \dez__include_graphics:nn[#1]{#2}
-}
+% TODO: not possible
+%\NewDocumentCommand \Graphics { O{} m }
+%{
+%    \dez__include_graphics:nn [#1] {#2}
+%}
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                            panel captioning
-%==================================================================================================
+%======================================================================================================================
 
 \regex_const:Nn \c_dez__endash_regex {--}
 
@@ -3409,40 +3926,29 @@ rule / footer .initial:n                 = 0ex ,
         \clist_map_inline:nn {#2}
         {
             \regex_split:NnNTF \c_dez__endash_regex {##1} \l_tmpa_seq
-            {
-                \seq_pop_left:N \l_tmpa_seq \l_tmpa_tl
-                \seq_pop_left:N \l_tmpa_seq \l_tmpb_tl
-                \exp_args:NV \subref \l_tmpa_tl
-                --
-                \exp_args:NV \subref \l_tmpb_tl
-            }
-            {
-                \subref{##1}
-            }
+                {
+                  \exp_args:Nx \subref { \seq_pop_left:N \l_tmpa_seq \l_tmpa_tl }
+                  --
+                  \exp_args:Nx \subref { \seq_pop_left:N \l_tmpa_seq \l_tmpb_tl }
+                }
+                { \subref{##1} }
         }
         #3
     }
 }
 
-\NewDocumentCommand \describepanels { m m }
+\NewDocumentCommand \panelcaption { m m }
 {
     \panels {#1} [\g_dez_typo_subref_label_sep_tl]
     #2
 }
 
-\NewDocumentCommand \describepanel { m m }
-{
-    \panel {#1} [\g_dez_typo_subref_label_sep_tl]
-    #2
-}
 
 
 
-
-
-%==================================================================================================
+%======================================================================================================================
 %                            tables
-%==================================================================================================
+%======================================================================================================================
 
 % Vertical spacing
 \SetTblrOuter
@@ -3484,10 +3990,12 @@ rule / footer .initial:n                 = 0ex ,
 %\exp_args:Ne \belowrulesep {\dim_use:N \g_dez_below_rule_dim}
 
 % Apply these font styles in all cases
-\SetTblrStyle {caption-sep}  { font=\textiles_run_nullary:n {table-head-label} }
-\SetTblrStyle {caption-tag}  { font=\textiles_run_nullary:n {table-head-label} }
-\SetTblrStyle {caption-text} { font=\textiles_run_nullary:n {table-head-body} }
-\SetTblrStyle {lastfoot}     { font=\textiles_run_nullary:n {table-footer} }
+\SetTblrStyle {caption-tag}    { font=\textiles_run_nullary:n {table-head-label} }
+\SetTblrStyle {caption-sep}    { font=\textiles_run_nullary:n {table-head-label} }
+\SetTblrStyle {conthead-text}  { font=\textiles_run_nullary:n {table-head-label} }
+\SetTblrStyle {caption-text}   { font=\textiles_run_nullary:n {table-head-body} }
+\SetTblrStyle {lastfoot}       { font=\textiles_run_nullary:n {table-footer} }
+% let contfoot-text be the normal text font
 
 % Fix the separators
 % For caption, that's the only thing we'll do.
@@ -3585,130 +4093,190 @@ rule / footer .initial:n                 = 0ex ,
 }
 
 \exp_args:Nne
-\NewTableStyle {DezTable}
-{
-    rowsep        = 0pt ,
-    cells         = { font=\exp_not:n{\sffamily\small} } ,
-    stretch       = \g_dez_stretch_table_tl ,
-}
+    \NewTableStyle
+    {DezTblr}
+    {
+        rowsep        = 0pt ,
+        cells         = { font=\exp_not:n{\sffamily\small} } ,
+        stretch       = \g_dez_stretch_table_tl ,
+    }
 
-\cs_new:Npn \dez__toexponce:n #1
-{
-    #1
-}
 
 \exp_args:Nne
-\NewTableStyle {DezSimpleTable}
-{
-    rowsep        = 0pt ,
-    rowhead       = {1} ,
-    hline{1,Z}    = \g_dez__top_tl ,  % TODO: can't pass these in!!
-    hline{2}      = \g_dez__mid_tl ,
-    cells         = { font      = \exp_not:n{\sffamily\small} } ,
-    row{1}        = {
-                      abovesep+ = {\g_dez__top_tl} ,
-                      belowsep+ = {\g_dez__mid_tl} ,
-                    } ,
-    row{2}        = { abovesep+ = \g_dez__mid_tl } ,
-    row{Z}        = { belowsep+ = \g_dez__top_tl } ,
-    cells         = { font      = \exp_not:n{\sffamily\small} } ,
-    row{even}     = { bg        = evenrow } ,
-    stretch       = \g_dez_stretch_table_tl ,
-}
+    \NewTableStyle
+    {DezSimpleTblr}
+    {
+        rowsep        = 0pt ,
+        rowhead       = {1} ,
+        width         = \linewidth ,
+        hline{1,Z}    = \g_dez__top_tl ,
+        hline{2}      = \g_dez__mid_tl ,
+        cells         = { font      = \exp_not:n{\sffamily\small} } ,
+        row{1}        = {
+                          abovesep+ = {\g_dez__top_tl} ,
+                          belowsep+ = {\g_dez__mid_tl} ,
+                        } ,
+        row{2}        = { abovesep+ = \g_dez__mid_tl } ,
+        row{Z}        = { belowsep+ = \g_dez__top_tl } ,
+        cells         = { font      = \exp_not:n{\sffamily\small} } ,
+        row{even}     = { bg        = evenrow } ,
+        stretch       = \g_dez_stretch_table_tl ,
+    }
+
+\exp_args:Nne
+    \NewTableStyle
+    {DezPlainTblr}
+    {
+        rowsep        = 0pt ,
+        rowhead       = {1} ,
+        width         = \linewidth ,
+        hline{1,Z}    = \g_dez__top_tl ,
+        cells         = { font      = \exp_not:n{\sffamily\small} } ,
+        row{1}        = {
+                          abovesep+ = {\g_dez__top_tl} ,
+                        } ,
+        row{Z}        = { belowsep+ = \g_dez__top_tl } ,
+        cells         = { font      = \exp_not:n{\sffamily\small} } ,
+        row{even}     = { bg        = evenrow } ,
+        stretch       = \g_dez_stretch_table_tl ,
+    }
+
 % for some reason, this gets ignored in the e-context with \exp_not:n above
 % fortunately, \SetTblrInner concats
-\SetTblrInner [DezSimpleTable]
+\SetTblrInner [DezSimpleTblr]
 {
     row{1}        = { font      = {\sffamily\small\bfseries} } ,
 }
 
 
-\AtBeginEnvironment {tblr}             { \setstretch {1.0} }
-\AtBeginEnvironment {longtblr}         { \setstretch {1.0} }
-\AtBeginEnvironment {talltblr}         { \setstretch {1.0} }
-\AtBeginEnvironment {booktabs}         { \setstretch {1.0} }
-\AtBeginEnvironment {longtabs}         { \setstretch {1.0} }
-\AtBeginEnvironment {talltabs}         { \setstretch {1.0} }
-\AtBeginEnvironment {DezTable}         { \setstretch {1.0} }
-\AtBeginEnvironment {DezSimpleTable}   { \setstretch {1.0} }
+\hook_gput_code:nnn {env/tblr/begin}          {dez/table-stretch}  { \setstretch {1.0} }
+\hook_gput_code:nnn {env/longtblr/begin}      {dez/table-stretch}  { \setstretch {1.0} }
+\hook_gput_code:nnn {env/talltblr/begin}      {dez/table-stretch}  { \setstretch {1.0} }
+\hook_gput_code:nnn {env/booktabs/begin}      {dez/table-stretch}  { \setstretch {1.0} }
+\hook_gput_code:nnn {env/longtabs/begin}      {dez/table-stretch}  { \setstretch {1.0} }
+\hook_gput_code:nnn {env/talltabs/begin}      {dez/table-stretch}  { \setstretch {1.0} }
+\hook_gput_code:nnn {env/DezTblr/begin}       {dez/table-stretch}  { \setstretch {1.0} }
+\hook_gput_code:nnn {env/DezSimpleTblr/begin} {dez/table-stretch}  { \setstretch {1.0} }
 
 
-\NewDocumentEnvironment {Table} { O{} G{} }
-    { \begin {DezTable} [#1] {#2} }
-    { \end {DezTable} }
-
-\NewDocumentEnvironment {SimpleTable} { O{} G{} }
-    { \begin {DezSimpleTable} [#1] {#2} }
-    { \end {DezSimpleTable} }
-
-\NewDocumentEnvironment {LongTable} { O{} G{} }
-    { \begin {DezTable} [long,#1] {#2} }
-    { \end {DezTable} }
-
-\NewDocumentEnvironment {SimpleLongTable} { O{} G{} }
-    { \begin {DezSimpleTable} [long,#1] {#2} }
-    { \end {DezSimpleTable} }
-
-\NewDocumentEnvironment {TallTable} { O{} G{} }
-    { \begin {DezTable} [tall,#1] {#2} }
-    { \end {DezTable} }
-
-\NewDocumentEnvironment {SimpleTallTable} { O{} G{} }
-    { \begin {DezSimpleTable} [tall,#1] {#2} }
-    { \end {DezSimpleTable} }
-
-
-
-%==================================================================================================
-%                            tables from CSV
-%==================================================================================================
-
-% Process an external table with csvsimple-l3.
-%                    == ARGS ==                                       %
-%  #      R? arg     description                                      %
-% [ #1 ]  Y  OUTER   key-value args to tblr outer[] (e.g. caption=)
-% { #2 }  Y  INNER   key-value args to tblr inner{} (e.g. colspec=)
-% ( #3 )  N  READER  key-value args to csvreader (e.g. separator=tab)
-% < #4 >  Y  FILE    Path to file (e.g. cows.csv)
-
-\NewDocumentCommand \LoadTableInternal { O{} m D(){} r<> }
+\keys_define:nn { dez / table }
 {
-    \group_begin:
-    \SetTblrOuter {#1}
-    \exp_args:Ne \SetTblrInner { \g_dez_simple_table_tl, #2 }
-    \csvreader [ no~head, #3 ] {#4}
-    \group_end:
+    at .tl_set:N                   = \l__placement_tl ,
+    at .initial:n                  = {} ,
+    at .value_required:n           = true ,
+    entry .tl_set:N                = \l__entry_tl ,
+    entry .default:n               = * ,
+    entry .initial:n               = {} ,
+    caption .tl_set:N              = \l__caption_tl ,
+    caption .initial:n             = {} ,
+    caption .value_required:n      = true ,
+    caption+ .tl_set:N             = \l__caption_plus_tl ,
+    caption+ .default:n            = {} ,
+    caption+ .initial:n            = {!!!!!} ,
+    simple .bool_set:N             = \l__simple_bool ,
+    simple .default:n              = true ,
+    simple .initial:n              = false ,
+    plain .bool_set:N              = \l__plain_bool ,
+    plain .default:n               = true ,
+    plain .initial:n               = false ,
+    2col .bool_set:N               = \l__twocol_bool ,
+    2col .default:n                = true ,
+    2col .initial:n                = false ,
+    unknown .code:n                = { \exp_args:NNo \tl_put_right:Nn \l__unknown_tl { \l_keys_key_str={#1}, } } ,
 }
 
-\NewDocumentCommand \LoadTable { O{} m D(){} r<> }
-    { \LoadTable [#1] {#2} (generic~collected~table = tblr, #3) <#4> }
-
-\NewDocumentCommand \LoadTallTable { O{} m D(){} r<> }
-    { \LoadTable [#1] {#2} (generic~collected~table = talltblr, #3) <#4> }
-
-\NewDocumentCommand \LoadLongTable { O{} m D(){} r<> }
-    { \LoadTable [#1] {#2} (generic~collected~table = longtblr, #3) <#4> }
-
-
-
-
-
-%==================================================================================================
-%                            boxes
-%==================================================================================================
-
-\keys_define:nn { dez / declare-box }
+\cs_new_protected:Nn \dez__fix_tblr_cap:
 {
-    header .tl_set:N    = \l_dez__box_header_tl ,
-    shade .tl_set:N     = \l_dez__box_shade_tl ,
+    \dez__fix_cap_args:
+    \tl_if_blank:VF \l__entry_tl
+    {
+        \exp_args:NNo
+            \tl_put_right:Nn
+            \l__unknown_tl
+            { , entry={\l__entry_tl} }
+    }
+    \tl_if_blank:VF \l__caption_tl
+    {
+        \exp_args:NNo
+            \tl_put_right:Nn
+            \l__unknown_tl
+            { , caption={\l__caption_tl} }
+    }
 }
 
-\keys_define:nn { dez / box }
+\NewDocumentEnvironment {Table} { s O{} G{} }
 {
-    name .tl_set:N       = \l__name_tl ,
-    name .initial:n      = {} ,
-    label .tl_set:N      = \l__label_tl ,
-    label .initial:n     = {} ,
+    \tl_set:Nn \l__unknown_tl {}
+    \keys_set:nn {dez / table} {#2}
+    \dez__begin_float:nn {table} {#1}
+    %\dez__capkeyval:
+    \bool_if:NTF \l__plain_bool
+        { \tl_set:Nn \l_my_tblr_tl {DezPlainTblr} }
+        {
+          \bool_if:NTF \l__simple_bool
+                { \tl_set:Nn \l_my_tblr_tl {DezSimpleTblr} }
+                { \tl_set:Nn \l_my_tblr_tl {DezTblr} }
+        }
+    \dez__fix_tblr_cap:
+    \tl_put_right:Nn \l__unknown_tl { , tall }
+    \begin_or:VVn \l_my_tblr_tl \l__unknown_tl {#3}
+}
+{
+    \end_:V \l_my_tblr_tl
+    \dez__end_float:n {table}
+}
+
+\NewDocumentEnvironment {LongTable} { s O{} G{} }
+{
+    \tl_set:Nn \l__unknown_tl {}
+    \keys_set:nn {dez / table} {#2}
+    \bool_if:NTF \l__plain_bool
+        { \tl_set:Nn \l_my_tblr_tl {DezPlainTblr} }
+        {
+          \bool_if:NTF \l__simple_bool
+                { \tl_set:Nn \l_my_tblr_tl {DezSimpleTblr} }
+                { \tl_set:Nn \l_my_tblr_tl {DezTblr} }
+        }
+    \bool_if:NT \l__twocol_bool
+        { \onecolumn }
+    \tl_if_blank:VF \l__placement_tl
+    {
+        % TODO: warn?
+    }
+    % we have to do some work so that we can use caption=* and caption+
+    % like with our floats
+    \tl_put_right:Nn \l__unknown_tl { , long }
+    \dez__fix_tblr_cap:
+    \begin_or:VVn \l_my_tblr_tl \l__unknown_tl {#3}
+}
+{
+    \end_:V \l_my_tblr_tl
+}
+
+
+
+
+%======================================================================================================================
+%                            admonitions
+%======================================================================================================================
+
+\keys_define:nn { dez / declare-admonition }
+{
+    header .tl_set:N            = \l_dez__box_header_tl ,
+    header .value_required:n    = true ,
+    shade .tl_set:N             = \l_dez__box_shade_tl ,
+    shade .initial:n            = black ,
+    shade .value_required:n     = true ,
+}
+
+\keys_define:nn { dez / admonition }
+{
+    name .tl_set:N             = \l__name_tl ,
+    name .initial:n            = {} ,
+    name .value_required:n     = true ,
+    label .tl_set:N            = \l__label_tl ,
+    label .default:n           = * ,
+    label .initial:n           = {} ,
 }
 \dim_new:N       \g_dez_box_border_dim
 \dim_gset:Nn     \g_dez_box_border_dim     { \g_dez_toprule_dim }
@@ -3720,25 +4288,32 @@ rule / footer .initial:n                 = 0ex ,
 \cs_new:Npn \dez__dec_box:nnnN #1#2#3#4
 {
     \tl_set:Nn \l_dez__box_header_tl {#3}
-    \tl_set:Nn \l_dez__box_shade_tl  {black}
-    \keys_set:nn {dez / declare-box} {#1}
+    \keys_set:nn {dez / declare-admonition} {#1}
     \tl_gset_eq:cN {g_dez__box_#3_hdr_tl} \l_dez__box_header_tl
-    \exp_args:NnV \colorlet {dez-box-#3} \l_dez__box_shade_tl
-    \colorlet {dez-box-#3-bg} {dez-box-#3!2!white}
+    \exp_args:NnV \colorlet {dez-admonition-#3} \l_dez__box_shade_tl
+    \colorlet {dez-admonition-#3-bg} {dez-admonition-#3!2!white}
 
     #4 {#3} { O{} }
     {
-        \keys_set:nn {dez / box} {##1}
+        \keys_set:nn {dez / admonition} {##1}
+        \tl_if_eq:NnT \l__label_tl {*}
+            {
+              \tl_set_eq:NN \l__label_tl \l__name_tl
+              \tl_replace_all:Nnn \l__label_tl {~} {-}
+            }
         \begin {tcolorbox}
         [
             title       =
             {
-                \exp_args:Nne \textiles_use:nn {box-label} {\use:c{g_dez__box_#3_hdr_tl} \g_dez_typo_caption_label_sep_tl}
-                \textiles_use:nn {box-name}  {\l__name_tl}
+                \exp_args:Nne
+                    \textiles_use:nn {admonition-label}
+                    {\use:c{g_dez__box_#3_hdr_tl}
+                    \g_dez_typo_caption_label_sep_tl}
+                \textiles_use:nn {admonition-name}  {\l__name_tl}
             } ,
-            colframe     = {dez-box-#3} ,
-            colupper     = {dez-box-#3} ,
-            colback      = {dez-box-#3-bg} ,
+            colframe     = {dez-admonition-#3} ,
+            colupper     = {dez-admonition-#3} ,
+            colback      = {dez-admonition-#3-bg} ,
             coltext      = black ,
             fontlower    = {} ,
             boxrule      = { \dim_use:N \g_dez_box_border_dim } ,
@@ -3767,23 +4342,23 @@ rule / footer .initial:n                 = 0ex ,
 
 \NewDocumentCommand \NewExampleAdmonitionEnvs {}
 {
-    \NewAdmonitionEnv (shade=xkcd~darkish~blue,   header=\faInfoCircle)           {Comment}
-    \NewAdmonitionEnv (shade=xkcd~dark~turquoise, header=\faHandPointRight)       {Hint}
-    \NewAdmonitionEnv (shade=xkcd~sunflower,      header=\faQuestionCircle)       {Caution}
-    \NewAdmonitionEnv (shade=xkcd~darkish~red,    header=\faExclamationCircle)    {Warning}
-    \NewAdmonitionEnv (shade=xkcd~charcoal~grey,  header=\faExclamationTriangle)  {Question}
+    \RequirePackage {fontawesome5}
+    \NewAdmonitionEnv ( shade=xkcd~darkish~blue,   header=\faInfoCircle )           {Comment}
+    \NewAdmonitionEnv ( shade=xkcd~dark~turquoise, header=\faHandPointRight )       {Hint}
+    \NewAdmonitionEnv ( shade=xkcd~sunflower,      header=\faQuestionCircle )       {Caution}
+    \NewAdmonitionEnv ( shade=xkcd~darkish~red,    header=\faExclamationCircle )    {Warning}
+    \NewAdmonitionEnv ( shade=xkcd~charcoal~grey,  header=\faExclamationTriangle )  {Discussion}
 }
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    source code
-%==================================================================================================
+%======================================================================================================================
 
-\NewDocumentCommand \dezrule {}
+\NewDocumentCommand \DezRule {}
 {
-    \exp_args:Nne
-    \rule {\textwidth} {\dim_use:N \g_dez_toprule_dim}
+    \exp_args:Nne \rule {\linewidth} {\dim_use:N \g_dez_toprule_dim}
 }
 
 \dez_if_feat_enabled:nT {minted}
@@ -3793,7 +4368,7 @@ rule / footer .initial:n                 = 0ex ,
         python3      = true ,
         frame        = lines ,
         framerule    = { \dim_use:N \g_dez_toprule_dim } ,
-        framesep     = 1ex ,  % TODO
+        framesep     = { \dim_use:N \g_dez_rule_pad_dim }  ,
         encoding     = UTF-8 ,
     }
 }
@@ -3802,27 +4377,32 @@ rule / footer .initial:n                 = 0ex ,
 \RenewDocumentCommand \theFancyVerbLine {}
 {
     \ttfamily
-    \textcolor {black}
-        {
-            \small
-            \oldstylenums{\arabic{FancyVerbLine}}
-        }
+    % TODO: reset text color here
+	\textiles_use:nn
+		{code-line-num}
+        { \oldstylenums{\arabic{FancyVerbLine}} }
 }
 
 \keys_define:nn { dez / source-code }
 {
-    at .tl_set:N              = \l__placement_tl ,
-    at .initial:n             = {} ,
-    lang .tl_set:N            = \l__lang_tl ,
-    lang .initial:n           = text ,
-    label .tl_set:N           = \l__label_tl ,
-    label .initial:n          = {} ,
-    entry .tl_set:N           = \l__entry_tl ,
-    entry .initial:n          = {} ,
-    caption .tl_set:N         = \l__caption_tl ,
-    caption .initial:n        = {} ,
-    options .tl_set:N         = \l__minted_tl ,
-    options .initial:n        = {} ,
+    at .tl_set:N                   = \l__placement_tl ,
+    at .initial:n                  = {} ,
+    at .value_required:n          = true ,
+    lang .tl_set:N                 = \l__lang_tl ,
+    lang .initial:n                = text ,
+    lang .value_required:n         = true ,
+    label .tl_set:N                = \l__label_tl ,
+    label .default:n               = * ,
+    label .initial:n               = {} ,
+    entry .tl_set:N                = \l__entry_tl ,
+    entry .default:n               = * ,
+    entry .initial:n               = {} ,
+    caption .tl_set:N              = \l__caption_tl ,
+    caption .initial:n             = {} ,
+    caption .value_required:n      = true ,
+    options .tl_set:N              = \CurrentFloatOptions ,
+    options .initial:n             = {} ,
+    options .value_required:n     = true ,
 }
 
 \NewDocumentEnvironment {SourceCode} { O{} }
@@ -3834,7 +4414,7 @@ rule / footer .initial:n                 = 0ex ,
     \dez__capkeyval:
     \dez_if_feat_enabled:nT {minted}
     {
-        \textiles_run_nullary:n {source-code}
+        \textiles_run_nullary:n {code}
         \setminted { baselinestretch = \g_dez_stretch_code_tl }
     }
 }
@@ -3846,11 +4426,11 @@ rule / footer .initial:n                 = 0ex ,
 {   \VerbatimEnvironment
     \begin {SourceCode} [#1]
     \dez_if_feat_enabled:nT {minted}
-        { \begin{minted} [\l__minted_tl] {\l__lang_tl} }
+        { \begin_or:nVV {minted} \CurrentFloatOptions \l__lang_tl }
 }
 {
     \dez_if_feat_enabled:nT {minted}
-        { \end{minted} }
+        { \end {minted} }
     \end {SourceCode}
 }
 
@@ -3859,9 +4439,9 @@ rule / footer .initial:n                 = 0ex ,
 %  #      R? arg     description                                      %
 % [ #1 ]  N  main    key-value args to \capkeyval / \begin{SourceCode}[]
 % ( #2 )  N  MINTED  key-value args to \begin{minted}[]
-% < #4 >  Y  FILE    Path to file (e.g. cows.java)
+% { #4 }  Y  FILE    Path to file (e.g. cows.java)
 %
-\NewDocumentCommand \LoadSourceCode { O{} D(){} r<> }
+\NewDocumentCommand \LoadSourceCode { O{} D(){} m }
 {
     \begin {SourceCode} [#1]
     \dez__capkeyval:
@@ -3872,22 +4452,30 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                               new user float types
-%==================================================================================================
+%======================================================================================================================
 
-\tl_new:N \CurrentFloatOptions
 
 \keys_define:nn { dez / float }
 {
-    label .tl_set:N       = \l__label_tl ,
-    label .initial:n      = {} ,
-    entry .tl_set:N       = \l__entry_tl ,
-    entry .initial:n      = {} ,
-    caption .tl_set:N     = \l__caption_tl ,
-    caption .initial:n    = {} ,
-    options .tl_gset:N    = \CurrentFloatOptions ,
-    options .initial:n    = {} ,
+    %at .tl_set:N          = \l__placement_tl ,
+    %at .initial:n         = {} ,
+    label .tl_set:N            = \l__label_tl ,
+    label .default:n           = * ,
+    label .initial:n           = {} ,
+    entry .tl_set:N            = \l__entry_tl ,
+    entry .default:n           = * ,
+    entry .initial:n           = {} ,
+    caption .tl_set:N          = \l__caption_tl ,
+    caption .initial:n         = {} ,
+    caption .value_required:n  = true ,
+    caption+ .tl_set:N         = \l__caption_plus_tl ,
+    caption+ .default:n        = {} ,
+    caption+ .initial:n        = {!!!!!} ,
+    options .tl_set:N          = \CurrentFloatOptions ,
+    options .initial:n         = {} ,
+    options .value_required:n  = true ,
 }
 
 \cs_new:Npn \dez_declare_float_type:ncc #1#2#3
@@ -3895,7 +4483,7 @@ rule / footer .initial:n                 = 0ex ,
     \dez__new_float:n {idez#1}
     \NewDocumentEnvironment {#1} { O{} }
     {
-        \keys_set:nn {dez / miscfloat} {##1}
+        \keys_set:nn {dez / float} {##1}
         \begin {Dez#1}
         #2
     }
@@ -3904,7 +4492,6 @@ rule / footer .initial:n                 = 0ex ,
         #3
         \end {idez#1}
     }
-    \tl_clear:N \CurrentFloatOptions  % becuase it's global
 }
 
 \NewDocumentCommand \DeclareDezFloat { m D\^\^{prg_do_nothing:} D\$\${prg_do_nothing:} }
@@ -3913,28 +4500,34 @@ rule / footer .initial:n                 = 0ex ,
 }
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    quotations
-%==================================================================================================
+%======================================================================================================================
 
 \exp_args:Ne \SetBlockThreshold { \int_use:N \g_dez_typo_display_quote_lines_int }
 
 % not supporting hyphenation; use otherlanguage* instead
 \keys_define:nn { dez / quote }
 {
-    style .choices:nn       = { block, text, display }
-                              { \@str_to \l_style_str \l_keys_choice_tl } ,
-    style .initial:n        = block ,
-    lang .tl_set:N          = \l_lang_tl ,
-    lang .initial:n         = {} ,
-    pre .tl_set:N           = \l_pre_tl ,
-    pre .initial:n          = {} ,
-    post .tl_set:N          = \l_post_tl ,
-    post .initial:n         = {} ,
-    cite .tl_set:N          = \l_cite_tl ,
-    cite .initial:n         = {} ,
-    punct .tl_set:N         = \l_punct_tl ,
-    punct .initial:n        = {} ,
+    style .choices:nn            = { block, text, display }
+                                   { \@str_to \l_style_str \l_keys_choice_tl } ,
+    style .initial:n             = block ,
+    style .value_required:n      = true ,
+    lang .tl_set:N               = \l_lang_tl ,
+    lang .initial:n              = {} ,
+    lang .value_required:n       = true ,
+    pre .tl_set:N                = \l_pre_tl ,
+    pre .initial:n               = {} ,
+    pre .value_required:n        = true ,
+    post .tl_set:N               = \l_post_tl ,
+    post .initial:n              = {} ,
+    post .value_required:n       = true ,
+    cite .tl_set:N               = \l_cite_tl ,
+    cite .initial:n              = {} ,
+    cite .value_required:n       = true ,
+    punct .tl_set:N              = \l_punct_tl ,
+    punct .initial:n             = {} ,
+    punct .value_required:n      = true ,
 }
 
 \cs_new_protected:Npn \dez__blockquote:Vn #1#2
@@ -3981,45 +4574,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-
-%==================================================================================================
-%                    semantic commands
-%==================================================================================================
-
-\let \charat           \c_atsign_str
-\let \chardollar       \c_dollar_str
-\let \charhash         \c_hash_str
-\let \chartilde        \c_tilde_str
-\let \charuscore       \c_underscore_str
-\let \charbkslash      \c_backslash_str
-\let \charlbrace       \c_left_brace_str
-\let \charrbrace       \c_right_brace_str
-
-\NewExpandableDocumentCommand \env {m}
-{
-    \code {#1}
-}
-
-\NewExpandableDocumentCommand \macro {m}
-{
-    \code {\c_backslash_str \c_left_brace_str #1 \c_right_brace_str}
-}
-
-\NewDocumentCommand \codeopts {m}
-{
-    \InfoListInline {#1} [ sep=|, pre={}\thinspace, post=\thinspace, style=mono, ]
-}
-
-\RenewDocumentCommand \foreign { m }
-{
-    \textiles_use:nn {foreign-words} {#1}  % e.g. "et al." or "in vivo"
-}
-
-
-
-%==================================================================================================
+%======================================================================================================================
 %                    fonts
-%==================================================================================================
+%======================================================================================================================
 
 \unimathsetup
 {
@@ -4037,7 +4594,7 @@ rule / footer .initial:n                 = 0ex ,
 % Fira has too few glyphs (~1k), and XITS is archived
 \prop_const_from_keyval:Nn \c_dez_mathfont_prop
 {
-    NOTO             = NotoSansMath-Regular.ttf ,
+    Noto             = NotoSansMath-Regular.ttf ,
     LatinModern      = Latin Modern Math ,
     STIX             = STIX Two Math ,
     Bonum            = TeX Gyre Bonum Math ,
@@ -4056,7 +4613,7 @@ rule / footer .initial:n                 = 0ex ,
     { \setmainfont  {STIX Two Text}                                             }
 \str_if_eq:VnT \g_dez_font_serif_str {SourcePro}
     { \setmainfont  {Source Serif Pro}      [\c_textiles_source_pro_help_tl]    }
-\str_if_eq:VnT \g_dez_font_serif_str {NOTO}
+\str_if_eq:VnT \g_dez_font_serif_str {Noto}
     { \setmainfont  {Noto Serif}            [\c_textiles_noto_help_tl]          }
 \str_if_eq:VnT \g_dez_font_serif_str {Plex}
     { \setmainfont  {IBM Plex Serif}                                            }
@@ -4065,7 +4622,7 @@ rule / footer .initial:n                 = 0ex ,
     { \setsansfont  {Latin Modern Sans}                                         }
 \str_if_eq:VnT \g_dez_font_sans_str {SourcePro}
     { \setsansfont  {Source Sans Pro}       [\c_textiles_source_pro_help_tl]    }
-\str_if_eq:VnT \g_dez_font_sans_str {NOTO}
+\str_if_eq:VnT \g_dez_font_sans_str {Noto}
     { \setsansfont  {Noto Sans}             [\c_textiles_noto_help_tl]          }
 \str_if_eq:VnT \g_dez_font_serif_str {Plex}
     { \setsansfont  {IBM Plex Sans}                                             }
@@ -4075,41 +4632,77 @@ rule / footer .initial:n                 = 0ex ,
     { \setmonofont  {Latin Modern Mono}     [\c_textiles_lmmono_help_tl]        }
 \str_if_eq:VnT \g_dez_font_mono_str {SourcePro}
     { \setmonofont  {Source Code Pro}       [\c_textiles_source_pro_help_tl]    }
-\str_if_eq:VnT \g_dez_font_mono_str {NOTO}
-    { \setmonofont  {Noto Sans Mono}        [\c_textiles_noto_help_tl]          }
-\str_if_eq:VnT \g_dez_font_mono_str {NOTO/roman}  % fewer glyphs
-    { \setmonofont  {Noto Mono}             [\c_textiles_noto_help_tl]          }
-\str_if_eq:VnT \g_dez_font_mono_str {NOTO/sans}
-    { \setmonofont  {Noto Sans Mono}        [\c_textiles_noto_help_tl]          }
+\str_if_eq:VnT \g_dez_font_mono_str {Noto}
+    { \setmonofont  {Noto Sans Mono}        [\c_textiles_noto_mono_help_tl]     }
+\str_if_eq:VnT \g_dez_font_mono_str {Noto/roman}  % fewer glyphs
+    { \setmonofont  {Noto Mono}             [\c_textiles_noto_mono_help_tl]     }
+\str_if_eq:VnT \g_dez_font_mono_str {Noto/sans}
+    { \setmonofont  {Noto Sans Mono}        [\c_textiles_noto_mono_help_tl]     }
 \str_if_eq:VnT \g_dez_font_mono_str {Cascadia}
     { \setmonofont  {Cascadia Code}                                             }
 \str_if_eq:VnT \g_dez_font_serif_str {Plex}
     { \setmonofont  {IBM Plex Mono}                                             }
-
  
 
 
-%==================================================================================================
+%======================================================================================================================
+%                    character fallbacks
+%======================================================================================================================
+
+ \NewDocumentCommand \DeclareCharFallback { m m }
+{
+    \newunicodechar {#1}
+    {
+        \iffontchar \font`#1
+        \relax #1
+        \else { { #2 } }
+        \fi
+    }
+}
+
+
+% we can use Noto fonts to get just about everything
+% However, only the math font has a minus sign
+\NewDocumentCommand \UseNotoFallbacks {}
+{
+    %\providefontfamily \NotoEmoji {Noto Emoji}
+    \def \textminus { $−$ }
+    \setfontfamily \NotoSansSymbol {Noto Sans Symbols 2}
+    \def \textvisiblespace { { \NotoSansSymbol ␣ } }
+    \DeclareCharFallback {−} { $-$ }
+    \DeclareCharFallback {␣} { { \NotoSansSymbol ␣ } }
+}
+
+\str_if_eq:VnT \g_dez_font_serif_str {Noto}
+    { \UseNotoFallbacks }
+\str_if_eq:VnT \g_dez_font_sans_str {Noto}
+    { \UseNotoFallbacks }
+\str_if_eq:VnT \g_dez_font_math_str {Noto}
+    { \UseNotoFallbacks }
+
+
+
+%======================================================================================================================
 %                    siunitx
-%==================================================================================================
+%======================================================================================================================
 
 % Really none of these should be changed, EXCEPT
 % group-digits group-minimum-digits, and maybe group-separator.
 % If in a US university: group-separator={,},group-digits=integer
 \sisetup
 {
-    retain-explicit-plus      = true ,       % +1 stays +1, not 1
-    retain-zero-uncertainty   = true ,       % \pm 0 still shown
-    group-minimum-digits      = 3 ,          % starting at this number (1 000)
-    group-separator           = \thinspace ,
-    propagate-math-font       = true ,       % keep math bold, etc.; not important with unicode-math
-    reset-text-family         = false ,      % these retain the current font in text mode:
-    reset-text-series         = false ,
-    reset-text-shape          = false ,
+    retain-explicit-plus            = true ,       % +1 stays +1, not 1
+    retain-zero-uncertainty         = true ,       % \pm 0 still shown
+    group-minimum-digits            = 3 ,          % starting at this number (1 000)
+    group-separator                 = \thinspace ,
+    propagate-math-font             = true ,       % unimportant with unicode-math ?
+    reset-text-family               = false ,      % these retain the current font in text mode:
+    reset-text-series               = false ,
+    reset-text-shape                = false ,
 }
 \exp_args:Ne \sisetup { group-digits = \g_dez_typo_siunitx_group_str }
 
-% NOTO text fonts lack ANY math symbols, including a minus sign
+% Noto text fonts lack ANY math symbols, including a minus sign
 % Consequently, siunitx \qty, etc. will show tofu when called in text mode
 % https://github.com/googlefonts/noto-fonts/issues/1013
 
@@ -4133,36 +4726,30 @@ rule / footer .initial:n                 = 0ex ,
     }
 }
 
-% re-add units siunitx removed
-% this command can be used to re-define, so it's ok to do it in desert
+% add a few important units to siunitx
 \DeclareSIUnit \angstrom       {\text{Å}}
-\DeclareSIUnit \bar            {Ba}
-\DeclareSIUnit \barn           {b}
-\DeclareSIUnit \knot           {kn}
-\DeclareSIUnit \mmHg           {mmHg}
-\DeclareSIUnit \nauticalmile   {nmi}
-% and add some new common ones
-\DeclareSIUnit \mile           {mi}
 \DeclareSIUnit \hour           {hr}
 \DeclareSIUnit \minute         {min}
 \DeclareSIUnit \Molar          {\textsc{m}}   % siunitx recommends small-caps
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    misc typography
-%==================================================================================================
+%======================================================================================================================
 
 % because we're using Babel and requiring a full dialect,
 % regional is a good choice
 \DTMsetregional
 
-
-\tikzset
+\cs_if_exist:NT \tikzset
 {
-    every~picture/.style =
+    \tikzset
     {
-        /utils/exec = { \textiles_run_nullary:n{tikz} }
+        every~picture/.style =
+        {
+            /utils/exec = { \textiles_run_nullary:n{tikz} }
+        }
     }
 }
 
@@ -4185,9 +4772,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    kantlipsum
-%==================================================================================================
+%======================================================================================================================
 
 
 \dez_if_feat_enabled:nT {kantlipsum}
@@ -4197,7 +4784,7 @@ rule / footer .initial:n                 = 0ex ,
     % Increment this counter each time a paragraph is used
     \int_gzero_new:N \g__dez_ikant_int
     
-    \NewDocumentCommand \ikant { O{3} }
+    \NewDocumentCommand \NextKant { O{3} }
     {
         \int_compare:nNnTF {\g__dez_ikant_int} > {\c_dez_max_kant_int-1}
             { \int_gset:Nn \g__dez_ikant_int {1} }
@@ -4209,7 +4796,7 @@ rule / footer .initial:n                 = 0ex ,
     }
     
     % This command instead chooses random paragraphs
-    \NewDocumentCommand \rkant { O{3} }
+    \NewDocumentCommand \RandKant { O{3} }
     {
         \use:e
         {
@@ -4223,19 +4810,23 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                front, main, back matter commands
-%==================================================================================================
+%======================================================================================================================
 
 \NewDocumentCommand \DezInternalPrintBib {O{}}
 {
+    \hook_use:n { dez / show-bib / before }
     \group_begin:
     \exp_args:NV \setstretch \g_dez_stretch_refs_tl
     \exp_args:NNe \setlength \bibitemsep { \skip_use:N \g_dez_btw_refs_skip }
     \setlength \bibnamesep {0pc}  % between different authors
     \setlength \bibinitsep {0pc}  % between authors with different initials (first letter)
+    \hook_use:n { dez / show-bib / pre }
     \printbibliography [#1]
+    \hook_use:n { dez / show-bib / post }
     \group_end:
+    \hook_use:n { dez / show-bib / after }
 }
 
 % Shows the bibliography at the end of the chapter, if \g_dez_bib_per_chap_bool
@@ -4245,12 +4836,16 @@ rule / footer .initial:n                 = 0ex ,
         { \DezInternalPrintBib [heading=subbibintoc] }
 }
 
-\NewDocumentCommand \ShowEndNotes {}
-{
-    \printendnotes  % does nothing if there are no endnotes
-}
 \NewDocumentCommand \ShowEndnotes {}
-    { \ShowEndNotes }
+{
+    \hook_use:n { dez / show-endnotes / before }
+    \group_begin:
+    \hook_use:n { dez / show-endnotes / pre }
+    \printendnotes  % does nothing if there are no endnotes
+    \hook_use:n { dez / show-endnotes / post }
+    \group_end:
+    \hook_use:n { dez / show-endnotes / after }
+}
 
 % Shows the bibliography at the end of the document
 \NewDocumentCommand \ShowFullBib {}
@@ -4266,19 +4861,27 @@ rule / footer .initial:n                 = 0ex ,
 
 \NewDocumentCommand \StartFrontMatter {}
 {
+    \hook_use:n { dez / front-matter / early }
+    \dez__one_col:
     \exp_args:Nc
         \dez__chap_num:N
         \g_dez_n_front_chp_str
     \dez__front_page_style:
     \pagenumbering {\g_dez_n_front_str}
     \setcounter {page} {1}
+    \hook_use:n { dez / front-matter / late }
 }
 
-\AtBeginDocument {\StartFrontMatter}
+\hook_gput_code:nnn
+    {begindocument}
+    {dez/start-front-matter}
+    {\StartFrontMatter}
 
 \NewDocumentCommand \StartMainMatter {}
 {
-    \DezChapterPageHook  % clear page BEFORE changing the page numbering!
+    \hook_use:n { dez / main-matter / early }
+    \dez__restore_col:
+    \DezChapterPageCmd  % clear page BEFORE changing the page numbering!
     \dez__main_page_style:
     \str_if_eq:VVF \g_dez_n_front_str \g_dez_n_main_str
     {
@@ -4291,11 +4894,13 @@ rule / footer .initial:n                 = 0ex ,
     \bool_if:NT \g_dez_force_endnotes_bool
         { \FootnotesAsEndnotes }
     \setcounter {chapter} {0}
+    \hook_use:n { dez / main-matter / late }
 }
 
 \NewDocumentCommand \StartBackMatter {}
 {
-    \DezChapterPageHook  % clear page BEFORE changing the page numbering!
+    \hook_use:n { dez / back-matter / early }
+    \DezChapterPageCmd  % clear page BEFORE changing the page numbering!
     \dez__back_page_style:
     \str_if_eq:VVF \g_dez_n_main_str \g_dez_n_back_str
         {
@@ -4306,17 +4911,23 @@ rule / footer .initial:n                 = 0ex ,
         \dez__chap_num:N
         \g_dez_n_back_chp_str
     \setcounter {chapter} {0}
+    \hook_use:n { dez / back-matter / late }
 }
 
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                     setup commands
-%==================================================================================================
+%======================================================================================================================
 
 % We're just aliasing to make them consistent.
 % Setup commands should end with 'Setup' and be camel-case.
+
+\NewDocumentCommand \BibSetup {m}
+    { \bibsetup {#1} }
+\NewDocumentCommand \CiteSetup {m}
+    { \citesetup {#1} }
 
 \NewDocumentCommand \UnimathSetup {m}
     { \unimathsetup {#1} }
@@ -4341,6 +4952,12 @@ rule / footer .initial:n                 = 0ex ,
 
 \NewDocumentCommand \GeometrySetup {m}
     { \geometry {#1} }
+
+\NewDocumentCommand \FnpctSetup {m}
+    { \setfnpct {#1} }
+
+\NewDocumentCommand \LwcSetup {m}
+    { \lwcsetup {#1} }
 
 \NewDocumentCommand \ListSetup { o m }
     { \setlist [#1] {#2} }  % enumitem
@@ -4399,9 +5016,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                     more aliases for consistency
-%==================================================================================================
+%======================================================================================================================
 
 
 % camel-case aliases of "document-wide" commands
@@ -4440,34 +5057,32 @@ rule / footer .initial:n                 = 0ex ,
 \let \SetQuoteStyle       \setquotestyle
 \let \ReverseMarginPar    \reversemarginpar
 \let \NormalMarginPar     \normalmarginpar
-\let \DeclareTheoremStyle \declaretheoremstyle
-\let \DeclareTheorem      \declaretheorem
 % leave \marginpar
 
 
 \NewDocumentEnvironment {TikzPicture} { }
     { \begin {tikzpicture} }
-    { \end {tikzpicture} }
+    { \end   {tikzpicture} }
 
 \NewDocumentEnvironment {Proof} { o }
     { \begin {proof} [#1] }  % arg is proof name
-    { \end {proof} }
+    { \end   {proof} }
 
 \NewDocumentEnvironment {OtherLanguage} { s m }
     {
     \bool_if:nTF {#1}
-        { \begin{otherlanguage*}{#2} }
-        { \begin{otherlanguage}{#2} }
+        { \begin {otherlanguage*} {#2} }
+        { \begin {otherlanguage}  {#2} }
     }
     { \end{otherlanguage} }
 
 \NewDocumentEnvironment {OtherLanguage*} { m }
-    { \begin{otherlanguage*}{#1} }
-    { \end{otherlanguage*} }
+    { \begin {otherlanguage*} {#1} }
+    { \end   {otherlanguage*} }
 
 \NewDocumentEnvironment {Landscape} {}
-    { \begin{landscape} }
-    { \end{landscape} }
+    { \begin {landscape} }
+    { \end   {landscape} }
 
 \NewDocumentCommand \NewMintedEnv { m m }
 {
@@ -4478,9 +5093,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    input and subfile wrapper commands
-%==================================================================================================
+%======================================================================================================================
 
 % See also: \LoadBib and \LoadTex.
 
@@ -4539,9 +5154,9 @@ rule / footer .initial:n                 = 0ex ,
 
 
 
-%==================================================================================================
+%======================================================================================================================
 %                    final things
-%==================================================================================================
+%======================================================================================================================
 
 % Nomenclature!
 \dez_if_feat_enabled:nT {noms}
@@ -4566,42 +5181,36 @@ rule / footer .initial:n                 = 0ex ,
 % We pass the author, etc., at the preamble end, after the user set it.
 \hypersetup
 {
-    breaklinks   = true ,
-    final        = true ,  % ignore global settings
-    draft        = false ,
-    linktoc      = all ,
+    breaklinks        = true ,
+    final             = true ,  % ignore global settings
+    draft             = false ,
+    linktoc           = all ,
+    colorlinks        = true ,
+    linkcolor         = ref ,
+    citecolor         = cite ,
+    urlcolor          = url ,
+    filecolor         = file ,
+    runcolor          = run ,
 }
-\bool_if:NTF \g_dez_color_as_border_bool
-{
-    \hypersetup
+\bool_if:NTF \g_dez_color_no_bool
+    { \hypersetup { colorlinks = false } }
     {
-        colorlinks        = false ,
-        pdfborder         = { 0~0~0.5 } ,  % user can change this
-        linkbordercolor   = ref ,
-        citebordercolor   = cite ,
-        urlbordercolor    = url ,
-        filebordercolor   = file ,
-        runbordercolor    = run ,
+      \hypersetup
+      {
+          colorlinks        = true ,
+          linkcolor         = ref ,
+          citecolor         = cite ,
+          urlcolor          = url ,
+          filecolor         = file ,
+          runcolor          = run ,
+      }
     }
-}
-{
-    \hypersetup
-    {
-        colorlinks        = true ,
-        linkcolor         = ref ,
-        citecolor         = cite ,
-        urlcolor          = url ,
-        filecolor         = file ,
-        runcolor          = run ,
-    }
-}
 
 
-\AtEndPreamble
-{
-    \AddPdfHyperxmpData  % from info.sty
-}
+\hook_gput_code:nnn
+    { begindocument/before }
+    { dez/add-pdf-hyperxmp-data }
+    { \AddPdfHyperxmpData } % from info.sty
 
 \g_dez__end_tl  % internal
-\DezEndHook     % external
-
+\hook_use:n { dez / after }    % external

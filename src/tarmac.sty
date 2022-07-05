@@ -12,7 +12,7 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {tarmac} {2022-05-30} {0.1.0} { Fixes~setspace }
+\ProvidesExplPackage {tarmac} {2022-07-04} {0.1.0} { Fixes~setspace~and~provides~scaffolding }
 
 \RequirePackage {fontsize}
 \RequirePackage {calc}
@@ -28,9 +28,10 @@
 
 \prop_const_from_keyval:Nn \c__tarmac_depths_prop
 {
-    none=-2, part=-1, chapter=0,
-    section=1, subsection=2, subsubsection=3,
-    paragraph=4, subparagraph=5,
+    none=-2, part=-1, chapter=0, chap=0,
+    section=1, subsection=2, subsec=2,
+    subsubsection=3, subsubsec=3,
+    paragraph=4, par=4, subparagraph=5, subpar=5,
     -1=-1, 0=0, 1=1, 2=2, 3=3, 4=4, 5=5
 }
 
@@ -113,7 +114,14 @@
 {
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
-        { \cs:w ##1 \cs_end: =##2 }
+        { \cs:w ##1 \cs_end: = ##2 }
+}
+
+\NewDocumentCommand \SetTexPenalties { m }
+{
+    \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
+    \prop_map_inline:Nn \l_tmpa_prop
+        { \cs:w ##1 penalty \cs_end: = ##2 }
 }
 
 \NewDocumentCommand \BanHyphens {}
@@ -269,36 +277,47 @@
     % Make sure hfuzz and vfuzz are 0 -- otherwise we might ignore overfull boxes
     \hfuzz=0pt
     \vfuzz=0pt
-
 }
 
 
 \keys_define:nn { tarmac / spacing }
 {
-    font .tl_gset:N             = \g__font_pt_tl ,
-    font .initial:n             = {} ,
-    leading .tl_gset:N          = \g__led_pt_tl ,
-    leading .initial:n          = {} ,
-    leading-ratio .tl_gset:N    = \g__led_ratio_tl ,
-    leading-ratio .initial:n    = 1.2 ,
-    stretch .tl_gset:N          = \g__linestretch_tl ,
-    stretch .initial:n          = {} ,
-    dm-stretch .tl_gset:N       = \g__displaylinestretch_tl ,
-    dm-stretch .initial:n       = {} ,
-    parskip .tl_gset:N          = \g__parskip_tl ,
-    parskip .initial:n          = {} ,
-    parskip-ratio .tl_gset:N    = \g__parskip_ratio_tl ,
-    parskip-ratio .initial:n    = {} ,
-    indent .tl_gset:N           = \g__indent_tl ,
-    indent .initial:n           = {} ,
-    above-dm .tl_gset:N         = \g__above_display_tl ,
-    above-dm .initial:n         = {} ,
-    below-dm .tl_gset:N         = \g__below_display_tl ,
-    below-dm .initial:n         = {} ,
-    above-short-dm .tl_gset:N   = \g__above_short_display_tl ,
-    above-short-dm .initial:n   = {} ,
-    below-short-dm .tl_gset:N   = \g__below_short_display_tl ,
-    below-short-dm .initial:n   = {} ,
+    font .tl_gset:N                   = \g__font_pt_tl ,
+    font .initial:n                   = {} ,
+    font .value_required:n            = true ,
+    leading .tl_gset:N                = \g__led_pt_tl ,
+    leading .initial:n                = {} ,
+    leading .value_required:n         = true ,
+    leading-ratio .tl_gset:N          = \g__led_ratio_tl ,
+    leading-ratio .initial:n          = 1.2 ,
+    leading-ratio .value_required:n   = true ,
+    stretch .tl_gset:N                = \g__linestretch_tl ,
+    stretch .initial:n                = {} ,
+    stretch .value_required:n         = true ,
+    dm-stretch .tl_gset:N             = \g__displaylinestretch_tl ,
+    dm-stretch .initial:n             = {} ,
+    dm-stretch .value_required:n      = true ,
+    parskip .tl_gset:N                = \g__parskip_tl ,
+    parskip .default:n                = 2ex plus 0.2ex minus 0.05ex ,
+    parskip .initial:n                = {} ,
+    parskip-ratio .tl_gset:N          = \g__parskip_ratio_tl ,
+    parskip-ratio .initial:n          = {} ,
+    parskip-ratio .value_required:n   = true ,
+    indent .tl_gset:N                 = \g__indent_tl ,
+    indent .default:n                 = 1em ,
+    indent .initial:n                 = {} ,
+    above-dm .tl_gset:N               = \g__above_display_tl ,
+    above-dm .initial:n               = {} ,
+    above-dm .value_required:n        = true ,
+    below-dm .tl_gset:N               = \g__below_display_tl ,
+    below-dm .initial:n               = {} ,
+    below-dm .value_required:n        = true ,
+    above-short-dm .tl_gset:N         = \g__above_short_display_tl ,
+    above-short-dm .initial:n         = {} ,
+    above-short-dm .value_required:n  = true ,
+    below-short-dm .tl_gset:N         = \g__below_short_display_tl ,
+    below-short-dm .initial:n         = {} ,
+    below-short-dm .value_required:n  = true ,
 }
 
 
@@ -317,6 +336,5 @@
 }
 
 
-\NewDocumentCommand \Tarmac { m }
+\NewDocumentCommand \TarmacSetup { m }
     { \tarmac_set:e{#1} }
-

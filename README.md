@@ -1,10 +1,10 @@
 # 🌵 Desert – dissertation and report class for 2022+
 
 Modern general-purpose documentclass with LaTeX 3 and
-currently 172 key–value document parameters.
+ ~180 key–value document parameters.
 
-Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](https://www.overleaf.com/read/bqpyjghrdxqs)
-
+Perfect for dissertations and similar documents.
+[Try it on Overleaf! 🍃](https://www.overleaf.com/read/bqpyjghrdxqs)
 
 #### 🎁 Features
 
@@ -24,29 +24,28 @@ Perfect for dissertations and similar documents. [Try it on Overleaf! 🍃](http
     pkg / noms,
     pkg / chemfig,
     mode = thesis,
-    lang / extras = {spanish},  % comma-separated
+    lang / extras = {spanish,arabic},
     bib / hide-lang = true,
     color / url = xkcd cloudy blue,
-    cref / capitalize = true,
+    ref / capitalize = true,
     font / size = 11.8pt,
     stretch / main = 1.6,
-    num / eqn-within = chapter,
+    num / eqn-in = chapter,
     num / eqn = arabic,
     num / eqn-brackets = square-bold,
     num / thm-like-in = chapter,
-	footer / R = \thepage of \pageref{LastPage},
-	header / back / C = \gettitle,
-    sty / foreign-words = swash,
-    sty / indx-starred = HTML:550000;sans;allcaps,
+    footer / R = \thepage of \pageref{LastPage},
+    header / back / C = \gettitle,
+    sty / index-starred = HTML:550000;sans;allcaps,
     sty / nom-group = LARGE;uppertosc,
     typo / subref-sep = {:\ },
-	typo / ban-hyphens = true ,
-    glue< / indent = 0em,  % >: right, <: left, ': above, .: below
+    typo / ban-hyphens = true ,
+    glue< / indent = 0em,  % < left, ' above, . below, : between
     glue' / table-footer = 1ex plus 2pt, % rubber length
     glue. / section = 2ex plus 1 ex minus 1ex,
     toc / depth = section,
-	toc / fig-panels = true ,
-    ...  % 172 total keys
+    toc / fig-panels = true ,
+    ...  % ~180 total keys
 ]{desert}
 ```
 
@@ -139,25 +138,17 @@ My lightbulb uses \qty{5}{\mega\watt\per\meter\square} \foreign{in silico}.
 Theorems, lemmas, etc. via [amsthm](https://ctan.org/pkg/amsthm) and [thmtools](https://ctan.org/pkg/thmtools).
 
 ```latex
+\NewDefaultTheoremEnvs
+% Or your own with \NewTheoremEnv
+\NewTheoremEnv {Statement} [style=definition]
+\SetCrefStrings {Statement=Statement/Statements}
 
-\NewTheoremEnvs [style=plain] {
-    Theorem     = thm./thms. ,   % cleveref names: cref/Cref
-    Proposition = prop./props. ,
-}
-
-\NewTheoremEnvs {  % auto-choose styles
-    Definition = defn./defns. ,
-    Remark     = rem./rems. ,
-    Criterion  = criterion/criteria ,
-    Property   = property/properties ,
-}
-
-\begin{Theorem} [
+\begin{Lemma} [
     label=thm1,
-    name=Central Theorem of Xenodynamics
+    name=Central Lemma of Xenodynamics
 ]
 ...
-\end{Theorem}
+\end{Lemma}
 
 \begin{Proof} \end{Proof}
 
@@ -179,6 +170,8 @@ Tables via [tabularray](https://ctan.org/pkg/tabularray) and [csvsimple](https:/
 
 ```latex
 \begin{LongTable} [  % multi-page if needed
+    simple,
+    theme = longfoot,
     entry   = ...,
     caption = ...,
     label   = ...,
@@ -249,19 +242,11 @@ By the way, there's a smart `\captioning` macro:
 \captioning[entry=My Caption, caption=This is my caption., label=butterflies}
 ```
 
-#### Boxes
+#### Admonitions
 
-Defaults are Note, Technical note, Example, Caution, and Tip.
-Use `DeclareDezBox` to add your own,
-or `DeclareTColorBox` to start one from scratch.
-
+Use `\NewAdmonitionEnv` or `\NewExampleAdmonitionEnvs`.
 ```latex
-
-% like \DeclareTColorBox, but with defaults
-\DeclareDesertBox [arc=1mm, fontlower=red] {Example}
-
-% And a shorthand for setting colframe, colupper, and colback together
-\DeclareDesertBox (xkcdalgae) [...] {Hint}
+\NewAdmonitionEnv {Example} (shade=red) [...tcolorbox options]
 
 \begin{Example}[name=Optional title, label=Optional]
 This is an example.
@@ -294,11 +279,11 @@ These commands will change the strings that Desert uses.
 % using language-specific Unicode rules
 \SetBabelStrings {
     listfigures       = Figures ,
-	% ...
+    % ...
 }
 
 \SetTranslationStrings {
-	Something From Translations = A string ,
+    Something From Translations = A string ,
 }
 
 % shorthand for \Crefname{figure}{fig.}{figs.}, etc.

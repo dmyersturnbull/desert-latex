@@ -28,10 +28,11 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {textiles} {2022-05-30} {0.1.0} { Text~styles }
+\ProvidesExplPackage {textiles} {2022-07-04} {0.1.0} { Text~styles }
 \RequirePackage {l3keys2e}
 
-\keys_define:nn {textiles} {
+\keys_define:nn {textiles / load}
+{
     faces .bool_gset:N    = \g_textiles_faces_bool,
     faces .default:n      = true,
     faces .initial:n      = false,
@@ -39,7 +40,7 @@
     markup .default:n     = true,
     markup .initial:n     = false,
 }
-\ProcessKeysOptions {textiles}
+\ProcessKeysOptions {textiles / load}
 
 \RequirePackage {hyperref}
 \RequirePackage {fontsize}
@@ -66,9 +67,9 @@
     % These warnings are unavoidable and going to happen from 2020 on
     \PassOptionsToPackage
         {
-            warnings-off={mathtools-colon,mathtools-overbracket} ,
-            math-style=ISO ,
-            bold-style=ISO ,
+            warnings-off  = {mathtools-colon,mathtools-overbracket} ,
+            math-style    = ISO ,
+            bold-style    = ISO ,
         }
         {unicode-math}
     \RequirePackage {fontspec}
@@ -105,6 +106,9 @@
     \PassOptionsToPackage {normalem} {ulem}
     \RequirePackage {ulem}
 }
+
+\NewDocumentCommand \TextilesSetup {m}
+    {}
 
 \msg_new:nnn {textiles} {notunderstood}
     { Command~/~name~'#1'~not~understood~while~declaring~style~'#2'. }
@@ -217,8 +221,8 @@
 \NewExpandableDocumentCommand \txtuppercase {+m}
 {
     \cs_if_exist:cTF {pidgin_uppercase:n}
-    { \pidgin_uppercase:n{#1} }
-    { \text_uppercase:n{#1} }
+        { \pidgin_uppercase:n{#1} }
+        { \text_uppercase:n{#1} }
 }
 
 \NewExpandableDocumentCommand \txtlowercase {+m}
@@ -301,9 +305,6 @@
 
 \NewDocumentCommand \HideLinks {}
     { \hypersetup {hidelinks} }
-
-%\NewDocumentCommand \ShowLinks {}
-%    { \hypersetup {colorlinks=true} }
 
 
 %===================================================================
@@ -2375,6 +2376,16 @@
     FontFace = {bl}{n}{*-Black} ,       % 900
 }
 
+\tl_const:Nn \c_textiles_noto_mono_help_tl {
+    % no thin or extra-bold
+    FontFace = {el}{n}{*-ExtraLight} ,  % 200
+    FontFace = {lt}{n}{*-Light} ,       % 300
+    FontFace = {sb}{n}{*-SemiBold} ,    % 600
+    FontFace = {bl}{n}{*-Black} ,       % 900
+    Ligatures= {NoCommon} ,
+}
+
+
 \NewDocumentCommand \DeclareSourcePro { }
 {
     \DeclareTxtFontFamilies
@@ -2405,3 +2416,4 @@
 \str_const:Nn \c_textiles_subsection_head_str       {mid,bold}
 \str_const:Nn \c_textiles_paragraph_head_str        {mid,bold}
 \str_const:Nn \c_textiles_subparagraph_head_str     {mid,bold}
+

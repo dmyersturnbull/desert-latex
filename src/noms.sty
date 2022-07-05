@@ -14,7 +14,7 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {noms} {2022-04-25} {0.1.0} { Define~nomenclature~groups }
+\ProvidesExplPackage {noms} {2022-07-04} {0.1.0} { Define~nomenclature~groups }
 \RequirePackage [notocbasic] {nomencl}
 
 
@@ -81,28 +81,30 @@
 
 \keys_define:nn { noms / setup}
 {
-    groups .code:n                    = { \SetNomGroups{#1} } ,
-    groups .initial:n                 = {} ,
-    put-conceptual-groups .code:n     = { \PutConceptualNomGroups } ,
-    put-conceptual-groups .default:n  = true ,
-    put-syntactic-groups .code:n      = { \PutSyntacticNomGroups } ,
-    put-syntactic-groups .default:n   = true ,
-    default-text-group .tl_gset:N     = \g_noms_text_str ,
-    default-math-group .tl_gset:N     = \g_noms_math_str ,
-    default-unit-group .tl_gset:N     = \g_noms_unit_str ,
-    header-skip .skip_gset:N          = \g_noms_header_skip ,
-    header-skip .initial:n            = 2ex plus 0.2ex minus 0.1ex ,
-    header-format .code:n             = { \cs_gset_eq:Nc \noms_format_header:n {#1} } ,
+    groups .code:n                            = { \SetNomGroups{#1} } ,
+    groups .initial:n                         = {} ,
+    groups .value_required:n                  = true ,
+    put-conceptual-groups .code:n             = { \PutConceptualNomGroups } ,
+    put-conceptual-groups .default:n          = true ,
+    put-syntactic-groups .code:n              = { \PutSyntacticNomGroups } ,
+    put-syntactic-groups .default:n           = true ,
+    default-text-group .tl_gset:N             = \g_noms_text_str ,
+    default-text-group .value_required:n      = true ,
+    default-math-group .tl_gset:N             = \g_noms_math_str ,
+    default-math-group .value_required:n      = true ,
+    default-unit-group .tl_gset:N             = \g_noms_unit_str ,
+    default-unit-group .value_required:n      = true ,
+    header-skip .skip_gset:N                  = \g_noms_header_skip ,
+    header-skip .initial:n                    = 2ex plus 0.2ex minus 0.1ex ,
+    header-skip .value_required:n             = true ,
+    header-format .code:n                     = { \cs_gset_eq:Nc \noms_format_header:n {#1} } ,
+    header-format .value_required:n           = true ,
 }
 
-\cs_new:Npn \noms_setup:n #1
-{
-    \keys_set:nn {noms / setup} {#1}
-}
 \NewDocumentCommand \NomsSetup {m}
-    { \noms_setup:n{#1} }
+    { \keys_set:nn {noms / setup} {#1} }
 
-\AtBeginDocument
+\hook_gput_code:nnn {begindocument} {noms}
 {
     \renewcommand* {\nomgroup} [1]
     {

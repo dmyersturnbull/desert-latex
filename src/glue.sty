@@ -12,7 +12,7 @@
 
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {glue} {2022-04-25} {0.1.0}
+\ProvidesExplPackage {glue} {2022-07-04} {0.1.0}
     { Glue:~stretch~&~shrink~-preserving~calculations~for~skips~and~muskips }
 
 
@@ -20,6 +20,11 @@
 %=======                                                   =======
 %=======              Get component                        =======
 %=======                                                   =======
+
+\cs_generate_variant:Nn \skip_set:Nn   { Ne }
+\cs_generate_variant:Nn \skip_gset:Nn  { Ne }
+\cs_generate_variant:Nn \dim_set:Nn    { Ne }
+\cs_generate_variant:Nn \dim_gset:Nn   { Ne }
 
 \str_const:Nn \c__plus_str {~plus~}
 \str_const:Nn \c__minus_str {~minus~}
@@ -79,32 +84,32 @@
 
 \cs_new_protected:Npn \glue_shelf:NN #1#2
 {
-    \dim_set:Nn #2 { \glue_shelf:N #1 }
+    \dim_set:Ne #2 { \glue_shelf:N #1 }
 }
 
 \cs_new_protected:Npn \glue_stretch:NN #1#2
 {
-    \dim_set:Nn #2 { \glue_stretch:N #1 }
+    \dim_set:Ne #2 { \glue_stretch:N #1 }
 }
 
 \cs_new_protected:Npn \glue_shrink:NN #1#2
 {
-    \dim_set:Nn #2 { \glue_shrink:N #1 }
+    \dim_set:Ne #2 { \glue_shrink:N #1 }
 }
 
 \cs_new_protected:Npn \glue_rubber:NN #1#2
 {
-    \dim_set:Nn #2 { \glue_rubber:N #1 }
+    \dim_set:Ne #2 { \glue_rubber:N #1 }
 }
 
 \cs_new_protected:Npn \glue_floor:NN #1#2
 {
-    \dim_set:Nn #2 { \glue_floor:N #1 }
+    \dim_set:Ne #2 { \glue_floor:N #1 }
 }
 
 \cs_new_protected:Npn \glue_roof:NN #1#2
 {
-    \dim_set:Nn #2 { \glue_roof:N #1 }
+    \dim_set:Ne #2 { \glue_roof:N #1 }
 }
 
 
@@ -124,7 +129,7 @@
 
 \cs_new_protected:Npn \glue_rescale_shelf:nN #1 #2
 {
-    \skip_set:Nn #2
+    \skip_set:Ne #2
     {
               \skip_eval:n { ( \glue_shelf:N #2 ) * #1 }
         plus  \skip_eval:n { ( \glue_stretch:N #2 ) }
@@ -135,7 +140,7 @@
 
 \cs_new_protected:Npn \glue_rescale_stretch:nN #1 #2
 {
-    \skip_set:Nn #2
+    \skip_set:Ne #2
     {
               \skip_eval:n { ( \glue_shelf:N #2 ) }
         plus  \skip_eval:n { ( \glue_stretch:N #2 * #1) }
@@ -146,7 +151,7 @@
 
 \cs_new_protected:Npn \glue_rescale_shrink:nN #1 #2
 {
-    \skip_set:Nn #2
+    \skip_set:Ne #2
     {
               \skip_eval:n { ( \glue_shelf:N #2 ) }
         plus  \skip_eval:n { ( \glue_stretch:N #2 ) }
@@ -157,7 +162,7 @@
 
 \cs_new_protected:Npn \glue_rescale_rubber:nN #1 #2
 {
-    \skip_set:Nn #2
+    \skip_set:Ne #2
     {
               \skip_eval:n { ( \glue_shelf:N #2 ) }
         plus  \skip_eval:n { ( \glue_stretch:N #2 ) * #1 }
@@ -180,10 +185,10 @@
 
 \cs_new_protected:Npn \glue_collapse:NNN #1#2#3
 {
-    \dim_set:Nn \l_shelf_dim { \dim_max:nn { \glue_shelf:N #1 } { \glue_shelf:N #2 } }
-    \dim_set:Nn \l_roof_dim  { \dim_max:nn { \glue_roof:N #1  } { \glue_roof:N #2  } }
-    \dim_set:Nn \l_floor_dim { \dim_max:nn { \glue_floor:N #1 } { \glue_floor:N #2 } }
-    \skip_set:Nn #3
+    \dim_set:Ne \l_shelf_dim { \dim_max:nn { \glue_shelf:N #1 } { \glue_shelf:N #2 } }
+    \dim_set:Ne \l_roof_dim  { \dim_max:nn { \glue_roof:N #1  } { \glue_roof:N #2  } }
+    \dim_set:Ne \l_floor_dim { \dim_max:nn { \glue_floor:N #1 } { \glue_floor:N #2 } }
+    \skip_set:Ne #3
     {
               \l_shelf_dim
         plus  \skip_eval:n { \l_roof_dim - \l_shelf_dim   }

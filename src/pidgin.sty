@@ -12,7 +12,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
 \ExplSyntaxOn
-\ProvidesExplPackage {pidgin} {2022-04-25} {0.1}
+\ProvidesExplPackage {pidgin} {2022-07-04} {0.1.0}
     { Pidgin:~tools~for~language-aware~packages }
 
 \cs_generate_variant:Nn \text_lowercase:nn { Vn }
@@ -135,12 +135,11 @@
         safe           = none ,
         bidi           = basic ,
         shorthands     = off ,
-        showlanguages ,
+        showlanguages  ,
         %strings        = unicode ,
-        provide*       = * ,
-        \g_pidgin_main_str , % TODO: load with babelprovide
+        provide*       = * ,        % use babelprovide for all
+        \g_pidgin_main_str ,
     ] {babel}
-    %\pidgin__load_lang:nV {import,main} \g_pidgin_main_str
     \clist_map_inline:Nn \g_pidgin_lang_clist
         { \pidgin__load_lang:nn {import} {##1} }
     \selectlanguage {\g_pidgin_main_str}
@@ -155,6 +154,13 @@
     \PassOptionsToPackage {\g_pidgin_base_str, nospace} {varioref}
     
     \exp_args:NV \SetBabelStrings \c_pidgin__defaults_en_tl
+    
+    % TODO: remove; replace with translations
+    \SetBabelStrings {
+        listabbreviation      = List~of~Abbreviations ,
+        nomenclature          = Nomenclature ,
+        listlisting           = List~of~Source~Codes ,
+    }
 }
 
 \NewDocumentCommand \OpenPidgin {m}
@@ -309,19 +315,19 @@
         { catalan }
         {
             Nomenclature            = Nomenclatura ,
-            List~of~Abbreviations   = Llista~d~abreviatures ,
+            List~of~Abbreviations   = Llista~d~Abreviatures ,
         }
     \ProvideTranslations
         { croatian }
         {
             Nomenclature            = Nomenklatura ,
-            List~of~Abbreviations   = Popis~kraćenica ,
+            List~of~Abbreviations   = Popis~Kraćenica ,
         }
     \ProvideTranslations
         { danish }
         {
             Nomenclature            = Nomenklatur ,
-            List~of~Abbreviations   = Liste~over~forkortelser ,
+            List~of~Abbreviations   = Liste~over~Forkortelser ,
         }
     \ProvideTranslations
         { dutch }
@@ -339,37 +345,37 @@
         { norwegian }
         {
             Nomenclature            = Nomenklatur ,
-            List~of~Abbreviations   = Liste~over~forkortelser ,
+            List~of~Abbreviations   = Liste~over~Forkortelser ,
         }
     \ProvideTranslations
         { swedish }
         {
             Nomenclature            = Nomenklatur ,
-            List~of~Abbreviations   = Lista~över~förkortningar ,
+            List~of~Abbreviations   = Lista~över~Förkortningar ,
         }
     \ProvideTranslations
         { finnish }
         {
             Nomenclature            = Nimikkeistö ,
-            List~of~Abbreviations   = Lyhenteiden~luettelo ,
+            List~of~Abbreviations   = Lyhenteiden~Luettelo ,
         }
     \ProvideTranslations
         { hungarian }
         {
             Nomenclature            = Elnevezéstan ,
-            List~of~Abbreviations   = Rövidítések listája ,
+            List~of~Abbreviations   = Rövidítések~Listája ,
         }
     \ProvideTranslations
         { slovenian }
         {
             Nomenclature            = Nomenklatura ,
-            List~of~Abbreviations   = Seznam~okrajšav ,
+            List~of~Abbreviations   = Seznam~Okrajšav ,
         }
     \ProvideTranslations
         { slovak }
         {
             Nomenclature            = Nomenklatúra ,
-            List~of~Abbreviations   = Zoznam ~ skratiek ,
+            List~of~Abbreviations   = Zoznam~Skratiek ,
         }
     \ProvideTranslations
         { polish }
@@ -405,7 +411,7 @@
         { bulgarian }
         {
             Nomenclature            = Номенклатура ,
-            List~of~Abbreviations   = Списък на съкращенията ,
+            List~of~Abbreviations   = Списък~на~съкращенията ,
         }
     \ProvideTranslations
         { afrikaans }
@@ -422,8 +428,8 @@
     \ProvideTranslations
         { turkish }
         {
-            Nomenclature            = Isimlendirme ,  % lowercase?
-            List~of~Abbreviations   = Kısaltmalar Listesi ,
+            Nomenclature            = Isimlendirme ,
+            List~of~Abbreviations   = Kısaltmalar~Listesi ,
         }
     \ProvideTranslations
         { greek }
@@ -431,6 +437,13 @@
             Nomenclature            = Ονοματολογία ,
             List~of~Abbreviations   = Κατάλογος~συντομογραφιών ,
         }
+    % For some reason, translations doesn't provide any Sino-Tibetan languages
+    %\ProvideTranslations
+    %    { schinese }
+    %    {
+    %        Nomenclature            = 命名法 ,
+    %        List~of~Abbreviations   = 缩略语表 ,
+    %    }
 }
 
 
@@ -473,10 +486,18 @@
 % Call after loading all your packages
 \cs_new_protected:Nn \pidgin_close:
 {
+    %\RequirePackage {zref-clever}  % TODO: instead
     \RequirePackage [\g_pidgin_base_str] {cleveref}
+    %\RequirePackage [overwrite] {crefthe}
+	%\RequirePackage {create-theorem}
     \RequirePackage {crossreftools}
     \cs_if_exist:cT {nomname}
-        { \AtEndPreamble { \pidgin__nomenclature_internal: } }
+    {
+        \hook_gput_code:nnn
+            { begindocument / before }
+            { pidgin / nomenclature }
+            { \pidgin__nomenclature_internal: }
+    }
 }
 
 \NewDocumentCommand \ClosePidgin {}
