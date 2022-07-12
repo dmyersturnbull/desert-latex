@@ -101,8 +101,12 @@
     header-format .value_required:n           = true ,
 }
 
-\NewDocumentCommand \NomsSetup {m}
+\cs_new_protected:Npn \noms_setup:n #1
     { \keys_set:nn {noms / setup} {#1} }
+\cs_generate_variant:Nn \noms_setup:n { e }
+
+\NewDocumentCommand \NomsSetup {m}
+    { \noms_setup:n{#1} }
 
 \hook_gput_code:nnn {begindocument} {noms}
 {

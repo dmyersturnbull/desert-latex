@@ -208,3 +208,12 @@
     \glue_collapse:NNN #1 #2 \l_tmpa_skip
     \addvspace {\skip_use:N \l_tmpa_skip}
 }
+
+% temporary solution
+\newlength \tmpgluelength
+\cs_new_protected:Npn \glue_par_addvspace:N #1
+{
+    \setlength \tmpgluelength { \skip_use:N #1 }
+    \par
+    \addvspace \tmpgluelength
+}

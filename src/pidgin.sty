@@ -220,7 +220,6 @@
     \tl_clear:N \l_tmpa_tl
     \tl_clear:N \l_tmpb_tl
     \seq_set_split:Nnn \l_tmpa_seq {/} {#2}
-    \seq_log:N \l_tmpa_seq
     \seq_get_left:NNTF  \l_tmpa_seq \l_tmpa_tl
         {
             \seq_get_right:NNTF \l_tmpa_seq \l_tmpb_tl  % could be the same

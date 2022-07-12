@@ -1,0 +1,322 @@
+% Copyright 2022 Douglas Myers-Turnbull
+% This work may be distributed and/or modified under the conditions of the
+% LaTeX Project Public License, either version 1.3 of this license or
+% (at your option) any later version. The latest version of this license is
+% in http://www.latex-project.org/lppl.txt and version 1.3 or later is part of
+% all distributions of LaTeX version 2005/12/01 or later.
+
+
+%=======                                                   =======
+%=======                   fontworthy                      =======
+%=======                                                   =======
+
+\NeedsTeXFormat {LaTeX2e} [2020-10-01]
+\ExplSyntaxOn
+\ProvidesExplPackage {fontworthy} {2022-07-04} {0.1.0}
+    { Easy~fontspec~and~siunitx~for~good~fonts }
+
+
+\msg_new:nnn {fontworthy} {missing}
+    { Font~'#1'~not~known }
+\cs_new_protected:Npn \fontworthy__missing_err:nn #1#2
+    { \msg_warning:nnn {fontworthy} {missing} {#1} {#2} }
+
+
+
+\tl_const:Nn \c_fontworthy_source_pro_help_tl {
+    FontFace = {el}{n}{*-ExtraLight} ,
+    FontFace = {lt}{n}{*-Light} ,
+    FontFace = {sb}{n}{*-Semi-Bold} ,
+    FontFace = {eb}{n}{*-Black} ,
+}
+
+\tl_const:Nn \c_fontworthy_lmroman_help_tl {
+     SmallCapsFont = Latin Modern Roman Caps ,
+}
+
+
+\tl_const:Nn \c_fontworthy_lmmono_help_tl {
+    ItalicFont     = lmmono10-italic.otf ,  % TODO: optical sizes?
+    BoldFont       = lmmonolt10-bold.otf ,
+    BoldItalicFont = lmmonolt10-boldoblique.otf ,
+}
+
+\tl_const:Nn \c_fontworthy_noto_help_tl {
+    % no thin or extra-bold
+    FontFace = {el}{n}{*-ExtraLight} ,  % 200
+    FontFace = {lt}{n}{*-Light} ,       % 300
+    FontFace = {sb}{n}{*-SemiBold} ,    % 600
+    FontFace = {bl}{n}{*-Black} ,       % 900
+}
+
+\tl_const:Nn \c_fontworthy_noto_mono_help_tl {
+    % no thin or extra-bold
+    FontFace = {el}{n}{*-ExtraLight} ,  % 200
+    FontFace = {lt}{n}{*-Light} ,       % 300
+    FontFace = {sb}{n}{*-SemiBold} ,    % 600
+    FontFace = {bl}{n}{*-Black} ,       % 900
+    Ligatures= {NoCommon} ,
+}
+
+
+% https://www.overleaf.com/learn/latex/Questions/Which_OTF_or_TTF_fonts_are_supported_via_fontspec%3F
+% Fira has too few glyphs (~1k), and XITS is archived
+\prop_const_from_keyval:Nn \c_fontworthy_mathfont_prop
+{
+    Noto             = NotoSansMath-Regular.ttf ,
+    LatinModern      = Latin Modern Math ,
+    STIX             = STIX Two Math ,
+    Bonum            = TeX Gyre Bonum Math ,
+    Pagella          = TeX Gyre Pagella Math ,
+    Schola           = TeX Gyre Schola Math ,
+    Termes           = TeX Gyre Termes Math ,
+    DejaVu           = TeX Gyre DejaVu Math ,
+    Asana            = Asana Math ,
+}
+
+
+
+%======================================================================================================================
+%                    character fallbacks
+%======================================================================================================================
+
+ \NewDocumentCommand \DeclareCharFallback { m m }
+{
+    \newunicodechar {#1}
+    {
+        \iffontchar \font`#1
+        \relax #1
+        \else { { #2 } }
+        \fi
+    }
+}
+
+% Noto text fonts lack ANY math symbols, including a minus sign
+% Consequently, siunitx \qty, etc. will show tofu when called in text mode
+% https://github.com/googlefonts/noto-fonts/issues/1013
+
+% we can use Noto fonts to get just about everything
+% However, only the math font has a minus sign
+
+\NewDocumentCommand \UseNotoFallbacks {}
+{
+    \def \textminus { $−$ }
+    \DeclareNotoSansSymbolsFace
+    \def \textvisiblespace { { \NotoSansSymbols ␣ } }
+    \DeclareCharFallback {−} { $-$ }
+    \DeclareCharFallback {␣} { { \NotoSansSymbosl ␣ } }
+}
+
+
+%======================================================================================================================
+%                    main
+%======================================================================================================================
+
+\keys_define:nn {fontworthy}
+{
+, math .choices:nn                   = { Noto, LatinModern, STIX, Bonum, Pagella, Schola, Termes, DejaVu, } { \str_gset_eq:NN \g_fontworthy_math_str \l_keys_choice_tl }
+, math .initial:n                    = STIX
+, math .value_required:n             = true
+, main .meta:n                       = { serif=#1 }
+, meta .value_required:n             = true
+, serif .choices:nn                  = { Noto, LatinModern, STIX, SourcePro, Plex, } { \str_gset_eq:NN \g_fontworthy_serif_str \l_keys_choice_tl }
+, serif .initial:n                   = Noto
+, serif .value_required:n            = true
+, sans .choices:nn                   = { Noto, LatinModern, SourcePro, Plex, } { \str_gset_eq:NN \g_fontworthy_sans_str \l_keys_choice_tl }
+, sans .initial:n                    = Noto
+, sans .value_required:n             = true
+, mono .choices:nn                   = { Noto, Noto/serif, Noto/serif, LatinModern, SourcePro, Plex, Cascadia, }  { \str_gset_eq:NN \g_fontworthy_mono_str \l_keys_choice_tl }
+, mono .initial:n                    = Noto
+, mono .value_required:n             = true
+
+, siunitx-mode .choices:nn           = { match, math, auto } { \str_gset_eq:NN \g_fontworthy_siunitx_mode_str \l_keys_choice_tl }
+, siunitx-mode .initial:n            = auto ,
+, siunitx-mode .value_required:n     = true ,
+}
+
+\hook_gput_code:nnn
+    { begindocument/before }
+    { fontworthy/defaults }
+    {
+      \fontworthy__init:
+      \fontworthy__run:
+    }
+
+\cs_new_protected:Npn \fontworthy_setup:n #1
+{
+    \keys_set:nn {fontworthy} {#1}
+    \fontworthy__init:
+    \fontworthy__run:
+    \hook_gremove_code:nn {begindocument/before} {fontworthy/defaults}
+}
+\cs_generate_variant:Nn \fontworthy_setup:n { e, x }
+
+\NewDocumentCommand \FontworthySetup {m}
+    { \fontworthy_setup:n{#1} }
+
+\cs_new_protected:Nn \fontworthy__init:
+{
+    \RequirePackage {fontspec}
+    % The warnings are unavoidable
+    \RequirePackage [warnings-off = {mathtools-colon,mathtools-overbracket}] {unicode-math}
+    \RequirePackage {microtype}
+}
+
+\cs_new_protected:Nn \fontworthy__run:
+{
+    % Math font
+    \prop_get:NVN \c_fontworthy_mathfont_prop \g_fontworthy_math_str \l_tmpa_tl
+    \exp_args:Ne
+        \setmathfont
+        { \prop_item:NV \c_fontworthy_mathfont_prop \g_fontworthy_math_str }
+    
+    % Main font
+    \str_if_eq:VnT \g_fontworthy_serif_str {LatinModern}
+        { \setmainfont {Latin Modern Roman}     [\c_fontworthy_lmroman_help_tl]       }
+    \str_if_eq:VnT \g_fontworthy_serif_str {STIX}
+        { \setmainfont  {STIX Two Text}                                             }
+    \str_if_eq:VnT \g_fontworthy_serif_str {SourcePro}
+        { \setmainfont  {Source Serif Pro}      [\c_fontworthy_source_pro_help_tl]    }
+    \str_if_eq:VnT \g_fontworthy_serif_str {Noto}
+        { \setmainfont  {Noto Serif}            [\c_fontworthy_noto_help_tl]          }
+    \str_if_eq:VnT \g_fontworthy_serif_str {Plex}
+        { \setmainfont  {IBM Plex Serif}                                            }
+    
+    % Sans font
+    \str_if_eq:VnT \g_fontworthy_sans_str {LatinModern}
+        { \setsansfont  {Latin Modern Sans}                                         }
+    \str_if_eq:VnT \g_fontworthy_sans_str {SourcePro}
+        { \setsansfont  {Source Sans Pro}       [\c_fontworthy_source_pro_help_tl]    }
+    \str_if_eq:VnT \g_fontworthy_sans_str {Noto}
+        { \setsansfont  {Noto Sans}             [\c_fontworthy_noto_help_tl]          }
+    \str_if_eq:VnT \g_fontworthy_serif_str {Plex}
+        { \setsansfont  {IBM Plex Sans}                                             }
+    
+    % Mono font
+    % Cascadia Mono is just Cascadia Code without ligatures; use Code and we can disable ligatures if wanted
+    \str_if_eq:VnT \g_fontworthy_mono_str {LatinModern}
+        { \setmonofont  {Latin Modern Mono}     [\c_fontworthy_lmmono_help_tl]        }
+    \str_if_eq:VnT \g_fontworthy_mono_str {SourcePro}
+        { \setmonofont  {Source Code Pro}       [\c_fontworthy_source_pro_help_tl]    }
+    \str_if_eq:VnT \g_fontworthy_mono_str {Noto}
+        { \setmonofont  {Noto Sans Mono}        [\c_fontworthy_noto_mono_help_tl]     }
+    \str_if_eq:VnT \g_fontworthy_mono_str {Noto/roman}  % fewer glyphs
+        { \setmonofont  {Noto Mono}             [\c_fontworthy_noto_mono_help_tl]     }
+    \str_if_eq:VnT \g_fontworthy_mono_str {Noto/sans}
+        { \setmonofont  {Noto Sans Mono}        [\c_fontworthy_noto_mono_help_tl]     }
+    \str_if_eq:VnT \g_fontworthy_mono_str {Cascadia}
+        { \setmonofont  {Cascadia Code}                                             }
+    \str_if_eq:VnT \g_fontworthy_serif_str {Plex}
+        { \setmonofont  {IBM Plex Mono}                                             }
+    
+    % Noto fallbacks
+    \str_if_eq:VnT \g_fontworthy_serif_str {Noto}
+        { \UseNotoFallbacks }
+    \str_if_eq:VnT \g_fontworthy_sans_str {Noto}
+        { \UseNotoFallbacks }
+    \str_if_eq:VnT \g_fontworthy_math_str {Noto}
+        { \UseNotoFallbacks }
+
+    \unimathsetup
+    {
+        colon       = literal ,  % NOT default but recommended
+        %mathrm      = sym ,     % NOT default:
+        %mathit      = sym ,
+        %mathsf      = sym ,
+        %mathbf      = sym ,
+        %mathtt      = sym ,
+        math-style  = ISO ,      % NOT default but recommended
+        bold-style  = ISO ,      % NOT default but recommended
+    }
+    
+    % Really none of these values should be changed, EXCEPT
+    % group-digit,s group-minimum-digits, and maybe group-separator.
+    % Possibly in the US: group-separator={,},group-digits=integer
+    \sisetup
+    {
+        retain-explicit-plus            = true ,       % +1 stays +1, not 1
+        retain-zero-uncertainty         = true ,       % \pm 0 still shown
+        group-minimum-digits            = 0 ,          % starting at this number (here: always group)
+        group-separator                 = \thinspace , % always use
+        propagate-math-font             = true ,       % unimportant with unicode-math ?
+        reset-text-family               = false ,      % these retain the current font in text mode:
+        reset-text-series               = false ,
+        reset-text-shape                = false ,
+    }
+    
+    \bool_set_false:N \l_tmpa_tl
+    % TODO: handle auto
+    \str_if_eq:VnTF \g_fontworthy_siunitx_mode_str { match }
+        { \bool_set_true:Nn \l_tmpa_tl }
+    
+    \bool_if:NTF \l_tmpa_tl
+    {
+        \sisetup
+        {
+            mode                      = match ,      % stay in the current mode (all?)
+            unit-mode                 = match ,      %
+            number-mode               = match ,      %
+        }
+    }
+    {
+        \sisetup
+        {
+            mode                      = math ,
+            unit-mode                 = math ,      %
+            number-mode               = math ,      %
+            text-family-to-math       = true ,
+            text-series-to-math       = true ,
+        }
+    }
+
+}
+
+
+%===================================================================
+%                    declare font face commands
+%===================================================================
+
+\cs_new_protected:Npn \fontworthy__declare_family:nnN #1#2#3
+    { \newfontfamily {#3} {#1} [#2] }
+
+\cs_new_protected:Npn \fontworthy_declare_family:nn #1#2
+{
+    \exp_args:Nnnc
+        \fontworthy__declare_family:nnN
+        {#1}
+        {#2}
+        {#1}
+}
+
+\NewDocumentCommand \DeclareFontFace { m O{} }
+    { \fontworthy_declare_family:nn {#1} {#2} }
+
+\NewDocumentCommand \DeclareFontFaces { D<>{} D<>{} m O{} }
+{
+    \seq_set_from_clist:Nn \l_tmpa_clist {#3}
+    \seq_map_inline:Nn \l_tmpa_clist
+        { \fontworthy_declare_family:nn {#1 ##1 #2} {#4} }
+}
+
+\NewDocumentCommand \DeclareSourceProFaces { }
+{
+    \DeclareFontFaces
+        { Source Serif Pro, Source Sans Pro, Source Code Pro }
+        [ \c_fontworthy_source_pro_help_tl ]
+}
+
+\NewDocumentCommand \DeclarePlexFaces { }
+{
+    \DeclareFontFaces { IBM Plex Serif, IBM Plex Sans, IBM Plex Mono }
+}
+
+\NewDocumentCommand \DeclareNotoSansSymbolsFace { }
+{
+    \setfontfamily \NotoSansSymbols {Noto Sans Symbols 2}
+}
+
+\NewDocumentCommand \DeclareNotoEmojiFace { }
+{
+    \setfontfamily \NotoEmoji {Noto Emoji}
+}
+

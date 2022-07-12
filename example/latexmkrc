@@ -6,6 +6,8 @@ $dvipdf = "dvipdf -dNOSAFER -dALLOWPSTRANSPARENCY %O %S %D";
 $lualatex = 'lualatex --shell-escape --halt-on-error %O %S';
 $pdf_mode = 1;
 
+$ENV{'TEXINPUTS'}='./src//:./src/lib//:./lib//:' . $ENV{'TEXINPUTS'}; 
+
 ###############################
 # Post processing of pdf file #
 ###############################

@@ -1,219 +1,264 @@
 
+% note: Other values are accepted, which can be defined in the preamble via \texmacro{DeclareCaptionSubType}.
 \begin{LongTable} [
     simple                 = true ,
     theme                  = longfoot,
     caption                = {Desert key–value options},
     entry                  = {Package key–value options},
     label                  = {options},
+    note{a} = {\texmacro{baselinestretch} is set to this value at the start of \code{equation}s and \ctan{amsmath} and \ctan{mathtools} environments like \code{gather}.}
 ] {
-    colspec                = { X[2,l] X[1,l] X[2,l] } ,
+    colspec                = { X[1,l] X[1,l] X[1,l] } ,
     column{1}              = { font=\ttfamily } ,
     column{2}              = { font=\ttfamily } ,
-    %cell{2-Z}{1}         = {font=\ttfamily} ,
+    cell{1}{1}             = { font=\sffamily\bfseries } ,
+    cell{1}{2}             = { font=\sffamily\bfseries } ,
 }
-name & value-type & description  \\
-bib / hide-lang & bool & Hide e.g. \textit{en.} in references  \\
-bib / per-chap & bool & Show bibliography per chapter  \\
-bib / style & BibLaTeX style & e.g. \code{numeric}, \code{authoryear}, \code{MLA}  \\
-color / off &  & Disable link and background colors \\
-color / cite & color & Passed to hyperref  \\
-color / even-row & color & named color \code{evenrow} background color \\
-color / file & color &   \\
-color / ref & color &   \\
-color / url & color &   \\
-ref / abbrev & bool & Pass \code{noabbrev} to \ctan{cref} if false  \\
-ref / capitalize & bool & Pass \code{capitalize} to cleveref  \\
-draft & bool & Disable some things, like \ctan{microtype} \\
-font / leading & float & Space between baselines (e.g. \code{13pt})  \\
-font / math &  &  \\
-font / mono &  & \\
-font / sans &  &  \\
-font / serif &  &  \\
-font / size & float & E.g. \code{12pt}  \\
-footer [/\ldots] & any &   \\
-footer / back [/\ldots]  & any &   \\
-footer / front [/\ldots]  & any &   \\
-footer / main [/\ldots]  & any &   \\
-glue' / abstract & v-skip &   \\
-glue' / abs-body & v-skip &   \\
-glue' / alg-like & v-skip &   \\
-glue' / caption & v-skip &   \\
-glue' / chap & v-skip & Unimportant if \texmacro{chapter} starts a page \\
-glue' / def-like & v-skip &   \\
-glue' / eqn & v-skip & \texmacro{abovedisplayskip}  \\
-glue' / eqn-short & v-skip & \texmacro{abovedisplayshortskip} \\
-glue' / fnote-list & v-skip & Glue above the footnote list  \\
-glue' / front-chap & v-skip & Unimportant if \texmacro{chapter} starts a page  \\
-glue' / list & v-skip & For default lists  \\
-glue' / lof-chap-group & v-skip & Skip after new chapter in list of figures, etc. \\
-glue' / long-list & v-skip & \code{long} lists  \\
-glue' / nom-group & v-skip & \\
-glue' / paragraph & v-skip & Above \texmacro{paragraph}  \\
-glue' / proof & v-skip &   \\
-glue' / rem-like & v-skip &   \\
-glue' / section & v-skip &   \\
-glue' / subcaption & v-skip &   \\
-glue' / subsec & v-skip &   \\
-glue' / subsubsec & v-skip &   \\
-glue' / table-footer & v-skip &   \\
-glue' / table-title & v-skip & Space above table caption  \\
-glue' / thm-like & v-skip &   \\
-glue' / toc-chapter & v-skip &   \\
-glue' / toc-part & v-skip &   \\
-glue' / toc-section & v-skip &   \\
-glue' / toc-subsec & v-skip &   \\
-glue' / toc-subsubsec & v-skip &   \\
-glue. / abstract-title & v-skip &   \\
-glue. / alg-like & v-skip &   \\
-glue. / chap & v-skip &   \\
-glue. / chap-label & v-skip &  V-space between label and name \\
-glue. / def-like & v-skip &   \\
-glue. / eqn & v-skip & \texmacro{belowdisplayskip}  \\
-glue. / eqn-short & v-skip & \texmacro{belowdisplayshortskip}  \\
-glue. / fnote-list & v-skip & Only if floats are below  \\
-glue. / front-chap & v-skip &   \\
-glue. / part-label & v-skip & For \texmacro{part}  \\
-glue. / proof & v-skip &   \\
-glue. / rem-like & v-skip &   \\
-glue. / section & v-skip &   \\
-glue. / subsec & v-skip &   \\
-glue. / subsubsec & v-skip &   \\
-glue. / table-footer & v-skip &   \\
-glue. / table-title & v-skip &   \\
-glue. / thm-like & v-skip &   \\
-glue: / float-float & skip & Space between neighboring floats \\
-glue: / float-text & skip & Space between neighboring float and text \\
-glue: / fnote & v-skip & Vertical glue between footnotes  \\
-glue: / item & v-skip & Vertical glue between \texmacro{item}  \\
-glue: / long-item & v-skip & Applies to style \code{long}  \\
-glue: / paragraph & v-skip & Vertical glue between paragraphs  \\
-glue: / refs & v-skip &   \\
-glue< / indent & h-dim & Paragraph indent (usually \code{1em})  \\
-glue< / fnote-indent & h-dim & Paragraph indent in footnotes \\
-glue< / nom-text & h-dim & Pad between symbol and text  \\
-glue< / thm-like-title & h-dim &   \\
-glue< / toc-chap & h-dim &   \\
-glue< / toc-part & h-dim &  Left-padding for \term{part} in TOC \\
-glue< / toc-section & h-dim &   \\
-glue< / toc-subsec & h-dim &   \\
-glue< / toc-subsubsec & h-dim &   \\
-header [/\ldots] & any &   \\
-header / back [/\ldots]  & any &   \\
-header / front [/\ldots]  & any &   \\
-header / main [/\ldots]  & any &   \\
-lang / extras & Babel INI & ...  \\
-lang / main & Babel INI &, main  \\
-layout / \ctan{geometry} & prop &  Options passed to \texmacro{geometry} \\
-layout / endnote-backrefs & bool &   \\
-layout / fnote-align & left, right, center, justify &   \\
-layout / fnote-place &  &  Passed to \ctan{footmisc} \\
-layout / fnotes-to-endnotes & bool & Converts footnotes to endnotes  \\
-layout / index-col-sep & h-dim & Space between columns in index  \\
-layout / index-cols & int & Number of columns in index  \\
-layout / show-nom-links & bool &   \\
-layout / show-toc-like-links & bool &   \\
-layout / subsec-runin  & bool  & \\
-layout / subsubsec-runin  & bool  & \\
-num / back-chaps & numbering &   \\
-num / back-pages & numbering  &   \\
-num / depth & level &   \\
-num / eqn-brackets & &   \\
-num / eqn-in & level &   \\
-num / panels & numbering &   \\
-num / float-in & level &   \\
-num / fnote-in &  &   \\
-num / fnotes &  &   \\
-num / front-chaps & numbering &   \\
-num / front-pages & numbering &   \\
-num / main-chaps & numbering &   \\
-num / main-pages & numbering &   \\
-num / thm-like-in & level &  \ctan{thmtools} numbering within \\
-pkg / \ctan{chemfig} & opts & Chemical diagrams  \\
-pkg / \ctan{chemformula} & opts &   \\
-pkg / \ctan{chemmacros} & opts &    \\
-pkg / \ctan{cryptocode} & opts &  Lots of things \\
-pkg / \ctan{fontawesome5} & opts & \link{https://fontawesome.com}[fontawesome]  \\
-pkg / \ctan{imakeidx} & opts & Make an index  \\
-pkg / \ctan{kantlipsum} & opts & \texmacro{ikant} command \\
-pkg / \ctan{knowledge} & opts & Hyperlinks to topics, etc.  \\
-pkg / \ctan{lettrine} & opts &  Big first letter via \texmacro{lettrine} \\
-pkg / \ctan{minted} & opts &  Source code highlighting \\
-pkg / \ctan{svg} & opts & \texmacro{includesvg} command  \\
-pkg / \ctan{tcolorbox} & opts & Styled boxes and \ctan{fontawesome5} \\
-pkg / \ctan{tikz-cd} & opts & Commutative diagrams  \\
-pkg / \ctan{tikz} & opts & Tikz and some libraries \\
-pkg / \ctan{ulem} & opts & Underline, strikethrough, etc.  \\
-pkg / \ctan{varioref} & opts & e.g. ``on the previous page"  \\
-pkg / graphs &  & Tikz graph-drawing \\
-pkg / noms &  & Nomenclature via \ctan{nomencl}  \\
-preset &  &  Only sets basic options \\
-rule / cmid & v-dim & thickness of \texmacro{cmidrule} \\
-rule / footer & v-dim & line above page footer \\
-rule / header & v-dim & line above page header \\
-rule / mid & v-dim & thickness of \texmacro{midrule} \\
-rule / top & v-dim  & thickness of \texmacro{toprule} and \texmacro{bottomrule} \\
-rule / fnote & v-dim & thickness of footnote rule \\
-stretch / double & & leading = $1.0\times$ text (stretch=1.6667); one-half for captions and code \\
-stretch / one-half & & leading = $0.5\times$ text (stretch=1.25); single for captions and code \\
-stretch / single & & leading = $0.2\times$ text (stretch=1.0) everywhere \\
-stretch / cap & float &   \\
-stretch / eqn & float &   \\
-stretch / lof-like & float &   \\
-stretch / main & float &   \\
-stretch / nom & float &   \\
-stretch / refs & float & \\
-stretch / code & float &   \\
-stretch / table & float & \\
-stretch / toc & float &   \\
-sty / abs-authors & unary &   \\
-sty / abs-by & unary &   \\
-sty / abs-title & unary &   \\
-sty / admonition-label & nullary & \code{DezBox} env name, like “note”  \\
-sty / admonition-name & nullary & Optional title (e.g. after “note”)  \\
-sty / cap-body & unary &   \\
-sty / cap-label & unary &   \\
-sty / chap-label & nullary &   \\
-sty / chap-name & nullary &   \\
-sty / chem-name & nullary & \\
-sty / chemfig & macro & \\
-sty / fnote-body & nullary &   \\
-sty / foreign-words & unary &   \\
-sty / front-chap-title & nullary &   \\
-sty / indx-starred & unary &   \\
-sty / nom-group & unary &   \\
-sty / par-title & nullary &   \\
-sty / part-label & nullary &   \\
-sty / part-name & nullary &   \\
-sty / section-title & nullary &   \\
-sty / code & nullary &   \\
-sty / subcap-body & unary &   \\
-sty / subcap-label & unary &   \\
-sty / subref & unary &   \\
-sty / subsec-title & nullary &   \\
-sty / subsubsec-title & nullary &   \\
-sty / table-footer & nullary &   \\
-sty / table-head-body & nullary &   \\
-sty / table-head-label & nullary &   \\
-sty / tikz & nullary & \\
-sty / toc-chap & nullary &   \\
-sty / toc-page-number & nullary &  \\
-sty / toc-part & nullary &   \\
-sty / toc-section & nullary &   \\
-sty / toc-subsec & nullary &   \\
-sty / toc-subsubsec & nullary &   \\
-toc / bib & bool & Show bibliographies in TOC  \\
-toc / depth & level &  \\
-toc / endnotes & bool & Show endnote lists in TOC   \\
-toc / panels & bool &  Show figure panels (e.g. \term{1A}) in TOC  \\
-typo / ban-hyphens & bool &  Sets hyphenation penalty to $+\infty$ \\
-typo / label-sep & any & Text after caption label (e.g. \code{:})  \\
-typo / table-note-sep & any &   \\
-typo / table-rem-sep & any &   \\
-typo / max-quote-lines & int & Threshold to switch to display \\
-typo / siunitx-group &  & Passed straight to \ctan{siunitx} \\
-typo / siunitx-match-mode & bool & Passes \code{mode=match} and other options\\
-typo / subref-format & &   \\
-typo / subref-label-sep & any & Text after \texmacro{subref} \\
+key    &    type    &    description  \\
+article-like    &    N/A    &    (meta) Chapters don't start pages and aren't included in numbering.  \\
+book-like    &    N/A    &    (meta) Adds \code{twoside,openright} to geometry.  \\
+bib / hide-lang    &    bool    &    Removes the language code (e.g. \textit{en.}) from each citation.  \\
+bib / per-chap    &    bool    &    Each \code{MainChapter} ends with a reference section, and \texmacro{ShowBackBib} has no effect.  \\
+bib / style    &    str    &    Passed to \ctan{biblatex}. E.g. \code{ieee}.  \\
+border / admonition / width    &    dim    &    Thickness of admonition border.  \\
+border / admonition / pad    &    dim    &    Padding inside admonition border.  \\
+border / admonition / arc    &    dim    &    Curvature of admonition border.  \\
+color / table / even-row    &    color    &    If \code{simple} or \code{plain} are passed to \code{Table} or \code{LongTable}, color even rows with this.  \\
+color / href / cite    &    color    &    Color of parenthetical citation links.  \\
+color / href / file    &    color    &    Color of embedded file links (not common).  \\
+color / href / ref    &    color    &    Color of links via e.g. \texmacro{ref} and \texmacro{cref}.  \\
+color / href / run    &    color    &    Color of PDF command links (not common).  \\
+color / href / url    &    color    &    Color of external URL links.  \\
+color / off    &    N/A    &    (meta) Disable discretionary colors, including hyperlinks and table contents.  \\
+draft    &    bool    &    Passes \code{draft} to \ctan{microtype} and some other packages.  \\
+font / leading    &    float (opt)    &    If empty, uses 20\% of \code{font / size}. If non-empty, an explicit leading in \code{pt} (not recommended).  \\
+font / math    &    Noto | LatinModern | STIX | Bonum | Pagella | Schola | Termes | DejaVu    &    Font family for \ctan{unicode-math} via \texmacro{setmathfont}.  \\
+font / mono    &    Noto | Noto/serif | Noto/serif | LatinModern | SourcePro | Plex | Cascadia    &    Font family for \ctan{fontspec} via \texmacro{setmonofont}.  \\
+font / sans    &    Noto | LatinModern | SourcePro | Plex    &    Font family for \ctan{fontspec} via \texmacro{setsansfont}.  \\
+font / serif    &    Noto | LatinModern | STIX | SourcePro | Plex    &    Font family for \ctan{fontspec} via \texmacro{setmainfont}.  \\
+font / size    &    float    &    Font size of main text in \code{pt} (e.g. \code{11.22}). Size commands (e.g. \texmacro{small} are scaled accordingly via \ctan{fontsize}.  \\
+footer / [ C | CE | CO | L | LE | LO | R | RE | RO ]    &    any    &    (meta) Sets \code{font / back / \ldots}, \code{font / front / \ldots}, and \code{font / main / \ldots}.  \\
+footer / back / [ C | CE | CO | L | LE | LO | R | RE | RO ]    &    any    &    Any TeX commands (e.g. \code{\thepage}. C=center, L=left, R=right, E=even, O=odd. For back-matter.  \\
+footer / front / [ C | CE | CO | L | LE | LO | R | RE | RO ]    &    any    &    Front-matter equivalent to \code{footer / back}.  \\
+footer / main / [ C | CE | CO | L | LE | LO | R | RE | RO ]    &    any    &    Main-matter equivalent to \code{footer / back}.  \\
+footer / clear    &    N/A    &    (meta) Clears any footer values previously listed in the key--value list (not commonly needed).  \\
+glue / abstract / authors / T    &    glue    &    Glue above author list in \code{Abstract} front-matter chapter.  \\
+glue / abstract / body / T    &    glue    &    Glue above abstract body.  \\
+glue / abstract / title / T    &    glue    &    Glue above abstract title.  \\
+glue / bib / item / :    &    glue    &    Glue between bibliography entries.  \\
+glue / caption / above / B    &    glue    &    Glue below caption and above float contents for captions placed at the top (e.g. listings), excluding tables.  \\
+glue / caption / main / T    &    glue    &    Glue above captions, between caption and float contents (e.g. for figures). Sets caption style \code{dez-main}.  \\
+glue / caption / panel / T    &    glue    &    Glue above figure panel captions (caption style \code{dez-panel}).  \\
+glue / code / rule / :    &    glue    &    Glue above (T) or below (B) the horizontal rule in listings from \ctan{minted}.  \\
+glue / eqn / long / [T | B]    &    glue    &    Glue above or below equations, in general. Sets lengths \texmacro{abovedisplayskip} and \texmacro{belowdisplayskip}.  \\
+glue / eqn / short / [T | B]    &    glue    &    Applies if the text is ``short". Sets lengths \texmacro{abovedisplayshortskip} and \texmacro{belowdisplayshortskip}.  \\
+glue / float--float    &    glue    &    Glue between consecutive floats. Corresponds to lengths \texmacro{floatsep} and \texmacro{intextsep}.  \\
+glue / float--text    &    glue    &    Glue between float and main text. Corresponds to lengths \texmacro{textfloatsep} and \texmacro{dbltextfloatsep}.  \\
+glue / fnote / :    &    glue    &    Glue between foonote items.  \\
+glue / fnote / paragraph / :    &    glue    &    Glue between paragraphs in the footnote list (within a single footnote item).  \\
+glue / fnote-list / [T | B]    &    glue    &    Glue above/below the footnote list. Below is only used if \code{layout / fnote / place} allows placing foonotes above floats.  \\
+glue / fnote-list / rule / B    &    glue    &    Glue below the footnote list rule.  \\
+glue / list / long / :    &    glue    &    Glue between \texmacro{item}s in lists, enumerations, etc. with style \code{long}.  \\
+glue / list / long / T    &    glue    &    Glue above a list, etc. with style \code{long}.  \\
+glue / list / short / :    &    glue    &    Glue between \texmacro{item}s with no optional style argument.  \\
+glue / list / short / T    &    glue    &    Glue above lists that are started with no optional style argument.  \\
+glue / list-of / :    &    glue    &    Glue between items in list of figures, nomenclature, etc., excluding the TOC. (Applies to \texmacro{ShowListOfFigures}, etc.)  \\
+glue / list-of / chap-group / T    &    glue    &    Glue added above items that belong to a new chapter in the list of figures and list of tables.  \\
+glue / list-of / nomencl-group / T    &    glue    &    Glue added above nomenclature items that belong to a new group.  \\
+glue / paragraph / :    &    glue    &    Glue between paragraphs. Applies to the vast majority of text that contains more than 1 paragraph.  \\
+glue / sec / front-chap / [T | B]    &    glue    &    Glue above or below a numberless chapter (normally front matter). Glue above is used if chapters do not start pages.  \\
+glue / sec / main-chap / [T | B]    &    glue    &    Equivalent of \code{glue / sec / front-chapter / [T | B]} for numbered chapters.  \\
+glue / sec / main-chap / label / B    &    glue    &    Glue between the label and name of a numbered chapter heading.  \\
+glue / sec / paragraph / T    &    glue    &    Glue above \code{paragraph} section level (always \textit{runin}-style).  \\
+glue / sec / part / label / B    &    glue    &    Glue between label and name of a numbered part heading.  \\
+glue / sec / section / [T | B]    &    glue    &    Glue above or below section headers.  \\
+glue / sec / subsec / [T | B]    &    glue    &    Glue above or below subsection headers. Glue below is ignored if \code{layout / sec / subsec-runin} is true.  \\
+glue / sec / subsubsec / [T | B]    &    glue    &    Glue above or below subsubsection headers. Glue below is ignored if \code{layout / sec / subsec-runin} is true.  \\
+glue / table / foot / [T | B]    &    glue    &    Glue above or below \ctan{tabularray} footers and \code{dez-table} \ctan{caption}.  \\
+glue / table / head / [T | B]    &    glue    &    Glue above or below \ctan{tabularray} headers.  \\
+glue / thm / [T | B]    &    glue    &    (meta) Sets \code{glue / thm / *-like / [T | B]}.  \\
+glue / thm / alg-like / [T | B]    &    glue    &    Glue above and below theorem-like environments using an \code{algorithm} style (see \ctan{amsthm}).  \\
+glue / thm / def-like / [T | B]    &    glue    &    Glue above and below theorem-like environments using the \code{definition} style (see \ctan{amsthm}).  \\
+glue / thm / proof / [T | B]    &    glue    &    Glue above and below \code{Proof} (equivalently \code{proof}).  \\
+glue / thm / rem-like / [T | B]    &    glue    &    Glue above and below theorem-like environments using the \code{remark} style (see \ctan{amsthm}).  \\
+glue / thm / thm-like / [T | B]    &    glue    &    Glue above and below theorem-like environments using the \code{plain} style (see \ctan{amsthm}).  \\
+glue / toc / chap / T    &    glue[=1ex plus 0.1ex minus 0.025ex]    &    Glue above chapter-level entries in the TOC.  \\
+glue / toc / part / T    &    glue[=5ex plus 0.5ex minus 0.125ex]    &    Glue above part-level entries in the TOC.  \\
+glue / toc / section / T    &    glue[=0.2ex plus 0.02ex minus 0.005ex]    &    Glue above section-level entries in the TOC.  \\
+glue / toc / subsec / T    &    glue[=0.04ex]    &    Glue above subsec-level entries in the TOC.  \\
+glue / toc / subsubsec / T    &    glue[=0ex]    &    Glue above subsubsec-level entries in the TOC.  \\
+header / [ C | CE | CO | L | LE | LO | R | RE | RO ]    &    any    &    (meta) See \code{footer / *}.  \\
+header / back / [ C | CE | CO | L | LE | LO | R | RE | RO ]    &    any    &    See \code{footer / *}.  \\
+header / front / [ C | CE | CO | L | LE | LO | R | RE | RO ]    &    any    &    See \code{footer / *}.  \\
+header / main / [ C | CE | CO | L | LE | LO | R | RE | RO ]    &    any    &    See \code{footer / *}.  \\
+header / clear    &    N/A    &    (meta) See \code{footer / *}.  \\
+lang / extras    &    list    &    Additional languages for \ctan{babel} to load via \texmacro{babelprovide}.  \\
+lang / extras+    &    list    &    (meta) Appends to \code{lang / extras}.  \\
+lang / main    &    string    &    Main language for \ctan{babel}; called via \texmacro{babelprovide}.  \\
+layout / chapter-page-cmd    &    any    &    Code called at the start of each chapter.  \\
+layout / endnote / backrefs    &    bool    &    Pass \code{backrefs} to \ctan{enotez}.  \\
+layout / fnote / align    &    left | right | center | justify    &    Footnote list alignment.  \\
+layout / fnote / place    &    default | abovefloats | belowfloats | bottom | bottomfloats | bottomfootnotes    &    Dictates how to place footnote list; see \ctan{footmisc}.  \\
+layout / geometry    &    keyval    &    Passed to \ctan{geometry}'s \texmacro{geometry}.  \\
+layout / geometry+    &    keyval    &    (meta) Appends to \code{layout / geometry}.  \\
+layout / index / col-sep    &    dim    &    Gutter between columns in the index.  \\
+layout / index / cols    &    int    &    Number of columns in the index.  \\
+layout / sec / subsec-runin    &    bool    &    Switch subsection level to a \textit{runin} style that flows into the text.  \\
+layout / sec / subsubsec-runin    &    bool    &    Switch section level to a \textit{runin} style that flows into the text.  \\
+list-of / abbrev / symbol-width    &    dim    &    Width of the column for symbols in the list of abbreviations.  \\
+list-of / abbrev / theme    &    lof | description    &    Use \code{description} if some abbreviations are too long. Refer to \ctan{acro} for more info.  \\
+list-of / figure / include-panels    &    bool    &    Include figure panels (subfigures) in the list of figures.  \\
+list-of / float / symbol-width    &    dim    &    Width of the column for labels (e.g. \textit{1.1}) in the list of figures and list of tables.  \\
+list-of / nomencl / symbol-width    &    dim    &    Width of the column for symbols in the nomenclature.  \\
+list-of / thm / symbol-width    &    dim    &    Width of the column for labels (e.g. \textit{1.1}) in lists of theorem-like things.  \\
+list-of / show-links    &    bool    &    Show (color) links in the list of figures, etc., normally disabled via \texmacro{HideLinks}. TOC instead uses \code{toc / show-links}.  \\
+list-of / symbol-width    &    dim    &    (meta) Sets \code{list-of / * / symbol-width}.  \\
+num / chap / back    &    arabic | roman | Roman | alph | Alph    &    How to number appendices (back chapters).  \\
+num / chap / by    &    arabic | roman | Roman | alph | Alph    &    (meta) Numbering style for all chapters.  \\
+num / chap / front    &    arabic | roman | Roman | alph | Alph    &    Numbering style for front-matter chapters.  \\
+num / chap / main    &    arabic | roman | Roman | alph | Alph    &    Numbering style for main-matter chapters.  \\
+num / continuous    &    N/A    &    (meta) Use continuous arabic numbering for pages, chapters, floats, equations, and theorem-like environments.  \\
+num / depth    &    none | chapter | section | subsec | subsubsec | paragraph | subpar | <n>    &    Max section numbering depth.  \\
+num / eqn / brackets    &    none | round | square | curly | none-bold | round-bold | square-bold | curly-bold    &    Format of equation numbers.  \\
+num / eqn / by    &    arabic | roman | Roman | alph | Alph    &    Numbeirng style for equations.  \\
+num / eqn / in    &    none | chapter | section | subsec | subsubsec    &    Number equations within a level, or \textit{none}.  \\
+num / float / by    &    arabic | roman | Roman | alph | Alph    &    Numbering style for floats such as \code{figure}.  \\
+num / float / in    &    none | chapter | section | subsec | subsubsec    &    Numbering within  \\
+num / fnote / by    &    arabic | roman | Roman | alph | Alph | lamport | lamport* | bringhurst | chicago | wiley | dez-fancy    &    Numbering style for footnotes via \ctan{footmisc}.  \\
+num / fnote / in    &    none | page | chapter    &    Reset footnote numbering each page or chapter, or none.  \\
+num / page / back    &    arabic | roman | Roman | alph | Alph    &    Numbering style for back-matter pages.  \\
+num / page / by    &    arabic | roman | Roman | alph | Alph    &    (meta) Numbering style for all pages.  \\
+num / page / front    &    arabic | roman | Roman | alph | Alph    &    Numbering style for front-matter pages.  \\
+num / page / main    &    arabic | roman | Roman | alph | Alph    &    Numbering style for main-matter pages.  \\
+num / panel / by    &    arabic | roman | Roman | alph | Alph    &    Numbering style for figure panels.  \\
+num / sec / in    &    none | chapter | section | subsec | subsubsec    &    Reset section numbering at all levels up to this one, inclusive.  \\
+num / thm / by    &    arabic | roman | Roman | alph | Alph    &    Numbering style for theorem-like environments in \ctan{amsthm}. Numbering is shared between all of them.  \\
+num / thm / in    &    none | chapter | section | subsec | subsubsec    &    Number \ctan{amsthm} environments with respect to this level. Numbering is shared between all of them.  \\
+pad / fnote / indent    &    dim[=1em]    &    Paragraph indent in footnote list (defaults to 1em if no value is passed).  \\
+pad / fnote / text    &    dim[=1em]    &    Space before footnote text (after marker) in footnote list.  \\
+pad / indent    &    dim    &    Paragraph indent in most text (defaults to 1em if no value is passed).  \\
+pad / sec / runin    &    dim    &    Space after \textit{runin}-style section headers (normally \code{paragraph}).  \\
+pad / thm / runin    &    dim    &    Space after \textit{runin}-style \ctan{amsthm} headers.  \\
+pad / toc / chap    &    dim    &    Left-margin for \textit{chapter} level in the TOC.  \\
+pad / toc / paragraph    &    dim    &    Left-margin for \textit{part} level in the TOC.  \\
+pad / toc / part    &    dim    &    Left-margin for \textit{paragraph} level in the TOC.  \\
+pad / toc / section    &    dim    &    Left-margin for \textit{section} level in the TOC.  \\
+pad / toc / subsec    &    dim    &    Left-margin for \textit{subsection} level in the TOC.  \\
+pad / toc / subsubsec    &    dim    &    Left-margin for \textit{subsubsection} level in the TOC.  \\
+pkg / chemfig    &    package options    &    Loads \ctan{chemfig} and enables related features.  \\
+pkg / chemformula    &    package options    &    Loads \ctan{chemformula} and enables related features.  \\
+pkg / chemmacros    &    package options    &    Loads \ctan{chemmacros} and enables related features.  \\
+pkg / circuitikz    &    package options    &    Loads \ctan{circuitikz} (option: \code{siunitx}).  \\
+pkg / cryptocode    &    package options    &    Loads \ctan{cryptocode} and patches with hooks.  \\
+pkg / fontawesome5    &    package options    &    Loads \ctan{fontawesome5}, enabling those symbols.  \\
+pkg / graphs    &    N/A    &    Loads \code{graphdrawing} and other \ctan{tikz} graph libraries.  \\
+pkg / imakeidx    &    package options    &    Loads \ctan{imakeidx}, enabling \texmacro{ShowIndex}.  \\
+pkg / kantlipsum    &    package options    &    Loads \ctan{kantlipsum} and enables \texmacro{NextKant} and \texmacro{RandKant}.  \\
+pkg / knowledge    &    package options    &    Loads \ctan{knowledge}. (Note: loading this package after desert will not work correctly.)  \\
+pkg / lettrine    &    package options    &    Loads \ctan{lettrine} for drop-caps. Currently has no other effect.  \\
+pkg / minted    &    package options    &    Loads \ctan{minted}, configures the \code{listing} environment, and enables the \code{MintedCode} environment.  \\
+pkg / noms    &    package options    &    Loads \code{noms} and \ctan{nomencl}, enabling \texmacro{ShowNomenclature} and nomenclature declarations.  \\
+pkg / svg    &    package options    &    Loads \code{svg}. Currently has no other effect.  \\
+pkg / tcolorbox    &    package options    &    Loads \code{tcolorbox}, enabling admonitions via \texmacro{NewAdmonitionEnv}, etc.  \\
+pkg / tikz    &    N/A    &    Loads \ctan{tikz} and various extra packages.  \\
+pkg / tikz-cd    &    package options    &    Loads \ctan{tikz-cd} for commutative diagrams. Currently has no other effect.  \\
+pkg / ulem    &    package options    &    Loads \ctan{ulem} and enables underlining, strike-through, etc. in \code{textiles}.  \\
+pkg / varioref    &    package options    &    Loads \ctan{varioref}. (Note: Loading this package after desert will not work correctly.)  \\
+preset / Berkeley    &    N/A    &    (meta) Preset for PhD dissertations at UC Berkeley.  \\
+preset / Cambridge    &    N/A    &    (meta) Preset for PhD dissertations at Cambridge.  \\
+preset / Chicago    &    N/A    &    (meta) Preset for PhD dissertations at U Chicago.  \\
+preset / CMU    &    N/A    &    (meta) Preset for PhD dissertations at Carnegie Mellon.  \\
+preset / generic-A4    &    N/A    &    (meta) Preset with simple A4 geometry.  \\
+preset / generic-letterpaper    &    N/A    &    (meta) Preset with simple letter-paper geometry.  \\
+preset / Harvard    &    N/A    &    (meta) Preset for PhD dissertations at Harvard.  \\
+preset / Stanford    &    N/A    &    (meta) Preset for PhD dissertations at Stanford.  \\
+preset / UCL    &    N/A    &    (meta) Preset for PhD dissertations at University College London.  \\
+preset / UCSD    &    N/A    &    (meta) Preset for PhD dissertations at UC San Diego.  \\
+preset / UCSF    &    N/A    &    (meta) Preset for PhD dissertations at UC San Francisco.  \\
+rule / fnote-list    &    dim    &    Thickness of footnote rule.  \\
+rule / fnote-list / width    &    dim    &    Horizontal length of footnote rule. Set to 0 to disable or negative for \texmacro{textwidth}.  \\
+rule / page / footer    &    dim    &    Thickness of page footer rule. Set to 0 to disable.  \\
+rule / page / header    &    dim    &    Thickness of page header rule. Set to 0 to disable.  \\
+rule / table / border    &    dim    &    Thickness of rule above and below tables if \code{simple} or \code{plain} is passed.  \\
+rule / table / extra    &    dim    &    Intended for rules in only some table cells. Currently not used directly.  \\
+rule / table / top-row    &    dim    &    Thickness of rule below the header row of a table if \code{simple} is passed.  \\
+stretch / bib    &    float    &    Line spacing in bibliography.  \\
+stretch / caption    &    float    &    Line spacing in captions and table footers.   \\
+stretch / code    &    float    &    Line spacing in \ctan{minted} source code.  \\
+stretch / double    &    N/A    &    (meta) Sets most spacing to 1.66667 (baseline-distance=2*x-height); captions, bibliography, code, and tables to 1.0.  \\
+stretch / eqn    &    float    &    Line spacing in equations. \TblrNote{a}  \\
+stretch / list-of    &    float    &    Line spacing in list of figures, nomenclature, etc., excluding TOC.  \\
+stretch / main    &    float    &    Line spacing in the main text.  \\
+stretch / one-half    &    N/A    &    (meta) Sets most spacing to 1.25 (baseline-distance=1.5*x-height); captions, bibliography, code, and tables to 1.0.  \\
+stretch / quote    &    float    &    Line spacing in display-style quotations via \ctan{csquotes}, the \texmacro{Quote} command, and the \code{Quotation} environment.  \\
+stretch / single    &    N/A    &    (meta) Sets all spacing to 1.25 (baseline-distance=1.0*x-height).  \\
+stretch / table    &    float    &    Line spacing in \ctan{tabularray} table contents.  \\
+stretch / toc    &    float    &    Line spacing in the TOC.  \\
+style / abstract / authors    &    style (unary)    &    Text style in the \code{Abstract} environment's author list (\textit{author} in \texmacro{SetInfo}).  \\
+style / abstract / by    &    style (unary)    &    Style in the \code{Abstract} environment's line between the title and author list (normally ``by" in English).  \\
+style / abstract / title    &    style (unary)    &    Style in the \code{Abstract} environment's thesis/article title (\textit{title} in \texmacro{SetInfo}).  \\
+style / admonition / label    &    style (unary)    &    Style of an admonition's label (e.g. \textit{Warning} or a symbol).  \\
+style / admonition / name    &    style (unary)    &    Style of an admonition's name passed via \code{name=}.  \\
+style / caption / body    &    style (unary)    &    (meta) Sets \code{style/caption/main/body},  \code{style/caption/above/body}, and  \code{style/caption/top/body}.  \\
+style / caption / entry    &    style (unary)    &    Style for the entry with \code{caption+}. Applied on top of the relevant \code{style/caption/*/body} key.  \\
+style / caption / label    &    style (unary)    &    (meta) Sets \code{style/caption/main/label},  \code{style/caption/above/label}, and  \code{style/caption/top/label}.  \\
+style / caption / above / body    &    style (unary)    &    Style of the caption body for captions above, not including tables.  \\
+style / caption / above / label    &    style (unary)    &    Style of the caption label and separator for captions above, not including tables.  \\
+style / caption / main / body    &    style (unary)    &    Style of caption body for captions below.  \\
+style / caption / main / label    &    style (unary)    &    Style of caption label and separator for captions below.  \\
+style / caption / panel / body    &    style (unary)    &    Style of caption body for figure panels.  \\
+style / caption / panel / label    &    style (unary)    &    Style of caption label and separator for figure panels.  \\
+style / caption / subref    &    style (unary)    &    Style of referenced panel labels from inside a figure's caption.  \\
+style / chemfig / figure    &    style (math)    &    Math code applied to \ctan{chemfig} per call.  \\
+style / chemfig / name    &    style (unary)    &    Style of name in \ctan{chemfig} \texmacro{chemname}.  \\
+style / code / line-num    &    style (nullary)    &    Style of line numbers via \ctan{minted}.  \\
+style / code / source    &    style (nullary)    &    Style of code via \ctan{minted}.  \\
+style / fnote / body    &    style (nullary)    &    Style of footnotes (in the list).  \\
+style / indexed-starred    &    style (unary)    &    Style for \texmacro{indexed*}.  \\
+style / list-of / nomencl-group    &    style (unary)    &    Style for subheadings in the nomenclature (e.g. \textit{Greek symbols}).  \\
+style / sec / front-chap    &    style (nullary)    &    Style of numberless chapter headings, typically reserved for front matter.  \\
+style / sec / main-chap / label    &    style (nullary)    &    Style of the chapter label (e.g. \textit{chapter 1}) in numbered chapters.  \\
+style / sec / main-chap / name    &    style (nullary)    &    Style of the chapter name in numbered chapters.  \\
+style / sec / paragraph    &    style (nullary)    &    Style of a runin paragraph-level section.  \\
+style / sec / part / label    &    style (nullary)    &    For \textit{part} section level.  \\
+style / sec / part / name    &    style (nullary)    &    For \textit{part} section level.  \\
+style / sec / section    &    style (nullary)    &    For \textit{subsec} section level.  \\
+style / sec / subsec    &    style (nullary)    &    For \textit{subsec} section level.  \\
+style / sec / subsubsec    &    style (nullary)    &    For \textit{subsubsec} section level.  \\
+style / table / foot    &    style (nullary)    &    Style of the table footer, including notes and remarks.  \\
+style / table / head / body    &    style (nullary)    &    Style of the table header's body, equivalent to a caption body.  \\
+style / table / head / label    &    style (nullary)    &    Style of the table header's label (e.g. \textit{Table 1.1}) and separator, equivalent to a caption body.  \\
+style / tikz    &    style (nullary)    &    Text style applied at the start of every \ctan{tikz} diagram.  \\
+style / toc / chap    &    style (nullary)    &    Style applied to chapter-level line in the TOC.  \\
+style / toc / chap / label    &    style (nullary)    &    Style applied to chapter-level line in the TOC.  \\
+style / toc / page-num    &    style (nullary)    &    Style applied to the chapter's label (e.g. \textit{1}) in the TOC, added on top of \code{style / toc / chap}.  \\
+style / toc / part    &    style (nullary)    &    For \textit{part} section level.  \\
+style / toc / part / label    &    style (nullary)    &    For \textit{part} section level.  \\
+style / toc / section    &    style (nullary)    &    For \textit{section} section level.  \\
+style / toc / section / label    &    style (nullary)    &    For \textit{section} section level.  \\
+style / toc / subsec    &    style (nullary)    &    For \textit{subsection} section level.  \\
+style / toc / subsec / label    &    style (nullary)    &    For \textit{subsection} section level.  \\
+style / toc / subsubsec / label    &    style (nullary)    &    For \textit{subsubsection} section level.  \\
+style / toc / subsubsec    &    style (nullary)    &    For \textit{subsubsection} section level.  \\
+toc / depth    &    none | chapter | section | subsec | subsubsec | paragraph | <n>    &    Max depth at which to show levels in the TOC.  \\
+toc / bib    &    bool    &    Include any bibliography sections in the TOC.  \\
+toc / endnotes    &    bool    &    Include any endnotes sections in the TOC.  \\
+toc / index    &    bool    &    Include the index in the TOC.  \\
+toc / show-links    &    bool    &    Show links in the TOC, normally disabled with \texmacro{HideLinks} .  \\
+typo / admonition / label-sep    &    any    &    Characters between admonition labels and names if a name is passed.  \\
+typo / caption / label-sep    &    any    &    Characters between a caption's label (e.g. \textit{Figure 1.1}) and its body.  \\
+typo / caption / subref / format    &    any    &    Format of panel references inside a caption (e.g. \textit{1a}). Sets \texmacro{subrefformat} in \ctan{subcaption}.  \\
+typo / caption / subref / label-sep    &    plain | parens    &    Characters between a panel reference inside a caption and a description in \texmacro{describepanels}.  \\
+typo / hyphens-off    &    bool    &    Sets all hyphenation penalties to infinite, preventing TeX from breaking words over lines via hyphenation.  \\
+typo / quote / max-lines    &    int    &    Switch to quote display style after this number of lines. Refer to \ctan{csquotes}.  \\
+typo / ref / abbreviate    &    bool    &    Passes \code{abbreviate} to \ctan{cleveref} (e.g. \textit{fig.} instead of \textit{figure}).  \\
+typo / ref / capitalize    &    bool    &    Passes \code{capitalize} to \ctan{cleveref} (e.g. \texmacro{cref} behaves like \texmacro{Cref}).  \\
+typo / siunitx / extra    &    keyval    &    Extra key--value pairs to pass to \ctan{siunitx} via \texmacro{sisetup}.  \\
+typo / siunitx / extra+    &    keyval    &    (meta) Appends to \code{typo / siunitx / extra}.  \\
+typo / siunitx / group    &    none | all | decimal | integer    &    Passed to \ctan{siunitx} via \texmacro{sisetup} to group digits. (Note: Desert references this.)  \\
+typo / siunitx / mode    &    match | math | auto    &    Whether \ctan{siunitx} should always use math mode (\code{math}) or keep the active mode and style (\code{match}).  \\
+typo / table / note / label-sep    &    any    &    Characters between \ctan{tabularray} note labels and text.  \\
+typo / table / remark / label-sep    &    any    &    Characters between \ctan{tabularray} remark labels and text.  \\
 \end{LongTable}
 
 
@@ -222,12 +267,14 @@ typo / subref-label-sep & any & Text after \texmacro{subref} \\
     simple                 = true ,
     theme                  = longfoot ,
     entry                  = {Packages loaded by Desert} ,
-    caption+               = {} ,
+    caption+               = { (some optional)} ,
     label                  = {packages} ,
 ]{
     colspec                = { X[2,l] X[1,l] X[2,l] } ,
     column{1}              = { font=\ttfamily } ,
     column{2}              = { font=\ttfamily } ,
+    cell{1}{1}             = { font=\sffamily\bfseries } ,
+    cell{1}{2}             = { font=\sffamily\bfseries } ,
 }
 name                        & options              & purpose                      \\
 \ctan{accsupp}              &                      & before: acro                 \\
@@ -253,7 +300,7 @@ name                        & options              & purpose                    
 \ctan{fancyvrb}             &                      & better \texmacro{verb}          \\
 \ctan{fnpct}                &                      & fnote marks position         \\
 \ctan{fontawesome5}         &                      &                              \\
-\ctan{fontsize}             &                      &                              \\
+\ctan{fontsize}             &                      & more font size commands  \\
 \ctan{fontspec}             &                      & all font loading             \\
 \ctan{footmisc}             &                      & fnote style and counters     \\
 \ctan{fvextra}              &                      & improves fancyvrb            \\
@@ -280,16 +327,16 @@ name                        & options              & purpose                    
 \ctan{pidgin}               &                      & language                     \\
 \ctan{ragged2e}             & newcommands          & full ragged envs             \\
 \ctan{semantic}             &                      & academic links, etc.         \\
-\ctan{setspace}             &                      &                              \\
+\ctan{setspace}             &                      & loaded and then patched over \\
 \ctan{showframe}            &                      & if draft                     \\
 \ctan{siunitx}              &                      & typeset quantities           \\
 \ctan{subcaption}           & hypcap=true          & subcaptions                  \\
-\ctan{svg}                  &                      & \texmacro{includesvg}           \\
+\ctan{svg}                  &                      & \texmacro{includesvg}        \\
 \ctan{tabularx}             &                      & for special envs only        \\
 \ctan{tarmac}               &                      & internal utils               \\
 \ctan{tcolorbox}            & xparse               & frame content                \\
 \ctan{textiles}             & faces                &                              \\
-\ctan{thmtools}             &                      & \texmacro{declaretheorem}       \\
+\ctan{thmtools}             &                      & \texmacro{declaretheorem}    \\
 \ctan{tikz}                 &                      & diagrams                     \\
 \ctan{titlesec}             & explicit             & section formatting           \\
 \ctan{titletoc}             &                      & TOC formatting               \\
@@ -298,7 +345,7 @@ name                        & options              & purpose                    
 \ctan{translations}         &                      &                              \\
 \ctan{unicode-math}         &                      & math fonts, unicode chars    \\
 \ctan{uspace}               &                      & Unicode space chars          \\
-\ctan{varioref}             &                      & \texmacro{vref}                 \\
+\ctan{varioref}             &                      & \texmacro{vref}              \\
 \ctan{xcolor}               &                      &                              \\
 \end{LongTable}
 
@@ -313,6 +360,8 @@ name                        & options              & purpose                    
     colspec                = { X[2,l] X[2,l] X[2,l] } ,
     column{1}              = { font=\ttfamily } ,
     column{2}              = { font=\ttfamily } ,
+    cell{1}{1}             = { font=\sffamily\bfseries } ,
+    cell{1}{2}             = { font=\sffamily\bfseries } ,
 }
 command                     & options                    & description             \\
 SetNomGroups                & \{str=str\}              &                        \\
@@ -448,12 +497,14 @@ DeclareCharFallback         & \{char\} \{code\}            & replace \code{char}
     simple                 = true ,
     theme                  = longfoot ,
     entry                  = {List of Desert environments} ,
-    caption+               = {} ,
+    caption+               = { (some require optional packages)} ,
     label                  = {environments} ,
 ]{
     colspec                = { X[2,l] X[1,l] X[2,l] } ,
     column{1}              = { font=\ttfamily } ,
     column{2}              = { font=\ttfamily } ,
+    cell{1}{1}             = { font=\sffamily\bfseries } ,
+    cell{1}{2}             = { font=\sffamily\bfseries } ,
 }
 environment                 & options                          & description           \\
 FrontChapter                & [K–V] \{str\}                    &                       \\
@@ -523,48 +574,6 @@ dez / show-endnotes / pre       &  \\
 dez / show-endnotes / post       &  \\
 dez / show-endnotes / after       &  \\
 \end{LongTable}
-
-
-\begin{LongTable} [
-    plain                  = true ,
-    theme                  = shortfoot ,
-    entry                  = {Reading material} ,
-    caption+               = {} ,
-    label                  = {reading} ,
-]{
-    colspec                = { X[1,l] } ,
-    stretch                = 1.0 ,
-}
-\link{https://www.overleaf.com/learn}[Overleaf's documentation] \\
-\link{https://www.overleaf.com/learn/latex/Articles}[in-depth LaTeX guides] \\
-\link{https://tex.stackexchange.com/}[StackExchange TeX] \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/tabularray/tabularray.pdf}[tabularray] \\
-\link{https://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf}[graphicx] \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/siunitx/siunitx.pdf}[siunitx] to properly and consistently typeset quantities, ranges, etc. \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/acro/acro-manual.pdf}[acro] for all abbreviation needs \\
-\link{https://mirrors.ctan.org/macros/unicodetex/latex/fontspec/fontspec.pdf}[fontspec] for configuring non-mathematical fonts \\
-\link{https://mirrors.ctan.org/macros/unicodetex/latex/unicode-math/unicode-math.pdf}[unicode-math] for mathematical fonts \\
-\link{https://mirrors.ctan.org/macros/unicodetex/latex/unicode-math/unimath-symbols.pdf}[list of math symbols] \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/newfloat/newfloat.pdf}[newfloat] to declare environments like figures, tables, etc. \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/caption/caption.pdf}[caption] \\
-      and \link{https://mirrors.ctan.org/macros/latex/contrib/caption/subcaption.pdf}[subcaption] for captions and subfigures \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/cleveref/cleveref.pdf}[cleveref] \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/enumitem/enumitem.pdf}[enumitem] \\
-\link{https://mirrors.ctan.org/macros/latex/required/amsmath/amsldoc.pdf}[amsmath] for math environments (ignore fonts) \\
-\link{http://mirrors.ctan.org/macros/latex/contrib/mathtools/mathtools.pdf}[mathtools] \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/thmtools/doc/thmtools-manual.pdf}[thmtools]
-      and \link{https://mirrors.ctan.org/macros/latex/contrib/mathtools/mathtools.pdf}[mathtools] to understand theorem-like environments \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/cryptocode/cryptocode.pdf}[cryptocode] for formal algorithms, etc. \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/minted/minted.pdf}[minted] for syntax highlighting \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/csvsimple/csvsimple-l3.pdf}[csvsimple-l3] to load tables from CSV \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/chemmacros/chemmacros-manual.pdf}[chemmacros], \\
-      \link{https://mirrors.ctan.org/macros/latex/contrib/chemformula/chemformula-manual.pdf}[chemformula], \\
-      and \link{https://mirrors.ctan.org/macros/generic/chemfig/chemfig-en.pdf}[chemfig] \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/l3packages/xparse.pdf}[xparse] \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/l3kernel/expl3.pdf}[L3 overview] \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/l3kernel/l3styleguide.pdf}[L3 style guide] \\
-\link{https://mirrors.ctan.org/macros/latex/contrib/l3kernel/interface3.pdf}[L3 documentation] \\
-\end {LongTable}
 
 
 

@@ -6,9 +6,11 @@
 %\Section[no-entry]{I am a section}
 %\Section[title=I am a section]
 
+\textbf{This documentation is very much a work in progress. However, uncomment the code \code{sections/back.tex} to show the (very large) tables for Desert's options and features.}
+
 \section{I am a section}
 
-Turns out \qty{5.302}{\joule\per\kilo\watt} looks ok.
+Turns out \qty{5.302}{\joule\per\kilo\watt} looks ok via \ctan{siunitx}.
 
 \subsection{I am a subsection}
 
@@ -22,42 +24,18 @@ Add a \code{*} when \emph{introducing} terms, for emphasis: \indexed*{starred}.
 The style is set with \code{style / indexed-starred} option \footnote{This is a great idea}. See? \ac{CRISPR}. \ac{CRISPR}. Always put footnotes before the punctuation; \ctan{fnpct} can then kern correctly.
 Using \ctan{chemformula}, \ch{KCr(SO4)2 * 12 H2O}. \ch{CH+CH}.
 
-Also see \ctan{chemmacros} and \ctan{chemfig}; check it out:
+Also see \ctan{chemmacros} and \ctan{chemfig}; check it out \Chem{*5(-=--=)}
 
-\chemfig{*5(-=--=)}
-
+\begin{ChemFigure}[
+    %caption  = Hello ,
+    %label      = chem,
+]
 \chemfig{[:120]NH_2*6(---=O)}
-
-%  the chemmacros 'scheme' module:
-% \begin{scheme}
-% \chemname{\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}}{methanol}
-% \end{scheme}
-%\begin{figure}
-%\schemestart
-%\chemname{\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}}{methanol}
-%\schemestop
-%\end{figure}
+\end{ChemFigure}
 
 % If you want to make your own numbered flaot type,
 % see newfloat: https://mirror.math.princeton.edu/pub/CTAN/macros/latex/contrib/newfloat/newfloat.pdf
 % \DeclareFloatingEnvironment {StructFormula} [within=chapter, name=structural formula, listname=...] {figure}
-
-%\begin{ChemFigure}[caption=methanol-ish]
-%\chemfig{*6((-)-(=O)-*6(-(-NH_2)-(-OH)(=[::60]O)))}
-%\end{ChemFigure}
-
-%\begin{ChemFigure}[caption=Isoborneol Oxidation Reaction To Camphor]
-%\chemnameinit{*6(-(-)-(<OH)----)}
-%\chemname{\chemfig{*6(-(-)-(<OH)----)}}{Isoborneol}
-%\+
-%\chemname{\chemfig{NaOCl}}{Sodium\\Hypochlorite}
-%\arrow{->[HOAc][]}
-%\chemname{\chemfig{*6(-(-)-(=O)----)}}{Camphor}
-%\+
-%\chemname{\chemfig{NaCl}}{Sodium\\Chloride}
-%\+
-%\chemname{\chemfig{H_2O}}{Water}
-%\end{ChemFigure}
 
 (This too: \indexed{space aliens}[aliens!space]).
 It is usually computed in the cloud. With \ac{CRISPR}.
@@ -78,11 +56,13 @@ T
 
 Using \ctan{circuitikz}:
 
+\begin{figure}
 \begin{circuitikz}
 \draw (0,0) to[R=2<\ohm>, i=?, v=84<\volt>] (2,0) --
 (2,2) to[V<=84<\volt>] (0,2)
 -- (0,0);
 \end{circuitikz}
+\end{figure}
 
 
 Quotations can use \ctan{csquotes}, or key--value commands that Desert added:
@@ -193,7 +173,7 @@ While we're at it, we'll make it longer.
     theme = shortfoot,
     entry = {Difficulty modifiers},
     %caption = {Difficulty modifiers},  % OR:
-    caption+ = {. Concatenate entry and this text for the caption.} ,
+    caption+ = \space(concatenate entry + this as caption) ,
     % You can alternatively set entry=* to set it the same as caption
     label = {difficulty},
     note{\dagger} = {A note about some cells, rows, etc.},
@@ -224,7 +204,7 @@ While we're at it, we'll make it longer.
 ] {
     %colspec=lrrrrr,
     % Better in most cases to use flexible X specifiers with relative widths:
-    colspec = { X[2,l] X[1,r] X[1,r] X[1,r] X[1,r] X[1,r] } ,
+    colspec = { X[1,l] X[1,r] X[1,r] X[1,r] X[1,r] X[1,r] } ,
     rowhead={1},
     hline{1,Z} = 0.2ex ,
     hline{2} = 0.1ex,
@@ -253,9 +233,9 @@ int i = 5;
 \end{MintedCode}
 
 \begin{Figure} [
-    entry    = A figure,
-    caption  = A figure,
-    label    = figgy,
+    entry      = A figure,
+    caption.+  = And more. ,
+    label     = figgy,
 ]
 \includegraphics[width=0.1\textwidth]{sections/person.png}
 \end{Figure}

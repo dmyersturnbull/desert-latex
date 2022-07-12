@@ -64,17 +64,7 @@
 
 \bool_if:NT \g_textiles_faces_bool
 {
-    % These warnings are unavoidable and going to happen from 2020 on
-    \PassOptionsToPackage
-        {
-            warnings-off  = {mathtools-colon,mathtools-overbracket} ,
-            math-style    = ISO ,
-            bold-style    = ISO ,
-        }
-        {unicode-math}
-    \RequirePackage {fontspec}
-    \RequirePackage {unicode-math}
-    \RequirePackage {microtype}
+    % require fontspec
     %\RequirePackage {realscripts}
     %\RenewDocumentCommand \textsuperscript {}
     %    { \fakesuperscript }
@@ -2319,91 +2309,6 @@
 \NewDocumentCommand \ShowParSamples
     { O{The~QUICK~brown~fox~jumped\newline\ldots~over~the~lazy~dog.} }
     { \textiles_show_samples:n {#1\par} }
-
-
-
-%===================================================================
-%                    font faces
-%===================================================================
-
-\cs_new_protected:Npn \textiles__declare_family:nnN #1#2#3
-    { \newfontfamily {#3} {#1} [#2] }
-
-\cs_new_protected:Npn \textiles_declare_family:nn #1#2
-{
-    \exp_args:Nnnc
-        \textiles__declare_family:nnN
-        {#1}
-        {#2}
-        {#1}
-}
-
-\NewDocumentCommand \DeclareTxtFontFamily { m O{} }
-    { \textiles_declare_family:nn {#1} {#2} }
-
-\cs_new_protected:Npn \textiles_declare_families:nnnn #1#2#3#4
-{
-    \seq_set_from_clist:Nn \l_tmpa_clist {#3}
-    \seq_map_inline:Nn \l_tmpa_clist
-        { \textiles_declare_family:nn {#1 ##1 #2} {#4} }
-}
-\NewDocumentCommand \DeclareTxtFontFamilies { D<>{} D<>{} m O{} }
-    { \textiles_declare_families:nnnn {#1} {#2} {#3} {#4} }
-
-\tl_const:Nn \c_textiles_source_pro_help_tl {
-    FontFace = {el}{n}{*-ExtraLight} ,
-    FontFace = {lt}{n}{*-Light} ,
-    FontFace = {sb}{n}{*-Semi-Bold} ,
-    FontFace = {eb}{n}{*-Black} ,
-}
-
-\tl_const:Nn \c_textiles_lmroman_help_tl {
-     SmallCapsFont = Latin Modern Roman Caps ,
-}
-
-
-\tl_const:Nn \c_textiles_lmmono_help_tl {
-    ItalicFont     = lmmono10-italic.otf ,  % TODO: optical sizes?
-    BoldFont       = lmmonolt10-bold.otf ,
-    BoldItalicFont = lmmonolt10-boldoblique.otf ,
-}
-
-\tl_const:Nn \c_textiles_noto_help_tl {
-    % no thin or extra-bold
-    FontFace = {el}{n}{*-ExtraLight} ,  % 200
-    FontFace = {lt}{n}{*-Light} ,       % 300
-    FontFace = {sb}{n}{*-SemiBold} ,    % 600
-    FontFace = {bl}{n}{*-Black} ,       % 900
-}
-
-\tl_const:Nn \c_textiles_noto_mono_help_tl {
-    % no thin or extra-bold
-    FontFace = {el}{n}{*-ExtraLight} ,  % 200
-    FontFace = {lt}{n}{*-Light} ,       % 300
-    FontFace = {sb}{n}{*-SemiBold} ,    % 600
-    FontFace = {bl}{n}{*-Black} ,       % 900
-    Ligatures= {NoCommon} ,
-}
-
-
-\NewDocumentCommand \DeclareSourcePro { }
-{
-    \DeclareTxtFontFamilies
-        { Source Serif Pro, Source Sans Pro, Source Code Pro }
-        [ \c_textiles_source_pro_help_tl ]
-}
-
-\NewDocumentCommand \DeclareLatinModern { }
-{
-    \DeclareTxtFontFamilies
-        <Latin Modern>
-        {Roman, Mono}
-        [SmallCapsFont = * Caps]  % needs some help here
-    \DeclareTxtFontFamilies  % doesn't support smallcaps
-        {Latin Modern Sans}
-    \DeclareTxtFontFamilies  % doesn't support smallcaps, italic, or bold
-        {Latin Modern Math}
-}
 
 
 %===================================================================
