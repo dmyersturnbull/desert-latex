@@ -195,8 +195,8 @@
     \prop_map_inline:Nn \g_info_prop
     {
         \str_if_in:NnTF \c_info_hyperxmp_str {##1,}
-            { \str_put_right:Nn #1 {pdf##1~=~{##2}} }
-            { \str_put_right:Nn #2 {##1~=~{##2}} }
+            { \str_put_right:Nn #1 {pdf##1={##2},} }
+            { \str_put_right:Nn #2 {##1={##2},} }
     }
 }
 
@@ -206,21 +206,21 @@
     \info_split_hyperxmp_data:NN \l__tmp_hyperxmp_str \l__tmp_nonhyperxmp_str
     \info__knownxmpdata_info:V \l__tmp_hyperxmp_str
     \info__unknownxmpdata_info:V \l__tmp_nonhyperxmp_str
-    \exp_args:Nx \hypersetup {\l__tmp_hyperxmp_str, \l__tmp_nonhyperxmp_str}
+    \exp_args:Ne \hypersetup {\l__tmp_hyperxmp_str, \l__tmp_nonhyperxmp_str}
 }
 
 \cs_new_protected:Npn \info_set_hyperxmp_data: #1
 {
     \info_split_hyperxmp_data:NN \l__tmp_hyperxmp_str \l__tmp_nonhyperxmp_str
     \info__knownxmpdata_info:V \l__tmp_hyperxmp_str
-    \exp_args:Nx \hypersetup {\l__tmp_hyperxmp_str}
+    \exp_args:Ne \hypersetup {\l__tmp_hyperxmp_str}
 }
 
 \cs_new_protected:Npn \info_set_non_hyperxmp_data: #1
 {
     \info_split_hyperxmp_data:NN \l__tmp_hyperxmp_str \l__tmp_nonhyperxmp_str
     \info__unknownxmpdata_info:V \l__tmp_nonhyperxmp_str
-    \exp_args:Nx \hypersetup {\l__tmp_nonhyperxmp_str}
+    \exp_args:Ne \hypersetup {\l__tmp_nonhyperxmp_str}
 }
 
 \NewDocumentCommand \AddPdfHyperxmpData { }
@@ -384,7 +384,7 @@
     \group_begin:
     \keys_set:nn {info / single} {#2}
     \info_get:nN {#1} \l_my_str
-    \tl_set:Nx \l_tmpa_tl { \text_titlecase_first:V \l_my_str }
+    \tl_set:Ne \l_tmpa_tl { \text_titlecase_first:V \l_my_str }
     \info__format_single:V \l_tmpa_tl
     \group_end:
 }
@@ -495,7 +495,7 @@
     \group_begin:
     \keys_set:nn {info / list} {#2}
     \info_get:nN {#1} \l_tmpa_tl
-    \tl_set:Nx \l_tmpa_tl { \text_titlecase_first:V \l_tmpa_tl }
+    \tl_set:Ne \l_tmpa_tl { \text_titlecase_first:V \l_tmpa_tl }
     \clist_set:NV \l_tmpa_clist \l_tmpa_tl
     \seq_set_from_clist:NN \l_tmpa_seq \l_tmpa_clist
     \info__format_list:N \l_tmpa_seq

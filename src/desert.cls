@@ -1131,7 +1131,7 @@
 
 % layout control:
 \@RP {fancyvrb}                    % _verbatim_ , etc.
-\@RP [newcommands] {ragged2e}      % full ragged environments; before: footmisc
+\@RP {tarmac}                      % includes ragged2e, before footmisc
 \@RP {newfloat}                    % declare new float environments
 \@RP {geometry}                    % \geometry
 \@RP [Export] {adjustbox}          % resize boxes
@@ -1141,7 +1141,8 @@
 % xindy and hyperref
 \@LF [xindy] {imakeidx}            % index; before: knowledge
 \@RP {hyperxmp}
-\@RP {hyperref}                    % AFTER xindy and geometry
+\@RP [pdfa,pdfapart=3,pdfaconformance=u] {hyperref}  % AFTER xindy and geometry
+%\@RP [a-3u] {pdfx}                 % PDF/A compliance
 
 % font control and math
 \@PP {babel=true} {microtype}
@@ -1171,7 +1172,6 @@
 \@RP {acro}                        % for all abbreviations (after: toclof)
 
 % more layout and spacing
-\@RP {tarmac}
 \@RP {fancyhdr}                    % footer and header
 \@RP {enumitem}                    % control spacing for lists
 \@RP [hang] {footmisc}             % footnote styling and counters (after: setspace)
@@ -1239,11 +1239,12 @@
     % core
     \@RP      { tikz }
     \@TZ      { babel, fpu, calc, }
+    % TODO: fix
     %\@TZ      { external }
-    \hook_gput_code:nnn
-        {dez/after}
-        {dez/tikzexternalize}
-        { \tikzexternalize }
+    %\hook_gput_code:nnn
+    %    {dez/after}
+    %    {dez/tikzexternalize}
+    %    { \tikzexternalize }
     % basic
     \@TZ     { scopes, backgrounds, positioning, intersections, through, chains, matrix, fit, }
     % shapes and arrows
@@ -2349,96 +2350,13 @@
 }
 
 
-% like the other ragged2e commands
-\let \Justifying \justifying
-
-\NewDocumentEnvironment {Justify} {}
-    { \begin {justify} }
-    { \end   {justify} }
-
-\prop_const_from_keyval:Nn \c_dez__align_to_cmd_prop
-{
-    left         = RaggedRight ,
-    Left         = RaggedRight ,
-    flushleft    = RaggedRight ,
-    FlushLeft    = RaggedRight ,
-    raggedright  = RaggedRight ,
-    RaggedRight  = RaggedRight ,
-    right        = RaggedLeft ,
-    Right        = RaggedLeft ,
-    flushright   = RaggedLeft ,
-    FlushRight   = RaggedLeft ,
-    raggedleft   = RaggedLeft ,
-    RaggedLeft   = RaggedLeft ,
-    center       = Centering ,
-    Center       = Centering ,
-    centering    = Centering ,
-    Centering    = Centering ,
-    centered     = Centering ,
-    Centered     = Centering ,
-    justify      = justifying ,
-    Justify      = justifying ,
-    justifying   = justifying ,
-    Justifying   = justifying ,
-    justified    = justifying ,
-    Justified    = justifying ,
-}
-
-\prop_const_from_keyval:Nn \c_dez__align_to_env_prop
-{
-    flushleft     = FlushLeft ,
-    FlushLeft     = FlushLeft ,
-    left          = FlushLeft ,
-    Left          = FlushLeft ,
-    raggedright   = FlushLeft ,
-    RaggedRight   = FlushLeft ,
-    right         = FlushRight ,
-    Right         = FlushRight ,
-    flushright    = FlushRight ,
-    raggedleft    = FlushRight ,
-    RaggedLeft    = FlushRight ,
-    FlushRight    = FlushRight ,
-    center        = Center ,
-    Center        = Center ,
-    centering     = Center ,
-    Centering     = Center ,
-    centered      = Center ,
-    Centered      = Center ,
-    justify       = justify ,
-    Justify       = Justify ,
-    justifying    = justify ,
-    Justifying    = justify ,
-    justified     = justify ,
-    Justified     = justify ,
-}
-
-\cs_new_protected:Npn \dez_align:n #1
-{
-    \prop_get:NnN \c_dez__align_to_cmd_prop {#1} \l_tmpa_tl
-    \cs_if_exist_use:N \l_tmpb_str
-}
-\cs_generate_variant:Nn \dez_align:n { V }
-
-\cs_new_protected:Npn \dez__align_begin:n #1
-{
-    \prop_get:NnN \c_dez__align_to_env_prop {#1} \l_tmpa_tl
-    \begin_:V \l_tmpa_tl
-}
-\cs_generate_variant:Nn \dez__align_begin:n { V }
-
-\cs_new:Npn \dez__align_end:n #1
-{
-    \prop_get:NnN \c_dez__align_to_env_prop {#1} \l_tmpa_tl
-    \end_:V \l_tmpa_tl
-}
-\cs_generate_variant:Nn \dez__align_end:n { V }
-
 %\NewDocumentCommand \Aligning { m }
-%    { \dez_align:n {#1} }
+%    { \tarmac_align:n {#1} }
 
 \NewDocumentEnvironment {Align} { m }
-    { \dez__align_begin:n {#1} }
-    { \dez__align_end:n   {#1} }
+    { \tarmac_align_begin:n {#1} }
+    { \tarmac_align_end:n   {#1} }
+
 
 
 
@@ -2483,16 +2401,16 @@
         { \HideLinks }
     \tl_if_eq:NnF \l__align_tl {justify}
         { \hbadness=10000 }
-    \dez_align:V \l__align_tl
+    \tarmac_align:V \l__align_tl
     \tl_if_eq:NnTF \l__at_tl {top}
         { \glue_par_addvspace:N \l__above_dim }
         { \vspace*{\fill} }
     \begin_r:nV {minipage} \l__width_dim
-    \dez__align_begin:V \l__align_tl
+    \tarmac_align_begin:V \l__align_tl
     \textiles_use_or_inline:VVn \l__textile_tl \l__style_tl {#1\par}
 }
 {
-    \dez__align_end:V \l__align_tl
+    \tarmac_align_end:V \l__align_tl
     \end {minipage}
     \tl_if_eq:NnTF \l__at_tl {bottom}
         { \glue_par_addvspace:N \l__below_dim }
@@ -4972,7 +4890,6 @@
     final             = true ,  % ignore global settings
     draft             = false ,
     linktoc           = all ,
-    colorlinks        = true ,
     linkcolor         = ref ,
     citecolor         = cite ,
     urlcolor          = url ,
@@ -4981,18 +4898,7 @@
 }
 \bool_if:NTF \g_dez_color_no_bool
     { \hypersetup { colorlinks = false } }
-    {
-      \hypersetup
-      {
-          colorlinks        = true ,
-          linkcolor         = ref ,
-          citecolor         = cite ,
-          urlcolor          = url ,
-          filecolor         = file ,
-          runcolor          = run ,
-      }
-    }
-
+    { \hypersetup { colorlinks = true } }
 
 \hook_gput_code:nnn
     { begindocument/before }
