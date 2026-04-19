@@ -1,8 +1,6 @@
-% Copyright 2022 Douglas Myers-Turnbull
-% This work may be distributed and/or modified under the conditions of the LaTeX Project Public
-% License, either version 1.3 of this license or (at your option) any later version. The latest
-% version of this license is in http://www.latex-project.org/lppl.txt and version 1.3 or later is
-% part of all distributions of LaTeX version 2005/12/01 or later.
+% SPDX-FileCopyrightText: Copyright 2022-2026, Douglas Myers-Turnbull and Contributors
+% SPDX-PackageHomePage: https://github.com/dmyersturnbull/desert-latex
+% SPDX-License-Identifier: LPPL-1.3c
 %==================================================================================================
 
 
@@ -144,17 +142,17 @@
         { \pidgin__load_lang:nn {import} {##1} }
     \selectlanguage {\g_pidgin_main_str}
     \RequirePackage {translations}
-    
+
     \str_gset:Nx \g_pidgin_base_str
         { \baselanguage {\g_pidgin_main_str} }
-    
+
     \clist_gset:Nx \g_pidgin_base_clist
         { \clist_map_function:NN \g_pidgin_lang_clist \baselanguage }
 
     \PassOptionsToPackage {\g_pidgin_base_str, nospace} {varioref}
-    
+
     \exp_args:NV \SetBabelStrings \c_pidgin__defaults_en_tl
-    
+
     % TODO: remove; replace with translations
     \SetBabelStrings {
         listabbreviation      = List~of~Abbreviations ,

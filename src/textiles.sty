@@ -1,8 +1,6 @@
-% Copyright 2022 Douglas Myers-Turnbull
-% This work may be distributed and/or modified under the conditions of the LaTeX Project Public
-% License, either version 1.3 of this license or (at your option) any later version. The latest
-% version of this license is in http://www.latex-project.org/lppl.txt and version 1.3 or later is
-% part of all distributions of LaTeX version 2005/12/01 or later.
+% SPDX-FileCopyrightText: Copyright 2022-2026, Douglas Myers-Turnbull and Contributors
+% SPDX-PackageHomePage: https://github.com/dmyersturnbull/desert-latex
+% SPDX-License-Identifier: LPPL-1.3c
 %==================================================================================================
 
 
@@ -29,6 +27,7 @@
 \NeedsTeXFormat {LaTeX2e} [2020-10-01]
 \ExplSyntaxOn
 \ProvidesExplPackage {textiles} {2022-07-04} {0.1.0} { Text~styles }
+
 \RequirePackage {l3keys2e}
 
 \keys_define:nn {textiles / load}
@@ -111,7 +110,7 @@
 \cs_new_protected:Npn\textiles__err_missing:n #1
     { \msg_error:nnn {textiles} {stylemissing} {#1} }
 \cs_generate_variant:Nn \textiles__err_missing:n { V }
-    
+
 \msg_new:nnn {textiles} {stylenotdefined}
     { Style~'#1'~is~not~defined;~cannot~renew. }
 \cs_new_protected:Npn \textiles__err_not_def:n #1
@@ -1753,7 +1752,7 @@
 {
     \prop_set_from_keyval:Nn \l_tmpa_prop {#1}
     \prop_map_inline:Nn \l_tmpa_prop
-    { 
+    {
         \DeclareColor{##1}{##2}
     }
 }
@@ -1762,7 +1761,7 @@
 \cs_new_protected:Npn \textiles_declare_colors_from_prop:N #1
 {
     \prop_map_inline:Nn #1
-    { 
+    {
         \DeclareColor{##1}{##2}
     }
 }
@@ -2253,7 +2252,7 @@
     { \textiles_inline:nn{#1}{#2} }
 \NewDocumentCommand \styletxtinline { >{\TrimSpaces}m +m }
     { \textiles_inline:nn{#1}{#2} }
-    
+
 \NewDocumentCommand \StyleParInline { >{\TrimSpaces}m +m }
     { \textiles_inline:nn{#1}{#2 \par} }
 \NewDocumentCommand \styleparinline { >{\TrimSpaces}m +m }

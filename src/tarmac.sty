@@ -1,8 +1,6 @@
-% Copyright 2022 Douglas Myers-tarmac
-% This work may be distributed and/or modified under the conditions of the LaTeX Project Public
-% License, either version 1.3 of this license or (at your option) any later version. The latest
-% version of this license is in http://www.latex-project.org/lppl.txt and version 1.3 or later is
-% part of all distributions of LaTeX version 2005/12/01 or later.
+% SPDX-FileCopyrightText: Copyright 2022-2026, Douglas Myers-Turnbull and Contributors
+% SPDX-PackageHomePage: https://github.com/dmyersturnbull/desert-latex
+% SPDX-License-Identifier: LPPL-1.3c
 %==================================================================================================
 
 
@@ -16,7 +14,7 @@
 
 \RequirePackage {fontsize}
 \RequirePackage {calc}
-\RequirePackage {ragged2e}
+\RequirePackage [newcommands] {ragged2e}
 \RequirePackage [] {setspace}
 
 
@@ -78,7 +76,7 @@
 %========================================================================================
 %                          penalties
 %========================================================================================
-%\pretolerance 
+%\pretolerance
 %\tolerance
 %\emergencystretch [a dimension!]
 
@@ -184,7 +182,7 @@
 \DeclareDocumentEnvironment {doublespace*} {}
     { \begin{spacing}{2.0} }
     { \end{spacing} }
-    
+
 \DeclareDocumentEnvironment {onehalfspace} {}
     { \begin{spacing}{1.5} }
     { \end{spacing} }
@@ -196,7 +194,7 @@
 % https://tex.stackexchange.com/questions/264624/where-and-why-does-lualatex-scale-down-the-requested-base-font-size/264639#264639
 % https://tex.stackexchange.com/questions/30073/why-is-the-linespread-factor-as-it-is
 % https://tex.stackexchange.com/questions/410250/understanding-line-height-line-spacing-baselineskip-in-latex
-% 
+%
 
 % parindent and parskip from expl3 skips
 \cs_new_protected:Npn \tarmac__length:NV #1#2
@@ -338,3 +336,94 @@
 
 \NewDocumentCommand \TarmacSetup { m }
     { \tarmac_set:e{#1} }
+
+
+
+
+%========================================================================================
+%                          ragged2e environments and commands
+%========================================================================================
+
+% like the other ragged2e commands
+\let \Justifying \justifying
+
+\NewDocumentEnvironment {Justify} {}
+    { \begin {justify} }
+    { \end   {justify} }
+
+\prop_const_from_keyval:Nn \c_tarmac__align_to_cmd_prop
+{
+    left         = RaggedRight ,
+    Left         = RaggedRight ,
+    flushleft    = RaggedRight ,
+    FlushLeft    = RaggedRight ,
+    raggedright  = RaggedRight ,
+    RaggedRight  = RaggedRight ,
+    right        = RaggedLeft ,
+    Right        = RaggedLeft ,
+    flushright   = RaggedLeft ,
+    FlushRight   = RaggedLeft ,
+    raggedleft   = RaggedLeft ,
+    RaggedLeft   = RaggedLeft ,
+    center       = Centering ,
+    Center       = Centering ,
+    centering    = Centering ,
+    Centering    = Centering ,
+    centered     = Centering ,
+    Centered     = Centering ,
+    justify      = justifying ,
+    Justify      = justifying ,
+    justifying   = justifying ,
+    Justifying   = justifying ,
+    justified    = justifying ,
+    Justified    = justifying ,
+}
+
+\prop_const_from_keyval:Nn \c_tarmac__align_to_env_prop
+{
+    flushleft     = FlushLeft ,
+    FlushLeft     = FlushLeft ,
+    left          = FlushLeft ,
+    Left          = FlushLeft ,
+    raggedright   = FlushLeft ,
+    RaggedRight   = FlushLeft ,
+    right         = FlushRight ,
+    Right         = FlushRight ,
+    flushright    = FlushRight ,
+    raggedleft    = FlushRight ,
+    RaggedLeft    = FlushRight ,
+    FlushRight    = FlushRight ,
+    center        = Center ,
+    Center        = Center ,
+    centering     = Center ,
+    Centering     = Center ,
+    centered      = Center ,
+    Centered      = Center ,
+    justify       = justify ,
+    Justify       = Justify ,
+    justifying    = justify ,
+    Justifying    = justify ,
+    justified     = justify ,
+    Justified     = justify ,
+}
+
+\cs_new_protected:Npn \tarmac_align:n #1
+{
+    \prop_get:NnN \c_tarmac__align_to_cmd_prop {#1} \l_tmpa_tl
+    \cs_if_exist_use:N \l_tmpb_str
+}
+\cs_generate_variant:Nn \tarmac_align:n { V }
+
+\cs_new_protected:Npn \tarmac_align_begin:n #1
+{
+    \prop_get:NnN \c_tarmac__align_to_env_prop {#1} \l_tmpa_tl
+    \exp_args:NV \begin \l_tmpa_tl
+}
+\cs_generate_variant:Nn \tarmac_align_begin:n { V }
+
+\cs_new:Npn \tarmac_align_end:n #1
+{
+    \prop_get:NnN \c_tarmac__align_to_env_prop {#1} \l_tmpa_tl
+    \exp_args:NV \end \l_tmpa_tl
+}
+\cs_generate_variant:Nn \tarmac_align_end:n { V }

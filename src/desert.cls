@@ -1,25 +1,22 @@
-% Copyright 2022 Douglas Myers-Turnbull
-% This work may be distributed and/or modified under the conditions of the
-% LaTeX Project Public License, either version 1.3 of this license or
-% (at your option) any later version. The latest version of this license is
-% in http://www.latex-project.org/lppl.txt and version 1.3 or later is part of
-% all distributions of LaTeX version 2005/12/01 or later.
-% See https://github.com/dmyersturnbull/dez-latex for the most recent code.
+% SPDX-FileCopyrightText: Copyright 2022-2026, Douglas Myers-Turnbull and Contributors
+% SPDX-PackageHomePage: https://github.com/dmyersturnbull/desert-latex
+% SPDX-License-Identifier: LPPL-1.3c
+
+%                                                                (ideal)             (normal)           (soft limit)
+%                                                                 column 79 → █       column 99 → █      column 119 → █
 
 
 %=======                                                   =======
 %=======                      Desert                       =======
 %=======                                                   =======
 
-\NeedsTeXFormat {LaTeX2e} [2020-10-01]
-\ExplSyntaxOn
-\ProvidesExplClass {desert} {2022-07-04} {0.1.0} { Desert~dissertation~template }
+\NeedsTeXFormat {LaTeX2e} [2025-11-01]
+%\ExplSyntaxOn
+\ProvidesExplClass {desert} {2026-04-19} {v0.1.1} { Desert~dissertation~template }
 
-
-
-%======================================================================================================================
+%==========================================================================================================================================
 %                    hooks for fancy users
-%======================================================================================================================
+%==========================================================================================================================================
 
 \hook_new:n { dez / before }
 \hook_new:n { dez / after }
@@ -51,10 +48,10 @@
 \hook_new:n { dez / show-endnotes / pre }
 \hook_new:n { dez / show-endnotes / post }
 
-    
+
 \ProvideDocumentCommand \DezMainChapterPageCmd {}
     { \cleardoublepage }
-    
+
 \ProvideDocumentCommand \DezChapterPageCmd {}
     { \clearpage }
 
@@ -76,7 +73,7 @@
 %\catcode`\^=\active
 %\def _ { \relax \ifmmode \sp \else \^ \fi }
 
-% https://tex.stackexchange.com/questions/245880/repeated-labels-may-have-changed-when-using-catcode-12-underscore-hack-wi
+% https://tex.stackexchange.com/q/245880/63693
 %\hook_gput_code:nnn
 %    { begindocument }
 %    { dez/fix-cat-codes }
@@ -278,12 +275,12 @@
     }
 }
 
-\let \@PP \PassOptionsToPackage
-\let \@RP \RequirePackage
-\let \@LF \@DezLoadFeat
-\let \@TZ \UseTikzLibrary
-\let \@PG \UsePgfLibrary
-\let \@GD \UseGdLibrary
+\let \@PP       \PassOptionsToPackage
+\let \@RP       \RequirePackage
+\let \@LF       \@DezLoadFeat
+\let \@TZ       \UseTikzLibrary
+\let \@PG       \UsePgfLibrary
+\let \@GD       \UseGdLibrary
 
 \cs_new_protected:Npn \dez__add_feat:n #1
 {
@@ -304,8 +301,8 @@
 , preset / Berkeley .value_forbidden:n                          = true
 , preset / Cambridge .meta:n                                    = { lang/main=british, layout/geometry={a4paper,twoside,top=2cm,bottom=2cm,inner=3cm,outer=2cm,footskip=1cm}, glue/bib/item=1ex, num/page/by=arabic, typo/siunitx/extra={group-separator=\thinspace,output-decimal-marker=.}, }
 , preset / Cambridge .value_forbidden:n                         = true
-, preset / Chicago .meta:n                                     = { lang/main=american, layout/geometry={letterpaper,hmargin=1in,top=1in,bottom=1.5in,footskip=0.5in}, font/size=12, num/fnote/by=arabic, num/fnote/in=chapter, stretch/double, stretch/bib=1.0, rule/fnote-list/length=1.5in, typo/siunitx/extra={group-digits=integer,group-separator={,},output-decimal-marker=.}, footer/clear, footer/C={\small\thepage}, header/clear }
-, preset / Chicago .value_forbidden:n                          = true
+, preset / Chicago .meta:n                                      = { lang/main=american, layout/geometry={letterpaper,hmargin=1in,top=1in,bottom=1.5in,footskip=0.5in}, font/size=12, num/fnote/by=arabic, num/fnote/in=chapter, stretch/double, stretch/bib=1.0, rule/fnote-list/length=1.5in, typo/siunitx/extra={group-digits=integer,group-separator={,},output-decimal-marker=.}, footer/clear, footer/C={\small\thepage}, header/clear }
+, preset / Chicago .value_forbidden:n                           = true
 , preset / CMU .meta:n                                          = { lang/main=american, layout/geometry={letterpaper,margin=1in,footskip=0.25in}, pad/fnote/indent=0.5in, layout/fnote/place=bottomfloats, num/fnote/in=chapter, num/fnote/in=arabic, num/float/in=none, num/eqn/in=none, num/thm/in=none, rule/fnote-list/width=1.5in, stretch/double, typo/siunitx/extra={group-digits=integer,group-separator={,},output-decimal-marker=.}, }
 , preset / CMU .value_forbidden:n                               = true
 , preset / generic-A4 .meta:n                                   = { layout/geometry={a4paper,vmargin=2.5cm,hmargin=3cm,headheight=1cm} }
@@ -826,9 +823,6 @@
 , num / panel / by .choices:nn                                  = { arabic, roman, Roman, alph, Alph, } { \str_gset_eq:NN \g_dez_n_panels_str \l_keys_choice_tl }
 , num / panel / by .initial:n                                   = alph
 , num / panel / by .value_required:n                            = true
-%, num / sec / in .choices:nn                                    = { none, chapter, section, subsection, subsec, subsubsection, subsubsec, } { \str_gset_eq:NN \g_dez_sec_in_str \l_keys_choice_tl }
-%, num / sec / in .default:n                                     = true ,
-%, num / sec / in .initial:n                                     = false ,
 , num / thm / by .choices:nn                                    = { arabic, roman, Roman, alph, Alph, } { \str_gset_eq:NN \g_dez_n_thm_str \l_keys_choice_tl }
 , num / thm / by .initial:n                                     = arabic
 , num / thm / by .value_required:n                              = true
@@ -870,11 +864,10 @@
 , pad / toc / subsubsec .value_required:n                       = true
 , pkg / chemfig .code:n                                         = { \dez__add_feat:n{#1} }
 , pkg / chemformula .code:n                                     = { \dez__add_feat:n{#1} }
-, pkg / chemmacros .code:n                                      = { \dez__add_feat:n{#1} }
+%, pkg / chemmacros .code:n                                      = { \dez__add_feat:n{#1} }
 , pkg / circuitikz .code:n                                      = { \dez__add_feat:n{#1} }
 , pkg / cryptocode .code:n                                      = { \dez__add_feat:n{#1} }
 , pkg / fontawesome5 .code:n                                    = { \dez__add_feat:n{#1} }
-, pkg / graphs .code:n                                          = { \dez__add_feat:n{#1} }
 , pkg / imakeidx .code:n                                        = { \dez__add_feat:n{#1} }
 , pkg / kantlipsum .code:n                                      = { \dez__add_feat:n{#1} }
 , pkg / knowledge .code:n                                       = { \dez__add_feat:n{#1} }
@@ -883,7 +876,6 @@
 , pkg / noms .code:n                                            = { \dez__add_feat:n{#1} }
 , pkg / svg .code:n                                             = { \dez__add_feat:n{#1} }
 , pkg / tcolorbox .code:n                                       = { \dez__add_feat:n{#1} }
-, pkg / tikz .code:n                                            = { \dez__add_feat:n{#1} }
 , pkg / tikz-cd .code:n                                         = { \dez__add_feat:n{#1} }
 , pkg / ulem .code:n                                            = { \dez__add_feat:n{#1} }
 , pkg / varioref .code:n                                        = { \dez__add_feat:n{#1} }
@@ -1117,19 +1109,18 @@
 \str_if_eq:VnF \g_dez_fnote_align_str {left}    { \@PP {ragged}                 {footmisc}   }
 \str_if_eq:VnF \g_dez_fnote_place_str {default}  % for compatibility
                                                 { \@PP {\g_dez_fnote_place_str} {footmisc}   }
-
 % Run our friendly hook:
 \hook_use_once:n { dez/packages/before }
 
-% language via pidgin
-% pidgin uses babel, tracklang, and translations
-% we use it to load cleveref etc. at the end
+% Language via pidgin:
+% pidgin uses babel, tracklang, and translations.
+% We use it to load cleveref etc. at the end.
 \@RP {pidgin}
 \pidgin_set_main_lang:V  \g_dez_lang_str
 \pidgin_set_langs:V      \g_dez_langs_str
 \pidgin_start:
 
-% layout control:
+% Layout control:
 \@RP {fancyvrb}                    % _verbatim_ , etc.
 \@RP {tarmac}                      % includes ragged2e, before footmisc
 \@RP {newfloat}                    % declare new float environments
@@ -1138,13 +1129,13 @@
 \@RP {perpage}                     % reset a counter every page
 \@RP {datetime2}                   % format dates and times (after: babel)
 
-% xindy and hyperref
+% Links via `xindy` `hyperref`, etc.:
 \@LF [xindy] {imakeidx}            % index; before: knowledge
-\@RP {hyperxmp}
-\@RP [pdfa,pdfapart=3,pdfaconformance=u] {hyperref}  % AFTER xindy and geometry
+\@RP {hyperref}                    % AFTER xindy and geometry
+\@RP {hyperxmp}                    % AFTER hyperref
 %\@RP [a-3u] {pdfx}                 % PDF/A compliance
 
-% font control and math
+% Font control and math:
 \@PP {babel=true} {microtype}
 \@RP {glue}
 \@RP {fontworthy}
@@ -1160,18 +1151,18 @@
 \@RP {fnpct}                       % move footnote marks
 
 
-% layout & spacing
+% Layout & spacing:
 \@RP [explicit] {titlesec}         % to format headers; explicit: use #1
 \@RP {titletoc}                    % to format TOC
 \@RP [titles] {tocloft}            % tableofcontents, etc.
 
 
-% acro, index, nomenclature, etc.
+% `acro`, `index`, `nomenclature`, etc.:
 \@RP [backend=biber] {biblatex}    % BibLaTeX! after: hyperref
 \@RP {accsupp}                     % before: acro
 \@RP {acro}                        % for all abbreviations (after: toclof)
 
-% more layout and spacing
+% More layout and spacing:
 \@RP {fancyhdr}                    % footer and header
 \@RP {enumitem}                    % control spacing for lists
 \@RP [hang] {footmisc}             % footnote styling and counters (after: setspace)
@@ -1181,20 +1172,19 @@
 \@RP {lscape}                      % {landscape} env
 \@RP {pdflscape}                   % gives {landscape} env PDF attr '\Rotate'
 \@RP {multicol}
-\bool_if:NT \g_dez_draft_bool
-    { \@RP {showframe} }
+%\bool_if:NT \g_dez_draft_bool { \@RP {showframe} }
 
 
-% graphics
+% Graphics:
 \@RP [hypcap=true] {caption}       % needed for formatting; use hypcap option
 \@RP [hypcap=true] {subcaption}    % successor to subfig; use hypcap option
 \@RP {graphicx}                    % for, well, everything
 
-% tables
+% Tables:
 %\@RP {csvsimple-l3}               % load CSV data
 \@RP {tabularray}                  % LaTeX3 tabular and table replacement
 \let \@TL \UseTblrLibrary
-\@TL {babel}
+%\@TL {babel}
 \@TL {amsmath}                     % (amsmath loaded earlier)
 \@TL {siunitx}                     % (siunitx loaded earlier)
 %\@TL {booktabs}                    % \toprule, etc. and envs
@@ -1202,7 +1192,7 @@
 %\@TL {counter}                     % get row and col counters
 %\@TL {diagbox}                     % split desc for top-left cellS
 
-% typography
+% Typography:
 \@RP {fvextra}                     % only needed to avoid warning in csquotes
 \@RP {csquotes}                    % quote environments [before: others?]
 \@RP {ellipsis}                    % no added space with \ldots in text mode
@@ -1210,53 +1200,28 @@
 \@RP {siunitx}                     % pretty units
 \@RP {alphalph}
 
-% shell
-% https://tex.stackexchange.com/questions/365777/cannot-run-tikz-externalize-with-lualatex-but-it-used-to-work
+% Shell:
+% https://tex.stackexchange.com/q/365777/63693
 %\@RP {shellesc}
 
-% optional features
+% Optional features:
 \@LF {noms}                        % nomenclature groups and utils
 \@LF {multicol}
 \@LF [newfloat] {minted}
 \@LF [xparse] {tcolorbox}
-\dez_if_feat_enabled:nT {cryptocode}
-{
-    % https://tex.stackexchange.com/questions/605616/how-to-remove-the-etex-warning-when-using-cryptocode-with-the-llncs-document-cla
-    \exp_after:wN \def \csname ver@etex.sty \endcsname {}
-    \RequirePackage {cryptocode}
-}
-\@LF {chemmacros}
+%\dez_if_feat_enabled:nT {cryptocode}  % TODO
+%{
+%    % https://tex.stackexchange.com/q/605616/63693
+%    \exp_after:wN \def \csname ver@etex.sty \endcsname {}
+%    \RequirePackage {cryptocode}
+%}
+%\@LFnoexpl {chemmacros}
 \@LF {chemformula}
 \@LF {chemfig}
 \@LF {svg}
-\@LF {tcolorbox}
 \@LF {fontawesome5}
 \@LF [siunitx] {circuitikz}
 \@LF {tikz-cd}
-
-\dez_if_feat_enabled:nT {tikz}
-{
-    % core
-    \@RP      { tikz }
-    \@TZ      { babel, fpu, calc, }
-    % TODO: fix
-    %\@TZ      { external }
-    %\hook_gput_code:nnn
-    %    {dez/after}
-    %    {dez/tikzexternalize}
-    %    { \tikzexternalize }
-    % basic
-    \@TZ     { scopes, backgrounds, positioning, intersections, through, chains, matrix, fit, }
-    % shapes and arrows
-    \@PG     { shapes.geometric, arrows, }
-    \@TZ     { decorations.markings, decorations.pathmorphing, decorations.pathreplacing, }
-    %  graphs
-    \dez_if_feat_enabled:nT {graphs}
-    {
-        \@TZ { graphs, graphdrawing, }
-        \@GD { force, layered, circular, routing, }
-    }
-}
 
 
 
@@ -1278,13 +1243,12 @@
 \cs_undefine:N \@GD
 
 
-% it's utterly weird that these can be different
-% report and book use bibname, while article uses refname
+% It's utterly weird that these can be different:
+% `report` and `book` use `bibname`, but `article` uses `refname`.
 \let \bibname \refname
 
 % Run our friendly hook:
 \hook_use_once:n { dez/packages/after }
-
 
 % Send our dez options to textiles!
 % The colors are saved to both xcolor and l3color.
@@ -1305,10 +1269,8 @@
 \tl_gset:Nx  \g_dez_stretch_table_tl     { \fp_use:N \g_dez_stretch_table_fp }
 
 
-
-% Some skips always appear with paragraph skips,
-% so we'll subtract those paragraph skips.
-% It's unclear why this is needed: Tex should be 'adding' vspace with max{last, next}
+% Some skips always appear with paragraph skips, so we'll subtract those paragraph skips.
+% It's unclear why this is needed: Tex should be 'adding' vspace with `max{last, next}`.
 \skip_gsub:NV \g_dez_bel_abstract_title_skip   \g_dez_btw_paragraphs_skip
 \skip_gsub:NV \g_dez_abv_abstract_author_skip  \g_dez_btw_paragraphs_skip
 \skip_gsub:NV \g_dez_abv_abstract_body_skip    \g_dez_btw_paragraphs_skip
@@ -1336,7 +1298,6 @@
 
 
 
-
 %======================================================================================================================
 %                         tarmac
 %======================================================================================================================
@@ -1348,8 +1309,8 @@
 \tarmac_set_depth:nV {tocdepth} \g_dez_toc_depth_str
 \bool_if:NT \g_dez_lof_panels_bool
     { \setcounter {\Zdepth} {2} }
-    
-% Note \SetTexParams from tarmac
+
+% Note `\SetTexParams` from tarmac.
 
 \bool_if:NT \g_dez_typo_ban_hyphens_bool
     { \BanHyphens }
@@ -1379,7 +1340,7 @@
 \cs_new_protected:Npn \dez__setlist:e #1
     { \setlist {#1} }
 
-% Our everyday lists and enums, where items are ==1 paragraph at most
+% Our everyday lists and enums, where items are ==1 paragraph at most.
 \dez__setlist:e
 {
     itemsep     = {\skip_use:N \g_dez_btw_items_skip} ,
@@ -1398,7 +1359,7 @@
         parsep      = {\skip_use:N \g_dez_btw_paragraphs_skip} ,
     }
 
-% https://tex.stackexchange.com/questions/95838/how-to-write-a-perfect-equation-parameters-description
+% https://tex.stackexchange.com/q/95838/63693
 \NewDocumentEnvironment {where} { m }
     {
         \begin {tabularray}
@@ -1411,7 +1372,7 @@
 
 \dez_if_feat_enabled:nT {noms}
 {
-    % Set nomenclature spacing
+    % Set nomenclature spacing.
     \cs_new:Npn \dez__nomgroup_header:n #1
     {
         \textiles_use:nn {list-of/nomencl-group} {#1}
@@ -1433,17 +1394,18 @@
     { \glue_par_addvspace:N \g_dez_btw_lof_items_skip \par }
 
 
+
 %======================================================================================================================
 %                           section titles
 %======================================================================================================================
 
+% `\titleformat` parameters:
 % \titleformat {command} [shape]
-%    {format}       1
-%    {label}        2
-%    {sep}          3 sep between label and title
-%    {before-code}  4
+%     {format}       1  (e.g. `\fillcenter` to center)
+%     {label}        2  (e.g. `\thetitle` for section number)
+%     {sep}          3  (sep between label and title)
+%     {before-code}  4  (e.g. `#1` for section name)
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====         PART          ====    %
 
 \titleformat { name=\part } [block]
@@ -1463,7 +1425,6 @@
     { \textiles_run_nullary:n{sec/part/name} #1 }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====        CHAPTER        ====    %
 
 \titleformat { name=\chapter } [block]
@@ -1472,7 +1433,7 @@
         \textiles_run_nullary:n{sec/main-chap/label}
         \chaptertitlename\ \thechapter
         \glue_par_addvspace:N \g_dez_bel_chap_label_skip
-    }  %(TODO: \g_dez_bel_chap_label_skip doesn't work below?
+    }  % TODO: \g_dez_bel_chap_label_skip doesn't work below?
     { 0pt }  % space between label and name
     { \textiles_run_nullary:n{sec/main-chap/name} #1 }  % code for name
 
@@ -1483,7 +1444,6 @@
     { \textiles_run_nullary:n{sec/front-chap} #1 }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====        SECTION        ====    %
 
 \titleformat {\section} [hang]
@@ -1493,7 +1453,6 @@
     { \textiles_run_nullary:n{sec/section} #1 }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====      SUB-SECTION      ====    %
 
 \bool_if:NTF \g_dez_subsec_runin_bool
@@ -1513,7 +1472,6 @@
 }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====    SUB-SUB-SECTION    ====    %
 
 \bool_if:NTF \g_dez_subsubsec_runin_bool
@@ -1533,7 +1491,6 @@
 }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====       PARAGRAPH       ====    %
 
 \titleformat {\paragraph} [runin]
@@ -1543,7 +1500,6 @@
     { \textiles_run_nullary:n{sec/paragraph} #1. }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====     SUB-PARAGRAPH     ====    %
 
 \titleformat {\subparagraph} [runin]
@@ -1558,25 +1514,24 @@
 %                           section spacing
 %======================================================================================================================
 
-%\titlespacing {command}
-%    {left}       1
-%    {before-sep} 2
-%    {after-sep}  3
+% `titlespacing` parameters:
+% \titlespacing {command}
+%     {left}       1
+%     {before-sep} 2
+%     {after-sep}  3
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====         PART          ====    %
 
-% All good -- we assume it takes the whole page
+% All good -- we assume it takes the whole page.
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====        CHAPTER        ====    %
 
 \titlespacing { name=\chapter }
-    { 0pt }                               % left space
-    { \skip_use:N \g_dez_abv_chap_skip }  % top space
-    { \skip_use:N \g_dez_bel_chap_skip }  % bottom space
+    { 0pt }                                       % left space
+    { \skip_use:N \g_dez_abv_chap_skip }          % top space
+    { \skip_use:N \g_dez_bel_chap_skip }          % bottom space
 
 \titlespacing { name=\chapter, numberless }
     { 0pt }
@@ -1584,7 +1539,6 @@
     { \skip_use:N \g_dez_bel_front_chap_skip }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====        SECTION        ====    %
 
 \titlespacing {\section}
@@ -1593,7 +1547,6 @@
     { \skip_use:N \g_dez_bel_section_skip }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====      SUB-SECTION      ====    %
 
 \bool_if:NTF \g_dez_subsec_runin_bool
@@ -1601,17 +1554,16 @@
     \titlespacing {\subsection}
         { 0pt }
         { \skip_use:N \g_dez_abv_subsec_skip }
-        { \dim_use:N \g_dez_runin_dim }         % runin, so horizontal after
+        { \dim_use:N \g_dez_runin_dim }           % runin, so horizontal after
 }
 {
     \titlespacing {\subsection}
         { 0pt }
         { \skip_use:N \g_dez_abv_subsec_skip }
-        { \skip_use:N \g_dez_bel_subsec_skip }  % hang, so vertical after
+        { \skip_use:N \g_dez_bel_subsec_skip }    % hang, so vertical after
 }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====    SUB-SUB-SECTION    ====    %
 
 \bool_if:NTF \g_dez_subsec_runin_bool
@@ -1629,7 +1581,6 @@
 }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====       PARAGRAPH       ====    %
 
 \titlespacing {\paragraph}
@@ -1638,11 +1589,10 @@
     { \dim_use:N \g_dez_runin_dim  }
 
 
-%   % % % % % % % % % % % % % % % % %   %
 %    ====     SUB-PARAGRAPH     ====    %
 
-\titlespacing {\subparagraph}  % not supported, but choose something reasonable
-    { \dim_use:N \g_dez_runin_dim  }           % indent to left
+\titlespacing {\subparagraph}  % Not supported, but choose something reasonable.
+    { \dim_use:N \g_dez_runin_dim  }              % indent to left
     { \skip_use:N \g_dez_abv_paragraph_skip }
     { \dim_use:N \g_dez_runin_dim  }
 
@@ -1659,12 +1609,12 @@
 
 
 \titlecontents {part}
-    [ \g_dez_toc_part_dim ]                           % margin from left side
-    {                                                 % code before
+    [ \g_dez_toc_part_dim ]                              % margin from left side
+    {                                                    % code before
         \glue_par_addvspace:N \g_dez_abv_toc_part_skip
         \textiles_run_nullary:n {toc/part}
     }
-    {                                                 % code for label if numbered
+    {                                                    % code for label if numbered
         \contentslabel
             [
                 \textiles_run_nullary:n {toc/part/label}
@@ -1672,10 +1622,10 @@
                     { part.\thecontentslabel }
                     { \thecontentslabel }
             ]
-            {\g_dez_toc_part_dim}                   % how big the label box is
+            {\g_dez_toc_part_dim}                        % how big the label box is
     }
-    {  }              % code if unnumbered (subtract the box)
-    {                                               % code for page number
+    {  }                                                 % code if unnumbered (subtract the box)
+    {                                                    % code for page number
         \textiles_run_nullary:n {toc/page-num}
         \titlerule*[12pt]{.} \contentspage
     }
@@ -1837,19 +1787,18 @@
 
 \fancyhf{} % kill the default
 
-\fancypagestyle {plain} {}  % make plain be fancy
-\pagestyle {plain}  % use plain
+\fancypagestyle {plain} {} % make plain be fancy
+\pagestyle {plain} % use plain
 
 \assignpagestyle  \part     {plain}  % or empty
 \assignpagestyle  \chapter  {plain}
 
 \cs_new_protected:Npn \dez__fancyhead:en #1#2
 {
-    % Force cat code to letter
+    % Force cat code to letter.
     \exp_args:NNe \str_set:Nn \l_tmpa_str {\str_uppercase:n{#1}}
-    % TODO: I can't explain why this is needed
-    % Calling an aux fn with \fancyhead[#1]{#2}
-    % results in "illegal char `R'"
+    % TODO: I can't explain why this is needed.
+    % Calling an aux fn with `\fancyhead[#1]{#2}` results in "illegal char `R'".
     \str_if_eq:VnT \l_tmpa_str {L}
         { \fancyhead [L] {#2} }
     \str_if_eq:VnT \l_tmpa_str {R}
@@ -1860,7 +1809,7 @@
         { \fancyhead [LE] {#2} }
     \str_if_eq:VnT \l_tmpa_str {RO}
         { \fancyhead [RO] {#2} }
-    % these aren't normal:
+    % These aren't normal:
     \str_if_eq:VnT \l_tmpa_str {LO}
         { \fancyhead [LO] {#2} }
     \str_if_eq:VnT \l_tmpa_str {RE}
@@ -1875,9 +1824,8 @@
 {
     % Force cat code to letter
     \exp_args:NNe \str_set:Nn \l_tmpa_str {\str_uppercase:n{#1}}
-    % TODO: I can't explain why this is needed
-    % Calling an aux fn with \fancyfoot[#1]{#2}
-    % results in "illegal char `R'"
+    % TODO: I can't explain why this is needed.
+    % Calling an aux fn with `\fancyfoot[#1]{#2}` results in "illegal char `R'".
     \str_if_eq:VnT \l_tmpa_str {L}
         { \fancyfoot [L] {#2} }
     \str_if_eq:VnT \l_tmpa_str {R}
@@ -1924,8 +1872,6 @@
 
 
 
-
-
 %======================================================================================================================
 %                           basic numbering
 %======================================================================================================================
@@ -1935,7 +1881,7 @@
     \str_if_eq:nnTF {#2} {none}
         { \counterwithout {#1} {#2} }
         { \counterwithin {#1} {#2} }
-        % there's also \numberwithin
+        % There's also `\numberwithin`.
 }
 
 \NewDocumentCommand \SetCounterWithin { m m }
@@ -1946,7 +1892,7 @@
 \cs_new_protected:Npn \dez__number_within:nV #1#2
     { \numberwithin {#1} {#2} }
 
-% provided by amsmath -- but works on all numbered environments
+% Provided by amsmath -- but works on all numbered environments.
 \str_if_eq:VnF \g_dez_float_in_str {none}
 {
     \dez__number_within:nV {figure} \g_dez_float_in_str
@@ -1961,12 +1907,13 @@
 %\counterwithout {figure} {chapter}
 
 
+
 %======================================================================================================================
 %                       footnote numbering and format
 %======================================================================================================================
 
 
-% NotoSansSymbol is defined if dez-fancy is used (or in other cases, defined wayy below)
+% `NotoSansSymbol` is defined if dez-fancy is used (or in other cases, defined wayy below).
 \cs_new_protected:Npn \dez__sym:n #1
     { { \NotoSansSymbol \text{#1} } }
 
@@ -2009,12 +1956,12 @@
 }
 
 \str_if_eq:VnT \g_dez_fnote_in_str {page}
-    { \MakePerPage [2] {footnote} }  % otherwise we'll set in \Chapter
+    { \MakePerPage [2] {footnote} }  % otherwise we'll set in `\Chapter`
 
 
 \seq_const_from_clist:Nn \c__dez_numeric_fnotes_clist
     { arabic, alph, Alph, roman, Roman }
-    
+
 \seq_if_in:NVTF \c__dez_numeric_fnotes_clist \g_dez_n_fnotes_str
     { \declarecommand \multfootsep {,} }           % e.g. 12,13
     { \declarecommand \multfootsep {\thinspace} }  % because some symbols are doubled
@@ -2031,7 +1978,7 @@
 
 \seq_if_in:NVTF \g__dez_footsymbols_seq \g_dez_n_fnotes_str
 {
-    % if it's a symbol style, we change symbols, then use \fnsymbol
+    % If it's a symbol style, we change symbols, then use `\fnsymbol`.
     \setfnsymbol {\g_dez_n_fnotes_str}
     \dez__fnote_num:N \fnsymbol
 }
@@ -2041,9 +1988,9 @@
         \g_dez_n_fnotes_str
 }
 
-% TODO: I don't understand this
+% TODO: I don't understand this.
 \setlength {\skip\footins} {\skip_use:N \g_dez_abv_fnote_list_skip}
-% there's also \footskip, which should be \baselineskip
+% There's also `\footskip`, which should be `\baselineskip`.
 
 \exp_args:NNe \setlength \footnotesep    {\skip_use:N \g_dez_btw_fnotes_skip}
 \exp_args:NNe \setlength \footnotemargin {\dim_use:N \g_dez_fnote_left_dim}
@@ -2051,7 +1998,7 @@
 \exp_args:NNe \renewcommand \hangfootparindent {\dim_use:N \g_dez_fnote_indent_dim}
 \exp_args:NNe \renewcommand \hangfootparskip   {\skip_use:N \g_dez_btw_fnote_paragraphs_skip}
 
-% apply the footnote body format
+% Apply the footnote body format.
 \renewcommand* \footnotelayout
     { \textiles_run_nullary:n {fnote/body} }
 
@@ -2090,7 +2037,11 @@
     }
 }
 
-\dez__set_fnote_rule:NNN \g_dez_fnote_rule_dim \g_dez_bel_fnote_rule_skip \g_dez_fnote_rule_width_dim
+% Call the function we just wrote.
+\dez__set_fnote_rule:NNN
+    \g_dez_fnote_rule_dim
+    \g_dez_bel_fnote_rule_skip
+    \g_dez_fnote_rule_width_dim
 
 
 
@@ -2111,8 +2062,8 @@
 \bool_if:NT \g_dez_toc_endnotes_bool
     { \setenotez {totoc=section*} }
 
-% We'll use these in \StartMainMatter if forcing endnotes
-% written as commands for the user's convenience
+% We'll use these in `\StartMainMatter` if forcing endnotes.
+% They're written as commands for the user's convenience.
 
 \NewDocumentCommand \FootnotesAsEndnotes {}
 {
@@ -2156,17 +2107,16 @@
 
 
 
-
 %======================================================================================================================
 %                        bibliography
 %======================================================================================================================
 
-% don't show the language for every reference
+% Don't show the language for every reference.
 \bool_if:NT \g_dez_bib_hide_lang_bool
     { \AtEveryBibitem { \clearlist {language} } }
 
-% Reference the title, date, journal, and authors
-% Could alternatively use \DeclareCiteCommand
+% Reference the title, date, journal, and authors.
+% Could alternatively use `\DeclareCiteCommand`.
 \NewDocumentCommand \reffull {m}
 {
     \AtNextCite { \defcounter {maxnames} {60} }
@@ -2175,14 +2125,12 @@
 
 \NewDocumentCommand \rrefttitle {m}
     { `` \citefield {#1} {title} " }
-    
+
 \NewDocumentCommand \refdoi {m}
     { \doi { \citefield {#1} {doi} } }
-    
+
 \NewDocumentCommand \refurl {m}
     { \link { \citefield {#1} {url} } }
-
-
 
 
 
@@ -2227,10 +2175,10 @@
 \cs_new_protected:Npn \dez__run_section_like:NN #1#2
 {
     \tl_set:Nx \l__level_tl {\cs_to_str:N #1}
-    % Set entry to title
+    % Set entry to title.
     \tl_if_eq:NnT \l__entry_tl {*}
         { \tl_set_eq:NN \l__entry_tl \l__title_tl }
-    % Set the label to entry (preferred) or title
+    % Set the label to entry (preferred) or title.
     \tl_if_eq:NnT \l__label_tl {*}
     {
         \tl_if_blank:VF \l__title_tl
@@ -2238,21 +2186,21 @@
         \tl_if_blank:VF \l__entry_tl
             { \tl_set_eq:NN \l__label_tl \l__entry_tl }
     }
-    % Clear title or entry if requested
+    % Clear title or entry if requested.
     \bool_if:NT \l__no_title_bool
         { \tl_clear:N \l__title_tl }
     \bool_if:NT \l__no_entry_bool
         { \tl_clear:N \l__entry_tl }
-    % okay, let's go:
+    % Done with setup; let's go.
     \tl_if_blank:VTF \l__title_tl
-    {   % Method A: PHANTOM \section
+    {   % Method A: PHANTOM `\section`.
         #2 \phantomsection
         \bool_if:NF \l__numberless_bool
             { \addtocounter {\l__level_tl} }
         \tl_if_blank:VF \l__entry_tl
             { \addcontentsline {toc} {\l__level_tl} {\l__entry_tl} }
     }
-    {   % or Method B: REAL \section
+    {   % ... or Method B: REAL `\section`.
         \bool_if:NTF \l__numberless_bool
             {
                 \dez__run_star:NV #1 \l__title_tl
@@ -2261,7 +2209,7 @@
             }
             { \dez__run_starless:NV #1 \l__title_tl }
     }
-    
+
     \tl_if_blank:VF \l__label_tl
         { \label {\l__label_tl} }
     \bool_if:NT \l__hide_links_bool
@@ -2273,10 +2221,10 @@
     \keys_set:nn {dez / section-like} {#3}
     \bool_if:NF \l__numberless_bool
         { \bool_set:Nn \l__numberless_bool {#2} }
-    % Process displayed title
+    % Process displayed title.
     \tl_if_blank:VT \l__title_tl
         { \tl_set:Nn \l__title_tl {#4} }
-    % The rest goes in run_section_like
+    % The rest goes in `run_section_like`.
 }
 
 \cs_new_protected:Npn \dez__section_like:nnnnNN #1#2#3#4#5#6
@@ -2312,7 +2260,7 @@
     \dez__section_like:nnnnNN
         {subsection} {#1} {#2} {#3} \subsection \prg_do_nothing:
 }
-    
+
 \NewDocumentCommand \SubSubSection { s O{} G{} }
 {
     \dez__section_like:nnnnNN
@@ -2333,7 +2281,6 @@
 
 
 
-
 %======================================================================================================================
 %                  alignment commands and environments
 %======================================================================================================================
@@ -2349,14 +2296,12 @@
     %\assignpagestyle \chapter {plain}
 }
 
-
 %\NewDocumentCommand \Aligning { m }
 %    { \tarmac_align:n {#1} }
 
 \NewDocumentEnvironment {Align} { m }
     { \tarmac_align_begin:n {#1} }
     { \tarmac_align_end:n   {#1} }
-
 
 
 
@@ -2522,7 +2467,7 @@
 
 \cs_new_protected:Npn \dez__newfrontchap:nnN #1#2#3
 {
-    #3 {#1} { O{} G{#1} } 
+    #3 {#1} { O{} G{#1} }
         { \begin {FrontChapter} [#2, ##1] {##2} }
         { \end   {FrontChapter} }
 }
@@ -2542,7 +2487,7 @@
 
 \cs_new_protected:Npn \dez__newspecialchap:nnN #1#2#3
 {
-    #3 {#1} { O{} G{#1} } 
+    #3 {#1} { O{} G{#1} }
         { \begin {SpecialChapter} [#2, ##1] {##2} }
         { \end   {SpecialChapter} }
 }
@@ -2562,7 +2507,7 @@
 
 \cs_new_protected:Npn \dez__newappendix:nnN #1#2#3
 {
-    #3 {#1} { O{} G{#1} } 
+    #3 {#1} { O{} G{#1} }
         { \begin {Appendix} [#2, ##1] {##2} }
         { \end   {Appendix} }
 }
@@ -2593,7 +2538,6 @@
 
 
 
-
 %======================================================================================================================
 %                        abstract and title
 %======================================================================================================================
@@ -2610,6 +2554,7 @@
     \end {center}
 }
 
+% Example title page; almost all users will need to redefine:
 \NewDocumentCommand \TitleContents {}
 {
     \GetTitle [style=largerr;bold] \par
@@ -2626,7 +2571,6 @@
     \StyleParInline {mono,202020} { Replace~this~temporary~title~page. }
 }
 
-% EXAMPLE title page
 \NewDocumentCommand \ShowTitle { O{} }
 {
     \begin {Title} [#1]
@@ -2694,17 +2638,14 @@
 
 
 
-
 %======================================================================================================================
 %                 theorem-like
 %======================================================================================================================
 
 
-% first, default style associations
-
-% from amsthm PDF:
+% First, here are the default style associations from the amsthm PDF.
 % https://ctan.mirrors.hoobly.com/macros/latex/required/amscls/doc/amsthdoc.pdf
-%  
+%
 %  plain        italic text, extra space above and below:
 %               Theorem, Lemma, Corollary, Proposition, Conjecture, Criterion, Assertion
 %  definition   upright text, extra space above and below:
@@ -2719,7 +2660,7 @@
 %    i)  set Algorithm to algorithm
 %    ii) added Protocol, Procedure, Game, and Reduction
 
-\prop_const_from_keyval:Nn \c_dez_theorem_like_prop 
+\prop_const_from_keyval:Nn \c_dez_theorem_like_prop
 {
     Algorithm       = algorithm ,   % changed to algorithm
     Theorem         = plain ,
@@ -2749,7 +2690,7 @@
     Conclusion      = remark ,
 }
 
-% These ones are defined in cleveref, so don't set names for them
+% These ones are defined in cleveref, so don't set names for them.
 \seq_const_from_clist:Nn \c_dez_theorem_like_names_in_cref_seq
 {
     Theorem, Lemma, Corollary, Proposition,
@@ -2759,38 +2700,38 @@
 }
 
 
-\prop_const_from_keyval:Nn \c_dez_theorem_like_names_prop 
+\prop_const_from_keyval:Nn \c_dez_theorem_like_names_prop
 {
-    % Theorem, Lemma, Corollary, Proposition are defined above
+    % Theorem, Lemma, Corollary, Proposition are defined above.
     Conjecture      = Conjecture/Conjectures ,
     Criterion       = Criterion/Criteria ,
     Assertion       = Assertion/Assertions ,
-    % Definition defined above
+    % Definition defined above.
     Condition       = Condition/Conditions ,
-    % Example defined above
+    % Example defined above.
     Question        = Question/Questions ,
     Axiom           = Axiom/Axioms ,
     Property        = Property/Properties ,
     Assumption      = Assumption/Assumptions ,
     Hypothesis      = Hypothesis/Hypotheses ,
     Exercise        = Exercise/Exercises ,
-    % Algorithm defined above
-    % Remark defined above
+    % Algorithm defined above.
+    % Remark defined above.
     Note            = Note/Notes ,
     Claim           = Claim/Claims ,
     Case            = Case/Cases ,
-    Postulate       = Postulate/Postulates ,  % added; not recommended by amsthm
+    Postulate       = Postulate/Postulates ,  % Added; not recommended by amsthm.
 }
 
-% define the styles suggested in the amsthm documentation
-% • plain : italic text, extra space above and below;
-% • definition : upright text, extra space above and below;
-% • algorithm (NEW): like definition, but a little more space below;
-% • remark : upright text, no extra space above or below
+% Define the styles suggested in the amsthm documentation:
+% • `plain` : italic text, extra space above and below;
+% • `definition` : upright text, extra space above and below;
+% • `algorithm` (NEW): like definition, but a little more space below;
+% • `remark` : upright text, no extra space above or below
 
 \NewDocumentCommand \DeclareTheoremStyle { m O{} }
 {
-    % typically most or all of these get overidden
+    % Typically most or all of these get overidden.
     \declaretheoremstyle
         [
             spaceabove     = \g_dez_abv_thm_skip ,
@@ -2833,13 +2774,13 @@
         spacebelow     = \g_dez_bel_remark_skip ,
     ]
 
-% amsthm defines this; renew so we can set the space
-% note: we alias Proof (capitalized) later
+% amsthm defines this; renew so we can set the space.
+% Note: we alias `Proof` (capitalized) later.
 \RenewDocumentEnvironment {proof} { O{\proofname} }
 {
     \par
     \glue_par_addvspace:N \g_dez_abv_proof_skip
-    %\vspace {-\topsep}% remove the space after the theorem
+    % `\vspace {-\topsep}%` remove the space after the theorem.
     \pushQED{\qed}
     \normalfont
     \topsep 0pt
@@ -2886,7 +2827,7 @@
     \seq_map_inline:Nn \c_dez_theorem_like_names_in_cref_seq
     {
         \dez_new_thm:n {##1}
-        % no cleveref call
+        % No `cleveref` call.
     }
     \prop_map_inline:Nn \c_dez_theorem_like_names_prop
     {
@@ -2896,12 +2837,13 @@
 }
 
 
+
 %======================================================================================================================
 %                     lists of things
 %======================================================================================================================
 
-% replace the 10pt extra space
-% https://tex.stackexchange.com/questions/784/how-to-change-the-line-spacing-in-my-list-of-figures
+% Replace the 10pt extra space.
+% https://tex.stackexchange.com/q/784/63693
 \patchcmd
     { \@chapter }
     { \addtocontents {lof}
@@ -2921,7 +2863,7 @@
 \cs_new_protected:Npn \dez__fix_lof:n #1
 {
     \renewcommand \listoffigures
-    {   % listfigurename already gets set
+    {   % `listfigurename` already gets set.
         \bool_if:nTF {#1}
             { \chapter  {\listfigurename} }
             { \chapter* {\listfigurename} }
@@ -2935,7 +2877,7 @@
 \cs_new_protected:Npn \dez__fix_lot:n #1
 {
     \renewcommand \listoftables
-    {   % listfigurename already gets set
+    {   % `listfigurename` already gets set.
         \bool_if:nTF {#1}
             { \chapter  {\listtablename} }
             { \chapter* {\listtablename} }
@@ -2951,7 +2893,7 @@
     \bool_if:NF \g_dez_show_lof_links_bool
         { \HideLinks }
     \dez__fix_lof:n{#1}
-    \setlength {\parskip} {0ex}  % makes things confusing
+    \setlength {\parskip} {0ex}  % Calculations are confusing if we don't set `\parskip` to 0.
     \hook_use:n { dez / list-of / pre }
 }
 { \hook_use:n { dez / list-of / post } }
@@ -2969,7 +2911,7 @@
     }
 }
 
-% Output table of contents
+% Output table of contents:
 \NewDocumentCommand \ShowTableOfContents { }
 {
     \hook_use:n { dez / list-of / before }
@@ -2987,7 +2929,7 @@
     \hook_use:n { dez / list-of / after }
 }
 
-% Output list of figures
+% Output list of figures:
 \NewDocumentCommand \ShowListOfFigures { t! t+ }
 {
     \hook_use:n { dez / list-of / before }
@@ -3000,7 +2942,7 @@
     \hook_use:n { dez / list-of / after }
 }
 
-% Output list of tables
+% Output list of tables:
 \NewDocumentCommand \ShowListOfTables { t! t+ }
 {
     \hook_use:n { dez / list-of / before }
@@ -3021,7 +2963,7 @@
     \hook_use:n { dez / list-of / after }
 }
 
-% Output list of abbreviations (via 'acro' package)
+% Output list of abbreviations (via `acro` package).
 \NewDocumentCommand \ShowListOfAbbreviations { t! t+ }
 {
     \hook_use:n { dez / list-of / before }
@@ -3030,13 +2972,13 @@
     \exp_args:NV \setstretch \g_dez_stretch_lof_tl
     %\setlength \cftsecnumwidth {10em}
     % template = description|tabular|longtable|supertabular|tabularray|lof|toc
-    % acceptable choices are description, toc, lof, and tabularray
-    % description is the default
+    % Acceptable choices are `description`, `toc`, `lof`, and `tabularray`.
+    % `description` is the default.
     \tl_set:Nx \l_tmpa_tl { \pidgin_string:n {listabbreviation} }
     \setlist [description] { font = \normalfont }
     \tl_set:Nn \l_tmpb_tl
     {
-        template = \g_dez_abbrev_theme_str , 
+        template = \g_dez_abbrev_theme_str ,
         name = \l_tmpa_tl ,
         preamble =
             {
@@ -3066,26 +3008,26 @@
     \hook_use:n { dez / list-of / after }
 }
 
-% Output nomenclature
+% Output nomenclature:
 \NewDocumentCommand \ShowNomenclature { t! t+ }
 {
     \hook_use:n { dez / list-of / before }
-    % nomencl doesn't use \listoffigures
-    % so, we'll turn \chapter* into \chapter
+    % nomencl doesn't use `\listoffigures`.
+    % So, we'll turn `\chapter*` into `\chapter`.
     \group_begin:
     \setlength {\parskip} {0ex}
     \bool_if:nT {#1}
     {
         \let \oldchapter \chapter
         \renewcommand {\chapter}
-            { {  % both braces
+            { {  % both braces needed
                  \oldchapter { \pidgin_string:n {nomenclature} }
             } }
     }
     \exp_args:NV \setstretch \g_dez_stretch_nom_tl
     \bool_if:NF \g_dez_show_lof_links_bool
         { \HideLinks }
-    % also uses \nomitemsep, which we set earlier
+    % Also uses `\nomitemsep`, which we set earlier.
     \setlist
     {
         itemsep     = 0pt ,
@@ -3218,7 +3160,7 @@
 
 \acsetup
 {
-    single-style       = long,     % NOTE:
+    single-style       = long,
     make-links         = false ,
     list / sort        = true ,
     accsupp / use      = true ,
@@ -3258,6 +3200,7 @@
 }
 
 
+
 %======================================================================================================================
 %                      caption and subcaption styling
 %======================================================================================================================
@@ -3294,8 +3237,8 @@
     skip   =   { \skip_use:N \g_dez_abv_subcaption_skip } ,
 }
 
-% Captions that go at the TOP of tables
-% This is used only for \caption in table environments; normally we use tabularray args
+% Captions that go at the TOP of tables.
+% This is used only for `\caption` in table environments; normally we use tabularray args.
 \captionsetup [table]
 {
     position         = above ,
@@ -3304,7 +3247,7 @@
     skip             = \g_dez_bel_table_title_skip ,
 }
 
-% if no minted, make a fake listing so we can use it anyway
+% If no `minted` package, make a fake listing so we can use it anyway.
 \dez_if_feat_enabled:nF {minted}
     { \DeclareFloatingEnvironment {listing} }
 
@@ -3341,12 +3284,12 @@
     }
 }
 
-% make specifying e.g. align= (inner-pos) easier
+% Make specifying e.g. `align=` (inner-pos) easier.
 \DeclareCaptionJustification {left}    {\RaggedRight}
 \DeclareCaptionJustification {right}   {\RaggedLeft}
 \DeclareCaptionJustification {center}  {\centering}
 \DeclareCaptionJustification {justify} {\justified}
-% caption also provides \centerfirst and \centerlast
+% `caption` also provides `\centerfirst` and `\centerlast`.
 
 \cs_new_protected:Npn \dez__begin_float:nn #1#2
 {
@@ -3443,7 +3386,7 @@
             \tl_set:Nn \l__label_tl {}
             \tl_set:Nn \l__entry_tl {}
             \tl_set:Nn \l__caption_tl {#2}
-        } 
+        }
     \tl_if_blank:VT \l__entry_tl
         { \tl_set:Nn \l__entry_tl {#1} }  % harmless at worst
     \dez__capkeyval:
@@ -3505,7 +3448,6 @@
 
 
 
-
 %======================================================================================================================
 %                 figures -- single-panel
 %======================================================================================================================
@@ -3513,7 +3455,7 @@
 \g@addto@macro \@floatboxreset \centering
 % This one no longer works!
 %\g@addto@macro\@subfloatboxreset{\centering}
-% https://tex.stackexchange.com/questions/144853/add-centering-to-all-subfigures-in-subcaption-using-gaddtomacro
+% https://tex.stackexchange.com/q/144853/63693
 \apptocmd \subcaption@iiminipage {\centering} {} {}
 
 \keys_define:nn { dez / figure }
@@ -3544,7 +3486,7 @@
 
 \cs_new:Npn \dez__include_graphics:nn #1#2
 {
-	% passed "Export" to adjustbox, so \includgraphics is \adjincludegraphics
+	% Passed `Export` to adjustbox, so `\includgraphics` is `\adjincludegraphics`.
     \includegraphics [#2] {#1}
 }
 \cs_generate_variant:Nn \dez__include_graphics:nn { VV }
@@ -3562,6 +3504,7 @@
 \NewDocumentEnvironment {Figure*} { O{} }
     { \begin {Figure} [ #1, full ] }
     { \end   {Figure} }
+
 
 
 %======================================================================================================================
@@ -3635,8 +3578,8 @@
     \dez__end_float:n {figure}
 }
 
-% align (inner-pos) can be 'l', 'c, 'r', or anything declared via \DeclareCaptionJustification
-% we declared some aliases in the captioning section above
+% Align (inner-pos) can be 'l', 'c, 'r', or anything declared via `\DeclareCaptionJustification`.
+% We declared some aliases in the captioning section above.
 \keys_define:nn { dez / real-panel }
 {
     file  .tl_set:N                = \l__file_tl ,
@@ -3689,9 +3632,8 @@
 
 
 
-
 %======================================================================================================================
-%                 phantom-panel figures -- 1 graphics file 
+%                 phantom-panel figures -- 1 graphics file
 %======================================================================================================================
 
 \keys_define:nn { dez / phantom-panel-figure }
@@ -3745,7 +3687,7 @@
 {
     \group_begin:
     \keys_set:nn {dez / phantom-panel} {#1}
-     % add a LOF/TOC entry (if applicable), but don't show the text
+     % Add a LOF/TOC entry (if applicable), but don't show the text.
     \captionlistentry {\l__panel_entry_tl}
     \tl_if_blank:VF \l__panel_label_tl
         { \label{\l__panel_label_tl} }
@@ -3804,7 +3746,7 @@
 %                            tables
 %======================================================================================================================
 
-% Vertical spacing
+% Vertical spacing:
 \SetTblrOuter
 {
     presep    = \g_dez_abv_table_title_skip ,
@@ -3813,7 +3755,7 @@
     postsep   = \g_dez_bel_table_footer_skip ,
 }
 
-% from booktabs source:
+% From booktabs source:
 % \heavyrulewidth=.08em
 % \lightrulewidth=.05em
 % \cmidrulewidth=.03em
@@ -3851,11 +3793,11 @@
 \SetTblrStyle {lastfoot}       { font=\textiles_run_nullary:n {table/foot} }
 % let contfoot-text be the normal text font
 
-% Fix the separators
+% Fix the separators.
 % For caption, that's the only thing we'll do.
 % (For notes and remarks, we'll do more after.)
 \DefTblrTemplate {caption-sep} {default} { \g_dez_typo_caption_label_sep_tl }
-\DefTblrTemplate {note-sep}    {default} { \g_dez_typo_table_note_sep_tl }   
+\DefTblrTemplate {note-sep}    {default} { \g_dez_typo_table_note_sep_tl }
 \DefTblrTemplate {remark-sep}  {default} { \g_dez_typo_table_remark_sep_tl }
 \DefTblrTemplate {note-tag}    {default} { \textsuperscript{\InsertTblrNoteTag} }
 \DefTblrTemplate {remark-tag}  {default} { \InsertTblrRemarkTag }
@@ -3877,7 +3819,7 @@
         }
     }
     \DefTblrTemplate {remark} {default}
-    { 
+    {
         \MapTblrRemarks
         {
             \noindent
@@ -3909,7 +3851,7 @@
         }
     }
     \DefTblrTemplate {remark} {default}
-    { 
+    {
         \MapTblrRemarks
         {
             \UseTblrTemplate {remark-tag}  {default}
@@ -3938,7 +3880,7 @@
 
 \exp_args:NnV \colorlet {evenrow} \g_dez_even_row_bg_tl
 
-% https://tex.stackexchange.com/questions/634497/define-a-style-in-tabularray
+% https://tex.stackexchange.com/q/634497/63693
 \NewDocumentCommand \NewTableStyle { m O{} m }
 {
     \NewTblrEnviron {#1}
@@ -3995,8 +3937,8 @@
         stretch       = \g_dez_stretch_table_tl ,
     }
 
-% for some reason, this gets ignored in the e-context with \exp_not:n above
-% fortunately, \SetTblrInner concats
+% For some reason, this gets ignored in the e-context with `\exp_not:n` above.
+% Fortunately, `\SetTblrInner` concats.
 \SetTblrInner [DezSimpleTblr]
 {
     row{1}        = { font      = {\sffamily\small\bfseries} } ,
@@ -4037,7 +3979,11 @@
     2col .bool_set:N               = \l__twocol_bool ,
     2col .default:n                = true ,
     2col .initial:n                = false ,
-    unknown .code:n                = { \exp_args:NNo \tl_put_right:Nn \l__unknown_tl { \l_keys_key_str={#1}, } } ,
+    unknown .code:n                = {
+                                         \exp_args:NNo
+                                             \tl_put_right:Nn
+                                             \l__unknown_tl { \l_keys_key_str={#1}, }
+                                     } ,
 }
 
 \cs_new_protected:Nn \dez__fix_tblr_cap:
@@ -4097,8 +4043,8 @@
     {
         % TODO: warn?
     }
-    % we have to do some work so that we can use caption=* and caption+
-    % like with our floats
+    % We have to do some work so that we can use `caption=*` and `caption+`.
+    % Same as with our floats.
     \tl_put_right:Nn \l__unknown_tl { , long }
     \dez__fix_tblr_cap:
     \begin_or:VVn \l_my_tblr_tl \l__unknown_tl {#3}
@@ -4106,7 +4052,6 @@
 {
     \end_:V \l_my_tblr_tl
 }
-
 
 
 
@@ -4167,7 +4112,7 @@
             boxrule      = { \dim_use:N \g_dez_box_border_dim } ,
             arc          = { \dim_use:N \g_dez_box_border_arc_dim } ,
             boxsep       = { \dim_use:N \g_dez_box_border_pad_dim } ,
-            #2 ,         % here the user can override any of the above-listed defaults
+            #2 ,         % Here the user can override any of the above-listed defaults.
         ]
         \tl_if_blank:VF \l__label_tl
             { \label {\l__label_tl} }
@@ -4176,16 +4121,16 @@
 }
 
 \NewDocumentCommand \DeclareAdmonitionEnv { D(){} O{} m }
-    { \dez__dec_box:nnnN {#1} {#2} {#3} \DeclareDocumentEnvironment } 
+    { \dez__dec_box:nnnN {#1} {#2} {#3} \DeclareDocumentEnvironment }
 
 \NewDocumentCommand \NewAdmonitionEnv { D(){} O{} m }
-    { \dez__dec_box:nnnN {#1} {#2} {#3} \NewDocumentEnvironment } 
+    { \dez__dec_box:nnnN {#1} {#2} {#3} \NewDocumentEnvironment }
 
 \NewDocumentCommand \ProvideAdmonitionEnv { D(){} O{} m }
     { \dez__dec_box:nnnN {#1} {#2} {#3} \ProvideDocumentEnvironment }
 
 \NewDocumentCommand \RenewAdmonitionEnv { D(){} O{} m }
-    { \dez__dec_box:nnnN {#1} {#2} {#3} \RenewDocumentEnvironment } 
+    { \dez__dec_box:nnnN {#1} {#2} {#3} \RenewDocumentEnvironment }
 
 
 \NewDocumentCommand \NewExampleAdmonitionEnvs {}
@@ -4221,7 +4166,7 @@
     }
 }
 
-% make line numbers big enough that they're readable
+% Make line numbers big enough that they're readable.
 \RenewDocumentCommand \theFancyVerbLine {}
 {
     \ttfamily
@@ -4361,7 +4306,7 @@
     { dez/quote-stretch }
     { tarmac_set:e { linestretch={\fp_use:N \g_dez_stretch_quote_fp} } }
 
-% not supporting hyphenation; use otherlanguage* instead
+% Not supporting hyphenation; use `otherlanguage*` instead.
 \keys_define:nn { dez / quote }
 {
     style .choices:nn            = { block, text, display }
@@ -4419,7 +4364,7 @@
     { \Quote [ style=display, #1 ] {#2} }
     { }
 
-% uses \textelp, \textelp*, \textins, and \textins*
+% Uses `\textelp`, `\textelp*`, `\textins`, and `\textins*`.
 
 
 
@@ -4490,7 +4435,7 @@
     % Get kant paragraphs sequentially;
     % Increment this counter each time a paragraph is used
     \int_gzero_new:N \g__dez_ikant_int
-    
+
     \NewDocumentCommand \NextKant { O{3} }
     {
         \int_compare:nNnTF {\g__dez_ikant_int} > {\c_dez_max_kant_int-1}
@@ -4501,7 +4446,7 @@
             \kant [\g__dez_ikant_int] {1--#1}
         }
     }
-    
+
     % This command instead chooses random paragraphs
     \NewDocumentCommand \RandKant { O{3} }
     {
@@ -4513,7 +4458,6 @@
         }
     }
 }
-
 
 
 
@@ -4536,7 +4480,7 @@
     \hook_use:n { dez / show-bib / after }
 }
 
-% Shows the bibliography at the end of the chapter, if \g_dez_bib_per_chap_bool
+% Shows the bibliography at the end of the chapter, if `\g_dez_bib_per_chap_bool`.
 \NewDocumentCommand \ShowSubBib {}
 {
     \bool_if:NT \g_dez_bib_per_chap_bool
@@ -4554,7 +4498,7 @@
     \hook_use:n { dez / show-endnotes / after }
 }
 
-% Shows the bibliography at the end of the document
+% Shows the bibliography at the end of the document/
 \NewDocumentCommand \ShowFullBib {}
 {
     \bool_if:NF \g_dez_bib_per_chap_bool
@@ -4621,7 +4565,6 @@
 
 
 
-
 %======================================================================================================================
 %                     setup commands
 %======================================================================================================================
@@ -4666,7 +4609,7 @@
 
 \NewDocumentCommand \ListSetup { o m }
     { \setlist [#1] {#2} }  % enumitem
-    
+
 % for optional features, allow setup without complaining
 
 \NewDocumentCommand \KnowledgeSetup {m}
@@ -4704,12 +4647,12 @@
         { \dez__warn_cmdneedspkg:nn {ChemformulaSetup} {chemformula} }
 }
 
-\NewDocumentCommand \ChemSetup { o m }
-{
-    \dez_if_feat_enabled:nTF {chemmacros}
-        { \chemsetup [#1] {#2} }
-        { \dez__warn_cmdneedspkg:nn {ChemSetup} {chemmacros} }
-}
+%\NewDocumentCommand \ChemSetup { o m }
+%{
+%    \dez_if_feat_enabled:nTF {chemmacros}
+%        { \chemsetup [#1] {#2} }
+%        { \dez__warn_cmdneedspkg:nn {ChemSetup} {chemmacros} }
+%}
 
 
 \NewDocumentCommand \ChemfigSetup { m }
@@ -4726,43 +4669,43 @@
 %======================================================================================================================
 
 
-% camel-case aliases of "document-wide" commands
-% datetime2 uses capitalized variants, so leave those alone
+% PascalCase aliases of "document-wide" commands
+% datetime2 uses capitalized variants, so leave those alone.
 
-% packages
-% UseTikzLibrary and \UseGdLibrary were defined intelligently at the top
+% Packages:
+% `UseTikzLibrary` and `\UseGdLibrary` were defined intelligently at the top
 \let \UsePackage          \usepackage
-% fonts
+% Fonts:
 \let \FontSpec            \fontspec
 \let \SetMainFont         \setmainfont
 \let \SetSansFont         \setsansfont
 \let \SetMonoFont         \setmonofont
 \let \SetMathFont         \setmathfont
-% counters
+% Counters:
 \let \NewCounter          \newcounter
 \let \DefCounter          \defcounter
 \let \SetCounter          \setcounter
 \let \AddToCounter        \addtocounter
 \let \StepCounter         \stepcounter
 \let \RefStepCounter      \refstepcounter
-% and SetCounterWithin
-% babel
+% and SetCounterWithin (already PascalCase)
+% Babel:
 \let \SelectLanguage      \selectlanguage
 \let \ForeignLanguage     \foreignlanguage
 \let \BabelProvide        \babelprovide
 \let \BabelFont           \babelfont
 \let \BabelTags           \babeltags
-% pages
+% Pages:
 \let \PageStyle           \pagestyle
 \let \AssignPageStyle     \assignpagestyle
 \let \NewPage             \newpage
 \let \ClearPage           \clearpage
 \let \ClearDoublePage     \cleardoublepage
-% misc
+% Miscellaneous:
 \let \SetQuoteStyle       \setquotestyle
 \let \ReverseMarginPar    \reversemarginpar
 \let \NormalMarginPar     \normalmarginpar
-% leave \marginpar
+% Leave `\marginpar` (probably not needed).
 
 
 \NewDocumentEnvironment {TikzPicture} { }
@@ -4802,7 +4745,7 @@
 %                    input and subfile wrapper commands
 %======================================================================================================================
 
-% See also: \LoadBib and \LoadTex.
+% See also: `\LoadBib` and `\LoadTex.`
 
 % These just start the front, main, or back matter and load the listed files.
 
@@ -4829,7 +4772,7 @@
     { \usepackage {subfiles} }  % usepackage on purpose -- don't allow in premable.
 
 
-% These use \subfile instead of \input.
+% These use `\subfile` instead of `\input`.
 
 \NewDocumentCommand \LoadFrontSubdocs { >{\SplitList{,}}m }
 {
@@ -4855,7 +4798,6 @@
 
 \NewDocumentCommand \LoadTex {m}
     { \input {#1} }
-
 
 
 
