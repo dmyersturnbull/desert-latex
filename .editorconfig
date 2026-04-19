@@ -1,50 +1,63 @@
-# Check https://editorconfig.org for more information
-# These are derived from https://ukupat.github.io/tabs-or-spaces/
-# The most majority indentation style was selected for each language
+# SPDX-FileCopyrightText: Copyright 2020-2026, Contributors to Tyrannosaurus
+# SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
+# SPDX-License-Identifier: Apache-2.0
+
+# See: https://editorconfig.org
 root = true
 
+# About indentation style:
+# We'll use the most prevalent indentation style for each language,
+# using the survey of top-starred GitHub repos at https://ukupat.github.io/tabs-or-spaces/ .
+
+# About line length:
+# Soft limits (and breaking in sensible places) are generally superior to hard limits.
+# The editorconfig spec states that `max_line_length` is a hard limit.
+# However, Prettier uses it as `--print-width`, a soft limit.
+# We'll default `max_line_length` to 100.
+# If you must use a formatter that treats it as a hard limit,
+# set `max_line_length = 120` and specify `--print-width 100` in `.pre-commit-config.yaml`.
+
+# ================ Default (2 spaces) ============================================================ #
+# JavaScript, CSS, Markdown, and others
+# Default to 2 spaces because it's the most common choice in the survey.
+# Note: This breaks Markdown's 2 trailing spaces behavior, which was bad anyway (use `\` instead).
 [*]
 end_of_line = lf
 charset = utf-8
-
-# Tex
-[*.tex]
 indent_style = space
 indent_size = 2
 trim_trailing_whitespace = true
 insert_final_newline = true
+max_line_length = 100
 
-# 4-space
-[*.{py,c,cpp,inc,h,s,asm,m,mm,ps1,bat,cs,d,erl,fsx,java,groovy,gradle,julia,php,rs,swift,ts,kt,kts,pl,perl,f90,f95,f03,f08,f15,f18}]
-# excludes Fortran fixed-form (e.g. .f/.ftn); these have weird indentation rules
-indent_style = space
+# ================ Curly-brace languages using 4 spaces ========================================== #
+# C, JVM, or C++-like: C, C++, C#, Rust, V, D, Java, Kotlin, Groovy
+# Notes:
+# - Assume `.v` is for the V language (https://vlang.io/), not Verilog.
+# - Excludes Scala, which is universally 2-space.
+[*.{c,cpp,h,cs,rs,d,v,java,kt,kts,groovy,gradle}]
 indent_size = 4
-trim_trailing_whitespace = true
-insert_final_newline = true
 
-# 2-space
-[{Dockerfile,Vagrantfile,*.scala,*.sbt,*.coffee,*.dart,*.js,*.sh,*.sql,*.hs,*.lhs,*.purs,*.ml,*.sml,*.R,*.rb,*.pas,*.dfm,*.clj,*.lisp,*.ex,*.exs,*.yml,*.yaml,*.json,*.jsonnet,*.xml,*.xaml,*.vim,*.vimrc,*.css,*.html,*.htm,*.yy,*.asciidoc,*.pod,*.ini,*.toml}]
-indent_style = space
-indent_size = 2
-trim_trailing_whitespace = true
-insert_final_newline = true
+# ================ Misc. languages using 4 spaces ================================================ #
+# Compiled: Assembly, F#, Objective-C, Julia, Fortran (90+), Erlang, Swift
+# Interpreted: Python, Lua, Perl, PowerShell, Batch, PHP (8+), MATLAB, Just
+# Notes:
+# - Allows `.f90`, `.f`, and`.for` for modern (free-form) Fortran, but not `.f95`/`.f03`/etc.
+# - Options in `[*]` will ruin fixed-form Fortran (a format that's been deprecated for 35 years).
+# - Lua is very mixed, but ~70% use spaces, and 4 spaces is the most common choice among those.
+[*.{s,asm,fs,fsi,fsx,mm,julia,f90,f,for,erl,swift,py,lua,pl,perl,ps1,bat,php,m,just}]
+indent_size = 4
 
-# tab
-[{Makefile,*.mk,*.go,*.hx,*.lua,*.sas,*.ahk,*.vala,*.sdc}]
+# ================ Languages using tabs ========================================================== #
+# Go, SAS, Vala, Haxe (`.hx`), AutoIt (`.au3`), Verilog (`.sv`)
+[*.{go,sas,vala,hx,au3,sv}]
 indent_style = tab
-insert_final_newline = true
 
-# markdown; 2-space
-[*.{md,mdown,markdown}]
-# Markdown uses two trailing spaces for a line break
-indent_style = space
-indent_size = 2
-trim_trailing_whitespace = false
-
-# CSV-like
+# ================ Tabular formats =============================================================== #
+# Tab-separated, comma-separated, etc.
+# Specifying `indent_style = tab` only because it feels safer.
 [*.{tsv,tab,csv}]
-# do NOT add a newline or trim whitespace
-# indent_style=tab seems safer but is probably not necessary
 indent_style = tab
 trim_trailing_whitespace = false
 insert_final_newline = false
+max_line_length = unset
