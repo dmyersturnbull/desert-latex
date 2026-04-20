@@ -1,6 +1,10 @@
 # SPDX-FileCopyrightText: Copyright 2020-2026, Contributors to Tyrannosaurus
 # SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
 # SPDX-License-Identifier: Apache-2.0
+#
+# SPDX-FileCopyrightText: Copyright 2022-2026, Contributors to desert-latex
+# SPDX-PackageHomePage: https://github.com/dmyersturnbull/desert-latex
+# SPDX-License-Identifier: LPPL-1.3c
 
 # See: https://editorconfig.org
 root = true
@@ -28,7 +32,10 @@ indent_style = space
 indent_size = 2
 trim_trailing_whitespace = true
 insert_final_newline = true
-max_line_length = 100
+
+# ================ LaTeX ========================================================== #
+[*.{tex,sty,cls}]
+indent_size = 4
 
 # ================ Curly-brace languages using 4 spaces ========================================== #
 # C, JVM, or C++-like: C, C++, C#, Rust, V, D, Java, Kotlin, Groovy
@@ -60,4 +67,3 @@ indent_style = tab
 indent_style = tab
 trim_trailing_whitespace = false
 insert_final_newline = false
-max_line_length = unset
