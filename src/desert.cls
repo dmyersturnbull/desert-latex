@@ -1,9 +1,9 @@
-% SPDX-FileCopyrightText: Copyright 2022-2026, Douglas Myers-Turnbull and Contributors
+% SPDX-FileCopyrightText: Copyright 2022-2026, Contributors to desert-latex
 % SPDX-PackageHomePage: https://github.com/dmyersturnbull/desert-latex
 % SPDX-License-Identifier: LPPL-1.3c
 
-%                                                                (ideal)             (normal)           (soft limit)
-%                                                                 column 79 → █       column 99 → █      column 119 → █
+%                                                                 (ideal)             (good)             (long)              (soft limit)
+%                                                                 column 79 → █       column 99 → █      column 119 → █      column 139 → █
 
 
 %=======                                                   =======
@@ -11,8 +11,9 @@
 %=======                                                   =======
 
 \NeedsTeXFormat {LaTeX2e} [2025-11-01]
-%\ExplSyntaxOn
 \ProvidesExplClass {desert} {2026-04-19} {v0.1.1} { Desert~dissertation~template }
+
+
 
 %==========================================================================================================================================
 %                    hooks for fancy users
@@ -137,6 +138,7 @@
 \exp_args_generate:n { Nen, Neo, NeV, Nev,    , Nef, Nex }
 \exp_args_generate:n { cen, ceo, ceV, cev, cee, cef, cex }
 \exp_args_generate:n { Nnee, NVn }
+
 
 \cs_new_protected:Npn \begin_:n #1
     { \begin {#1} }
@@ -4610,7 +4612,9 @@
 \NewDocumentCommand \ListSetup { o m }
     { \setlist [#1] {#2} }  % enumitem
 
-% for optional features, allow setup without complaining
+% Setup commands for optional features.
+% If the corresponding feature isn't loaded, the setup command is just ignored.
+% This makes it easier to toggle features on and off.
 
 \NewDocumentCommand \KnowledgeSetup {m}
 {
@@ -4647,13 +4651,12 @@
         { \dez__warn_cmdneedspkg:nn {ChemformulaSetup} {chemformula} }
 }
 
-%\NewDocumentCommand \ChemSetup { o m }
-%{
-%    \dez_if_feat_enabled:nTF {chemmacros}
-%        { \chemsetup [#1] {#2} }
-%        { \dez__warn_cmdneedspkg:nn {ChemSetup} {chemmacros} }
-%}
-
+\NewDocumentCommand \ChemSetup { o m }
+{
+    \dez_if_feat_enabled:nTF {chemmacros}
+        { \chemsetup [#1] {#2} }
+        { \dez__warn_cmdneedspkg:nn {ChemSetup} {chemmacros} }
+}
 
 \NewDocumentCommand \ChemfigSetup { m }
 {
@@ -4673,7 +4676,7 @@
 % datetime2 uses capitalized variants, so leave those alone.
 
 % Packages:
-% `UseTikzLibrary` and `\UseGdLibrary` were defined intelligently at the top
+% `UseTikzLibrary` and `\UseGdLibrary` were defined intelligently at the top.
 \let \UsePackage          \usepackage
 % Fonts:
 \let \FontSpec            \fontspec
@@ -4805,7 +4808,7 @@
 %                    final things
 %======================================================================================================================
 
-% Nomenclature!
+% Nomenclature
 \dez_if_feat_enabled:nT {noms}
     { \makenomenclature }
 
@@ -4817,11 +4820,13 @@
         { \tl_set:Nn \l_tmpa_tl {}      }
     \exp_last_unbraced:Ne
         \makeindex
-        { [
-            \l_tmpa_tl ,
-            columns    = { \int_use:N \g_dez_lay_index_cols_int } ,
-            columnsep  = { \dim_use:N \g_dez_lay_index_col_sep_dim } ,
-        ] }
+        {
+            [
+                \l_tmpa_tl ,
+                columns    = { \int_use:N \g_dez_lay_index_cols_int } ,
+                columnsep  = { \dim_use:N \g_dez_lay_index_col_sep_dim } ,
+            ]
+        }
 }
 
 
